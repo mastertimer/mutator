@@ -3,7 +3,6 @@
 #define NOMINMAX
 #include <windows.h>
 
-#include "color.h"
 #include "mgeometry.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,7 +20,7 @@ struct _picture
 
 	_picture& operator=(_picture&& move) noexcept;
 
-	_color& px(int64 x, int64 y) { return ((_color*)data)[y * size.x + x]; }
+	uint& px(int64 x, int64 y) { return data[y * size.x + x]; }
 
 	void set_area(const _area2i &q) { area = q & size; }
 	bool resize(int64 w, int64 h);
@@ -85,8 +84,8 @@ struct _bitmap: public _picture
 
 	bool resize(int64 w, int64 h);
 
-	void text(int x, int y, std::wstring_view s, int h, _color c, _color bg);
-	void text(int x, int y, std::string_view s, int h, _color c, _color bg);
+	void text(int x, int y, std::wstring_view s, int h, uint c, uint bg);
+	void text(int x, int y, std::string_view s, int h, uint c, uint bg);
 	_size2i size_text(std::wstring_view s, int h);
 	_size2i size_text(std::string_view s, int h);
 };

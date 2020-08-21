@@ -247,8 +247,8 @@ t_t using __xy = vec2<_t>;
 typedef __xy<double> _xy;
 typedef __xy<int>    _ixy;
 
-using vec2i = vec2<int32>;
-using vec2u = vec2<uint32>;
+using vec2i = vec2<int>;
+using vec2u = vec2<uint>;
 using vec2f = vec2<double>;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

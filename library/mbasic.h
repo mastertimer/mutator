@@ -17,19 +17,12 @@ constexpr double pi = 3.1415926535897932384626;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-using int8          = short;
-using int16         = short;
-using int32         = int;
 using int64         = long long;
-
-using uint8         = unsigned char;
-using uint16        = unsigned short;
-using uint32        = unsigned int;
-using uint64        = unsigned long long;
 
 using uchar         = unsigned char;
 using ushort        = unsigned short;
 using uint          = unsigned int;
+using uint64        = unsigned long long;
 
 using astr          = const char*;
 using wstr          = const wchar_t*;

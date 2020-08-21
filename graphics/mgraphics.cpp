@@ -54,14 +54,14 @@ _bitmap::~_bitmap()
 	data = 0; // чтобы ~Picture не выругался
 }
 
-void _bitmap::text(int x, int y, std::wstring_view s, int h, _color c, _color bg)
+void _bitmap::text(int x, int y, std::wstring_view s, int h, uint c, uint bg)
 { 
 	podg_font(h);
 	podg_cc(c, bg);
 	TextOutW(hdc, x, y, s.data(), (int)s.size());
 }
 
-void _bitmap::text(int x, int y, std::string_view s, int h, _color c, _color bg)
+void _bitmap::text(int x, int y, std::string_view s, int h, uint c, uint bg)
 { 
 	podg_font(h);
 	podg_cc(c, bg);
@@ -934,7 +934,7 @@ void _picture::text16n(int64 x, int64 y, const char* s, int64 n, uint c)
 		if (x + lx * n > area.x.max) i1 = (area.x.max - x) / n;
 		for (int64 j = j0; j < j1; j++)
 		{
-			ushort mask = (uint16(1) << j);
+			ushort mask = (ushort(1) << j);
 			for (int64 jj = 0; jj < n; jj++)
 			{
 				const ushort* sss = ss;
@@ -1048,7 +1048,7 @@ void _picture::text16(int64 x, int64 y, const char* s, uint c)
 		if (x + lx > area.x.max) i1 = area.x.max - x;
 		for (int64 j = j0; j < j1; j++)
 		{
-			ushort        mask = (uint16(1) << j);
+			ushort        mask = (ushort(1) << j);
 			const ushort* sss  = ss;
 			if (kk == 0)
 			{
@@ -1376,7 +1376,7 @@ void _picture::froglif(_coordinate2 p, double r, uchar* f, int rf, uint c, uint 
 						ii = (xx[ax].ii + yy[ay - 1].ii) >> xx[ax].sm1; // ay не может быть равно 0
 					else
 						ii = 4 + 2 * (ax >> rf0); // первая и последняя палочка
-					if (xx[ax].f[ii >> 3] & (uint8(1) << (ii & 7))) break;
+					if (xx[ax].f[ii >> 3] & (uchar(1) << (ii & 7))) break;
 					ax++;
 				}
 				if (ax > rr) break;
@@ -1428,7 +1428,7 @@ void _picture::froglif(_coordinate2 p, double r, uchar* f, int rf, uint c, uint 
 						ii = (((xx[ayx].ii + yyay->ii) >> yyay->sm1) - 1) & 0xFFFFFFFE;
 					else
 						ii = 5 + 2 * (ay >> rf0); // первая и последняя палочка
-					if (yyay->f[ii >> 3] & (uint8(1) << (ii & 7))) break;
+					if (yyay->f[ii >> 3] & (uchar(1) << (ii & 7))) break;
 					ayx += stepy;
 				}
 				int ayx_next = ayx + stepy; // следующая после серии палочек
@@ -1439,7 +1439,7 @@ void _picture::froglif(_coordinate2 p, double r, uchar* f, int rf, uint c, uint 
 						ii = (((xx[ayx_next].ii + yyay->ii) >> yyay->sm1) - 1) & 0xFFFFFFFE;
 					else
 						ii = 5 + 2 * (ay >> rf0); // первая и последняя палочка
-					if ((yyay->f[ii >> 3] & (uint8(1) << (ii & 7))) == 0) break;
+					if ((yyay->f[ii >> 3] & (uchar(1) << (ii & 7))) == 0) break;
 					ayx_next += stepy;
 				}
 				bool nac = true;
@@ -1496,12 +1496,12 @@ void _picture::froglif(_coordinate2 p, double r, uchar* f, int rf, uint c, uint 
 								ii  = 4 + 2 * (ax >> rf0); // первая и последняя палочка
 								iii = ii;
 							}
-							if (xxax->f[ii >> 3] & (uint8(1) << (ii & 7)))
+							if (xxax->f[ii >> 3] & (uchar(1) << (ii & 7)))
 							{
 								if (ay) vepa = true;
 								break;
 							}
-							if (xxax->f[iii >> 3] & (uint8(1) << (iii & 7))) break;
+							if (xxax->f[iii >> 3] & (uchar(1) << (iii & 7))) break;
 							ax++;
 						}
 						if (ax > rr) break;
@@ -1575,7 +1575,7 @@ void _picture::froglif(_coordinate2 p, double r, uchar* f, int rf, uint c, uint 
 								ii = (xxax->ii + yyay_1->ii) >> xxax->sm1;
 							else
 								ii = 4 + 2 * (ax >> rf0); // первая и последняя палочка
-							if (xxax->f[ii >> 3] & (uint8(1) << (ii & 7))) break;
+							if (xxax->f[ii >> 3] & (uchar(1) << (ii & 7))) break;
 							ax++;
 						}
 					xxxyyy* xxax = 0;
@@ -1710,7 +1710,7 @@ void _picture::froglif(_coordinate2 p, double r, uchar* f, int rf, uint c, uint 
 						ii = (((xx[ayx].ii + yyay->ii) >> yyay->sm1) - 1) & 0xFFFFFFFE;
 					else
 						ii = 5 + 2 * (ay >> rf0); // первая и последняя палочка
-					if (yyay->f[ii >> 3] & (uint8(1) << (ii & 7))) break;
+					if (yyay->f[ii >> 3] & (uchar(1) << (ii & 7))) break;
 					ayx += stepy;
 				}
 				int ayx_next = ayx + stepy; // следующая после серии палочек
@@ -1721,7 +1721,7 @@ void _picture::froglif(_coordinate2 p, double r, uchar* f, int rf, uint c, uint 
 						ii = (((xx[ayx_next].ii + yyay->ii) >> yyay->sm1) - 1) & 0xFFFFFFFE;
 					else
 						ii = 5 + 2 * (ay >> rf0); // первая и последняя палочка
-					if ((yyay->f[ii >> 3] & (uint8(1) << (ii & 7))) == 0) break;
+					if ((yyay->f[ii >> 3] & (uchar(1) << (ii & 7))) == 0) break;
 					ayx_next += stepy;
 				}
 				bool nac = true;
@@ -1778,12 +1778,12 @@ void _picture::froglif(_coordinate2 p, double r, uchar* f, int rf, uint c, uint 
 								ii  = 4 + 2 * (ax >> rf0); // первая и последняя палочка
 								iii = ii;
 							}
-							if (xxax->f[iii >> 3] & (uint8(1) << (iii & 7)))
+							if (xxax->f[iii >> 3] & (uchar(1) << (iii & 7)))
 							{
 								if (ay < rr) nipa = true;
 								break;
 							}
-							if (xxax->f[ii >> 3] & (uint8(1) << (ii & 7))) break;
+							if (xxax->f[ii >> 3] & (uchar(1) << (ii & 7))) break;
 							ax++;
 						}
 						if (ax > rr) break;
@@ -1857,7 +1857,7 @@ void _picture::froglif(_coordinate2 p, double r, uchar* f, int rf, uint c, uint 
 								ii = (xxax->ii + yyay->ii) >> xxax->sm1;
 							else
 								ii = 4 + 2 * (ax >> rf0); // первая и последняя палочка
-							if (xxax->f[ii >> 3] & (uint8(1) << (ii & 7))) break;
+							if (xxax->f[ii >> 3] & (uchar(1) << (ii & 7))) break;
 							ax++;
 						}
 					xxxyyy* xxax = 0;
@@ -1985,7 +1985,7 @@ void _picture::froglif(_coordinate2 p, double r, uchar* f, int rf, uint c, uint 
 					ii = (((xx[ayx].ii + yyay->ii) >> yyay->sm1) - 1) & 0xFFFFFFFE;
 				else
 					ii = 5 + 2 * (ay >> rf0); // первая и последняя палочка
-				if (yyay->f[ii >> 3] & (uint8(1) << (ii & 7))) break;
+				if (yyay->f[ii >> 3] & (uchar(1) << (ii & 7))) break;
 				ayx += stepy;
 			}
 			int ayx_next = ayx + stepy; // следующая после серии палочек
@@ -1996,7 +1996,7 @@ void _picture::froglif(_coordinate2 p, double r, uchar* f, int rf, uint c, uint 
 					ii = (((xx[ayx_next].ii + yyay->ii) >> yyay->sm1) - 1) & 0xFFFFFFFE;
 				else
 					ii = 5 + 2 * (ay >> rf0); // первая и последняя палочка
-				if ((yyay->f[ii >> 3] & (uint8(1) << (ii & 7))) == 0) break;
+				if ((yyay->f[ii >> 3] & (uchar(1) << (ii & 7))) == 0) break;
 				ayx_next += stepy;
 			}
 			bool nac = true;
@@ -2052,8 +2052,8 @@ void _picture::froglif(_coordinate2 p, double r, uchar* f, int rf, uint c, uint 
 							ii  = 4 + 2 * (ax >> rf0); // первая и последняя палочка
 							iii = ii;
 						}
-						if (xxax->f[ii >> 3] & (uint8(1) << (ii & 7))) break;
-						if (xxax->f[iii >> 3] & (uint8(1) << (iii & 7))) break;
+						if (xxax->f[ii >> 3] & (uchar(1) << (ii & 7))) break;
+						if (xxax->f[iii >> 3] & (uchar(1) << (iii & 7))) break;
 						ax++;
 					}
 					if (ax > rr) break;
