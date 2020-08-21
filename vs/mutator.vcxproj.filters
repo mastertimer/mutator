@@ -48,9 +48,6 @@
     <ClCompile Include="..\mut\t_function.cpp">
       <Filter>Mutator</Filter>
     </ClCompile>
-    <ClCompile Include="..\library\mwindow.cpp">
-      <Filter>Library</Filter>
-    </ClCompile>
     <ClCompile Include="..\library\mjson.cpp">
       <Filter>Library</Filter>
     </ClCompile>
@@ -71,9 +68,6 @@
     </ClCompile>
     <ClCompile Include="..\mut\go\g1list.cpp">
       <Filter>Mutator\go</Filter>
-    </ClCompile>
-    <ClCompile Include="..\library\mdialog.cpp">
-      <Filter>Library</Filter>
     </ClCompile>
     <ClCompile Include="..\set\g_graph.cpp">
       <Filter>SET</Filter>
@@ -125,9 +119,6 @@
     <ClInclude Include="..\mut\t_function.h">
       <Filter>Mutator</Filter>
     </ClInclude>
-    <ClInclude Include="..\library\mwindow.h">
-      <Filter>Library</Filter>
-    </ClInclude>
     <ClInclude Include="..\library\mspeed.hpp">
       <Filter>Library</Filter>
     </ClInclude>
@@ -151,9 +142,6 @@
     </ClInclude>
     <ClInclude Include="..\mut\go\g1list.h">
       <Filter>Mutator\go</Filter>
-    </ClInclude>
-    <ClInclude Include="..\library\mdialog.h">
-      <Filter>Library</Filter>
     </ClInclude>
     <ClInclude Include="..\set\g_graph.h">
       <Filter>SET</Filter>

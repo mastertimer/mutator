@@ -3,7 +3,6 @@
 #include "g_list_link.h"
 #include "go_edit.h"
 #include "g1list.h"
-#include "mdialog.h"
 #include "t_function.h"
 
 _stack clipboard; // буффер обмена
@@ -551,14 +550,14 @@ void fun22(_tetron* tt0, _tetron* tt, uint64 flags)
 
 void fun23(_tetron* tt0, _tetron* tt, uint64 flags)
 {
-	_tetron* t = tt->find1<_tetron>(flag_part);
+/*	_tetron* t = tt->find1<_tetron>(flag_part);
 	_g_picture* tp = *t;
 	if (tp)
 	{
 		auto fn = dialog::open_file(L"*.bmp");
 		if (!exists(fn)) return;
 		tp->load_from_file(fn);
-	}
+	}*/
 }
 
 void fun24(_tetron* tt0, _tetron* tt, uint64 flags)
@@ -995,7 +994,7 @@ void fun54(_tetron* tt0, _tetron* tt, uint64 flags)
 		v++;
 		b = a;
 	}
-	dialog::message(L"найдено функций: " + std::to_wstring(v));
+//	dialog::message(L"найдено функций: " + std::to_wstring(v));
 	if (b)
 	{
 		n_act = b;

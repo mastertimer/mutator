@@ -162,10 +162,8 @@
     <ClCompile Include="..\graphics\peach_flavor.cpp" />
     <ClCompile Include="..\graphics\renderer.cpp" />
     <ClCompile Include="..\library\mbasic.cpp" />
-    <ClCompile Include="..\library\mdialog.cpp" />
     <ClCompile Include="..\library\mgeometry.cpp" />
     <ClCompile Include="..\library\mjson.cpp" />
-    <ClCompile Include="..\library\mwindow.cpp" />
     <ClCompile Include="..\mut\basic_tetrons.cpp" />
     <ClCompile Include="..\mut\go\g1list.cpp" />
     <ClCompile Include="..\mut\go\go_edit.cpp" />
@@ -189,11 +187,9 @@
     <ClInclude Include="..\graphics\peach_flavor.h" />
     <ClInclude Include="..\graphics\renderer.h" />
     <ClInclude Include="..\library\mbasic.h" />
-    <ClInclude Include="..\library\mdialog.h" />
     <ClInclude Include="..\library\mgeometry.h" />
     <ClInclude Include="..\library\mjson.h" />
     <ClInclude Include="..\library\mspeed.hpp" />
-    <ClInclude Include="..\library\mwindow.h" />
     <ClInclude Include="..\mut\basic_tetrons.h" />
     <ClInclude Include="..\mut\go\g1list.h" />
     <ClInclude Include="..\mut\go\go_edit.h" />

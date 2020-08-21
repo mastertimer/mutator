@@ -29,9 +29,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-extern void change_window_text();
-extern void change_window_text2(std::chrono::nanoseconds t);
-
 _tetron* create_tetron(const _string& name)
 {
 #define make(name) {""#name, []() -> _tetron* { return new name; }}
@@ -192,9 +189,9 @@ namespace mutator
 		return (tet.error == 0);
 	}
 
-	void draw(_window_event::_render e)
+	void draw(_bitmap& e)
 	{
-		change_window_text();
+		if (master_bm.resize(e.size.x, e.size.y)) master_obl_izm = _area_old(0, e.size.x + 1, 0, e.size.y + 1);
 		_area2 sum_area = (_area2)master_obl_izm + top_graph.changed();
 		if (sum_area.empty()) return;
 		if (master_obl_izm)
@@ -208,64 +205,64 @@ namespace mutator
 			master_chain_go.clear();
 			n_ko->operator _t_trans* ()->ris(_trans(), false); // средний слой (тетронная графика)
 		}
-		_renderer(e.data, e.size).image((int)sum_area.x.min, (int)sum_area.y.min,
+		e.draw((int)sum_area.x.min, (int)sum_area.y.min,
 			int(sum_area.x.max) - int(sum_area.x.min) + 1, int(sum_area.y.max) - int(sum_area.y.min) + 1,
-			(_color*)master_bm.data, master_bm.size, master_bm.transparent, (int)sum_area.x.min, (int)sum_area.y.min);
+			&master_bm, (int)sum_area.x.min, (int)sum_area.y.min);
 		top_graph.set_picture(master_bm.size);
 		_picture* ka_top = top_graph.draw(); // верхний слой
 		if (ka_top)
-			_renderer(e.data, e.size).image((int)sum_area.x.min, (int)sum_area.y.min,
+			e.draw((int)sum_area.x.min, (int)sum_area.y.min,
 				int(sum_area.x.max) - int(sum_area.x.min) + 1, int(sum_area.y.max) - int(sum_area.y.min) + 1,
-				(_color*)ka_top->data, ka_top->size, ka_top->transparent, (int)sum_area.x.min, (int)sum_area.y.min);
+				ka_top, (int)sum_area.x.min, (int)sum_area.y.min);
 		master_obl_izm = _tarea::empty;
 	}
 
 	bool start(std::filesystem::path fn)
 	{
-		master_chosen.push_back(&n_ko); // !!корневой графический объект (трансформация)
-		master_chosen.push_back(&n_s_shift);     // !!зажата клавиша Shift
-		master_chosen.push_back(&n_s_alt);       // !!зажата клавиша Alt
-		master_chosen.push_back(&n_s_ctrl);      // !!зажата клавиша Ctrl
-		master_chosen.push_back(&n_s_left);      // зажата левая кнопка мышки
-		master_chosen.push_back(&n_s_right);     // зажата правая кнопка мышки
-		master_chosen.push_back(&n_s_middle);    // зажато колесо мышки
-		master_chosen.push_back(&n_s_double);    // двойной щелчок мышки
-		master_chosen.push_back(&n_down_left);   // нажата левая кнопка мышки
-		master_chosen.push_back(&n_down_right);  // нажата правая кнопка мышки
-		master_chosen.push_back(&n_down_middle); // нажата средняя кнопка мышки (колесо)
-		master_chosen.push_back(&n_up_left);     // отжата левая кнопка мышки
-		master_chosen.push_back(&n_up_right);    // отжата правая кнопка мышки
-		master_chosen.push_back(&n_up_middle);   // отжата средняя кнопка мышки (колесо)
-		master_chosen.push_back(&n_move);        // перемещен курсор мышки
-		master_chosen.push_back(&n_wheel);       // повернуто колесо мышки
-		master_chosen.push_back(&n_hint);        // подсказка для элемента под курсором мышки
-		master_chosen.push_back(&n_hex);         // АБСТРАКТНЫЙ ПАРАЗИТ 16-ричная система счисления
-		master_chosen.push_back(&n_go_move);     // !!цепочка!! GO, над которым перемещается мышка
-		master_chosen.push_back(&n_perenos);     // режим переноса
-		master_chosen.push_back(&n_move_all);    // вызывается после глобального смещения или масштабирования
-		master_chosen.push_back(&n_ramk);        // рамка выделения потенциально активного
-		master_chosen.push_back(&n_ramk2);       // рамка выделения активного
-		master_chosen.push_back(&n_pot_act);     // потенциально активный тетрон
-		master_chosen.push_back(&n_act);         // активный тетрон
-		master_chosen.push_back(&n_zagolovok);   // АБСТРАКТНЫЙ ПРЕДОК - заголовки
-		master_chosen.push_back(&n_checkbox);    // АБСТРАКТНЫЙ ПРЕДОК - переключатель
-		master_chosen.push_back(&n_go_layer);    // АБСТРАКТНЫЙ ПРЕДОК - графический слой
-		master_chosen.push_back(&n_color_line);  // АБСТРАКТНЫЙ ПРЕДОК - цвет линий и текста
-		master_chosen.push_back(&n_color_bg);    // АБСТРАКТНЫЙ ПРЕДОК - цвет фона
-		master_chosen.push_back(&n_act_key);     // активный тетрон для управления клавиатурой
-		master_chosen.push_back(&n_down_key);    // нажата кнопка клавиатуры
-		master_chosen.push_back(&n_press_key);   // введен символ
-		master_chosen.push_back(&n_timer1000);   // таймер с периодом 1000
-		master_chosen.push_back(&n_tani);        // объект, который тянется, перемещается
-		master_chosen.push_back(&n_fun_tani0);   // АБСТРАКТНЫЙ ПРЕДОК функция начала тяни-толкай
-		master_chosen.push_back(&n_fun_tani);    // АБСТРАКТНЫЙ ПРЕДОК функция тяни-толкай
-		master_chosen.push_back(&n_fun_tani1);   // АБСТРАКТНЫЙ ПРЕДОК функция конца тяни-толкай
-		master_chosen.push_back(&n_temp_go);     // АБСТРАКТНЫЙ ПРЕДОК временный графический объект
-		master_chosen.push_back(&n_center);      // АБСТРАКТНЫЙ ПРЕДОК центр
-		master_chosen.push_back(&n_radius);      // АБСТРАКТНЫЙ ПРЕДОК радиус
-		master_chosen.push_back(&n_width);       // АБСТРАКТНЫЙ ПРЕДОК толщина
-		master_chosen.push_back(&n_begin);       // АБСТРАКТНЫЙ ПРЕДОК начало
-		master_chosen.push_back(&n_end);         // АБСТРАКТНЫЙ ПРЕДОК конец
+		master_chosen.push_back(&n_ko);                // !!корневой графический объект (трансформация)
+		master_chosen.push_back(&n_s_shift);           // !!зажата клавиша Shift
+		master_chosen.push_back(&n_s_alt);             // !!зажата клавиша Alt
+		master_chosen.push_back(&n_s_ctrl);            // !!зажата клавиша Ctrl
+		master_chosen.push_back(&n_s_left);            // зажата левая кнопка мышки
+		master_chosen.push_back(&n_s_right);           // зажата правая кнопка мышки
+		master_chosen.push_back(&n_s_middle);          // зажато колесо мышки
+		master_chosen.push_back(&n_s_double);          // двойной щелчок мышки
+		master_chosen.push_back(&n_down_left);         // нажата левая кнопка мышки
+		master_chosen.push_back(&n_down_right);        // нажата правая кнопка мышки
+		master_chosen.push_back(&n_down_middle);       // нажата средняя кнопка мышки (колесо)
+		master_chosen.push_back(&n_up_left);           // отжата левая кнопка мышки
+		master_chosen.push_back(&n_up_right);          // отжата правая кнопка мышки
+		master_chosen.push_back(&n_up_middle);         // отжата средняя кнопка мышки (колесо)
+		master_chosen.push_back(&n_move);              // перемещен курсор мышки
+		master_chosen.push_back(&n_wheel);             // повернуто колесо мышки
+		master_chosen.push_back(&n_hint);              // подсказка для элемента под курсором мышки
+		master_chosen.push_back(&n_hex);               // АБСТРАКТНЫЙ ПАРАЗИТ 16-ричная система счисления
+		master_chosen.push_back(&n_go_move);           // !!цепочка!! GO, над которым перемещается мышка
+		master_chosen.push_back(&n_perenos);           // режим переноса
+		master_chosen.push_back(&n_move_all);          // вызывается после глобального смещения или масштабирования
+		master_chosen.push_back(&n_ramk);              // рамка выделения потенциально активного
+		master_chosen.push_back(&n_ramk2);             // рамка выделения активного
+		master_chosen.push_back(&n_pot_act);           // потенциально активный тетрон
+		master_chosen.push_back(&n_act);               // активный тетрон
+		master_chosen.push_back(&n_zagolovok);         // АБСТРАКТНЫЙ ПРЕДОК - заголовки
+		master_chosen.push_back(&n_checkbox);          // АБСТРАКТНЫЙ ПРЕДОК - переключатель
+		master_chosen.push_back(&n_go_layer);          // АБСТРАКТНЫЙ ПРЕДОК - графический слой
+		master_chosen.push_back(&n_color_line);        // АБСТРАКТНЫЙ ПРЕДОК - цвет линий и текста
+		master_chosen.push_back(&n_color_bg);          // АБСТРАКТНЫЙ ПРЕДОК - цвет фона
+		master_chosen.push_back(&n_act_key);           // активный тетрон для управления клавиатурой
+		master_chosen.push_back(&n_down_key);          // нажата кнопка клавиатуры
+		master_chosen.push_back(&n_press_key);         // введен символ
+		master_chosen.push_back(&n_timer1000);         // таймер с периодом 1000
+		master_chosen.push_back(&n_tani);              // объект, который тянется, перемещается
+		master_chosen.push_back(&n_fun_tani0);         // АБСТРАКТНЫЙ ПРЕДОК функция начала тяни-толкай
+		master_chosen.push_back(&n_fun_tani);          // АБСТРАКТНЫЙ ПРЕДОК функция тяни-толкай
+		master_chosen.push_back(&n_fun_tani1);         // АБСТРАКТНЫЙ ПРЕДОК функция конца тяни-толкай
+		master_chosen.push_back(&n_temp_go);           // АБСТРАКТНЫЙ ПРЕДОК временный графический объект
+		master_chosen.push_back(&n_center);            // АБСТРАКТНЫЙ ПРЕДОК центр
+		master_chosen.push_back(&n_radius);            // АБСТРАКТНЫЙ ПРЕДОК радиус
+		master_chosen.push_back(&n_width);             // АБСТРАКТНЫЙ ПРЕДОК толщина
+		master_chosen.push_back(&n_begin);             // АБСТРАКТНЫЙ ПРЕДОК начало
+		master_chosen.push_back(&n_end);               // АБСТРАКТНЫЙ ПРЕДОК конец
 		master_chosen.push_back(&n_mouse_inactive);    // АБСТРАКТНАЯ ИНФОРМАЦИЯ неактивный для перемещения мышки
 		master_chosen.push_back(&n_start_mouse_move);  // АБСТРАКТНЫЙ ПРЕДОК функция начала перемещения мышки над объектом
 		master_chosen.push_back(&n_mouse_move);        // АБСТРАКТНЫЙ ПРЕДОК функция перемещения мышки над объектом
