@@ -78,9 +78,6 @@
     <ClCompile Include="..\graphics\mgraphics.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\graphics\mimage.cpp">
-      <Filter>graphics</Filter>
-    </ClCompile>
     <ClCompile Include="..\graphics\peach_flavor.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
@@ -147,9 +144,6 @@
       <Filter>SET</Filter>
     </ClInclude>
     <ClInclude Include="..\graphics\mgraphics.h">
-      <Filter>graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\graphics\mimage.h">
       <Filter>graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\graphics\peach_flavor.h">

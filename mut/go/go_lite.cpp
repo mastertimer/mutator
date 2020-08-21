@@ -1,4 +1,3 @@
-#include "mimage.h"
 #include "basic_tetrons.h"
 #include "go_lite.h"
 
@@ -151,7 +150,7 @@ void _g_picture::new_size(int rx3, int ry3)
 
 bool _g_picture::load_from_file(_path fn)
 {
-	del_area();
+/*	del_area();
 	_stack fs;
 	fs.load_from_file(fn);
 	_bitmap_file bf;
@@ -161,13 +160,16 @@ bool _g_picture::load_from_file(_path fn)
 	local_area = _area_old(0, (double)pic.size.x, 0, (double)pic.size.y);
 	area.type = _tarea::indefinite;
 	add_area();
+	return true;*/
 	return true;
 }
 
-bool _g_picture::save_to_file(_path fn) const {
-	_stack fs((size_t)pic.size.x * pic.size.y * sizeof(_color));
+bool _g_picture::save_to_file(_path fn) const
+{
+/*	_stack fs((size_t)pic.size.x * pic.size.y * sizeof(_color));
 	fs << _bitmap_file(pic);
-	return fs.save_to_file(fn);
+	return fs.save_to_file(fn);*/
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -176,7 +178,7 @@ void _g_rect::ris2(_trans tr, bool final)
 {
 	_area_old oo = tr(local_area);
 	uint c2 = get_c2();
-	master_bm.fill_rectangle({ {(int)oo.x.min, (int)oo.x.max+1}, {(int)oo.y.min, (int)oo.y.max+1} }, c2);
+	master_bm.fill_rectangle({ {(int64)oo.x.min, (int64)oo.x.max+1}, {(int64)oo.y.min, (int64)oo.y.max+1} }, c2);
 	uint c0 = get_c();
 	if (((c0 >> 24) != 0x00) && (c0 != c2)) master_bm.rectangle((_area2)oo, c0);
 }
