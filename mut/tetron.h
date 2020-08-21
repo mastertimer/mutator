@@ -15,8 +15,6 @@ inline uint c_def        = 0xFF208040;
 inline uint c_min        = 0xFF104020;
 inline uint c_minn       = 0xFF082010;
 
-inline double zoom_speed = 1;
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 inline _cursor g_cursor = _cursor::normal; // установленный курсор

@@ -45,20 +45,6 @@ void change_window_text(HWND hwnd)
 
 bool run_timer = true;
 
-/*void resize_mutator(_window_event::_resize e)
-{
-	master_bm.resize(e.size.x, e.size.y);
-	render.target((_color*)master_bm.data, master_bm.size);
-	master_obl_izm = _area_old(0, e.size.x, 0, e.size.y);
-}*/
-
-/*void on_mouse_move(_window_event::_mouse_move e)
-{
-	mouse_xy = e.pos;
-	n_move->run(0, n_move, flag_run);
-	win.display();
-}*/
-
 /*void on_mouse_button(_window_event::_mouse_button e)
 {
 	switch (e.button)
@@ -73,46 +59,6 @@ bool run_timer = true;
 		mutator::mouse_button_middle({ e.mouse.position.x, e.mouse.position.y }, e.pressed);
 		break;
 	}
-	win.display();
-}*/
-
-/*void on_click(_window_event::_mouse_click e)
-{
-	if (e.double_click)
-	{
-		*n_s_double->operator int64*() = true;
-		if (e.button == _mouse::_button::left)
-			n_down_left->run(0, n_down_left, flag_run);
-		else if (e.button == _mouse::_button::right)
-			n_down_right->run(0, n_down_right, flag_run);
-		else if (e.button == _mouse::_button::middle)
-			n_down_middle->run(0, n_down_middle, flag_run);
-		*n_s_double->operator int64*() = false;
-	}
-}*/
-
-/*void on_scroll(_window_event::_mouse_scroll e)
-{
-	*n_wheel->operator int64*() = (int64)e.delta;
-	n_wheel->run(0, n_wheel, flag_run);
-	win.display();
-}*/
-
-/*void on_timer(_window_event::_timer e)
-{
-	if (!run_timer) return;
-	if (e.id == 1)
-	{
-		n_timer1000->run(0, n_timer1000, flag_run);
-		win.display();
-	}
-}*/
-
-/*void on_char(_window_event::_text e)
-{
-	*n_press_key->operator int64* () = e.symb; 
-
-	n_press_key->run(0, n_press_key, flag_run);
 	win.display();
 }*/
 
@@ -154,7 +100,6 @@ void load_theme(std::filesystem::path file_name)
 	fs.read("c_def", c_def);
 	fs.read("c_min", c_min);
 	fs.read("c_minn", c_minn);
-	fs.read("zoom_speed", zoom_speed);
 }
 
 /*int main()
@@ -187,11 +132,9 @@ void paint(HWND hwnd)
 	HDC hdc = GetDC(hwnd);
 	RECT rect;
 	GetClientRect(hwnd, &rect);
-	int ClientWidth = rect.right - rect.left;
-	int ClientHeight = rect.bottom - rect.top;
-	main_bm.resize(ClientWidth, ClientHeight);
+	main_bm.resize(rect.right, rect.bottom);
 	mutator::draw(main_bm);
-	BitBlt(hdc, 0, 0, ClientWidth, ClientHeight, main_bm.hdc, 0, 0, SRCCOPY);
+	BitBlt(hdc, 0, 0, rect.right, rect.bottom, main_bm.hdc, 0, 0, SRCCOPY);
 	ReleaseDC(hwnd, hdc);
 }
 
