@@ -33,132 +33,132 @@
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="..\library\mbasic.cpp">
+    <ClCompile Include="library\mbasic.cpp">
       <Filter>Library</Filter>
     </ClCompile>
-    <ClCompile Include="..\library\mgeometry.cpp">
+    <ClCompile Include="library\mgeometry.cpp">
       <Filter>Library</Filter>
     </ClCompile>
-    <ClCompile Include="..\mut\mutator.cpp">
+    <ClCompile Include="mut\mutator.cpp">
       <Filter>Mutator</Filter>
     </ClCompile>
-    <ClCompile Include="..\mut\tetron.cpp">
+    <ClCompile Include="mut\tetron.cpp">
       <Filter>Mutator</Filter>
     </ClCompile>
-    <ClCompile Include="..\mut\t_function.cpp">
+    <ClCompile Include="mut\t_function.cpp">
       <Filter>Mutator</Filter>
     </ClCompile>
-    <ClCompile Include="..\library\mjson.cpp">
+    <ClCompile Include="library\mjson.cpp">
       <Filter>Library</Filter>
     </ClCompile>
-    <ClCompile Include="..\mut\go\g_button.cpp">
+    <ClCompile Include="mut\go\g_button.cpp">
       <Filter>Mutator\go</Filter>
     </ClCompile>
-    <ClCompile Include="..\mut\go\g_color_ring.cpp">
+    <ClCompile Include="mut\go\g_color_ring.cpp">
       <Filter>Mutator\go</Filter>
     </ClCompile>
-    <ClCompile Include="..\mut\go\g_list_link.cpp">
+    <ClCompile Include="mut\go\g_list_link.cpp">
       <Filter>Mutator\go</Filter>
     </ClCompile>
-    <ClCompile Include="..\mut\go\g_scrollbar.cpp">
+    <ClCompile Include="mut\go\g_scrollbar.cpp">
       <Filter>Mutator\go</Filter>
     </ClCompile>
-    <ClCompile Include="..\mut\go\g_tetron.cpp">
+    <ClCompile Include="mut\go\g_tetron.cpp">
       <Filter>Mutator\go</Filter>
     </ClCompile>
-    <ClCompile Include="..\mut\go\g1list.cpp">
+    <ClCompile Include="mut\go\g1list.cpp">
       <Filter>Mutator\go</Filter>
     </ClCompile>
-    <ClCompile Include="..\set\g_graph.cpp">
+    <ClCompile Include="set\g_graph.cpp">
       <Filter>SET</Filter>
     </ClCompile>
-    <ClCompile Include="..\set\super_stat.cpp">
+    <ClCompile Include="set\super_stat.cpp">
       <Filter>SET</Filter>
     </ClCompile>
-    <ClCompile Include="..\graphics\mgraphics.cpp">
+    <ClCompile Include="graphics\mgraphics.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\graphics\peach_flavor.cpp">
+    <ClCompile Include="graphics\peach_flavor.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\mut\basic_tetrons.cpp">
+    <ClCompile Include="mut\basic_tetrons.cpp">
       <Filter>Mutator</Filter>
     </ClCompile>
-    <ClCompile Include="..\mut\go\t_basic_go.cpp">
+    <ClCompile Include="mut\go\t_basic_go.cpp">
       <Filter>Mutator\go</Filter>
     </ClCompile>
-    <ClCompile Include="..\mut\go\go_lite.cpp">
+    <ClCompile Include="mut\go\go_lite.cpp">
       <Filter>Mutator\go</Filter>
     </ClCompile>
-    <ClCompile Include="..\mut\go\go_edit.cpp">
+    <ClCompile Include="mut\go\go_edit.cpp">
       <Filter>Mutator\go</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\resource.h">
+    <ClInclude Include="resource.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="..\library\mbasic.h">
+    <ClInclude Include="library\mbasic.h">
       <Filter>Library</Filter>
     </ClInclude>
-    <ClInclude Include="..\library\mgeometry.h">
+    <ClInclude Include="library\mgeometry.h">
       <Filter>Library</Filter>
     </ClInclude>
-    <ClInclude Include="..\mut\mutator.h">
+    <ClInclude Include="mut\mutator.h">
       <Filter>Mutator</Filter>
     </ClInclude>
-    <ClInclude Include="..\mut\tetron.h">
+    <ClInclude Include="mut\tetron.h">
       <Filter>Mutator</Filter>
     </ClInclude>
-    <ClInclude Include="..\mut\t_function.h">
+    <ClInclude Include="mut\t_function.h">
       <Filter>Mutator</Filter>
     </ClInclude>
-    <ClInclude Include="..\library\mspeed.hpp">
+    <ClInclude Include="library\mspeed.hpp">
       <Filter>Library</Filter>
     </ClInclude>
-    <ClInclude Include="..\library\mjson.h">
+    <ClInclude Include="library\mjson.h">
       <Filter>Library</Filter>
     </ClInclude>
-    <ClInclude Include="..\mut\go\g_button.h">
+    <ClInclude Include="mut\go\g_button.h">
       <Filter>Mutator\go</Filter>
     </ClInclude>
-    <ClInclude Include="..\mut\go\g_color_ring.h">
+    <ClInclude Include="mut\go\g_color_ring.h">
       <Filter>Mutator\go</Filter>
     </ClInclude>
-    <ClInclude Include="..\mut\go\g_list_link.h">
+    <ClInclude Include="mut\go\g_list_link.h">
       <Filter>Mutator\go</Filter>
     </ClInclude>
-    <ClInclude Include="..\mut\go\g_scrollbar.h">
+    <ClInclude Include="mut\go\g_scrollbar.h">
       <Filter>Mutator\go</Filter>
     </ClInclude>
-    <ClInclude Include="..\mut\go\g_tetron.h">
+    <ClInclude Include="mut\go\g_tetron.h">
       <Filter>Mutator\go</Filter>
     </ClInclude>
-    <ClInclude Include="..\mut\go\g1list.h">
+    <ClInclude Include="mut\go\g1list.h">
       <Filter>Mutator\go</Filter>
     </ClInclude>
-    <ClInclude Include="..\set\g_graph.h">
+    <ClInclude Include="set\g_graph.h">
       <Filter>SET</Filter>
     </ClInclude>
-    <ClInclude Include="..\set\super_stat.h">
+    <ClInclude Include="set\super_stat.h">
       <Filter>SET</Filter>
     </ClInclude>
-    <ClInclude Include="..\graphics\mgraphics.h">
+    <ClInclude Include="graphics\mgraphics.h">
       <Filter>graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\graphics\peach_flavor.h">
+    <ClInclude Include="graphics\peach_flavor.h">
       <Filter>graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\mut\basic_tetrons.h">
+    <ClInclude Include="mut\basic_tetrons.h">
       <Filter>Mutator</Filter>
     </ClInclude>
-    <ClInclude Include="..\mut\go\t_basic_go.h">
+    <ClInclude Include="mut\go\t_basic_go.h">
       <Filter>Mutator\go</Filter>
     </ClInclude>
-    <ClInclude Include="..\mut\go\go_lite.h">
+    <ClInclude Include="mut\go\go_lite.h">
       <Filter>Mutator\go</Filter>
     </ClInclude>
-    <ClInclude Include="..\mut\go\go_edit.h">
+    <ClInclude Include="mut\go\go_edit.h">
       <Filter>Mutator\go</Filter>
     </ClInclude>
   </ItemGroup>
@@ -173,8 +173,8 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\.gitignore" />
-    <None Include="..\README.md" />
-    <None Include="..\tetrons.m00" />
+    <None Include=".gitignore" />
+    <None Include="README.md" />
+    <None Include="tetrons.m00" />
   </ItemGroup>
 </Project>

@@ -2,7 +2,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-constexpr wchar_t tetfile[] = L"..\\..\\..\\tetrons.txt";
+constexpr wchar_t tetfile[] = L"..\\..\\tetrons.txt";
 _wstring exe_path; // путь к запущенному exe файлу
 _bitmap main_bm;
 
