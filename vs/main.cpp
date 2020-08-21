@@ -1,12 +1,9 @@
-﻿#include <fstream>
-
-#include "mutator.h"
+﻿#include "mutator.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-std::filesystem::path ini_file = L"theme.json";
-_wstring tetrons_file;
-
+constexpr wchar_t tetfile[] = L"..\\..\\..\\tetrons.txt";
+_wstring exe_path; // путь к запущенному exe файлу
 _bitmap main_bm;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -90,42 +87,6 @@ bool run_timer = true;
 	win.display();
 }*/
 
-void load_theme(std::filesystem::path file_name)
-{
-	_rjson fs(file_name);
-	fs.read("tetrons", tetrons_file);
-	fs.read("c_background", c_background);
-	fs.read("c_maxx", c_maxx);
-	fs.read("c_max", c_max);
-	fs.read("c_def", c_def);
-	fs.read("c_min", c_min);
-	fs.read("c_minn", c_minn);
-}
-
-/*int main()
-{
-	load_theme(ini_file);
-	if (!mutator::start(tetrons_file)) return 1;
-
-	set_cursorx((*n_perenos->operator int64*()) ? _cursor::size_all : _cursor::normal);
-
-	win.create(1200, 800);
-	win.on_render     = mutator::draw;
-	win.on_resize     = resize_mutator;
-	win.on_mouse_move = on_mouse_move;
-	win.on_scroll     = on_scroll;
-	win.on_text_enter = on_char;
-
-	win.on_mouse_down = win.on_mouse_up = on_mouse_button;
-	win.on_click = win.on_double_click = on_click;
-	win.on_key_down = win.on_key_up = on_key;
-
-	win.add_timer(1, 1s);
-	win.on_timer = on_timer;
-
-	return win.event_loop();
-}*/
-
 void paint(HWND hwnd)
 {
 	change_window_text(hwnd);
@@ -140,11 +101,11 @@ void paint(HWND hwnd)
 
 void init_shift(WPARAM wparam)
 {
-	*n_s_shift->operator int64* () = wparam & MK_SHIFT;
-	*n_s_alt->operator int64* () = false;
-	*n_s_ctrl->operator int64* () = wparam & MK_CONTROL;
-	*n_s_left->operator int64* () = wparam & MK_LBUTTON;
-	*n_s_right->operator int64* () = wparam & MK_RBUTTON;
+	*n_s_shift->operator int64* ()  = wparam & MK_SHIFT;
+	*n_s_alt->operator int64* ()    = false;
+	*n_s_ctrl->operator int64* ()   = wparam & MK_CONTROL;
+	*n_s_left->operator int64* ()   = wparam & MK_LBUTTON;
+	*n_s_right->operator int64* ()  = wparam & MK_RBUTTON;
 	*n_s_middle->operator int64* () = wparam & MK_MBUTTON;
 	*n_s_double->operator int64* () = false;
 }
@@ -245,7 +206,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			run_timer = false;
 			int r = MessageBox(hWnd, L"сохранить?", L"предупреждение", MB_YESNO);
-			if (r == IDYES) mutator::save_to_txt_file(tetrons_file);
+			if (r == IDYES) mutator::save_to_txt_file(exe_path + tetfile);
 			run_timer = true;
 			return 0;
 		}
@@ -288,16 +249,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
-	load_theme(ini_file);
-	if (!mutator::start(tetrons_file)) return 1;
-
-/*	wchar_t buffer[MAX_PATH];
+	wchar_t buffer[MAX_PATH];
 	GetModuleFileName(hInstance, buffer, MAX_PATH);
-	load_theme();
 	exe_path = buffer;
 	exe_path = exe_path.substr(0, exe_path.rfind(L'\\') + 1);
-	master.load_from_file((exe_path + tetfile).c_str());
-	if (!master.n_ko) return 1;*/
+	if (!mutator::start(exe_path + tetfile)) return 1;
+
 	static TCHAR szWindowClass[] = L"win64app";
 	WNDCLASSEX wcex;
 	wcex.cbSize = sizeof(WNDCLASSEX);

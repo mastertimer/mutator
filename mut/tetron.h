@@ -8,12 +8,12 @@
 #include "mjson.h"
 #include "peach_flavor.h"
 
-inline uint c_background = 0xFF000000;
-inline uint c_maxx       = 0xFFA0FFC0;
-inline uint c_max        = 0xFF40FF80;
-inline uint c_def        = 0xFF208040;
-inline uint c_min        = 0xFF104020;
-inline uint c_minn       = 0xFF082010;
+constexpr uint c_background = 0xFF000000;
+constexpr uint c_maxx       = 0xFFA0FFC0;
+constexpr uint c_max        = 0xFF40FF80;
+constexpr uint c_def        = 0xFF208040;
+constexpr uint c_min        = 0xFF104020;
+constexpr uint c_minn       = 0xFF082010;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -47,17 +47,17 @@ void _g_button::ris2(_trans tr, bool final)
 	uint c = 0;
 	if (picture.size.x * picture.size.y > 0)
 	{
-		int rx2 = (int)(picture.size.x * tr.scale + 0.5);
-		int ry2 = (int)(picture.size.y * tr.scale + 0.5);
+		int64 rx2 = (int64)(picture.size.x * tr.scale + 0.5);
+		int64 ry2 = (int64)(picture.size.y * tr.scale + 0.5);
 		_ixy ce = oo.center();
 		master_bm.stretch_draw3(&picture, ce.x - rx2 / 2, ce.y - ry2 / 2, tr.scale);
 	}
 	else
 		c = c_def;
-	if (checked) c = 0x40000000 + c_def;
-	if (n_go_move == this) c = 0x80000000 + c_def;
-	if (n_tani == this) c = 0x80000000 + c_max;
-	master_bm.fill_rectangle({ {(int)oo.x.min, (int)oo.x.max+1}, {(int)oo.y.min, (int)oo.y.max+1} }, c);
+	if (checked) c = c_def - 0x40000000;
+	if (n_go_move == this) c = c_def - 0x80000000;
+	if (n_tani == this) c = c_max - 0x80000000;
+	master_bm.fill_rectangle({ {(int64)oo.x.min, (int64)oo.x.max+1}, {(int64)oo.y.min, (int64)oo.y.max+1} }, c);
 }
 
 void _g_button::push(_stack* mem)
