@@ -1,4 +1,3 @@
-#include "mwindow.h"
 #include "g_tetron.h"
 #include "basic_tetrons.h"
 #include "g_scrollbar.h"
@@ -23,10 +22,9 @@ void _g_edit_double::ris2(_trans tr, bool final)
 	}
 }
 
-void _g_edit_double::key_down(ushort key_)
+void _g_edit_double::key_down(ushort key)
 {
-	_keyboard::_key key = (_keyboard::_key)key_;
-	if (key == _keyboard::_key::left)
+	if (key == 37) // left
 	{
 		if (cursor > 0)
 		{
@@ -36,7 +34,7 @@ void _g_edit_double::key_down(ushort key_)
 		return;
 	}
 	std::wstring s = double_to_string(a, 2);
-	if (key == _keyboard::_key::backspace)
+	if (key == 8) // backspace
 	{
 		if ((cursor > 0) && (cursor < (int)s.size() - 2))
 		{
@@ -49,7 +47,7 @@ void _g_edit_double::key_down(ushort key_)
 		}
 		return;
 	}
-	if (key == _keyboard::_key::right)
+	if (key == 39) // right
 	{
 		if (cursor < (int)s.size())
 		{
@@ -58,7 +56,7 @@ void _g_edit_double::key_down(ushort key_)
 		}
 		return;
 	}
-	if (key == _keyboard::_key::del)
+	if (key == 46) // delete
 	{
 		if (cursor < (int)s.size() - 3)
 		{
@@ -135,14 +133,13 @@ void _g_edit_int::ris2(_trans tr, bool final)
 	}
 }
 
-void _g_edit_int::key_down(ushort key_)
+void _g_edit_int::key_down(ushort key)
 {
 	int64* a = find1_plus_gtetron<int64>(this, flag_specialty);
 	if (!a) return;
 	bool hex = test_flags(n_hex, flag_information);
 
-	_keyboard::_key key = (_keyboard::_key)key_;
-	if (key == _keyboard::_key::backspace)
+	if (key == 8) // backspace
 	{
 		if (cursor > 0)
 		{
@@ -163,7 +160,7 @@ void _g_edit_int::key_down(ushort key_)
 		}
 		return;
 	}
-	if (key == _keyboard::_key::left)
+	if (key == 37) // left
 	{
 		if (cursor > 0)
 		{
@@ -173,7 +170,7 @@ void _g_edit_int::key_down(ushort key_)
 		return;
 	}
 	int l = (int)((hex) ? std::wstring(uint64_to_wstr_hex(*a)) : std::to_wstring(*a)).size();
-	if (key == _keyboard::_key::right)
+	if (key == 39) // right
 	{
 		if (cursor < l)
 		{
@@ -182,7 +179,7 @@ void _g_edit_int::key_down(ushort key_)
 		}
 		return;
 	}
-	if (key == _keyboard::_key::del)
+	if (key == 46) // delete
 	{
 		if (cursor < l)
 		{
@@ -314,12 +311,11 @@ void _g_edit_string::ris2(_trans tr, bool final)
 	}
 }
 
-void _g_edit_string::key_down(ushort key_)
+void _g_edit_string::key_down(ushort key)
 {
-	_keyboard::_key key = (_keyboard::_key)key_;
 	std::wstring* s = find1_plus_gtetron<std::wstring>(this, flag_specialty);
 	if (!s) return;
-	if (key == _keyboard::_key::backspace)
+	if (key == 8) // backspace
 	{
 		if (cursor > 0)
 		{
@@ -329,7 +325,7 @@ void _g_edit_string::key_down(ushort key_)
 		}
 		return;
 	}
-	if (key == _keyboard::_key::left)
+	if (key == 37) // left
 	{
 		if (cursor > 0)
 		{
@@ -339,7 +335,7 @@ void _g_edit_string::key_down(ushort key_)
 		return;
 	}
 	int l = (int)s->size();
-	if (key == _keyboard::_key::right)
+	if (key == 39) // right
 	{
 		if (cursor < l)
 		{
@@ -348,7 +344,7 @@ void _g_edit_string::key_down(ushort key_)
 		}
 		return;
 	}
-	if (key == _keyboard::_key::del)
+	if (key == 46) // delete
 	{
 		if (cursor < l)
 		{
@@ -434,15 +430,14 @@ void _g_edit_multi_string::ris2(_trans tr, bool final)
 	}
 }
 
-void _g_edit_multi_string::key_down(ushort key_)
+void _g_edit_multi_string::key_down(ushort key)
 {
 	_multi_string* str = find1_plus_gtetron<_multi_string>(this, flag_specialty);
 	if (!str) str = &strings;
 	if (str->line.size() == 0) return;
 	if (cursor.y >= (int)str->line.size()) cursor.y = (int)str->line.size() - 1;
 
-	_keyboard::_key key = (_keyboard::_key)key_;
-	if (key == _keyboard::_key::backspace)
+	if (key == 8) // backspace
 	{
 		int ll = 0;
 		if (cursor.y) ll = (int)str->line[cursor.y - 1LL].size();
@@ -458,14 +453,14 @@ void _g_edit_multi_string::key_down(ushort key_)
 		}
 		return;
 	}
-	if (key == _keyboard::_key::enter)
+	if (key == 13) // enter
 	{
 		str->div2line(cursor.y, cursor.x);
 		cursor.y++;
 		cursor.x = 0;
 		cha_area();
 	}
-	if (key == _keyboard::_key::left)
+	if (key == 37) // left
 	{
 		if (cursor.x > 0)
 		{
@@ -482,7 +477,7 @@ void _g_edit_multi_string::key_down(ushort key_)
 
 		return;
 	}
-	if (key == _keyboard::_key::up)
+	if (key == 38) // up
 	{
 		if (cursor.y > 0)
 		{
@@ -505,7 +500,7 @@ void _g_edit_multi_string::key_down(ushort key_)
 		return;
 	}
 	int l = (int)str->line[cursor.y].size();
-	if (key == _keyboard::_key::right)
+	if (key == 39) // right
 	{
 		if (cursor.x < l)
 		{
@@ -521,7 +516,7 @@ void _g_edit_multi_string::key_down(ushort key_)
 			}
 		return;
 	}
-	if (key == _keyboard::_key::down)
+	if (key == 40) // down
 	{
 		if (cursor.y < (int)str->line.size() - 1)
 		{
@@ -543,7 +538,7 @@ void _g_edit_multi_string::key_down(ushort key_)
 		cha_area();
 		return;
 	}
-	if (key == _keyboard::_key::del)
+	if (key == 46) // delete
 	{
 		if (str->delete_char(cursor.y, cursor.x)) cha_area();
 		return;
@@ -767,7 +762,7 @@ void _g_edit_one::ris2(_trans tr, bool final)
 	}
 }
 
-void _g_edit_one::key_down(ushort key_)
+void _g_edit_one::key_down(ushort key)
 {
 	_one_tetron* ot = find1_plus_gtetron<_one_tetron>(this, flag_specialty);
 	if (!ot) return;
@@ -785,17 +780,16 @@ void _g_edit_one::key_down(ushort key_)
 		}
 	if (cursor > s.length()) cursor = s.length();
 
-	_keyboard::_key key = (_keyboard::_key)key_;
 	switch (key)
 	{
-	case _keyboard::_key::backspace:
+	case 8: // backspace
 		if (cursor > 0)
 		{
 			s.erase(cursor - 1, 1);
 			cursor--;
 		}
 		break;
-	case _keyboard::_key::enter:
+	case 13: // enter
 		if (mode == 0)
 		{
 			std::wistringstream(s) >> a_i;
@@ -810,13 +804,13 @@ void _g_edit_one::key_down(ushort key_)
 		}
 		cursor = 0;
 		break;
-	case _keyboard::_key::left:
+	case 37: // left
 		if (cursor > 0) cursor--;
 		break;
-	case _keyboard::_key::right:
+	case 39: // right
 		if (cursor < s.length()) cursor++;
 		break;
-	case _keyboard::_key::del:
+	case 46: // delete
 		if (cursor < s.length()) s.erase(cursor, 1);
 		break;
 	default: break;
