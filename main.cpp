@@ -5,9 +5,6 @@
 constexpr wchar_t tetfile[] = L"..\\..\\tetrons.txt";
 _wstring exe_path; // путь к запущенному exe файлу
 _bitmap main_bm;
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 HCURSOR g_cu = LoadCursor(0, IDC_ARROW); // активный курсор
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,53 +36,6 @@ void change_window_text(HWND hwnd)
 	s_old = s;
 	SetWindowText(hwnd, s);
 }
-
-bool run_timer = true;
-
-/*void on_mouse_button(_window_event::_mouse_button e)
-{
-	switch (e.button)
-	{
-	case _mouse::_button::left:
-		mutator::mouse_button_left({ e.mouse.position.x, e.mouse.position.y }, e.pressed);
-		break;
-	case _mouse::_button::right:
-		mutator::mouse_button_right({ e.mouse.position.x, e.mouse.position.y }, e.pressed);
-		break;
-	case _mouse::_button::middle:
-		mutator::mouse_button_middle({ e.mouse.position.x, e.mouse.position.y }, e.pressed);
-		break;
-	}
-	win.display();
-}*/
-
-/*void on_key(_window_event::_key e)
-{
-	// TODO: повторение клавиш left, right, backspace и т.п.
-	*n_s_shift->operator int64*() = e.shift;
-	*n_s_alt->operator int64*()   = e.alt;
-	*n_s_ctrl->operator int64*()  = e.control;
-	if (e.pressed)
-	{
-		*n_down_key->operator int64* () = (int64)e.key;
-		n_down_key->run(0, n_down_key, flag_run);
-	}
-	else
-	{
-		switch (e.key)
-		{
-		case _keyboard::_key::f1:
-			win.set_fullscreen(!win.is_fullscreen());
-			break;
-		case _keyboard::_key::f2:
-			run_timer = false;
-			if (dialog::y_n(L"сохранить?"))	mutator::save_to_txt_file(tetrons_file);
-			run_timer = true;
-			break;
-		}
-	}
-	win.display();
-}*/
 
 void paint(HWND hwnd)
 {
@@ -165,17 +115,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_LBUTTONDOWN: case WM_RBUTTONDOWN: case WM_MBUTTONDOWN:
 		init_shift(wParam);
-		if (message == WM_LBUTTONDOWN) n_down_left->run(0, n_down_left, flag_run);
-		if (message == WM_RBUTTONDOWN) n_down_right->run(0, n_down_right, flag_run);
-		if (message == WM_MBUTTONDOWN) n_down_middle->run(0, n_down_middle, flag_run);
-		if (master_obl_izm) paint(hWnd);
+		if (message == WM_LBUTTONDOWN) mutator::mouse_button_left(true);
+		if (message == WM_RBUTTONDOWN) mutator::mouse_button_right(true);
+		if (message == WM_MBUTTONDOWN) mutator::mouse_button_middle(true);
+		if (mutator::need_draw()) paint(hWnd);
 		return 0;
 	case WM_LBUTTONUP: case WM_RBUTTONUP: case WM_MBUTTONUP:
 		init_shift(wParam);
-		if (message == WM_LBUTTONUP) n_up_left->run(0, n_up_left, flag_run);
-		if (message == WM_RBUTTONUP) n_up_right->run(0, n_up_right, flag_run);
-		if (message == WM_MBUTTONUP) n_up_middle->run(0, n_up_middle, flag_run);
-		if (master_obl_izm) paint(hWnd);
+		if (message == WM_LBUTTONUP) mutator::mouse_button_left(false);
+		if (message == WM_RBUTTONUP) mutator::mouse_button_right(false);
+		if (message == WM_MBUTTONUP) mutator::mouse_button_middle(false);
+		if (mutator::need_draw()) paint(hWnd);
 		return 0;
 	case WM_LBUTTONDBLCLK: case WM_RBUTTONDBLCLK: case WM_MBUTTONDBLCLK:
 		init_shift(wParam);

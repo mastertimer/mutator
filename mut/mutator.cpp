@@ -189,6 +189,11 @@ namespace mutator
 		return (tet.error == 0);
 	}
 
+	bool need_draw()
+	{
+		return (((bool)master_obl_izm) || (!top_graph.changed().empty()));
+	}
+
 	void draw(_bitmap& e)
 	{
 		if (master_bm.resize(e.size.x, e.size.y)) master_obl_izm = _area_old(0, e.size.x + 1.0, 0, e.size.y + 1.0);
@@ -278,20 +283,20 @@ namespace mutator
 		return tr->trans.scale;
 	}
 
-	void mouse_button_left(_number2 xy, bool pressed)
+	void mouse_button_left(bool pressed)
 	{
-		if (top_graph.mouse_button_left(xy, pressed)) return;
+		if (top_graph.mouse_button_left(mouse_xy, pressed)) return;
 		*n_s_left->operator int64* () = pressed;
 		if (pressed) n_down_left->run(0, n_down_left, flag_run); else n_up_left->run(0, n_up_left, flag_run);
 	}
 
-	void mouse_button_right(_number2 xy, bool pressed)
+	void mouse_button_right(bool pressed)
 	{
 		*n_s_right->operator int64* () = pressed;
 		if (pressed) n_down_right->run(0, n_down_right, flag_run); else n_up_right->run(0, n_up_right, flag_run);
 	}
 
-	void mouse_button_middle(_number2 xy, bool pressed)
+	void mouse_button_middle(bool pressed)
 	{
 		*n_s_middle->operator int64* () = pressed;
 		if (pressed) n_down_middle->run(0, n_down_middle, flag_run); else n_up_middle->run(0, n_up_middle, flag_run);
