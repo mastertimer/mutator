@@ -68,7 +68,6 @@ protected:
 
 struct _bitmap: public _picture
 {
-#if TARGET_SYSTEM_WINDOWS
 	HBITMAP bitmap2;
 	HDC hdc = 0;
 
@@ -80,7 +79,6 @@ struct _bitmap: public _picture
 
 	void podg_font(int r); // подготовка шрифта в выводу
 	void podg_cc(uint c, uint cf); // подготовка цветов к выводу
-#endif
 
 	explicit _bitmap(int rx3 = 0, int ry3 = 0);
 	~_bitmap();
@@ -91,31 +89,6 @@ struct _bitmap: public _picture
 	void text(int x, int y, std::string_view s, int h, _color c, _color bg);
 	_size2i size_text(std::wstring_view s, int h);
 	_size2i size_text(std::string_view s, int h);
-
-private:
-#if TARGET_SYSTEM_LINUX
-	Display*      d           = 0;
-	int32         screen      = 0;
-
-	struct _font
-	{
-		XFontSet      set = 0;
-		XFontStruct** a   = 0;
-		int32         c   = 0;
-	};
-	std::map<int, _font> fonts;
-	_font font;
-
-	int32         h = 16;
-
-	x::_shmpixmap img;
-	GC           gc = {};
-
-	void update_font(int h);             // подготовка шрифта в выводу
-
-	bool need_uptext = true;
-	void inittext();
-#endif
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -11,7 +11,6 @@ constexpr _prices cena_zero_ = { {}, {}, { 1,1,1,1,1 } };
 
 void _date_time::now()
 {
-#if TARGET_SYSTEM_WINDOWS
 	SYSTEMTIME t;
 	GetLocalTime(&t);
 	month = t.wMonth + (t.wYear - 2017) * 12;
@@ -19,17 +18,6 @@ void _date_time::now()
 	hour = (uchar)t.wHour;
 	minute = (uchar)t.wMinute;
 	second = (uchar)t.wSecond;
-#elif TARGET_SYSTEM_LINUX
-	using namespace std::chrono;
-	auto t_ = system_clock::to_time_t(system_clock::now());
-	std::tm t;
-	t = *localtime(&t_);
-	month = t.tm_mon + (t.tm_year - 117) * 12;
-	day = (uchar)t.tm_mday;
-	hour = (uchar)t.tm_hour;
-	minute = (uchar)t.tm_min;
-	second = (uchar)t.tm_sec;
-#endif
 }
 
 void _date_time::operator =(int a)

@@ -83,8 +83,6 @@ std::ofstream& _wjson::cout()
 
 std::string wstring_to_string(std::wstring_view b)
 {
-
-#if TARGET_SYSTEM_WINDOWS
 	static std::map<wchar_t, char> conv = {
 	    // нельзя " и #
 	    {L'!', '!'},   {L'$', '$'}, {L'%', '%'}, {L'&', '&'}, {L'(', '('}, {L')', ')'},   {L'*', '*'}, {L'+', '+'},
@@ -121,10 +119,6 @@ std::string wstring_to_string(std::wstring_view b)
 		res << '#' << zz[(e >> 12) & 15] << zz[(e >> 8) & 15] << zz[(e >> 4) & 15] << zz[e & 15];
 	}
 	return res.str();
-#elif TARGET_SYSTEM_LINUX
-	std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
-	return conv.to_bytes(std::wstring(b));
-#endif
 }
 
 constexpr uint hex_to_byte[256] = {

@@ -8,7 +8,6 @@ _bitmap temp_bmp(10, 10);
 
 bool _bitmap::resize(int64 w, int64 h)
 {
-#if TARGET_SYSTEM_WINDOWS
 	if (w < 0) w = 0;
 	if (h < 0) h = 0;
 	if ((size.x == w) && (size.y == h)) return false;
@@ -19,19 +18,10 @@ bool _bitmap::resize(int64 w, int64 h)
 	HGDIOBJ old = (bitmap2 != 0) ? SelectObject(hdc, bitmap2) : 0;
 	if (old != 0) DeleteObject(old);
 	return true;
-#elif TARGET_SYSTEM_LINUX
-	if (!_picture::resize(w, h)) return false;
-
-	if (gc) XFreeGC(d, gc);
-
-	need_uptext = true;
-	return true;
-#endif
 }
 
 _bitmap::_bitmap(int rx3, int ry3) : _picture(rx3, ry3)
 {
-#if TARGET_SYSTEM_WINDOWS
 	font.lfHeight = 13; // высота шрифта или символа
 	font.lfWidth = 0; // средняя ширина символов в шрифте
 	font.lfEscapement = 0; // угол, между вектором наклона и осью X устройства
@@ -54,92 +44,46 @@ _bitmap::_bitmap(int rx3, int ry3) : _picture(rx3, ry3)
 	if (bitmap2 != 0) SelectObject(hdc, bitmap2);
 	f_c = GetTextColor(hdc);
 	f_cf = GetBkColor(hdc);
-#elif TARGET_SYSTEM_LINUX
-	d = x::open_display();
-	screen = XDefaultScreen(d);
-	x::load_font(16, font.set, font.a, font.c);
-	if (!font.set) throw std::runtime_error("can't load font");
-	fonts[16] = font;
-#endif
 }
 
 _bitmap::~_bitmap()
 {
-#if TARGET_SYSTEM_WINDOWS
 	DeleteDC(hdc);
 	DeleteObject(bitmap2);
 	if (hfont != 0) DeleteObject(hfont);
 	data = 0; // чтобы ~Picture не выругался
-#elif TARGET_SYSTEM_LINUX
-	if (gc) XFreeGC(d, gc);
-	img.free();
-	for (auto [_, v] : fonts)
-		if (v.set) XFreeFontSet(d, v.set);
-	x::close_display();
-#endif
 }
 
 void _bitmap::text(int x, int y, std::wstring_view s, int h, _color c, _color bg)
 { 
-#if TARGET_SYSTEM_WINDOWS
 	podg_font(h);
 	podg_cc(c, bg);
 	TextOutW(hdc, x, y, s.data(), (int)s.size());
-#elif TARGET_SYSTEM_LINUX
-	text(x, y, x::to_utf8(s), h, c, bg);
-#endif
 }
 
 void _bitmap::text(int x, int y, std::string_view s, int h, _color c, _color bg)
 { 
-#if TARGET_SYSTEM_WINDOWS
 	podg_font(h);
 	podg_cc(c, bg);
 	TextOutA(hdc, x, y, s.data(), (int)s.size());
-#elif TARGET_SYSTEM_LINUX
-	inittext();
-	update_font(h);
-
-	auto sz = size_text(s, h);
-
-	XSetForeground(d, gc, bg);
-	XFillRectangle(d, img.pix, gc, x, y, sz.x, sz.y);
-	XSetForeground(d, gc, c);
-
-	Xutf8DrawString(d, img.pix, font.set, gc, x, y + font.a[0]->ascent, s.data(), s.length());
-	XSync(d, false);
-
-	_renderer{(_color*)data, size}.image(x, y, sz.x, sz.y, img.data, size, bg.a != 255, x, y);
-#endif
 }
 
 _size2i _bitmap::size_text(std::wstring_view s, int h)
 {
-#if TARGET_SYSTEM_WINDOWS
 	podg_font(h);
 	SIZE a;
 	GetTextExtentPoint32W(hdc, s.data(), (int)s.size(), &a);
 	return { a.cx, a.cy };
-#elif TARGET_SYSTEM_LINUX
-	return size_text(x::to_utf8(s), h);
-#endif
 }
 
 _size2i _bitmap::size_text(std::string_view s, int h)
 {
-#if TARGET_SYSTEM_WINDOWS
 	podg_font(h);
 	SIZE a;
 	GetTextExtentPoint32A(hdc, s.data(), (int)s.size(), &a);
 	return { a.cx, a.cy };
-#elif TARGET_SYSTEM_LINUX
-	inittext();
-	update_font(h);
-	return {XTextWidth(font.a[0], s.data(), s.length()), font.a[0]->ascent + font.a[0]->descent};
-#endif
 }
 
-#if TARGET_SYSTEM_WINDOWS
 void _bitmap::podg_font(int r)
 {
 	if (r != font.lfHeight)
@@ -171,31 +115,6 @@ void _bitmap::podg_cc(uint c, uint cf)
 		f_cf = cf;
 	}
 }
-#elif TARGET_SYSTEM_LINUX
-void _bitmap::update_font(int hh)
-{
-	if (h != hh)
-	{
-		h           = hh;
-		if (fonts.count(hh))
-			font = fonts[hh];
-		if (x::load_font(hh, font.set, font.a, font.c, false))
-			fonts[hh] = font;
-		if (!font.set) throw std::runtime_error("can't load font");
-	}
-}
-
-void _bitmap::inittext()
-{
-	if (!need_uptext) return;
-
-	img.create(size.x, size.y);
-	XGCValues gcv;
-	gc = XCreateGC(d, img.pix, GCForeground | GCBackground, &gcv);
-
-	need_uptext = false;
-}
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

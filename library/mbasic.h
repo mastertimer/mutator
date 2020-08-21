@@ -8,14 +8,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#if TARGET_SYSTEM_WINDOWS
-#elif TARGET_SYSTEM_LINUX
-#elif TARGET_SYSTEM_MACOS
-#elif TARGET_SYSTEM_UNKNOWN
-#else
-#define TARGET_SYSTEM_WINDOWS 1
-#endif
-
 #define t_t template <typename _t>
 #define t_b template <typename _b>
 
