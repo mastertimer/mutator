@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Исходные файлы">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Файлы заголовков">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Файлы ресурсов">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Library">
+      <UniqueIdentifier>{24489574-864b-4be3-868e-16fd7f8597c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mutator">
+      <UniqueIdentifier>{70361bfc-1f90-4dbc-acac-d4ac3f3fbb47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mutator\go">
+      <UniqueIdentifier>{08eaa60b-7f4a-4829-8eb8-d00ee34fdb04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SET">
+      <UniqueIdentifier>{48c4533f-e2a8-4202-8cd9-ad05add0a1aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics">
+      <UniqueIdentifier>{ad916be6-8001-449b-9ce0-fa270b3ad86f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="..\library\mbasic.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\library\mgeometry.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mut\mutator.cpp">
+      <Filter>Mutator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mut\tetron.cpp">
+      <Filter>Mutator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mut\t_function.cpp">
+      <Filter>Mutator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\library\mwindow.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\library\mjson.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mut\go\g_button.cpp">
+      <Filter>Mutator\go</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mut\go\g_color_ring.cpp">
+      <Filter>Mutator\go</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mut\go\g_list_link.cpp">
+      <Filter>Mutator\go</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mut\go\g_scrollbar.cpp">
+      <Filter>Mutator\go</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mut\go\g_tetron.cpp">
+      <Filter>Mutator\go</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mut\go\g1list.cpp">
+      <Filter>Mutator\go</Filter>
+    </ClCompile>
+    <ClCompile Include="..\library\mdialog.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\set\g_graph.cpp">
+      <Filter>SET</Filter>
+    </ClCompile>
+    <ClCompile Include="..\set\super_stat.cpp">
+      <Filter>SET</Filter>
+    </ClCompile>
+    <ClCompile Include="..\graphics\mgraphics.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\graphics\mimage.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\graphics\renderer.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\graphics\peach_flavor.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mut\basic_tetrons.cpp">
+      <Filter>Mutator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mut\go\t_basic_go.cpp">
+      <Filter>Mutator\go</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mut\go\go_lite.cpp">
+      <Filter>Mutator\go</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mut\go\go_edit.cpp">
+      <Filter>Mutator\go</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\resource.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="..\library\mbasic.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\library\mgeometry.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mut\mutator.h">
+      <Filter>Mutator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mut\tetron.h">
+      <Filter>Mutator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mut\t_function.h">
+      <Filter>Mutator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\library\mwindow.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\library\mspeed.hpp">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\library\mjson.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mut\go\g_button.h">
+      <Filter>Mutator\go</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mut\go\g_color_ring.h">
+      <Filter>Mutator\go</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mut\go\g_list_link.h">
+      <Filter>Mutator\go</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mut\go\g_scrollbar.h">
+      <Filter>Mutator\go</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mut\go\g_tetron.h">
+      <Filter>Mutator\go</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mut\go\g1list.h">
+      <Filter>Mutator\go</Filter>
+    </ClInclude>
+    <ClInclude Include="..\library\mdialog.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\set\g_graph.h">
+      <Filter>SET</Filter>
+    </ClInclude>
+    <ClInclude Include="..\set\super_stat.h">
+      <Filter>SET</Filter>
+    </ClInclude>
+    <ClInclude Include="..\graphics\mgraphics.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\graphics\mimage.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\graphics\renderer.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\graphics\peach_flavor.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mut\basic_tetrons.h">
+      <Filter>Mutator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mut\go\t_basic_go.h">
+      <Filter>Mutator\go</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mut\go\go_lite.h">
+      <Filter>Mutator\go</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mut\go\go_edit.h">
+      <Filter>Mutator\go</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="mutator.rc">
+      <Filter>Файлы ресурсов</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="MUTATOR.ico">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.gitignore" />
+    <None Include="..\README.md" />
+    <None Include="..\tetrons.m00" />
+  </ItemGroup>
+</Project>
