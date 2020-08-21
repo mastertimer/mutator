@@ -160,7 +160,6 @@
     <ClCompile Include="..\graphics\mgraphics.cpp" />
     <ClCompile Include="..\graphics\mimage.cpp" />
     <ClCompile Include="..\graphics\peach_flavor.cpp" />
-    <ClCompile Include="..\graphics\renderer.cpp" />
     <ClCompile Include="..\library\mbasic.cpp" />
     <ClCompile Include="..\library\mgeometry.cpp" />
     <ClCompile Include="..\library\mjson.cpp" />
@@ -185,7 +184,6 @@
     <ClInclude Include="..\graphics\mgraphics.h" />
     <ClInclude Include="..\graphics\mimage.h" />
     <ClInclude Include="..\graphics\peach_flavor.h" />
-    <ClInclude Include="..\graphics\renderer.h" />
     <ClInclude Include="..\library\mbasic.h" />
     <ClInclude Include="..\library\mgeometry.h" />
     <ClInclude Include="..\library\mjson.h" />

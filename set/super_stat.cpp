@@ -1,5 +1,7 @@
+#define NOMINMAX
+#include <windows.h>
+
 #include "super_stat.h"
-#include "xwindows.h" // безопасный windows.h
 
 _super_stat ss; // сжатые цены
 

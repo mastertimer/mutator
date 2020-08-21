@@ -1,8 +1,4 @@
-﻿#if TARGET_SYSTEM_LINUX
-   #include <cxxabi.h>
-#endif
-
-#include "tetron.h"
+﻿#include "tetron.h"
 
 __hash_table<_link> link;
 
@@ -33,15 +29,8 @@ void _tetron::find_all_intermediate(_tetron* t, uint64 flags_before, uint64 flag
 
 std::string _tetron::name()
 {
-#if TARGET_SYSTEM_WINDOWS
 	std::string s = typeid(*this).raw_name();
 	return s.substr(4, s.size() - 6);
-#elif TARGET_SYSTEM_LINUX
-	int status;
-	auto ti = typeid(*this).name();
-	std::string s = abi::__cxa_demangle(ti, 0, 0, &status);
-	return s;
-#endif
 }
 
 namespace SuperDelTetron2

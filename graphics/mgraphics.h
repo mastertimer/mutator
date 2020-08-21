@@ -1,10 +1,10 @@
 ﻿#pragma once
 
+#define NOMINMAX
+#include <windows.h>
+
 #include "color.h"
 #include "mgeometry.h"
-#include "renderer.h"
-#include "xwindows.h"
-#include "xlinux.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -85,7 +85,7 @@ struct _bitmap: public _picture
 	explicit _bitmap(int rx3 = 0, int ry3 = 0);
 	~_bitmap();
 
-	bool resize(int w, int h);
+	bool resize(int64 w, int64 h);
 
 	void text(int x, int y, std::wstring_view s, int h, _color c, _color bg);
 	void text(int x, int y, std::string_view s, int h, _color c, _color bg);

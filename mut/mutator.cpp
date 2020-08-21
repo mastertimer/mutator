@@ -191,7 +191,7 @@ namespace mutator
 
 	void draw(_bitmap& e)
 	{
-		if (master_bm.resize(e.size.x, e.size.y)) master_obl_izm = _area_old(0, e.size.x + 1, 0, e.size.y + 1);
+		if (master_bm.resize(e.size.x, e.size.y)) master_obl_izm = _area_old(0, e.size.x + 1.0, 0, e.size.y + 1.0);
 		_area2 sum_area = (_area2)master_obl_izm + top_graph.changed();
 		if (sum_area.empty()) return;
 		if (master_obl_izm)
@@ -205,15 +205,15 @@ namespace mutator
 			master_chain_go.clear();
 			n_ko->operator _t_trans* ()->ris(_trans(), false); // средний слой (тетронная графика)
 		}
-		e.draw((int)sum_area.x.min, (int)sum_area.y.min,
-			int(sum_area.x.max) - int(sum_area.x.min) + 1, int(sum_area.y.max) - int(sum_area.y.min) + 1,
-			&master_bm, (int)sum_area.x.min, (int)sum_area.y.min);
+		e.draw((int64)sum_area.x.min, (int64)sum_area.y.min,
+			int64(sum_area.x.max) - int64(sum_area.x.min) + 1, int64(sum_area.y.max) - int64(sum_area.y.min) + 1,
+			&master_bm, (int64)sum_area.x.min, (int64)sum_area.y.min);
 		top_graph.set_picture(master_bm.size);
 		_picture* ka_top = top_graph.draw(); // верхний слой
 		if (ka_top)
-			e.draw((int)sum_area.x.min, (int)sum_area.y.min,
-				int(sum_area.x.max) - int(sum_area.x.min) + 1, int(sum_area.y.max) - int(sum_area.y.min) + 1,
-				ka_top, (int)sum_area.x.min, (int)sum_area.y.min);
+			e.draw((int64)sum_area.x.min, (int64)sum_area.y.min,
+				int64(sum_area.x.max) - int64(sum_area.x.min) + 1, int64(sum_area.y.max) - int64(sum_area.y.min) + 1,
+				ka_top, (int64)sum_area.x.min, (int64)sum_area.y.min);
 		master_obl_izm = _tarea::empty;
 	}
 

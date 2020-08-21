@@ -23,7 +23,6 @@ inline uint64 id_tetron = 1; // глобальный счетчик id тетр�
 inline bool run_before_del_link = true; // вызывать ли спец функции перед удалением связи
 inline _area_old master_obl_izm = _tarea::empty; // область изменений
 inline _bitmap master_bm; // кусочный рисунок
-inline _renderer render;
 
 inline _peach top_graph; // графика над тетронами
 
