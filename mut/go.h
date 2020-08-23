@@ -63,8 +63,8 @@ struct _g_edit_string : public _t_go
 struct _g_edit_multi_string : public _t_go
 {
 	_multi_string strings;
-	_ixy cursor;
-	int first = 0; // номер первого элемента в списке
+	_num2 cursor;
+	int64 first = 0; // номер первого элемента в списке
 
 	_g_edit_multi_string();
 

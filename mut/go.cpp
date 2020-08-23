@@ -405,11 +405,11 @@ void _g_edit_multi_string::ris2(_trans tr, bool final)
 	if (first > cursor.y) first = cursor.y;
 	if (first + len2 > (int)str->line.size()) first = (int)str->line.size() - len2;
 	if (first < 0) first = 0;
-	int k = len2;
-	if ((int)str->line.size() < first + k) k = (int)str->line.size() - first;
-	for (int i = 0; i < k; i++)
+	int64 k = len2;
+	if ((int)str->line.size() < first + k) k = (int64)str->line.size() - first;
+	for (int64 i = 0; i < k; i++)
 	{
-		int ii = first + i;
+		int64 ii = first + i;
 		master_bm.text((int)(oo.x.min + 4 * tr.scale), (int)(oo.y.min + (i * 16LL + 4) * tr.scale),
 			str->line[ii].c_str(), sf, c_def, 0xff000000);
 	}
@@ -903,7 +903,7 @@ void _g_button::ris2(_trans tr, bool final)
 	{
 		int64 rx2 = (int64)(picture.size.x * tr.scale + 0.5);
 		int64 ry2 = (int64)(picture.size.y * tr.scale + 0.5);
-		_ixy ce = oo.center();
+		_num2 ce = oo.center();
 		master_bm.stretch_draw3(&picture, ce.x - rx2 / 2, ce.y - ry2 / 2, tr.scale);
 	}
 	else

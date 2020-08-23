@@ -127,9 +127,9 @@ struct _multi_string
 	_multi_string() : line(1) {}
 	void push(_stack* mem) { *mem << line; }
 	void pop(_stack* mem) { *mem >> line; }
-	bool delete_char(int y, int x);
-	void insert_char(int y, int x, wchar_t c);
-	void div2line(int y, int x);
+	bool delete_char(int64 y, int64 x);
+	void insert_char(int64 y, int64 x, wchar_t c);
+	void div2line(int64 y, int64 x);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

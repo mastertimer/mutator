@@ -182,7 +182,7 @@ void _stack::set_capacity(uint64 rdata)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _multi_string::div2line(int y, int x)
+void _multi_string::div2line(int64 y, int64 x)
 {
 	if ((y < 0) || (y >= (int)line.size())) return;
 	int l = (int)line[y].size();
@@ -193,7 +193,7 @@ void _multi_string::div2line(int y, int x)
 	line[y + 1LL].erase(0, x);
 }
 
-void _multi_string::insert_char(int y, int x, wchar_t c)
+void _multi_string::insert_char(int64 y, int64 x, wchar_t c)
 {
 	if ((y < 0) || (y >= (int)line.size())) return;
 	if (x < 0) x = 0;
@@ -202,7 +202,7 @@ void _multi_string::insert_char(int y, int x, wchar_t c)
 	line[y].insert(x, 1, c);
 }
 
-bool _multi_string::delete_char(int y, int x)
+bool _multi_string::delete_char(int64 y, int64 x)
 {
 	if ((y < 0) || (y >= (int)line.size())) return false;
 	if (x < 0)

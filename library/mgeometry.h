@@ -236,7 +236,6 @@ std::basic_ostream<TC>& operator<<(std::basic_ostream<TC>& o, vec2<_t> vec);
 t_t using __xy = vec2<_t>;
 
 typedef __xy<double> _xy;
-typedef __xy<int>    _ixy;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
