@@ -125,19 +125,17 @@ struct _chain_go // цепочка графических объектов с м
 
 struct _layers_go // для цикла по слоям графических объектов
 {
-	_layers_go(_tetron* t, uint64 flags_);
+	_layers_go(_tetron* t);
 	void operator++(int);
 	operator bool() { return tetron2; }
 	operator _t_basic_go* () { return tetron2; }
 	_t_basic_go* operator->() { return tetron2; }
 
 private:
-	_tetron* tetron;
-	std::map<int, _speed<_vector_id> > map_;
-	uint i;
-	std::map<int, _speed<_vector_id> >::iterator i_m;
-	_t_basic_go* tetron2;
-	uint64 flags;
+	_tetron* tetron = nullptr;
+	std::multimap<int, _id> map_;
+	std::map<int, _id>::iterator i_m;
+	_t_basic_go* tetron2 = nullptr;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

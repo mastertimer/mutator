@@ -758,36 +758,8 @@ void gen_ring()
 	g_main->run(nullptr, g_main, flag_run);
 }
 
-void push_ico()
-{
-	_picture p(24, 24);
-	p.clear(0x000000);
-	double t1 = 11;
-	double t2 = 7;
-	double t3 = 5;
-	double f1 = 0.7;
-	double f2 = 0.3;
-	double f3 = 1.1;
-	for (double rad = 17; rad >= 1; rad -= 0.5)
-	{
-		uint c1 = (uint)((sin(f1 + 2 * pi * rad / t1) + 1) * 128);
-		uint c2 = (uint)((sin(f2 + 2 * pi * rad / t2) + 1) * 128);
-		uint c3 = (uint)((sin(f3 + 2 * pi * rad / t3) + 1) * 128);
-		if (c1 > 255) c1 = 255;
-		if (c2 > 255) c2 = 255;
-		if (c3 > 255) c3 = 255;
-		p.fill_circle(12, 12, rad, c1 + (c2 << 8) + (c3 << 16));
-	}
-	clipboard.clear();
-	std::wstring s = L"Picture";
-	clipboard << s << p;
-}
-
 void fun33(_tetron* tt0, _tetron* tt, uint64 flags)
 {
-	MessageBox(0, L"привет", L"упс", MB_OK | MB_TASKMODAL);
-
-	//	push_ico();
 	//	gen_ring();
 	//	gen_1krug();
 

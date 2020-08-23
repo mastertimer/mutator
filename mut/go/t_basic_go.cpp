@@ -1,5 +1,4 @@
-﻿#include "mtime.hpp"
-#include "basic_tetrons.h"
+﻿#include "basic_tetrons.h"
 #include "g_scrollbar.h"
 #include "t_basic_go.h"
 
@@ -380,7 +379,7 @@ void _t_trans::ris(_trans tr, bool final)
 			if (_t_trans * b = *a)
 				b->ris(tr / b->trans, final);
 	}
-	for (_layers_go a(this, flag_sub_go); a; a++) a->ris(tr, final);
+	for (_layers_go a(this); a; a++) a->ris(tr, final);
 	master_chain_go.pop();
 }
 
@@ -528,7 +527,7 @@ void _t_go::ris(_trans tr, bool final)
 	auto ris_all = [&]() {
 		ris2(tr, final);
 		if (!final)
-			for (_layers_go a(this, flag_sub_go); a; a++) a->ris(tr, final);
+			for (_layers_go a(this); a; a++) a->ris(tr, final);
 	};
 
 	if (!time_ris)
@@ -538,7 +537,9 @@ void _t_go::ris(_trans tr, bool final)
 	}
 	else
 	{
-		auto t = test::duration(ris_all);
+		auto t0 = std::chrono::high_resolution_clock::now();
+		ris_all();
+		auto t = std::chrono::high_resolution_clock::now() - t0;
 		master_chain_go.pop();
 		_area_old oo = tr(local_area);
 		if (oo.x.min < 0) oo.x.min = 0;
@@ -692,40 +693,28 @@ void _chain_go::pop()
 
 void _layers_go::operator++(int)
 {
-	i++;
-	do
+	for (++i_m; i_m != map_.end(); ++i_m)
 	{
-		for (; i < i_m->second->size(); i++)
-		{
-			_tetron* t2 = (*i_m->second)[i];
-			if (!t2) continue;
-			if (!tetron->test_flags(t2, flags)) continue;
-			tetron2 = (_t_basic_go*)t2;
-			return;
-		}
-		++i_m;
-		i = 0;
-	} while (i_m != map_.end());
+		_tetron* t2 = *i_m->second;
+		if (!t2) continue;
+		if (!tetron->test_flags(t2, flag_sub_go)) continue;
+		tetron2 = (_t_basic_go*)t2;
+		return;
+	}
 	tetron2 = nullptr;
 }
 
-_layers_go::_layers_go(_tetron* t, uint64 flags_) : tetron(t), i(0), tetron2(nullptr), flags(flags_)
+_layers_go::_layers_go(_tetron* t) : tetron(t)
 {
 	for (auto j : t->link)
 	{
 		_tetron* tt = j->pairr(t);
-		if (!j->test_flags(t, flags)) continue;
-		_t_basic_go* ttt = *tt;
-		if (ttt == nullptr) continue;
-		int n = 0;
+		if (!j->test_flags(t, flag_sub_go)) continue;
+		if (tt->operator _t_basic_go *() == nullptr) continue;
 		_t_int* ti = tt->find_intermediate<_t_int>(n_go_layer, inverted_flags(flag_information), flag_parent);
-		if (ti != nullptr)
-		{
-			n = (int)ti->a;
-		}
-		if (!tetron2) tetron2 = ttt;
-		map_[n]->push_back(tt);
+		int n = (ti) ? (int)ti->a : 0;
+		map_.insert({n, tt});
 	}
 	i_m = map_.begin();
-	if (tetron2) tetron2 = (_t_basic_go*)(*((*i_m->second)[0]));
+	if (i_m != map_.end()) tetron2 = *i_m->second;
 }
