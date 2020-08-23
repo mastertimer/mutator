@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "t_basic_go.h"
+#include "basic_go.h"
 
 struct _g1list : public _t_go
 {

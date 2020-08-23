@@ -161,6 +161,7 @@
     <ClCompile Include="library\mgeometry.cpp" />
     <ClCompile Include="library\mgraphics.cpp" />
     <ClCompile Include="library\mjson.cpp" />
+    <ClCompile Include="mut\basic_go.cpp" />
     <ClCompile Include="mut\go\g1list.cpp" />
     <ClCompile Include="mut\go\go_edit.cpp" />
     <ClCompile Include="mut\go\g_button.cpp" />
@@ -168,7 +169,6 @@
     <ClCompile Include="mut\go\g_list_link.cpp" />
     <ClCompile Include="mut\go\g_scrollbar.cpp" />
     <ClCompile Include="mut\go\g_tetron.cpp" />
-    <ClCompile Include="mut\go\t_basic_go.cpp" />
     <ClCompile Include="mut\mutator.cpp" />
     <ClCompile Include="mut\tetron.cpp" />
     <ClCompile Include="mut\t_function.cpp" />
@@ -182,6 +182,7 @@
     <ClInclude Include="library\mgraphics.h" />
     <ClInclude Include="library\mjson.h" />
     <ClInclude Include="library\mspeed.hpp" />
+    <ClInclude Include="mut\basic_go.h" />
     <ClInclude Include="mut\go\g1list.h" />
     <ClInclude Include="mut\go\go_edit.h" />
     <ClInclude Include="mut\go\g_button.h" />
@@ -189,7 +190,6 @@
     <ClInclude Include="mut\go\g_list_link.h" />
     <ClInclude Include="mut\go\g_scrollbar.h" />
     <ClInclude Include="mut\go\g_tetron.h" />
-    <ClInclude Include="mut\go\t_basic_go.h" />
     <ClInclude Include="mut\mutator.h" />
     <ClInclude Include="mut\tetron.h" />
     <ClInclude Include="mut\t_function.h" />
