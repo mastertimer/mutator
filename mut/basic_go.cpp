@@ -2,22 +2,22 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_trans    master_trans_go;      // трансформация тяни-толкай объекта, или объекта под мышкой
+_trans2    master_trans_go;     // трансформация тяни-толкай объекта, или объекта под мышкой
 _chain_go master_chain_go;      // активная цепочка графических объектов
 bool      time_ris = false;     // отображать время рисования
-_trans    master_trans_go_move; // трансформация n_go_move
-_xy       par_koo1;             // .....вспомогательная переменная  !!!ИЗБАВИТЬСЯ!!!
+_trans2   master_trans_go_move; // трансформация n_go_move
+_coo2       par_koo1;             // .....вспомогательная переменная  !!!ИЗБАВИТЬСЯ!!!
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_area_old _t_basic_go::calc_area()
+_area2 _t_basic_go::calc_area()
 { // рекурсия невозможна
 	if (area_definite) return area;
 	area_definite = true;
 	if (_t_go* tgo = *this)
 		area = tgo->local_area;
 	else
-		area = _tarea::empty;
+		area.clear();
 	for (auto i : link)
 	{
 		_tetron* a = i->pairr(this);
@@ -37,7 +37,7 @@ _area_old _t_basic_go::calc_area()
 	return area;
 }
 
-void _t_basic_go::add_area(_area_old a, bool first)
+void _t_basic_go::add_area(_area2 a, bool first)
 {
 	static _speed<_hash_table_tetron> hash(false);
 	bool start = (hash.a == nullptr);
@@ -69,14 +69,14 @@ void _t_basic_go::add_area(_area_old a, bool first)
 	if (start) hash.stop();
 }
 
-void _t_basic_go::cha_area(_trans tr)
+void _t_basic_go::cha_area(_trans2 tr)
 {
 	_t_go* tgo = *this;
 	if (!tgo) return;
 	add_obl_izm(tr(tgo->local_area));
 }
 
-void _t_basic_go::cha_area(_area_old a, bool first)
+void _t_basic_go::cha_area(_area2 a, bool first)
 {
 	static _speed<_hash_table_tetron> hash(false);
 	bool start = (hash.a == nullptr);
@@ -104,7 +104,7 @@ void _t_basic_go::cha_area(_area_old a, bool first)
 	if (start) hash.stop();
 }
 
-void _t_basic_go::del_area(_area_old a, bool first)
+void _t_basic_go::del_area(_area2 a, bool first)
 {
 	static _speed<_hash_table_tetron> hash(false);
 	bool start = (hash.a == nullptr);
@@ -136,9 +136,9 @@ void _t_basic_go::del_area(_area_old a, bool first)
 	if (start) hash.stop();
 }
 
-_trans _t_basic_go::oko_trans(bool* ko)
+_trans2 _t_basic_go::oko_trans(bool* ko)
 {
-	_trans a;
+	_trans2 a;
 	_tetron* b = this;
 	_speed<_hash_table_tetron> hash;
 	bool nai = true;
@@ -192,7 +192,7 @@ void _t_basic_go::set_layer(double n)
 	t->add_flags(this, flag_information);
 }
 
-bool _t_basic_go::mouse_down_left(_trans tr)
+bool _t_basic_go::mouse_down_left(_trans2 tr)
 {
 	for (int i = (int)link.size() - 1; i >= 0; i--)
 	{
@@ -200,7 +200,7 @@ bool _t_basic_go::mouse_down_left(_trans tr)
 		if (!link[i]->test_flags(this, flag_sub_go)) continue;
 		if (_t_basic_go* aa = *a)
 		{
-			_trans tr2;
+			_trans2 tr2;
 			if (_t_go* tgo = *a)
 				tr2 = tr;
 			else
@@ -209,7 +209,7 @@ bool _t_basic_go::mouse_down_left(_trans tr)
 			if (aa->mouse_down_left(tr2)) return true;
 		}
 	}
-	_xy r = tr.inverse(mouse_xy);
+	_coo2 r = tr.inverse(mouse_xy);
 	if (_t_go* tgo = *this)
 		if (tgo->test_local_area(r))
 		{
@@ -244,7 +244,7 @@ bool _t_basic_go::mouse_down_left(_trans tr)
 	return false;
 }
 
-void _t_basic_go::find_pot_act(_xy r)
+void _t_basic_go::find_pot_act(_coo2 r)
 {
 	for (int i = (int)link.size() - 1; i >= 0; i--)
 	{
@@ -254,7 +254,7 @@ void _t_basic_go::find_pot_act(_xy r)
 		{
 			if (n_ramk == aa) continue;//?только здесь
 			if (n_ramk2 == aa) continue;
-			_xy r2;
+			_coo2 r2;
 			if (_t_go* tgo = *aa)
 				r2 = r;
 			else
@@ -270,7 +270,7 @@ void _t_basic_go::find_pot_act(_xy r)
 			n_pot_act = this;
 }
 
-bool _t_basic_go::mouse_wheel(_trans tr)
+bool _t_basic_go::mouse_wheel(_trans2 tr)
 {
 	for (int i = (int)link.size() - 1; i >= 0; i--)
 	{
@@ -278,7 +278,7 @@ bool _t_basic_go::mouse_wheel(_trans tr)
 		if (!link[i]->test_flags(this, flag_sub_go)) continue;
 		if (_t_basic_go* aa = *a)
 		{
-			_trans tr2;
+			_trans2 tr2;
 			if (_t_go* tgo = *a)
 				tr2 = tr;
 			else
@@ -287,7 +287,7 @@ bool _t_basic_go::mouse_wheel(_trans tr)
 			if (aa->mouse_wheel(tr2)) return true;
 		}
 	}
-	_xy r = tr.inverse(mouse_xy);
+	_coo2 r = tr.inverse(mouse_xy);
 	if (_t_go* tgo = *this)
 		if (tgo->test_local_area(r)) // ДЕЙСТВИЕ
 		{
@@ -307,7 +307,7 @@ bool _t_basic_go::mouse_wheel(_trans tr)
 	return false;
 }
 
-bool _t_basic_go::final_fractal(const _trans& tr)
+bool _t_basic_go::final_fractal(const _trans2& tr)
 {
 	if (tr(calc_area()).radius() < final_radius()) return true;
 	auto h = master_chain_go.hash.find(this);
@@ -319,7 +319,7 @@ void _t_basic_go::priem_gv()
 {
 	_t_go* c = *n_act;
 	if (c == this) return;
-	_trans tr = c->oko_trans();
+	_trans2 tr = c->oko_trans();
 	c->clear_go_rod();
 	_t_trans* trr = set_t_trans(c, flag_part + flag_sub_go);
 	trr->del_area();
@@ -364,7 +364,7 @@ _t_trans* _t_basic_go::set_t_trans(_tetron* go, uint64 flags)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _t_trans::ris(_trans tr, bool final)
+void _t_trans::ris(_trans2 tr, bool final)
 {
 	tr *= trans;
 	if (((tr(calc_area())) & master_obl_izm).empty()) return;
@@ -393,7 +393,7 @@ void _t_trans::clear_go_rod()
 	}
 }
 
-bool _t_trans::mouse_move(_trans tr, bool final)
+bool _t_trans::mouse_move(_trans2 tr, bool final)
 {
 	if (!final) final = final_fractal(tr);
 	master_chain_go.push(this, tr);
@@ -403,7 +403,7 @@ bool _t_trans::mouse_move(_trans tr, bool final)
 		if (!link[i]->test_flags(this, flag_sub_go)) continue;
 		if (_t_basic_go * aa = *a)
 		{
-			_trans tr2;
+			_trans2 tr2;
 			if (_t_go * tgo = *a)
 				tr2 = tr;
 			else
@@ -412,7 +412,7 @@ bool _t_trans::mouse_move(_trans tr, bool final)
 			if (aa->mouse_move(tr2, final)) return true;
 		}
 	}
-	_xy r = tr.inverse(mouse_xy);
+	_coo2 r = tr.inverse(mouse_xy);
 	for (int i = (int)link.size() - 1; i >= 0; i--)
 	{
 		_tetron* a = link[i]->pairr(this);
@@ -441,7 +441,7 @@ void _t_go::mouse_finish_move()
 	}
 }
 
-bool _t_go::mouse_move2(_xy r)
+bool _t_go::mouse_move2(_coo2 r)
 {
 	static _vector_id var; // ??
 	if (test_flags(n_mouse_inactive, flag_information)) return false;
@@ -506,11 +506,11 @@ void _t_go::set_c2(uint c)
 	add_flags(ti, flag_information | flag_part);
 }
 
-_t_go::_t_go() : _t_basic_go(), local_area(_tarea::empty), key_fokus(false)
+_t_go::_t_go() : _t_basic_go(), key_fokus(false)
 {
 }
 
-void _t_go::ris(_trans tr, bool final)
+void _t_go::ris(_trans2 tr, bool final)
 {
 	if (((tr(calc_area())) & master_obl_izm).empty()) return;
 	if (!final) final = final_fractal(tr);
@@ -540,7 +540,7 @@ void _t_go::ris(_trans tr, bool final)
 		ris_all();
 		auto t = std::chrono::high_resolution_clock::now() - t0;
 		master_chain_go.pop();
-		_area_old oo = tr(local_area);
+		_area2 oo = tr(local_area);
 		if (oo.x.min < 0) oo.x.min = 0;
 		if (oo.y.min < 0) oo.y.min = 0;
 		std::wstring s = double_to_string(t.count() / 1000000.0, 2);
@@ -585,7 +585,7 @@ void _t_go::mouse_up_middle()
 	for (auto& i : var)	if (i) i->run(this, i, flag_run);
 }
 
-bool _t_go::mouse_move(_trans tr, bool final)
+bool _t_go::mouse_move(_trans2 tr, bool final)
 {
 	if (!final) final = final_fractal(tr);
 	master_chain_go.push(this, tr);
@@ -596,7 +596,7 @@ bool _t_go::mouse_move(_trans tr, bool final)
 			if (!link[i]->test_flags(this, flag_sub_go)) continue;
 			if (_t_basic_go * aa = *a)
 			{
-				_trans tr2;
+				_trans2 tr2;
 				if (_t_go * tgo = *a)
 					tr2 = tr;
 				else
@@ -605,7 +605,7 @@ bool _t_go::mouse_move(_trans tr, bool final)
 				if (aa->mouse_move(tr2, final)) return true;
 			}
 		}
-	_xy r = tr.inverse(mouse_xy);
+	_coo2 r = tr.inverse(mouse_xy);
 	if (test_local_area(r)) // ДЕЙСТВИЕ
 	{
 		master_trans_go = tr;
@@ -641,7 +641,7 @@ bool _t_go::mouse_move(_trans tr, bool final)
 	return false;
 }
 
-bool _t_go::mouse_down_left2(_xy r)
+bool _t_go::mouse_down_left2(_coo2 r)
 {
 	_tetron* a = find_intermediate<_tetron>(n_fun_tani0, flag_information, flag_parent);
 	if (!a) return false;
@@ -650,14 +650,14 @@ bool _t_go::mouse_down_left2(_xy r)
 	return true;
 }
 
-void _t_go::mouse_move_left2(_xy r)
+void _t_go::mouse_move_left2(_coo2 r)
 {
 	_tetron* a = find_intermediate<_tetron>(n_fun_tani, flag_information, flag_parent);
 	par_koo1 = r;
 	if (a) a->run(this, a, flag_run);
 }
 
-void _t_go::mouse_up_left2(_xy r)
+void _t_go::mouse_up_left2(_coo2 r)
 {
 	_tetron* a = find_intermediate<_tetron>(n_fun_tani1, flag_information, flag_parent);
 	par_koo1 = r;
@@ -666,7 +666,7 @@ void _t_go::mouse_up_left2(_xy r)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _chain_go::push(_t_basic_go* a, _trans& tr)
+void _chain_go::push(_t_basic_go* a, _trans2& tr)
 {
 	chain.push_back(a);
 	auto n = hash.find(a);
@@ -753,15 +753,15 @@ void _g_circle::run(_tetron* tt0, _tetron* tt, uint64 flags)
 
 void _g_circle::calc_local_area()
 {
-	local_area = _area_old(center.x - radius, center.x + radius, center.y - radius, center.y + radius);
+	local_area = { {center.x - radius, center.x + radius}, {center.y - radius, center.y + radius} };
 }
 
-void _g_circle::ris2(_trans tr, bool final)
+void _g_circle::ris2(_trans2 tr, bool final)
 {
 	master_bm.fill_ring(tr(center), tr(radius), tr(width), get_c(), get_c2());
 }
 
-bool _g_circle::test_local_area(_xy b)
+bool _g_circle::test_local_area(_coo2 b)
 {
 	if (!local_area.test(b)) return false;
 	return ((b - center).len2() <= radius * radius);
@@ -769,9 +769,9 @@ bool _g_circle::test_local_area(_xy b)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_froglif::ris2(_trans tr, bool final)
+void _g_froglif::ris2(_trans2 tr, bool final)
 {
-	_area_old a = tr(local_area);
+	_area2 a = tr(local_area);
 	master_bm.froglif(a.top_left(), a.min_length(), f, r_f, get_c(), get_c2());
 }
 
@@ -794,23 +794,23 @@ void _g_line::run(_tetron* tt0, _tetron* tt, uint64 flags)
 
 void _g_line::calc_local_area()
 {
-	local_area = (_area_old(p1) + p2).expansion(width * 0.5);
+	local_area = (_area2(p1) + p2).expansion(width * 0.5);
 }
 
-void _g_line::ris2(_trans tr, bool final)
+void _g_line::ris2(_trans2 tr, bool final)
 {
 	master_bm.lines(tr(p1), tr(p2), tr(width), get_c());
 }
 
-bool _g_line::test_local_area(_xy b)
+bool _g_line::test_local_area(_coo2 b)
 {
 	if (!local_area.test(b)) return false;
-	_xy n = { p1.y - p2.y,p2.x - p1.x };
+	_coo2 n = { p1.y - p2.y,p2.x - p1.x };
 	n *= 1.0 / n.len();
-	_xy p11 = p1 + n * (width * 0.75);
-	_xy p12 = p1 - n * (width * 0.75);
-	_xy p21 = p2 + n * (width * 0.75);
-	_xy p22 = p2 - n * (width * 0.75);
+	_coo2 p11 = p1 + n * (width * 0.75);
+	_coo2 p12 = p1 - n * (width * 0.75);
+	_coo2 p21 = p2 + n * (width * 0.75);
+	_coo2 p22 = p2 - n * (width * 0.75);
 	if (((test_line(p11, p12, b) + test_line(p21, p22, b) + test_line(p11, p21, b) + test_line(p12, p22, b)) & 1) == 0) return false;
 	return true;
 }
@@ -833,7 +833,7 @@ void _g_line::pop(_rjson& b)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_picture::ris2(_trans tr, bool final)
+void _g_picture::ris2(_trans2 tr, bool final)
 {
 	if (pic.size.x * pic.size.y == 0)
 	{
@@ -852,7 +852,7 @@ void _g_picture::ris2(_trans tr, bool final)
 			{ (int)tr.offset.x, (int)(tr.offset.y + rr * tr.scale) }, c_def);
 		return;
 	}
-	_area_old oo = tr(local_area);
+	_area2 oo = tr(local_area);
 	master_bm.stretch_draw3(&pic, (int)oo.x.min, (int)oo.y.min, tr.scale);
 }
 
@@ -860,7 +860,7 @@ void _g_picture::new_size(int rx3, int ry3)
 {
 	if (!pic.resize(rx3, ry3)) return;
 	del_area();
-	local_area = _area_old(0, (double)pic.size.x, 0, (double)pic.size.y);
+	local_area = { {0, (double)pic.size.x}, {0, (double)pic.size.y} };
 	area_definite = false;
 	add_area();
 }
@@ -891,13 +891,13 @@ bool _g_picture::save_to_file(_path fn) const
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_rect::ris2(_trans tr, bool final)
+void _g_rect::ris2(_trans2 tr, bool final)
 {
-	_area_old oo = tr(local_area);
+	_area2 oo = tr(local_area);
 	uint c2 = get_c2();
 	master_bm.fill_rectangle({ {(int64)oo.x.min, (int64)oo.x.max + 1}, {(int64)oo.y.min, (int64)oo.y.max + 1} }, c2);
 	uint c0 = get_c();
-	if (((c0 >> 24) != 0x00) && (c0 != c2)) master_bm.rectangle((_area2)oo, c0);
+	if (((c0 >> 24) != 0x00) && (c0 != c2)) master_bm.rectangle(oo, c0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -907,12 +907,12 @@ void _g_text::set_text(std::wstring_view s2)
 	del_area();
 	s = s2;
 	_size2i size = master_bm.size_text(s2, 13);
-	local_area = _area_old(-1, (double)size.x, 0, (double)size.y);
+	local_area = { {-1, (double)size.x}, {0, (double)size.y} };
 	area_definite = false;
 	add_area();
 }
 
-void _g_text::ris2(_trans tr, bool final)
+void _g_text::ris2(_trans2 tr, bool final)
 {
 	int sf = (int)(13 * tr.scale + 0.5);
 	if (sf < 5) return;
@@ -932,9 +932,9 @@ void add_hint(std::wstring_view hint, _t_go* g)
 	del_hint();
 	if (hint.empty()) return;
 	_t_trans* ko = *n_ko;
-	_trans tr = master_trans_go;
+	_trans2 tr = master_trans_go;
 	_size2i siz = master_bm.size_text(hint, 13);
-	tr.offset += _xy{ -siz.x * 0.5, -15.0 } +_xy{ g->local_area.x(0.5), g->local_area.y.min } *tr.scale;
+	tr.offset += _coo2{ -siz.x * 0.5, -15.0 } +_coo2{ g->local_area.x(0.5), g->local_area.y.min } *tr.scale;
 	tr.scale = 1;
 	_g_text* go = new _g_text;
 	go->set_c(c_maxx);
@@ -956,7 +956,7 @@ void change_hint(std::wstring_view hint)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_test_graph::ris2(_trans tr, bool final)
+void _g_test_graph::ris2(_trans2 tr, bool final)
 {
 	static bool first = true;
 	if (first)
@@ -972,13 +972,13 @@ void _g_test_graph::ris2(_trans tr, bool final)
 		a.stretch_draw3(&te, 0, 0, 3.3);
 		a.rectangle(ogr, 0x80FF0000);
 	}
-	_area_old oo = tr(local_area);
+	_area2 oo = tr(local_area);
 	master_bm.stretch_draw(&a, (int)(oo.x.min + 20), (int)(oo.y.min + 20), 1);
 }
 
 _g_test_graph::_g_test_graph() : a(250, 150)
 {
-	local_area = _area_old(0, 300, 0, 200);
+	local_area = { {0, 300}, {0, 200} };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1002,11 +1002,11 @@ void _g_scrollbar::prilip(_t_go* r)
 	if (!r) return;
 	del_area();
 	double l = ((vid & 1) == 1) ? local_area.x.length() : local_area.y.length();
-	_area_old& o = r->local_area;
-	if (vid == 2) local_area = _area_old(o.x.min, o.x.max, o.y.max, o.y.max + l);
-	if (vid == 3) local_area = _area_old(o.x.max, o.x.max + l, o.y.min, o.y.max);
-	if (vid == 4) local_area = _area_old(o.x.min, o.x.max, o.y.min - l, o.y.min);
-	if (vid == 5) local_area = _area_old(o.x.min - l, o.x.min, o.y.min, o.y.max);
+	_area2& o = r->local_area;
+	if (vid == 2) local_area = { {o.x.min, o.x.max}, {o.y.max, o.y.max + l} };
+	if (vid == 3) local_area = { {o.x.max, o.x.max + l}, {o.y.min, o.y.max} };
+	if (vid == 4) local_area = { {o.x.min, o.x.max}, {o.y.min - l, o.y.min} };
+	if (vid == 5) local_area = { {o.x.min - l, o.x.min}, {o.y.min, o.y.max} };
 	//	if (vid > 1) trans = _trans(); //глобальная замена trans
 	area_definite = false;
 	add_area();
@@ -1023,9 +1023,9 @@ void _g_scrollbar::after_create_link(_link* li)
 	_t_go::after_create_link(li);
 }
 
-void _g_scrollbar::ris2(_trans tr, bool final)
+void _g_scrollbar::ris2(_trans2 tr, bool final)
 {
-	_area_old a = tr(local_area);
+	_area2 a = tr(local_area);
 	uint c = c_def;
 	if ((vid & 1) == 0)
 	{
@@ -1039,7 +1039,7 @@ void _g_scrollbar::ris2(_trans tr, bool final)
 	}
 }
 
-void _g_scrollbar::mouse_move_left2(_xy r)
+void _g_scrollbar::mouse_move_left2(_coo2 r)
 {
 	double ii;
 	if ((vid & 1) == 0)

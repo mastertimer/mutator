@@ -22,10 +22,28 @@ struct _coo2
 {
 	_coo x, y;
 
+	operator _num2() const noexcept
+	{
+		_num2 res{ (_num)x, (_num)y };
+		if (x < 0.0) if (x != res.x) res.x--;
+		if (y < 0.0) if (y != res.y) res.y--;
+		return res;
+	}
+
 	_coo2 operator-(_coo2 b)  const noexcept { return { x - b.x, y - b.y }; }
+	_coo2 operator+(_coo2 b)  const noexcept { return { x + b.x, y + b.y }; }
+
 	_coo2 operator*(double b) const noexcept { return { x * b, y * b }; }
 
 	void operator+=(_coo2 b)        noexcept { x += b.x; y += b.y; }
+
+	void operator*=(double b)       noexcept { x *= b; y *= b; }
+	void operator/=(double b)       noexcept { x /= b; y /= b; }
+
+	double len() const noexcept { return sqrt(x * x + y * y); }  // длина вектора
+	double len2() const noexcept { return x * x + y * y; } // квадрат длины вектора
+
+	double scalar(_coo2 b) const noexcept { return x * b.x + y * b.y; } // скалярное произведение
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -101,6 +119,9 @@ struct _area // [...]
 		return res;
 	}
 
+	_coo operator()(double k) const noexcept { return min + (max - min) * k; }; // [0..1 -> min..max]
+	double get_k(double a) const noexcept { return (a - min) / (max - min); } // [min..max -> 0..1]
+
 	void operator&=(const _area& b) noexcept { if (b.min > min) min = b.min; if (b.max < max) max = b.max; }
 
 	_size length() { return (max > min) ? (max - min) : 0; }
@@ -135,7 +156,19 @@ struct _area2
 
 	bool empty() const noexcept { return (x.min > x.max) || (y.min > y.max); }
 	void clear() noexcept { x = { 1.0, 0.0 }; }
+
+	_area2 expansion(double b) const noexcept; // расширенная область во все стороны
+
 	_coo2 center() const noexcept { return { (x.max + x.min) * 0.5, (y.max + y.min) * 0.5 }; }
+	_coo2 top_left() { return { x.min, y.min }; } // верхний левый угол
+	_coo2 top_right() { return { x.max, y.min }; } // верхний правый угол
+	_coo2 bottom_left() { return { x.min, y.max }; } // нижний левый угол
+	_coo2 bottom_right() { return { x.max, y.max }; } // нижний правый угол
+
+	_size radius(); // радиус вписанной окружности
+	_size min_length() { if (empty()) return 0.0; return std::min(x.max - x.min, y.max - y.min); } // минимальный размер
+
+	_area2 move(_coo2 d) const noexcept;
 
 	bool test(_coo2 b); // принадлежит ли точка области
 };
@@ -148,10 +181,21 @@ struct _trans2
 	_coo2 offset = { 0.0, 0.0 };
 
 	_area2 operator()(const _area2& b) const noexcept; // применение трансформации
-	void operator*=(_trans2 tr) noexcept { offset += tr.offset * scale; scale *= tr.scale; }
-	_trans2 operator*(_trans2 tr) const noexcept;  // сместить и промасштабировать
+	_coo2  operator()(const _coo2& b) const noexcept; // применение трансформации
+	double operator()(double b) const noexcept { return scale * b; } // применение трансформации
 
+	_trans2 operator*(_trans2 tr) const noexcept;  // сместить и промасштабировать
+	_trans2 operator/(_trans2 tr) const noexcept;  // обратно сместить и промасштабировать
+
+	void operator*=(_trans2 tr) noexcept { offset += tr.offset * scale; scale *= tr.scale; }
+	void operator/=(_trans2 tr); // обратно сместить и промасштабировать
+	bool operator!=(const _trans2& b) const noexcept;
+
+	_trans2 inverse() const noexcept;   // обратная трансформация
 	_coo2 inverse(_coo2 b) const noexcept;
+	_area2 inverse(const _area2& b) const noexcept;
+
+	void MasToch(_coo2 b, double m); // промасштабировать вокруг точки
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -162,14 +206,10 @@ t_t struct vec2
 	_t x, y;
 
 	vec2(_t x, _t y) : x(x), y(y) {}
-	vec2(_size2i size) : x((_t)size.x), y((_t)size.y) {}
 	t_b vec2(vec2<_b> size) : x((_t)size.x), y((_t)size.y) {}
 	vec2() = default;
 
 //	TB operator vec2<_b>() const noexcept { return {_b(x), _b(y)}; };
-	operator _coo2()         const noexcept { return { (double)x, (double)y }; };
-	operator _size2i()       const noexcept { return { (int64)x, (int64)y }; };
-	operator _num2()         const noexcept { return { (int64)x, (int64)y }; };
 
 	[[nodiscard]] vec2 operator-() const noexcept;
 
@@ -262,14 +302,10 @@ t_t struct __area // базовая область
 
 	__area(_tarea t = _tarea::empty) : x(), y(), type(t) {}
 	__area(_t minx, _t maxx, _t miny, _t maxy);
-	__area(_size2i s);
 	__area(__xy<_t> b) : x{ b.x, b.x }, y{ b.y, b.y }, type{ _tarea::normal } {}
 	__area(const __area& b) = default;
-	__area(const _area2& b);
 
 	bool empty() const noexcept { return type == _tarea::empty; }
-
-	operator _area2() const noexcept;
 
 	void operator=(_tarea t); // задать тип
 	bool operator==(const __area& b) const noexcept;
@@ -303,7 +339,6 @@ t_t struct __area // базовая область
 };
 
 typedef __area<double> _area_old;
-typedef __area<int>    _areai_old;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -473,19 +508,9 @@ t_t t_b _interval<_t>& _interval<_t>::operator=(const _interval<_b>& a) noexcept
 	return *this;
 }
 
-uint test_line(_xy p1, _xy p2, _xy b);
+uint test_line(_coo2 p1, _coo2 p2, _coo2 b);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-t_t __area<_t>::__area(const _area2& b) : x{ b.x.min, b.x.max }, y{ b.y.min, b.y.max }
-{
-	type = (b.empty()) ? _tarea::empty : _tarea::normal;
-}
-
-t_t __area<_t>::__area(_size2i s) : x{ 0, s.x }, y{ 0, s.y }
-{
-	type = (s.empty()) ? _tarea::empty : _tarea::normal;
-}
 
 t_t __area<_t>::__area(_t minx, _t maxx, _t miny, _t maxy) : x{minx, maxx}, y{miny, maxy}, type{_tarea::normal}
 {
@@ -686,10 +711,4 @@ t_t __area<_t> __area<_t>::move(const __xy<_t>& d) const noexcept
 	rez.y.min = this->y.min + d.y;
 	rez.y.max = this->y.max + d.y;
 	return rez;
-}
-
-t_t __area<_t>::operator _area2() const noexcept
-{
-	if (type != _tarea::normal) return _area2();
-	return { {x.min, x.max}, {y.min, y.max} };
 }

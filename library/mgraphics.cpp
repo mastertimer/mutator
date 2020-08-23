@@ -376,7 +376,7 @@ void _picture::line(_num2 p1, _num2 p2, uint c, bool rep)
 	}
 }
 
-void _picture::lines(_xy p1, _xy p2, double l, uint c)
+void _picture::lines(_coo2 p1, _coo2 p2, double l, uint c)
 {
 	uint kk = 255 - (c >> 24);
 	if (kk == 0xFF) return; // полностью прозрачная
@@ -2430,7 +2430,7 @@ void _picture::stretch_draw(_picture* bm, int64 x, int64 y, double m)
 	delete[] ll;
 }
 
-void _picture::fill_ring(_xy p, double r, double d, uint c, uint c2)
+void _picture::fill_ring(_coo2 p, double r, double d, uint c, uint c2)
 {
 	if (r < 0.5) return; // слишком маленький
 	if (c == c2)
@@ -2893,7 +2893,7 @@ void _picture::fill_ellipse2(_area_old o, double d, uint c, uint c2)
 	}
 }
 
-void _picture::ring(_xy p, double r, double d, uint c)
+void _picture::ring(_coo2 p, double r, double d, uint c)
 {
 	if (r < 0.5) return; // слишком маленький
 	double r2 = r - d;

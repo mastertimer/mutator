@@ -29,15 +29,15 @@ struct _picture
 
 	void clear(uint c = 0xFF000000);
 	void line(_num2 p1, _num2 p2, uint c, bool rep = false); // линия rep - полное замещение цвета
-	void lines(_xy p1, _xy p2, double l, uint c); // точная линия заданной толщины
+	void lines(_coo2 p1, _coo2 p2, double l, uint c); // точная линия заданной толщины
 	void text16(int64 x, int64 y, const char* s, uint c); // простой текст высотой 16
 	void text16n(int64 x, int64 y, const char* s, int64 n, uint c); // простой текст высотой 16*n
 	static _size2i size_text16(std::string_view s, int64 n = 1); // размер текста *n
 	void froglif(_coo2 p, double r, uchar* f, int rf, uint c, uint c2 = 0);
 
 	void fill_circle(double x, double y, double r, uint c);
-	void fill_ring(_xy p, double r, double d, uint c, uint c2);
-	void ring(_xy p, double r, double d, uint c);
+	void fill_ring(_coo2 p, double r, double d, uint c, uint c2);
+	void ring(_coo2 p, double r, double d, uint c);
 	void fill_ellipse(_area_old o, double d, uint c, uint c2);
 	void fill_ellipse2(_area_old o, double d, uint c, uint c2);
 

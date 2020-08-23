@@ -54,14 +54,14 @@ void smena_avt()
 			{
 				_t_go* ra = *n_ramk2;
 
-				_area_old a2 = g->local_area;
+				_area2 a2 = g->local_area;
 				if (a2.empty()) a2 = g->calc_area();
 				a2 = n_ko->operator _t_trans * ()->trans.inverse(g->oko_trans()(a2).expansion(3.0));
 
 				_t_trans* rat = n_ko->operator _t_basic_go * ()->set_t_trans(n_ramk2, flag_sub_go);
 				rat->trans.offset = { a2.x.min, a2.y.min };
 				rat->trans.scale = 1.0 / n_ko->operator _t_trans * ()->trans.scale;
-				ra->local_area = _area_old(0, a2.x.length() / rat->trans.scale, 0, a2.y.length() / rat->trans.scale);
+				ra->local_area = { {0, a2.x.length() / rat->trans.scale}, {0, a2.y.length() / rat->trans.scale} };
 
 				ra->area_definite = false;
 				init_shuba2();
@@ -93,7 +93,7 @@ void smena_avt()
 			_cursor::hand_point : _cursor::normal));
 }
 
-void master_mouse_move(_xy r)
+void master_mouse_move(_coo2 r)
 {
 	_t_trans* a = *n_ko;
 	if (n_act)
@@ -151,7 +151,7 @@ void init_shuba()
 void find_pot_act()
 {
 	n_pot_act = 0ULL;
-	_xy r = mouse_xy;
+	_coo2 r = mouse_xy;
 	_t_trans* bb = *n_ko;
 	r = bb->trans.inverse(r);
 	bb->find_pot_act(r);
@@ -167,13 +167,13 @@ void find_ris_pot_act()
 		_t_go* ra = *n_ramk;
 		if (pred) ra->del_area();
 		_t_go* g = *n_pot_act;
-		_area_old a2 = g->local_area;
+		_area2 a2 = g->local_area;
 		if (a2.empty()) a2 = g->calc_area();
 		a2 = n_ko->operator _t_trans * ()->trans.inverse(g->oko_trans()(a2).expansion(3.0));
 		_t_trans* rat = n_ko->operator _t_basic_go * ()->set_t_trans(ra, flag_sub_go);
 		rat->trans.offset = { a2.x.min, a2.y.min };
 		rat->trans.scale = 1.0 / n_ko->operator _t_trans * ()->trans.scale;
-		ra->local_area = _area_old(0, a2.x.length() / rat->trans.scale, 0, a2.y.length() / rat->trans.scale);
+		ra->local_area = { {0, a2.x.length() / rat->trans.scale}, {0, a2.y.length() / rat->trans.scale} };
 		ra->area_definite = false;
 		init_shuba();
 		ra->add_area();
@@ -218,7 +218,7 @@ void fun02(_tetron* tt0, _tetron* tt, uint64 flags)
 
 void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 {
-	_xy to = mouse_xy;
+	_coo2 to = mouse_xy;
 	if (n_tani)
 	{
 		if (!*n_s_left->operator int64 * ())
@@ -262,7 +262,7 @@ void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 				_t_trans* rat2 = (raa) ? raa->ttrans() : nullptr;
 				if (rat2) // пока запрещено, потом возможно надо менять local_area??
 				{
-					_trans t2 = ra->oko_trans() / rat->trans;
+					_trans2 t2 = ra->oko_trans() / rat->trans;
 					rat->trans.offset.x += (mouse_xy.x - mouse_xy_pr.x) / t2.scale;
 					rat->trans.offset.y += (mouse_xy.y - mouse_xy_pr.y) / t2.scale;
 					ra->add_area();
@@ -275,7 +275,7 @@ void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 			}
 			if (g_cursor == _cursor::size_we)
 			{
-				_trans t2 = ra->oko_trans();
+				_trans2 t2 = ra->oko_trans();
 				ra->local_area.x.max += (mouse_xy.x - mouse_xy_pr.x) / t2.scale;
 				if (ra->local_area.x.max < ra->local_area.x.min)
 					ra->local_area.x.max = ra->local_area.x.min;
@@ -285,7 +285,7 @@ void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 				if (ra)
 				{
 					ra->del_area();
-					_trans t2 = ra->oko_trans();
+					_trans2 t2 = ra->oko_trans();
 					double q = ra->local_area.x.max;
 					ra->local_area.x.max += (mouse_xy.x - mouse_xy_pr.x) / t2.scale;
 					if (ra->local_area.x.max <= ra->local_area.x.min) ra->local_area.x.max = q; // или выделять нулевую ширину
@@ -296,7 +296,7 @@ void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 			}
 			if (g_cursor == _cursor::size_ns)
 			{
-				_trans t2 = ra->oko_trans();
+				_trans2 t2 = ra->oko_trans();
 				ra->local_area.y.max += (mouse_xy.y - mouse_xy_pr.y) / t2.scale;
 				if (ra->local_area.y.max < ra->local_area.y.min)
 					ra->local_area.y.max = ra->local_area.y.min;
@@ -306,7 +306,7 @@ void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 				if (ra)
 				{
 					ra->del_area();
-					_trans t2 = ra->oko_trans();
+					_trans2 t2 = ra->oko_trans();
 					double q = ra->local_area.y.max;
 					ra->local_area.y.max += (mouse_xy.y - mouse_xy_pr.y) / t2.scale;
 					if (ra->local_area.y.max <= ra->local_area.y.min) ra->local_area.y.max = q; // или выделять нулевую ширину
@@ -319,9 +319,9 @@ void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 			return;
 		}
 		_t_go* r2 = *n_ramk2;
-		_area_old a = r2->oko_trans()(r2->local_area);
-		_area_old pr(a.x.max - 5, a.x.max, a.y(0.1), a.y(0.9));
-		_area_old ni(a.x(0.1), a.x(0.9), a.y.max - 5, a.y.max);
+		_area2 a = r2->oko_trans()(r2->local_area);
+		_area2 pr = { {a.x.max - 5, a.x.max}, {a.y(0.1), a.y(0.9)} };
+		_area2 ni = { {a.x(0.1), a.x(0.9)}, {a.y.max - 5, a.y.max} };
 		if (pr.test(to))
 			set_cursorx(_cursor::size_we);
 		else
@@ -337,7 +337,7 @@ void fun04(_tetron* tt0, _tetron* tt, uint64 flags)
 {
 	if (*n_perenos->operator int64 * ())
 	{
-		_xy tr = mouse_xy;
+		_coo2 tr = mouse_xy;
 		_t_trans* kor = *n_ko;
 		double kk     = *n_wheel->operator int64*() * 0.01;
 		if ((kk > 0) && (kor->trans.scale > 1E12)) return;
@@ -358,7 +358,7 @@ void fun04(_tetron* tt0, _tetron* tt, uint64 flags)
 		_t_trans* rat2 = (raa) ? raa->ttrans() : nullptr;
 		if (rat2)
 		{
-			_xy tr = mouse_xy;
+			_coo2 tr = mouse_xy;
 			_t_go* ra = *n_ramk2;
 			_t_trans* rat = ra->ttrans();
 			ra->del_area();
@@ -562,7 +562,7 @@ void fun24(_tetron* tt0, _tetron* tt, uint64 flags)
 	_t_trans* g = *tt0;
 	if (!g) return;
 	g->del_area();
-	g->trans = _trans();
+	g->trans = _trans2();
 	g->trans = g->oko_trans().inverse();
 	g->trans.offset.x += 16 * g->trans.scale;
 	g->trans.offset.y += 16 * g->trans.scale;
@@ -603,7 +603,7 @@ void fun26(_tetron* tt0, _tetron* tt, uint64 flags)
 
 void fun27(_tetron* tt0, _tetron* tt, uint64 flags)
 {
-	_xy tr = mouse_xy;
+	_coo2 tr = mouse_xy;
 	_t_trans* kor = *n_ko;
 	kor->cha_area(kor->calc_area());
 	kor->trans.MasToch(tr, 1 / kor->trans.scale);
@@ -628,7 +628,7 @@ void fun28(_tetron* tt0, _tetron* tt, uint64 flags)
 void fun29(_tetron* tt0, _tetron* tt, uint64 flags)
 {
 	time_ris = !time_ris;
-	master_obl_izm = {0.0, (double)master_bm.size.x, 0.0, (double)master_bm.size.y};
+	master_obl_izm = { {0.0, (double)master_bm.size.x}, {0.0, (double)master_bm.size.y} };
 }
 
 void fun30(_tetron* tt0, _tetron* tt, uint64 flags)
@@ -672,7 +672,7 @@ void gen_ring()
 	c->a = 0x60000000ULL + c_background;
 	c->add_flags(n_color_bg, flag_parent);
 
-	auto ris_line = [](_g_circle* g, _xy k1, _xy k2)
+	auto ris_line = [](_g_circle* g, _coo2 k1, _coo2 k2)
 	{
 		_g_line* li = new _g_line;
 		_one_tetron* p1 = new _one_tetron(k1.x, k1.y);
@@ -697,7 +697,7 @@ void gen_ring()
 	auto create_froglif = [radius](_t_trans* ttr)
 	{
 		_g_froglif* pic = new _g_froglif;
-		pic->local_area = _area_old(-12, 12, -12, 12);
+		pic->local_area = { {-12, 12}, {-12, 12} };
 		pic->f_int = 0;// 0xAF;
 		ttr->add_flags(pic, flag_sub_go + flag_part);
 	};
@@ -743,10 +743,10 @@ void gen_ring()
 		int nn = (int)(pi / asin(radius / ((2 * i - 2) * radius + (i - 1) * width)));
 		for (int j = 0; j < nn; j++)
 		{
-			_xy v = { cos(2 * pi * (j + 0.5) / nn), sin(2 * pi * (j + 0.5) / nn) };
+			_coo2 v = { cos(2 * pi * (j + 0.5) / nn), sin(2 * pi * (j + 0.5) / nn) };
 			ris_line(g2, v * ((2 * i - 1) * radius + (i - 0.5) * width), v * ((2 * i - 3) * radius + (i - 1.5) * width));
 			_t_trans* ttr = new _t_trans;
-			ttr->trans.offset = _xy{ cos(2 * pi * j / nn), sin(2 * pi * j / nn) } *((2 * i - 2) * radius + (i - 1) * width);
+			ttr->trans.offset = _coo2{ cos(2 * pi * j / nn), sin(2 * pi * j / nn) } *((2 * i - 2) * radius + (i - 1) * width);
 			g2->add_flags(ttr, flag_part + flag_sub_go);
 			create_button(ttr);
 		}
@@ -873,8 +873,8 @@ void fun48(_tetron* tt0, _tetron* tt, uint64 flags)
 	if (tt0 == nullptr) return;
 	_g_picture* g = *tt0;
 	if (g == nullptr) return;
-	_xy r1 = master_trans_go.inverse(mouse_xy_pr);
-	_xy r2 = master_trans_go.inverse(mouse_xy);
+	_coo2 r1 = master_trans_go.inverse(mouse_xy_pr);
+	_coo2 r2 = master_trans_go.inverse(mouse_xy);
 	g->pic.line(r1, r2, (*n_s_shift->operator int64 * ()) ? 0xFF000000 : c_def, true);
 	g->cha_area();
 }

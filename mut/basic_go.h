@@ -5,32 +5,32 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 extern bool time_ris; // отображать время рисования
-extern _trans master_trans_go;  // трансформация тяни-толкай объекта, или объекта под мышкой
-extern _trans master_trans_go_move; // трансформация n_go_move
-extern _xy par_koo1; // .....вспомогательная переменная  !!!ИЗБАВИТЬСЯ!!!
+extern _trans2 master_trans_go;  // трансформация тяни-толкай объекта, или объекта под мышкой
+extern _trans2 master_trans_go_move; // трансформация n_go_move
+extern _coo2 par_koo1; // .....вспомогательная переменная  !!!ИЗБАВИТЬСЯ!!!
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _t_basic_go : public _tetron
 {
-	_area_old area; // визуальная область полная
+	_area2 area; // визуальная область полная
 	bool area_definite = false; // area задана
 
 	operator _t_basic_go* () { return this; }
 	void after_create_link(_link* li);          // вызывается после создания связи
 	void before_delete_link(_link* li);         // вызывается перед удалением связи
-	_area_old calc_area();                          // вычислить область
-	void cha_area(_area_old a = {}, bool first = true); // эта область изменена внутри
-	void cha_area(_trans tr); // эта область изменена внутри c известной трансформацией
-	void add_area(_area_old a = {}, bool first = true);         // эта область добавлена
-	void del_area(_area_old a = {}, bool first = true);         // эта область удалена
-	void find_pot_act(_xy r);                           // найти потенциально активный
-	virtual bool mouse_move(_trans tr, bool final) = 0; // перемещение мышки
-	virtual void ris(_trans tr, bool final) = 0; // нарисовать
-	bool mouse_down_left(_trans tr);                    // щелчок мышки
-	bool mouse_wheel(_trans tr);                        // повернуто колесо мышки
-	_trans oko_trans(bool* ko = 0); // абсолютная трансформация (*ko - докопался до корневого объекта)
-	bool final_fractal(const _trans& tr); // является ли данный тетрон последним?
+	_area2 calc_area();                          // вычислить область
+	void cha_area(_area2 a = {}, bool first = true); // эта область изменена внутри
+	void cha_area(_trans2 tr); // эта область изменена внутри c известной трансформацией
+	void add_area(_area2 a = {}, bool first = true);         // эта область добавлена
+	void del_area(_area2 a = {}, bool first = true);         // эта область удалена
+	void find_pot_act(_coo2 r);                           // найти потенциально активный
+	virtual bool mouse_move(_trans2 tr, bool final) = 0; // перемещение мышки
+	virtual void ris(_trans2 tr, bool final) = 0; // нарисовать
+	bool mouse_down_left(_trans2 tr);                    // щелчок мышки
+	bool mouse_wheel(_trans2 tr);                        // повернуто колесо мышки
+	_trans2 oko_trans(bool* ko = 0); // абсолютная трансформация (*ko - докопался до корневого объекта)
+	bool final_fractal(const _trans2& tr); // является ли данный тетрон последним?
 	virtual void clear_go_rod() {}        // !!! нет универсальности, придумать как лучше
 	virtual void priem_gv();              // сюда перетащен гвоздь активного элемента
 	virtual _t_trans* ttrans() { return nullptr; } // ищет первый тетрон с трансофрмацией, указывающий на этот _t_go
@@ -43,7 +43,7 @@ struct _t_basic_go : public _tetron
 
 struct _t_trans : public _t_basic_go
 {
-	_trans trans;
+	_trans2 trans;
 
 	~_t_trans() { if (run_before_del_link) del_area(); }
 
@@ -58,8 +58,8 @@ struct _t_trans : public _t_basic_go
 	operator _t_trans* ()          override { return this; }
 
 	void clear_go_rod() override; // удалить все графические родительские связи
-	bool mouse_move(_trans tr, bool final) override; // перемещение мышки
-	void ris(_trans tr, bool final) override; // нарисовать
+	bool mouse_move(_trans2 tr, bool final) override; // перемещение мышки
+	void ris(_trans2 tr, bool final) override; // нарисовать
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,7 +69,7 @@ struct _t_go : public _t_basic_go
 	//	static constexpr uint c1_default = c_def; // цвет рисования по умолчанию
 	static constexpr uint c2_default = 0; // цвет фона по умолчанию
 
-	_area_old local_area; // область только этого объекта
+	_area2 local_area; // область только этого объекта
 	bool key_fokus; // делать активным для управления клавиатурой
 
 	uint get_c();
@@ -83,25 +83,25 @@ struct _t_go : public _t_basic_go
 	void push(_stack* mem) override { _t_basic_go::push(mem); *mem << local_area; }
 	void pop(_stack* mem)  override { _t_basic_go::pop(mem); *mem >> local_area; }
 	void push(_wjson& b)   override { _t_basic_go::push(b); b.add("local_area", local_area); }
-	void pop(_rjson& b)    override { _t_basic_go::pop(b); local_area = b.read_area("local_area"); }
+	void pop(_rjson& b)    override { _t_basic_go::pop(b); local_area = b.read_area2("local_area"); }
 
-	virtual void ris2(_trans tr, bool final = false) = 0; // нарисовать индивидуальное
+	virtual void ris2(_trans2 tr, bool final = false) = 0; // нарисовать индивидуальное
 	virtual void mega_ris() { cha_area(); } // перерисовать с измененными параметрами
-	virtual bool mouse_wheel2(_xy r) { return false; } // повернуто колесо мышки действие
-	virtual bool mouse_move2(_xy r); // перемещение мышки действие
+	virtual bool mouse_wheel2(_coo2 r) { return false; } // повернуто колесо мышки действие
+	virtual bool mouse_move2(_coo2 r); // перемещение мышки действие
 	virtual void mouse_finish_move(); // мышка ушла
-	virtual bool mouse_down_left2(_xy r); // начало перетаскивания
-	virtual void mouse_move_left2(_xy r); // процесс перетаскивания
-	virtual void mouse_up_left2(_xy r); // конец перетаскивания
+	virtual bool mouse_down_left2(_coo2 r); // начало перетаскивания
+	virtual void mouse_move_left2(_coo2 r); // процесс перетаскивания
+	virtual void mouse_up_left2(_coo2 r); // конец перетаскивания
 	void mouse_up_middle(); // отпущено колесо мышки
 	virtual void key_down(ushort key) {} // нажата кнопка
 	virtual void key_press(ushort key) {} // введен символ
 	virtual void resize(); // был изменен local_area_
-	virtual bool test_local_area(_xy b) { return local_area.test(b); } // лежит ли точка внутри
+	virtual bool test_local_area(_coo2 b) { return local_area.test(b); } // лежит ли точка внутри
 	_t_trans* ttrans(); // ищет первый тетрон с трансофрмацией, указывающий на этот _t_go
 	void clear_go_rod(); // удалить все промежуточные трансформации
-	bool mouse_move(_trans tr, bool final) override; // перемещение мышки
-	void ris(_trans tr, bool final) override; // нарисовать
+	bool mouse_move(_trans2 tr, bool final) override; // перемещение мышки
+	void ris(_trans2 tr, bool final) override; // нарисовать
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -111,14 +111,14 @@ struct _chain_go // цепочка графических объектов с м
 	struct para
 	{
 		int k = 0;
-		_trans tr;
+		_trans2 tr;
 	};
 
 	__hash_table<_pair_t<para> > hash;
 	std::vector<_t_basic_go*> chain;
 
 	void clear() { chain.clear(); hash.clear(); }
-	void push(_t_basic_go* a, _trans& tr);
+	void push(_t_basic_go* a, _trans2& tr);
 	void pop();
 };
 
@@ -164,14 +164,14 @@ struct _g_circle : public _t_go
 
 	void push(_wjson& b)                              override;
 	void pop(_rjson& b)                               override;
-	void ris2(_trans tr, bool final)                  override;
+	void ris2(_trans2 tr, bool final)                 override;
 	void run(_tetron* tt0, _tetron* tt, uint64 flags) override;
-	bool test_local_area(_xy b)                       override; // лежит ли точка внутри
+	bool test_local_area(_coo2 b)                     override; // лежит ли точка внутри
 
 	void calc_local_area();
 
 private:
-	_xy center{ 0,0 };
+	_coo2 center{ 0,0 };
 	double radius{ 20 };
 	double width{ 2 };
 };
@@ -189,7 +189,7 @@ struct _g_froglif : public _t_go
 		int64 f_int64;
 	};
 
-	_g_froglif() { local_area = _area_old(0, 24, 0, 24); }
+	_g_froglif() { local_area = { {0, 24}, {0, 24} }; }
 
 	uchar type()               override { return 14; }
 	int   get_froglif()        override { return 0x7F; }
@@ -200,7 +200,7 @@ struct _g_froglif : public _t_go
 
 	operator int64* ()         override { return &f_int64; }
 
-	void ris2(_trans tr, bool final) override;
+	void ris2(_trans2 tr, bool final) override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -216,14 +216,14 @@ struct _g_line : public _t_go
 
 	void push(_wjson& b)                              override;
 	void pop(_rjson& b)                               override;
-	void ris2(_trans tr, bool final)                  override;
+	void ris2(_trans2 tr, bool final)                 override;
 	void run(_tetron* tt0, _tetron* tt, uint64 flags) override;
-	bool test_local_area(_xy b)                       override; // лежит ли точка внутри
+	bool test_local_area(_coo2 b)                     override; // лежит ли точка внутри
 
 	void calc_local_area();
 
 private:
-	_xy p1{ 0, 0 }, p2{ 100, 100 }; // начало и конец
+	_coo2 p1{ 0, 0 }, p2{ 100, 100 }; // начало и конец
 	double width{ 1 };
 };
 
@@ -233,7 +233,7 @@ struct _g_picture : public _t_go
 {
 	_picture pic;
 
-	_g_picture() { local_area = _area_old(0, 100, 0, 100); }
+	_g_picture() { local_area = { {0, 100}, {0, 100} }; }
 
 	uchar type()            override { return 31; }
 	int   get_froglif()     override { return 0xF6; }
@@ -245,7 +245,7 @@ struct _g_picture : public _t_go
 	operator _g_picture* () override { return this; }
 	operator _picture* ()   override { return &pic; }
 
-	void ris2(_trans tr, bool final) override;
+	void ris2(_trans2 tr, bool final) override;
 
 	void new_size(int rx3, int ry3);
 	bool load_from_file(_path fn);
@@ -258,11 +258,11 @@ struct _g_text : public _t_go
 {
 	std::wstring s = L"";
 
-	_g_text() { local_area = _area_old(0, 13, 0, 13); }
+	_g_text() { local_area = { {0, 13}, {0, 13} }; }
 
 	uchar type()              override { return 29; }
 	int   get_froglif()       override { return 0xF1; }
-	bool  mouse_move2(_xy r)  override { return false; }
+	bool  mouse_move2(_coo2 r)  override { return false; }
 	void  push(_stack* mem)   override { _t_go::push(mem); *mem << s; }
 	void  pop(_stack* mem)    override { _t_go::pop(mem); *mem >> s; }
 	void  push(_wjson& b)     override { _t_go::push(b); b.add("s", s); }
@@ -271,7 +271,7 @@ struct _g_text : public _t_go
 	operator std::wstring* () override { return &s; }
 	operator _g_text* ()      override { return this; }
 
-	void ris2(_trans tr, bool final) override;
+	void ris2(_trans2 tr, bool final) override;
 
 	void set_text(std::wstring_view s2);
 };
@@ -280,14 +280,14 @@ struct _g_text : public _t_go
 
 struct _g_rect : public _t_go
 {
-	_g_rect() { local_area = _area_old(0, 100, 0, 100); }
+	_g_rect() { local_area = { {0, 100}, {0, 100} }; }
 
 	uchar type()         override { return 12; }
 	int   get_froglif()  override { return 0xF4; }
 
 	operator _g_rect* () override { return this; }
 
-	void ris2(_trans tr, bool final) override;
+	void ris2(_trans2 tr, bool final) override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -299,7 +299,7 @@ struct _g_test_graph : public _t_go // !! НЕ УДАЛЯТЬ, ПРИГОДИТ�
 	_g_test_graph();
 	uchar type() { return 6; }
 	int get_froglif() { return 0xF2; }
-	void ris2(_trans tr, bool final) override;
+	void ris2(_trans2 tr, bool final) override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -309,23 +309,23 @@ struct _g_scrollbar : public _t_go
 	double position = 0; // положение стрелки [0-1]
 	char   vid = 0; // 0 - горизонтальный 1 - вертикальный 2 - снизу 3 - справа 4 - сверху 5 - слева
 
-	_g_scrollbar() { local_area = _area_old(0, 10, 0, 10); }
+	_g_scrollbar() { local_area = { {0, 10}, {0, 10} }; }
 	~_g_scrollbar() { calc_area(); }
 
-	operator double* ()           override { return &position; }
-	operator _g_scrollbar* ()     override { return this; }
+	operator double* ()                override { return &position; }
+	operator _g_scrollbar* ()          override { return this; }
 
-	uchar type()                  override { return 16; }
-	int   get_froglif()           override { return 0xF8; }
-	void  push(_stack* mem)       override { _t_go::push(mem); *mem << position << vid; }
-	void  pop(_stack* mem)        override { _t_go::pop(mem);	*mem >> position >> vid; }
-	bool  mouse_down_left2(_xy r) override { mouse_move_left2(r); return true; }
-	void  mouse_up_left2(_xy r)   override {}
+	uchar type()                       override { return 16; }
+	int   get_froglif()                override { return 0xF8; }
+	void  push(_stack* mem)            override { _t_go::push(mem); *mem << position << vid; }
+	void  pop(_stack* mem)             override { _t_go::pop(mem); *mem >> position >> vid; }
+	bool  mouse_down_left2(_coo2 r)    override { mouse_move_left2(r); return true; }
+	void  mouse_up_left2(_coo2 r)      override {}
 
 	void  push(_wjson& b)              override;
 	void  pop(_rjson& b)               override;
-	void  mouse_move_left2(_xy r)      override;
-	void  ris2(_trans tr, bool final)  override;
+	void  mouse_move_left2(_coo2 r)    override;
+	void  ris2(_trans2 tr, bool final) override;
 	void  after_create_link(_link* li) override;
 
 	void  prilip(_t_go* r); // прилипание к графическому объекту

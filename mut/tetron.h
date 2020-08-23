@@ -20,11 +20,11 @@ inline _cursor g_cursor = _cursor::normal; // установленный кур�
 
 inline uint64 id_tetron = 1; // глобальный счетчик id тетронов
 inline bool run_before_del_link = true; // вызывать ли спец функции перед удалением связи
-inline _area_old master_obl_izm = _tarea::empty; // область изменений
+inline _area2 master_obl_izm; // область изменений
 inline _bitmap master_bm; // кусочный рисунок
 
-inline _xy mouse_xy; // координаты мышки
-inline _xy mouse_xy_pr; // предыдущие координаты мышки
+inline _coo2 mouse_xy; // координаты мышки
+inline _coo2 mouse_xy_pr; // предыдущие координаты мышки
 
 inline uint64 inverted_flags(uint64 a) { return (a << 32) | (a >> 32); }
 
@@ -319,7 +319,7 @@ extern __hash_table<_link> link; // ??? если сделать inline - буд�
 
 void delete_hvost(_tetron* t, bool del_t = false, bool run_func = true);
 void optimize_hash_intermediate();
-void add_obl_izm(_area_old a); // добавить область изменения
+void add_obl_izm(_area2 a); // добавить область изменения
 _tetron* create_tetron(uchar tipt); // определено в другом места
 
 namespace SuperDelTetron2

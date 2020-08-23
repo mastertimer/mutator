@@ -186,7 +186,7 @@ _wjson& _wjson::add(std::string_view name, const _multi_string& b)
 	return *this;
 }
 
-_wjson& _wjson::add(std::string_view name, _trans b)
+_wjson& _wjson::add(std::string_view name, _trans2 b)
 {
 	str(name, true);
 	add("scale", b.scale);
@@ -195,7 +195,7 @@ _wjson& _wjson::add(std::string_view name, _trans b)
 	return *this;
 }
 
-_wjson& _wjson::add(std::string_view name, _xy b)
+_wjson& _wjson::add(std::string_view name, _coo2 b)
 {
 	str(name, true);
 	add("x", b.x);
@@ -204,22 +204,16 @@ _wjson& _wjson::add(std::string_view name, _xy b)
 	return *this;
 }
 
-_wjson& _wjson::add(std::string_view name, _area_old b)
+_wjson& _wjson::add(std::string_view name, _area2 b)
 {
 	str(name, true);
-	switch (b.type)
-	{
-	case _tarea::normal:     add("type", "normal");     break;
-	case _tarea::empty:      add("type", "empty");      break;
-	}
 	add("x", b.x);
 	add("y", b.y);
 	end();
 	return *this;
 }
 
-template <typename _t>
-_wjson& _wjson::add(std::string_view name, _interval<_t> b)
+_wjson& _wjson::add(std::string_view name, _area b)
 {
 	str(name, true);
 	add("min", b.min);
@@ -408,9 +402,9 @@ void _rjson::read(std::string_view name, double& b)
 	if (!file.good()) error = 15;
 }
 
-_interval<double> _rjson::read_interval(std::string_view name)
+_area _rjson::read_area(std::string_view name)
 {
-	_interval<double> res = {};
+	_area res;
 	if (!obj(name)) return res;
 	read("min", res.min);
 	read("max", res.max);
@@ -418,20 +412,18 @@ _interval<double> _rjson::read_interval(std::string_view name)
 	return res;
 }
 
-_area_old _rjson::read_area(std::string_view name)
+_area2 _rjson::read_area2(std::string_view name)
 {
-	_area_old res;
+	_area2 res;
 	if (!obj(name)) return res;
-	_string type = read_string("type");
-	if (type == "normal")     res.type = _tarea::normal;     else
-	if (type == "empty")      res.type = _tarea::empty;      else { error = 11; return res; }
-	res.x = read_interval("x");
-	res.y = read_interval("y");
+	_string type = read_string("type"); // !!!!!!!!!!
+	res.x = read_area("x");
+	res.y = read_area("y");
 	end();
 	return res;
 }
 
-void _rjson::read(std::string_view name, _xy& b)
+void _rjson::read(std::string_view name, _coo2& b)
 {
 	if (!obj(name)) return;
 	read("x", b.x);
@@ -439,9 +431,9 @@ void _rjson::read(std::string_view name, _xy& b)
 	end();
 }
 
-_trans _rjson::read_trans(std::string_view name)
+_trans2 _rjson::read_trans(std::string_view name)
 {
-	_trans res;
+	_trans2 res;
 	if (!obj(name)) return res;
 	read("scale", res.scale);
 	read("offset", res.offset);
