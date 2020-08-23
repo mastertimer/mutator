@@ -127,7 +127,7 @@ struct _tetron
 	        operator _tetron       * () { return this; }
 	virtual operator double        * () { return nullptr; }
 	virtual operator int64         * () { return nullptr; }
-	virtual operator _xy           * () { return nullptr; }
+	virtual operator _coo2         * () { return nullptr; }
 	virtual operator std::wstring  * () { return nullptr; }
 	virtual operator _t_string     * () { return nullptr; }
 	virtual operator _multi_string * () { return nullptr; }

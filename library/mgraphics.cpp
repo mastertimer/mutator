@@ -2597,7 +2597,7 @@ void _picture::fill_ring(_coo2 p, double r, double d, uint c, uint c2)
 	}
 }
 
-void _picture::fill_ellipse(_area_old o, double d, uint c, uint c2)
+void _picture::fill_ellipse(_area2 o, double d, uint c, uint c2)
 {
 	if (o.empty()) return;
 	double rx3 = o.x.max - o.x.min;
@@ -2759,7 +2759,7 @@ void _picture::fill_ellipse(_area_old o, double d, uint c, uint c2)
 	}
 }
 
-void _picture::fill_ellipse2(_area_old o, double d, uint c, uint c2)
+void _picture::fill_ellipse2(_area2 o, double d, uint c, uint c2)
 {
 	if (o.empty()) return;
 	double rx3 = o.x.max - o.x.min;

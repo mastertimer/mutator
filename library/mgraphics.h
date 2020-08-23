@@ -38,8 +38,8 @@ struct _picture
 	void fill_circle(double x, double y, double r, uint c);
 	void fill_ring(_coo2 p, double r, double d, uint c, uint c2);
 	void ring(_coo2 p, double r, double d, uint c);
-	void fill_ellipse(_area_old o, double d, uint c, uint c2);
-	void fill_ellipse2(_area_old o, double d, uint c, uint c2);
+	void fill_ellipse(_area2 o, double d, uint c, uint c2);
+	void fill_ellipse2(_area2 o, double d, uint c, uint c2);
 
 	void fill_rectangle(_area2i r, uint c, bool rep = false);
 	void fill_rect_d(double x1, double y1, double x2, double y2, uint c); // полупрозрачный пр-к на !!непр-й!! подложке
