@@ -19,9 +19,6 @@
     <Filter Include="Mutator">
       <UniqueIdentifier>{70361bfc-1f90-4dbc-acac-d4ac3f3fbb47}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Mutator\go">
-      <UniqueIdentifier>{08eaa60b-7f4a-4829-8eb8-d00ee34fdb04}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SET">
       <UniqueIdentifier>{48c4533f-e2a8-4202-8cd9-ad05add0a1aa}</UniqueIdentifier>
     </Filter>
@@ -47,24 +44,6 @@
     </ClCompile>
     <ClCompile Include="library\mjson.cpp">
       <Filter>Library</Filter>
-    </ClCompile>
-    <ClCompile Include="mut\go\g_button.cpp">
-      <Filter>Mutator\go</Filter>
-    </ClCompile>
-    <ClCompile Include="mut\go\g_color_ring.cpp">
-      <Filter>Mutator\go</Filter>
-    </ClCompile>
-    <ClCompile Include="mut\go\g_list_link.cpp">
-      <Filter>Mutator\go</Filter>
-    </ClCompile>
-    <ClCompile Include="mut\go\g_scrollbar.cpp">
-      <Filter>Mutator\go</Filter>
-    </ClCompile>
-    <ClCompile Include="mut\go\g_tetron.cpp">
-      <Filter>Mutator\go</Filter>
-    </ClCompile>
-    <ClCompile Include="mut\go\g1list.cpp">
-      <Filter>Mutator\go</Filter>
     </ClCompile>
     <ClCompile Include="set\g_graph.cpp">
       <Filter>SET</Filter>
@@ -106,24 +85,6 @@
     </ClInclude>
     <ClInclude Include="library\mjson.h">
       <Filter>Library</Filter>
-    </ClInclude>
-    <ClInclude Include="mut\go\g_button.h">
-      <Filter>Mutator\go</Filter>
-    </ClInclude>
-    <ClInclude Include="mut\go\g_color_ring.h">
-      <Filter>Mutator\go</Filter>
-    </ClInclude>
-    <ClInclude Include="mut\go\g_list_link.h">
-      <Filter>Mutator\go</Filter>
-    </ClInclude>
-    <ClInclude Include="mut\go\g_scrollbar.h">
-      <Filter>Mutator\go</Filter>
-    </ClInclude>
-    <ClInclude Include="mut\go\g_tetron.h">
-      <Filter>Mutator\go</Filter>
-    </ClInclude>
-    <ClInclude Include="mut\go\g1list.h">
-      <Filter>Mutator\go</Filter>
     </ClInclude>
     <ClInclude Include="set\g_graph.h">
       <Filter>SET</Filter>

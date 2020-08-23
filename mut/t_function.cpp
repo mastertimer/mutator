@@ -1,7 +1,4 @@
-﻿#include "g_tetron.h"
-#include "g_list_link.h"
-#include "go.h"
-#include "g1list.h"
+﻿#include "go.h"
 #include "t_function.h"
 
 _stack clipboard; // буффер обмена

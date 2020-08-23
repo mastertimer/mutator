@@ -10,16 +10,8 @@
 
 #include <functional>
 
-#include "g1list.h"
-#include "g_button.h"
-#include "g_color_ring.h"
 #include "go.h"
-#include "g_list_link.h"
-#include "g_scrollbar.h"
-#include "g_tetron.h"
 #include "mjson.h"
-#include "g_list_link.h"
-#include "t_function.h"
 #include "t_function.h"
 #include "mjson.h"
 #include "g_graph.h"
