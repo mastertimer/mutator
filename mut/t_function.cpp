@@ -783,28 +783,9 @@ void push_ico()
 	clipboard << s << p;
 }
 
-bool fia001(_peach* a)
-{
-	a->delete_me();
-	return true;
-}
-
-void show_message(std::string_view s)
-{
-	_size2 ss = { 300, 150 };
-
-	_p_rect* p = new _p_rect(ss, { 1.0, master_bm.size.center() - ss.center() }, c_def, 0x800000FF);
-	p->set_mouse_down_left(fia001);
-	_p_text* t = new _p_text(s);
-	t->trans.offset = ss.center() - t->local_area.center();
-	p->insert(0, t);
-	top_graph.insert(0, p);
-}
-
 void fun33(_tetron* tt0, _tetron* tt, uint64 flags)
 {
-//	MessageBox(0, L"привет", L"упс", MB_OK | MB_TASKMODAL);
-	show_message("привет");
+	MessageBox(0, L"привет", L"упс", MB_OK | MB_TASKMODAL);
 
 	//	push_ico();
 	//	gen_ring();

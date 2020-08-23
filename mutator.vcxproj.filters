@@ -78,9 +78,6 @@
     <ClCompile Include="graphics\mgraphics.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\peach_flavor.cpp">
-      <Filter>graphics</Filter>
-    </ClCompile>
     <ClCompile Include="mut\basic_tetrons.cpp">
       <Filter>Mutator</Filter>
     </ClCompile>
@@ -144,9 +141,6 @@
       <Filter>SET</Filter>
     </ClInclude>
     <ClInclude Include="graphics\mgraphics.h">
-      <Filter>graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\peach_flavor.h">
       <Filter>graphics</Filter>
     </ClInclude>
     <ClInclude Include="mut\basic_tetrons.h">

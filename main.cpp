@@ -4,7 +4,6 @@
 
 constexpr wchar_t tetfile[] = L"..\\..\\tetrons.txt";
 _wstring exe_path; // путь к запущенному exe файлу
-_bitmap main_bm;
 HCURSOR g_cu = LoadCursor(0, IDC_ARROW); // активный курсор
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,9 +42,8 @@ void paint(HWND hwnd)
 	HDC hdc = GetDC(hwnd);
 	RECT rect;
 	GetClientRect(hwnd, &rect);
-	main_bm.resize(rect.right, rect.bottom);
-	mutator::draw(main_bm);
-	BitBlt(hdc, 0, 0, rect.right, rect.bottom, main_bm.hdc, 0, 0, SRCCOPY);
+	mutator::draw({ rect.right, rect.bottom });
+	BitBlt(hdc, 0, 0, rect.right, rect.bottom, master_bm.hdc, 0, 0, SRCCOPY);
 	ReleaseDC(hwnd, hdc);
 }
 
@@ -118,14 +116,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (message == WM_LBUTTONDOWN) mutator::mouse_button_left(true);
 		if (message == WM_RBUTTONDOWN) mutator::mouse_button_right(true);
 		if (message == WM_MBUTTONDOWN) mutator::mouse_button_middle(true);
-		if (mutator::need_draw()) paint(hWnd);
+		if (master_obl_izm) paint(hWnd);
 		return 0;
 	case WM_LBUTTONUP: case WM_RBUTTONUP: case WM_MBUTTONUP:
 		init_shift(wParam);
 		if (message == WM_LBUTTONUP) mutator::mouse_button_left(false);
 		if (message == WM_RBUTTONUP) mutator::mouse_button_right(false);
 		if (message == WM_MBUTTONUP) mutator::mouse_button_middle(false);
-		if (mutator::need_draw()) paint(hWnd);
+		if (master_obl_izm) paint(hWnd);
 		return 0;
 	case WM_LBUTTONDBLCLK: case WM_RBUTTONDBLCLK: case WM_MBUTTONDBLCLK:
 		init_shift(wParam);

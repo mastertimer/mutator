@@ -6,7 +6,6 @@
 #include "mgraphics.h"
 #include "mspeed.hpp"
 #include "mjson.h"
-#include "peach_flavor.h"
 
 constexpr uint c_background = 0xFF000000;
 constexpr uint c_maxx       = 0xFFA0FFC0;
@@ -23,8 +22,6 @@ inline uint64 id_tetron = 1; // глобальный счетчик id тетр�
 inline bool run_before_del_link = true; // вызывать ли спец функции перед удалением связи
 inline _area_old master_obl_izm = _tarea::empty; // область изменений
 inline _bitmap master_bm; // кусочный рисунок
-
-inline _peach top_graph; // графика над тетронами
 
 inline _xy mouse_xy; // координаты мышки
 inline _xy mouse_xy_pr; // предыдущие координаты мышки

@@ -9,7 +9,14 @@
 // стратегия:
 //		правильная альтернатива _g_tetron
 
+// тест мультимап
+// слои вещественные
+// one_tetron удалить
+// перейти на новый area
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#include <functional>
 
 #include "g1list.h"
 #include "g_button.h"
@@ -189,36 +196,17 @@ namespace mutator
 		return (tet.error == 0);
 	}
 
-	bool need_draw()
+	void draw(_size2i r)
 	{
-		return (((bool)master_obl_izm) || (!top_graph.changed().empty()));
-	}
-
-	void draw(_bitmap& e)
-	{
-		if (master_bm.resize(e.size.x, e.size.y)) master_obl_izm = _area_old(0, e.size.x + 1.0, 0, e.size.y + 1.0);
-		_area2 sum_area = (_area2)master_obl_izm + top_graph.changed();
-		if (sum_area.empty()) return;
-		if (master_obl_izm)
-		{
-			master_bm.set_area((_area2)master_obl_izm);
-			_area_old erkan(0, (double)master_bm.size.x, 0, (double)master_bm.size.y);
-			master_obl_izm = master_obl_izm.expansion(0.1);
-			master_obl_izm &= erkan;
-			master_bm.fill_rectangle({ {(int64)master_obl_izm.x.min, (int64)master_obl_izm.x.max + 1}, {(int64)master_obl_izm.y.min,
-				(int64)master_obl_izm.y.max + 1} }, c_background); // нижний слой (пока сплошной цвет)
-			master_chain_go.clear();
-			n_ko->operator _t_trans* ()->ris(_trans(), false); // средний слой (тетронная графика)
-		}
-		e.draw((int64)sum_area.x.min, (int64)sum_area.y.min,
-			int64(sum_area.x.max) - int64(sum_area.x.min) + 1, int64(sum_area.y.max) - int64(sum_area.y.min) + 1,
-			&master_bm, (int64)sum_area.x.min, (int64)sum_area.y.min);
-		top_graph.set_picture(master_bm.size);
-		_picture* ka_top = top_graph.draw(); // верхний слой
-		if (ka_top)
-			e.draw((int64)sum_area.x.min, (int64)sum_area.y.min,
-				int64(sum_area.x.max) - int64(sum_area.x.min) + 1, int64(sum_area.y.max) - int64(sum_area.y.min) + 1,
-				ka_top, (int64)sum_area.x.min, (int64)sum_area.y.min);
+		if (master_bm.resize(r.x, r.y)) master_obl_izm = _area_old(0, r.x + 1.0, 0, r.y + 1.0);
+		if (!master_obl_izm) return;
+		master_bm.set_area((_area2)master_obl_izm);
+		_area_old erkan(0, (double)master_bm.size.x, 0, (double)master_bm.size.y);
+		master_obl_izm = master_obl_izm.expansion(0.1);
+		master_obl_izm &= erkan;
+		master_bm.clear(c_background);
+		master_chain_go.clear();
+		n_ko->operator _t_trans* ()->ris(_trans(), false);
 		master_obl_izm = _tarea::empty;
 	}
 
@@ -285,7 +273,6 @@ namespace mutator
 
 	void mouse_button_left(bool pressed)
 	{
-		if (top_graph.mouse_button_left(mouse_xy, pressed)) return;
 		*n_s_left->operator int64* () = pressed;
 		if (pressed) n_down_left->run(0, n_down_left, flag_run); else n_up_left->run(0, n_up_left, flag_run);
 	}
