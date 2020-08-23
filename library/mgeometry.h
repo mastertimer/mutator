@@ -238,8 +238,6 @@ t_t using __xy = vec2<_t>;
 typedef __xy<double> _xy;
 typedef __xy<int>    _ixy;
 
-using vec2f = vec2<double>;
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename _t>
@@ -313,7 +311,7 @@ typedef __area<int>    _areai_old;
 struct _trans
 {
 	double scale  = 1.0;
-	vec2f  offset = {0.0, 0.0};
+	_xy    offset = {0.0, 0.0};
 
 	_trans operator*(_trans tr);  // сместить и промасштабировать
 	_trans operator/(_trans tr);  // обратно сместить и промасштабировать
@@ -322,13 +320,13 @@ struct _trans
 	bool   operator==(_trans& b);
 	bool   operator!=(const _trans& b);
 
-	void   MasToch(vec2f b, double m); // промасштабировать вокруг точки
+	void   MasToch(_xy b, double m); // промасштабировать вокруг точки
 	_trans inverse() const noexcept;   // обратная трансформация
-	vec2f  inverse(vec2f b) const noexcept;
+	_xy  inverse(_xy b) const noexcept;
 	_area_old  inverse(const _area_old& b) const noexcept;
 
 	_area_old  operator()(const _area_old& b) const noexcept; // применение трансформации
-	vec2f  operator()(const vec2f& b) const noexcept; // применение трансформации
+	_xy  operator()(const _xy& b) const noexcept; // применение трансформации
 	double operator()(double b) const noexcept;       // применение трансформации
 };
 

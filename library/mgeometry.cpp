@@ -91,7 +91,7 @@ bool _trans::operator==(_trans& b) { return ((scale == b.scale) && (offset.x == 
 
 bool _trans::operator!=(const _trans& b) { return ((scale != b.scale) || (offset.x != b.offset.x) || (offset.y != b.offset.y)); }
 
-void _trans::MasToch(vec2f b, double m)
+void _trans::MasToch(_xy b, double m)
 {
 	offset.x = b.x + m * (offset.x - b.x);
 	offset.y = b.y + m * (offset.y - b.y);
@@ -104,7 +104,7 @@ _trans _trans::inverse() const noexcept
 	return {mm, {-offset.x * mm, -offset.y * mm}};
 }
 
-vec2f _trans::inverse(const vec2f b) const noexcept { return {(b.x - offset.x) / scale, (b.y - offset.y) / scale}; }
+_xy _trans::inverse(const _xy b) const noexcept { return {(b.x - offset.x) / scale, (b.y - offset.y) / scale}; }
 
 _area_old _trans::inverse(const _area_old& b) const noexcept
 {
@@ -118,7 +118,7 @@ _area_old _trans::inverse(const _area_old& b) const noexcept
 	return c;
 }
 
-vec2f _trans::operator()(const vec2f& b) const noexcept { return vec2f{b.x * scale + offset.x, b.y * scale + offset.y}; }
+_xy _trans::operator()(const _xy& b) const noexcept { return _xy{b.x * scale + offset.x, b.y * scale + offset.y}; }
 
 double _trans::operator()(const double b) const noexcept { return scale * b; }
 
