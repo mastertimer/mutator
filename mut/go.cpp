@@ -15,7 +15,7 @@ void _g_edit_double::ris2(_trans tr, bool final)
 	master_bm.text((int)(oo.x.min + 5), (int)(oo.y.min + 1), s.c_str(), sf2, c0, 0xff000000);
 	if (n_act_key == this)
 	{
-		vec2i size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
+		_size2i size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
 		master_bm.line({ (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + 1) }, { (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + sf2) }, c0);
 	}
 }
@@ -125,7 +125,7 @@ void _g_edit_int::ris2(_trans tr, bool final)
 	master_bm.text((int)(oo.x.min + 5), (int)(oo.y.min + 1), s.c_str(), sf2, c0, 0xff000000);
 	if (n_act_key == this)
 	{
-		vec2i size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
+		_size2i size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
 		master_bm.line({ (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + 1) }, { (int)(oo.x.min + 4 + size.x),
 			(int)(oo.y.min + sf2) }, c0);
 	}
@@ -260,7 +260,7 @@ void _g_edit_string::ris2(_trans tr, bool final)
 	{
 		int l2_min = 1;
 		int l2_max = l - first;
-		vec2i size = master_bm.size_text(s->substr(first, len2).c_str(), sf);
+		_size2i size = master_bm.size_text(s->substr(first, len2).c_str(), sf);
 		if (size.x > rx_text)
 		{
 			while (first + len2 > cursor)
@@ -304,7 +304,7 @@ void _g_edit_string::ris2(_trans tr, bool final)
 	}
 	if (n_act_key == this)
 	{
-		vec2i size = master_bm.size_text(s->substr(first, (int64)cursor - first).c_str(), sf);
+		_size2i size = master_bm.size_text(s->substr(first, (int64)cursor - first).c_str(), sf);
 		master_bm.line({ (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + 1) }, { (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + sf) }, c0);
 	}
 }
@@ -420,7 +420,7 @@ void _g_edit_multi_string::ris2(_trans tr, bool final)
 
 	if (n_act_key == this)
 	{
-		vec2i size = master_bm.size_text(str->line[cursor.y].substr(0, cursor.x).c_str(), sf);
+		_size2i size = master_bm.size_text(str->line[cursor.y].substr(0, cursor.x).c_str(), sf);
 		master_bm.line({ (int)(oo.x.min + 4 * tr.scale + size.x - 1),
 			(int)(oo.y.min + (((int64)cursor.y - first) * 16 + 4) * tr.scale) },
 			{ (int)(oo.x.min + 4 * tr.scale + size.x - 1),
@@ -736,7 +736,7 @@ void _g_edit_one::ris2(_trans tr, bool final)
 		master_bm.text((int)(oo.x.min + 5), (int)(oo.y.min + 1), s.c_str(), sf2, c0, 0xff000000);
 		if (n_act_key == this)
 		{
-			vec2i size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
+			_size2i size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
 			master_bm.line({ (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + 1) },
 				{ (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + sf2) }, c0);
 		}
@@ -752,7 +752,7 @@ void _g_edit_one::ris2(_trans tr, bool final)
 		master_bm.text((int)(oo.x.min + 5), (int)(oo.y.min + 1), s.c_str(), sf2, c0, 0xff000000);
 		if (n_act_key == this)
 		{
-			vec2i size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
+			_size2i size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
 			master_bm.line({ (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + 1) },
 				{ (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + sf2) }, c0);
 		}

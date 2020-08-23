@@ -906,8 +906,8 @@ void _g_text::set_text(std::wstring_view s2)
 {
 	del_area();
 	s = s2;
-	vec2i size = master_bm.size_text(s2, 13);
-	local_area = _area_old(-1, size.x, 0, size.y);
+	_size2i size = master_bm.size_text(s2, 13);
+	local_area = _area_old(-1, (double)size.x, 0, (double)size.y);
 	area_definite = false;
 	add_area();
 }
@@ -933,7 +933,7 @@ void add_hint(std::wstring_view hint, _t_go* g)
 	if (hint.empty()) return;
 	_t_trans* ko = *n_ko;
 	_trans tr = master_trans_go;
-	vec2i siz = master_bm.size_text(hint, 13);
+	_size2i siz = master_bm.size_text(hint, 13);
 	tr.offset += _xy{ -siz.x * 0.5, -15.0 } +_xy{ g->local_area.x(0.5), g->local_area.y.min } *tr.scale;
 	tr.scale = 1;
 	_g_text* go = new _g_text;
