@@ -189,7 +189,7 @@ namespace mutator
 		master_obl_izm &= erkan;
 		master_bm.clear(c_background);
 		master_chain_go.clear();
-		n_ko->operator _t_trans* ()->ris(_trans2(), false);
+		n_ko->operator _t_trans* ()->ris(_trans(), false);
 		master_obl_izm.clear();
 	}
 

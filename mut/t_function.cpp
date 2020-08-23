@@ -262,7 +262,7 @@ void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 				_t_trans* rat2 = (raa) ? raa->ttrans() : nullptr;
 				if (rat2) // пока запрещено, потом возможно надо менять local_area??
 				{
-					_trans2 t2 = ra->oko_trans() / rat->trans;
+					_trans t2 = ra->oko_trans() / rat->trans;
 					rat->trans.offset.x += (mouse_xy.x - mouse_xy_pr.x) / t2.scale;
 					rat->trans.offset.y += (mouse_xy.y - mouse_xy_pr.y) / t2.scale;
 					ra->add_area();
@@ -275,7 +275,7 @@ void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 			}
 			if (g_cursor == _cursor::size_we)
 			{
-				_trans2 t2 = ra->oko_trans();
+				_trans t2 = ra->oko_trans();
 				ra->local_area.x.max += (mouse_xy.x - mouse_xy_pr.x) / t2.scale;
 				if (ra->local_area.x.max < ra->local_area.x.min)
 					ra->local_area.x.max = ra->local_area.x.min;
@@ -285,7 +285,7 @@ void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 				if (ra)
 				{
 					ra->del_area();
-					_trans2 t2 = ra->oko_trans();
+					_trans t2 = ra->oko_trans();
 					double q = ra->local_area.x.max;
 					ra->local_area.x.max += (mouse_xy.x - mouse_xy_pr.x) / t2.scale;
 					if (ra->local_area.x.max <= ra->local_area.x.min) ra->local_area.x.max = q; // или выделять нулевую ширину
@@ -296,7 +296,7 @@ void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 			}
 			if (g_cursor == _cursor::size_ns)
 			{
-				_trans2 t2 = ra->oko_trans();
+				_trans t2 = ra->oko_trans();
 				ra->local_area.y.max += (mouse_xy.y - mouse_xy_pr.y) / t2.scale;
 				if (ra->local_area.y.max < ra->local_area.y.min)
 					ra->local_area.y.max = ra->local_area.y.min;
@@ -306,7 +306,7 @@ void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 				if (ra)
 				{
 					ra->del_area();
-					_trans2 t2 = ra->oko_trans();
+					_trans t2 = ra->oko_trans();
 					double q = ra->local_area.y.max;
 					ra->local_area.y.max += (mouse_xy.y - mouse_xy_pr.y) / t2.scale;
 					if (ra->local_area.y.max <= ra->local_area.y.min) ra->local_area.y.max = q; // или выделять нулевую ширину
@@ -562,7 +562,7 @@ void fun24(_tetron* tt0, _tetron* tt, uint64 flags)
 	_t_trans* g = *tt0;
 	if (!g) return;
 	g->del_area();
-	g->trans = _trans2();
+	g->trans = _trans();
 	g->trans = g->oko_trans().inverse();
 	g->trans.offset.x += 16 * g->trans.scale;
 	g->trans.offset.y += 16 * g->trans.scale;

@@ -186,7 +186,7 @@ _wjson& _wjson::add(std::string_view name, const _multi_string& b)
 	return *this;
 }
 
-_wjson& _wjson::add(std::string_view name, _trans2 b)
+_wjson& _wjson::add(std::string_view name, _trans b)
 {
 	str(name, true);
 	add("scale", b.scale);
@@ -416,7 +416,6 @@ _area2 _rjson::read_area2(std::string_view name)
 {
 	_area2 res;
 	if (!obj(name)) return res;
-	_string type = read_string("type"); // !!!!!!!!!!
 	res.x = read_area("x");
 	res.y = read_area("y");
 	end();
@@ -431,9 +430,9 @@ void _rjson::read(std::string_view name, _coo2& b)
 	end();
 }
 
-_trans2 _rjson::read_trans(std::string_view name)
+_trans _rjson::read_trans(std::string_view name)
 {
-	_trans2 res;
+	_trans res;
 	if (!obj(name)) return res;
 	read("scale", res.scale);
 	read("offset", res.offset);

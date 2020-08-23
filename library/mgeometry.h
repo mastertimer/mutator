@@ -175,7 +175,7 @@ struct _area2
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _trans2
+struct _trans
 {
 	double scale = 1.0;
 	_coo2 offset = { 0.0, 0.0 };
@@ -184,14 +184,14 @@ struct _trans2
 	_coo2  operator()(const _coo2& b) const noexcept; // применение трансформации
 	double operator()(double b) const noexcept { return scale * b; } // применение трансформации
 
-	_trans2 operator*(_trans2 tr) const noexcept;  // сместить и промасштабировать
-	_trans2 operator/(_trans2 tr) const noexcept;  // обратно сместить и промасштабировать
+	_trans operator*(_trans tr) const noexcept;  // сместить и промасштабировать
+	_trans operator/(_trans tr) const noexcept;  // обратно сместить и промасштабировать
 
-	void operator*=(_trans2 tr) noexcept { offset += tr.offset * scale; scale *= tr.scale; }
-	void operator/=(_trans2 tr); // обратно сместить и промасштабировать
-	bool operator!=(const _trans2& b) const noexcept;
+	void operator*=(_trans tr) noexcept { offset += tr.offset * scale; scale *= tr.scale; }
+	void operator/=(_trans tr); // обратно сместить и промасштабировать
+	bool operator!=(const _trans& b) const noexcept;
 
-	_trans2 inverse() const noexcept;   // обратная трансформация
+	_trans inverse() const noexcept;   // обратная трансформация
 	_coo2 inverse(_coo2 b) const noexcept;
 	_area2 inverse(const _area2& b) const noexcept;
 
@@ -202,4 +202,4 @@ struct _trans2
 
 uint test_line(_coo2 p1, _coo2 p2, _coo2 b);
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

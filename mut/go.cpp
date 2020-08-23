@@ -3,7 +3,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_edit_double::ris2(_trans2 tr, bool final)
+void _g_edit_double::ris2(_trans tr, bool final)
 {
 	_g_rect::ris2(tr, final);
 	_area2 oo = tr(local_area);
@@ -106,7 +106,7 @@ _g_edit_double::_g_edit_double() : cursor(0), a(0.0)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_edit_int::ris2(_trans2 tr, bool final)
+void _g_edit_int::ris2(_trans tr, bool final)
 {
 	_area2 oo = tr(local_area);
 	uint c0 = get_c();
@@ -235,7 +235,7 @@ void _g_edit_int::key_press(ushort key)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_edit_string::ris2(_trans2 tr, bool final)
+void _g_edit_string::ris2(_trans tr, bool final)
 {
 	_area2 oo = tr(local_area);
 	uint c0 = get_c();
@@ -371,7 +371,7 @@ _g_edit_string::_g_edit_string()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_edit_multi_string::ris2(_trans2 tr, bool final)
+void _g_edit_multi_string::ris2(_trans tr, bool final)
 {
 	_area2 oo = tr(local_area);
 	if ((oo.x.length() <= 3) || (oo.y.length() <= 3)) return;
@@ -618,7 +618,7 @@ bool _g_edit64bit::mouse_move2(_coo2 r)
 	return true;
 }
 
-void _g_edit64bit::ris2(_trans2 tr, bool final)
+void _g_edit64bit::ris2(_trans tr, bool final)
 {
 	_area2  oo = tr(local_area);
 	double d = oo.x.length();
@@ -702,7 +702,7 @@ bool _g_edit_one::mouse_down_left2(_coo2 r)
 	return true;
 }
 
-void _g_edit_one::ris2(_trans2 tr, bool final)
+void _g_edit_one::ris2(_trans tr, bool final)
 {
 	_g_rect::ris2(tr, final);
 	_area2 bb = tr(local_area);
@@ -895,7 +895,7 @@ void _g_button::RisIco(const char* kod, const char* s)
 	picture.text16(0, y, ss, c_def);
 }
 
-void _g_button::ris2(_trans2 tr, bool final)
+void _g_button::ris2(_trans tr, bool final)
 {
 	_area2 oo = tr(local_area);
 	uint c = 0;
@@ -973,7 +973,7 @@ bool _g_button::mouse_down_left2(_coo2 r)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_color_ring::ris2(_trans2 tr, bool final)
+void _g_color_ring::ris2(_trans tr, bool final)
 {
 	const double toll = 2.0;
 	_area2 a = tr(local_area);
@@ -1095,7 +1095,7 @@ bool _g_list_link::mouse_down_left2(_coo2 r)
 	return true;
 }
 
-void _g_list_link::ris2(_trans2 tr, bool final)
+void _g_list_link::ris2(_trans tr, bool final)
 {
 	_g_rect::ris2(tr, final);
 	int sf = (int)(13 * tr.scale + 0.5);
@@ -1184,7 +1184,7 @@ void _g1list::init_sel() //вызывается только при отсутствии
 	}
 }
 
-void _g1list::ris2(_trans2 tr, bool final)
+void _g1list::ris2(_trans tr, bool final)
 {
 	_area2 oo2 = tr(oo);
 	uint c = get_c();
@@ -1373,7 +1373,7 @@ bool _g_tetron::test_local_area(_coo2 b)
 	return ((b - pp).len2() <= r * r);
 }
 
-void _g_tetron::ris2(_trans2 tr, bool final)
+void _g_tetron::ris2(_trans tr, bool final)
 {
 	_area2 a = tr(local_area);
 	_coo2 p = a.center();
@@ -1542,7 +1542,7 @@ void _g_tetron::add_unique_flags(_tetron* t, uint64 flags, bool after)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_tetron2::ris2(_trans2 tr, bool final)
+void _g_tetron2::ris2(_trans tr, bool final)
 {
 	_area2 a = tr(local_area);
 	_coo2 p = a.center();
@@ -1603,7 +1603,7 @@ void _g_tetron2::ris2(_trans2 tr, bool final)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_link::ris2(_trans2 tr, bool final)
+void _g_link::ris2(_trans tr, bool final)
 {
 	_coo2 pp11 = tr(p11);
 	_coo2 pp12 = tr(p12);
@@ -1691,7 +1691,7 @@ void _g_link::calc_local_area()
 	if ((tr1 == nullptr) || (tr2 == nullptr)) return;
 	_area2 a1 = tr1->trans(g1->local_area);
 	_area2 a2 = tr2->trans(g2->local_area);
-	par->trans = _trans2();
+	par->trans = _trans();
 	_coo2 p1 = a1.center();
 	double r1 = a1.radius();
 	_coo2 p2 = a2.center();

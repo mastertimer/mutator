@@ -2,10 +2,10 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_trans2    master_trans_go;     // трансформация тяни-толкай объекта, или объекта под мышкой
+_trans    master_trans_go;     // трансформация тяни-толкай объекта, или объекта под мышкой
 _chain_go master_chain_go;      // активная цепочка графических объектов
 bool      time_ris = false;     // отображать время рисования
-_trans2   master_trans_go_move; // трансформация n_go_move
+_trans   master_trans_go_move; // трансформация n_go_move
 _coo2       par_koo1;             // .....вспомогательная переменная  !!!ИЗБАВИТЬСЯ!!!
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,7 +69,7 @@ void _t_basic_go::add_area(_area2 a, bool first)
 	if (start) hash.stop();
 }
 
-void _t_basic_go::cha_area(_trans2 tr)
+void _t_basic_go::cha_area(_trans tr)
 {
 	_t_go* tgo = *this;
 	if (!tgo) return;
@@ -136,9 +136,9 @@ void _t_basic_go::del_area(_area2 a, bool first)
 	if (start) hash.stop();
 }
 
-_trans2 _t_basic_go::oko_trans(bool* ko)
+_trans _t_basic_go::oko_trans(bool* ko)
 {
-	_trans2 a;
+	_trans a;
 	_tetron* b = this;
 	_speed<_hash_table_tetron> hash;
 	bool nai = true;
@@ -192,7 +192,7 @@ void _t_basic_go::set_layer(double n)
 	t->add_flags(this, flag_information);
 }
 
-bool _t_basic_go::mouse_down_left(_trans2 tr)
+bool _t_basic_go::mouse_down_left(_trans tr)
 {
 	for (int i = (int)link.size() - 1; i >= 0; i--)
 	{
@@ -200,7 +200,7 @@ bool _t_basic_go::mouse_down_left(_trans2 tr)
 		if (!link[i]->test_flags(this, flag_sub_go)) continue;
 		if (_t_basic_go* aa = *a)
 		{
-			_trans2 tr2;
+			_trans tr2;
 			if (_t_go* tgo = *a)
 				tr2 = tr;
 			else
@@ -270,7 +270,7 @@ void _t_basic_go::find_pot_act(_coo2 r)
 			n_pot_act = this;
 }
 
-bool _t_basic_go::mouse_wheel(_trans2 tr)
+bool _t_basic_go::mouse_wheel(_trans tr)
 {
 	for (int i = (int)link.size() - 1; i >= 0; i--)
 	{
@@ -278,7 +278,7 @@ bool _t_basic_go::mouse_wheel(_trans2 tr)
 		if (!link[i]->test_flags(this, flag_sub_go)) continue;
 		if (_t_basic_go* aa = *a)
 		{
-			_trans2 tr2;
+			_trans tr2;
 			if (_t_go* tgo = *a)
 				tr2 = tr;
 			else
@@ -307,7 +307,7 @@ bool _t_basic_go::mouse_wheel(_trans2 tr)
 	return false;
 }
 
-bool _t_basic_go::final_fractal(const _trans2& tr)
+bool _t_basic_go::final_fractal(const _trans& tr)
 {
 	if (tr(calc_area()).radius() < final_radius()) return true;
 	auto h = master_chain_go.hash.find(this);
@@ -319,7 +319,7 @@ void _t_basic_go::priem_gv()
 {
 	_t_go* c = *n_act;
 	if (c == this) return;
-	_trans2 tr = c->oko_trans();
+	_trans tr = c->oko_trans();
 	c->clear_go_rod();
 	_t_trans* trr = set_t_trans(c, flag_part + flag_sub_go);
 	trr->del_area();
@@ -364,7 +364,7 @@ _t_trans* _t_basic_go::set_t_trans(_tetron* go, uint64 flags)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _t_trans::ris(_trans2 tr, bool final)
+void _t_trans::ris(_trans tr, bool final)
 {
 	tr *= trans;
 	if (((tr(calc_area())) & master_obl_izm).empty()) return;
@@ -393,7 +393,7 @@ void _t_trans::clear_go_rod()
 	}
 }
 
-bool _t_trans::mouse_move(_trans2 tr, bool final)
+bool _t_trans::mouse_move(_trans tr, bool final)
 {
 	if (!final) final = final_fractal(tr);
 	master_chain_go.push(this, tr);
@@ -403,7 +403,7 @@ bool _t_trans::mouse_move(_trans2 tr, bool final)
 		if (!link[i]->test_flags(this, flag_sub_go)) continue;
 		if (_t_basic_go * aa = *a)
 		{
-			_trans2 tr2;
+			_trans tr2;
 			if (_t_go * tgo = *a)
 				tr2 = tr;
 			else
@@ -510,7 +510,7 @@ _t_go::_t_go() : _t_basic_go(), key_fokus(false)
 {
 }
 
-void _t_go::ris(_trans2 tr, bool final)
+void _t_go::ris(_trans tr, bool final)
 {
 	if (((tr(calc_area())) & master_obl_izm).empty()) return;
 	if (!final) final = final_fractal(tr);
@@ -585,7 +585,7 @@ void _t_go::mouse_up_middle()
 	for (auto& i : var)	if (i) i->run(this, i, flag_run);
 }
 
-bool _t_go::mouse_move(_trans2 tr, bool final)
+bool _t_go::mouse_move(_trans tr, bool final)
 {
 	if (!final) final = final_fractal(tr);
 	master_chain_go.push(this, tr);
@@ -596,7 +596,7 @@ bool _t_go::mouse_move(_trans2 tr, bool final)
 			if (!link[i]->test_flags(this, flag_sub_go)) continue;
 			if (_t_basic_go * aa = *a)
 			{
-				_trans2 tr2;
+				_trans tr2;
 				if (_t_go * tgo = *a)
 					tr2 = tr;
 				else
@@ -666,7 +666,7 @@ void _t_go::mouse_up_left2(_coo2 r)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _chain_go::push(_t_basic_go* a, _trans2& tr)
+void _chain_go::push(_t_basic_go* a, _trans& tr)
 {
 	chain.push_back(a);
 	auto n = hash.find(a);
@@ -756,7 +756,7 @@ void _g_circle::calc_local_area()
 	local_area = { {center.x - radius, center.x + radius}, {center.y - radius, center.y + radius} };
 }
 
-void _g_circle::ris2(_trans2 tr, bool final)
+void _g_circle::ris2(_trans tr, bool final)
 {
 	master_bm.fill_ring(tr(center), tr(radius), tr(width), get_c(), get_c2());
 }
@@ -769,7 +769,7 @@ bool _g_circle::test_local_area(_coo2 b)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_froglif::ris2(_trans2 tr, bool final)
+void _g_froglif::ris2(_trans tr, bool final)
 {
 	_area2 a = tr(local_area);
 	master_bm.froglif(a.top_left(), a.min_length(), f, r_f, get_c(), get_c2());
@@ -797,7 +797,7 @@ void _g_line::calc_local_area()
 	local_area = (_area2(p1) + p2).expansion(width * 0.5);
 }
 
-void _g_line::ris2(_trans2 tr, bool final)
+void _g_line::ris2(_trans tr, bool final)
 {
 	master_bm.lines(tr(p1), tr(p2), tr(width), get_c());
 }
@@ -833,7 +833,7 @@ void _g_line::pop(_rjson& b)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_picture::ris2(_trans2 tr, bool final)
+void _g_picture::ris2(_trans tr, bool final)
 {
 	if (pic.size.x * pic.size.y == 0)
 	{
@@ -891,7 +891,7 @@ bool _g_picture::save_to_file(_path fn) const
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_rect::ris2(_trans2 tr, bool final)
+void _g_rect::ris2(_trans tr, bool final)
 {
 	_area2 oo = tr(local_area);
 	uint c2 = get_c2();
@@ -912,7 +912,7 @@ void _g_text::set_text(std::wstring_view s2)
 	add_area();
 }
 
-void _g_text::ris2(_trans2 tr, bool final)
+void _g_text::ris2(_trans tr, bool final)
 {
 	int sf = (int)(13 * tr.scale + 0.5);
 	if (sf < 5) return;
@@ -932,7 +932,7 @@ void add_hint(std::wstring_view hint, _t_go* g)
 	del_hint();
 	if (hint.empty()) return;
 	_t_trans* ko = *n_ko;
-	_trans2 tr = master_trans_go;
+	_trans tr = master_trans_go;
 	_size2i siz = master_bm.size_text(hint, 13);
 	tr.offset += _coo2{ -siz.x * 0.5, -15.0 } +_coo2{ g->local_area.x(0.5), g->local_area.y.min } *tr.scale;
 	tr.scale = 1;
@@ -956,7 +956,7 @@ void change_hint(std::wstring_view hint)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_test_graph::ris2(_trans2 tr, bool final)
+void _g_test_graph::ris2(_trans tr, bool final)
 {
 	static bool first = true;
 	if (first)
@@ -1023,7 +1023,7 @@ void _g_scrollbar::after_create_link(_link* li)
 	_t_go::after_create_link(li);
 }
 
-void _g_scrollbar::ris2(_trans2 tr, bool final)
+void _g_scrollbar::ris2(_trans tr, bool final)
 {
 	_area2 a = tr(local_area);
 	uint c = c_def;

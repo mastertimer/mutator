@@ -61,7 +61,7 @@ _area2 _area2::move(_coo2 d) const noexcept
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_trans2 _trans2::operator*(_trans2 tr) const noexcept
+_trans _trans::operator*(_trans tr) const noexcept
 {
 	tr.offset.x = offset.x + tr.offset.x * scale;
 	tr.offset.y = offset.y + tr.offset.y * scale;
@@ -69,18 +69,18 @@ _trans2 _trans2::operator*(_trans2 tr) const noexcept
 	return tr;
 }
 
-_coo2 _trans2::inverse(_coo2 b) const noexcept
+_coo2 _trans::inverse(_coo2 b) const noexcept
 {
 	return { (b.x - offset.x) / scale, (b.y - offset.y) / scale };
 }
 
-_trans2 _trans2::inverse() const noexcept
+_trans _trans::inverse() const noexcept
 {
 	double mm = 1.0 / scale;
 	return { mm, {-offset.x * mm, -offset.y * mm} };
 }
 
-_trans2 _trans2::operator/(_trans2 tr) const noexcept
+_trans _trans::operator/(_trans tr) const noexcept
 {
 	tr.scale = scale / tr.scale;
 	tr.offset.x = offset.x - tr.offset.x * tr.scale;
@@ -88,17 +88,17 @@ _trans2 _trans2::operator/(_trans2 tr) const noexcept
 	return tr;
 }
 
-bool _trans2::operator!=(const _trans2& b) const noexcept
+bool _trans::operator!=(const _trans& b) const noexcept
 {
 	return ((scale != b.scale) || (offset.x != b.offset.x) || (offset.y != b.offset.y));
 }
 
-_coo2 _trans2::operator()(const _coo2& b) const noexcept
+_coo2 _trans::operator()(const _coo2& b) const noexcept
 {
 	return _coo2{ b.x * scale + offset.x, b.y * scale + offset.y };
 }
 
-_area2 _trans2::inverse(const _area2& b) const noexcept
+_area2 _trans::inverse(const _area2& b) const noexcept
 {
 	if (b.empty()) return b;
 	_area2 c;
@@ -110,21 +110,21 @@ _area2 _trans2::inverse(const _area2& b) const noexcept
 	return c;
 }
 
-void _trans2::MasToch(_coo2 b, double m)
+void _trans::MasToch(_coo2 b, double m)
 {
 	offset.x = b.x + m * (offset.x - b.x);
 	offset.y = b.y + m * (offset.y - b.y);
 	scale *= m;
 }
 
-void _trans2::operator/=(_trans2 tr)
+void _trans::operator/=(_trans tr)
 {
 	scale /= tr.scale;
 	offset.x -= tr.offset.x * scale;
 	offset.y -= tr.offset.y * scale;
 }
 
-_area2 _trans2::operator()(const _area2& b) const noexcept
+_area2 _trans::operator()(const _area2& b) const noexcept
 {
 //	if (b.empty()) return b;
 	return { {b.x.min * scale + offset.x, b.x.max * scale + offset.x},
