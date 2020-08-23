@@ -1,6 +1,6 @@
 ﻿#include "g_tetron.h"
 #include "g_list_link.h"
-#include "go_edit.h"
+#include "go.h"
 #include "g1list.h"
 #include "t_function.h"
 

@@ -13,7 +13,7 @@
 #include "g1list.h"
 #include "g_button.h"
 #include "g_color_ring.h"
-#include "go_edit.h"
+#include "go.h"
 #include "g_list_link.h"
 #include "g_scrollbar.h"
 #include "g_tetron.h"

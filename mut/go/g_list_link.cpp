@@ -1,5 +1,5 @@
 ﻿#include "g_scrollbar.h"
-#include "go_edit.h"
+#include "go.h"
 #include "g_tetron.h"
 #include "t_function.h"
 #include "g_list_link.h"

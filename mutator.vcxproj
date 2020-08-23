@@ -162,8 +162,8 @@
     <ClCompile Include="library\mgraphics.cpp" />
     <ClCompile Include="library\mjson.cpp" />
     <ClCompile Include="mut\basic_go.cpp" />
+    <ClCompile Include="mut\go.cpp" />
     <ClCompile Include="mut\go\g1list.cpp" />
-    <ClCompile Include="mut\go\go_edit.cpp" />
     <ClCompile Include="mut\go\g_button.cpp" />
     <ClCompile Include="mut\go\g_color_ring.cpp" />
     <ClCompile Include="mut\go\g_list_link.cpp" />
@@ -183,8 +183,8 @@
     <ClInclude Include="library\mjson.h" />
     <ClInclude Include="library\mspeed.hpp" />
     <ClInclude Include="mut\basic_go.h" />
+    <ClInclude Include="mut\go.h" />
     <ClInclude Include="mut\go\g1list.h" />
-    <ClInclude Include="mut\go\go_edit.h" />
     <ClInclude Include="mut\go\g_button.h" />
     <ClInclude Include="mut\go\g_color_ring.h" />
     <ClInclude Include="mut\go\g_list_link.h" />

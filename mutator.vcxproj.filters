@@ -72,13 +72,13 @@
     <ClCompile Include="set\super_stat.cpp">
       <Filter>SET</Filter>
     </ClCompile>
-    <ClCompile Include="mut\go\go_edit.cpp">
-      <Filter>Mutator\go</Filter>
-    </ClCompile>
     <ClCompile Include="library\mgraphics.cpp">
       <Filter>Library</Filter>
     </ClCompile>
     <ClCompile Include="mut\basic_go.cpp">
+      <Filter>Mutator</Filter>
+    </ClCompile>
+    <ClCompile Include="mut\go.cpp">
       <Filter>Mutator</Filter>
     </ClCompile>
   </ItemGroup>
@@ -131,13 +131,13 @@
     <ClInclude Include="set\super_stat.h">
       <Filter>SET</Filter>
     </ClInclude>
-    <ClInclude Include="mut\go\go_edit.h">
-      <Filter>Mutator\go</Filter>
-    </ClInclude>
     <ClInclude Include="library\mgraphics.h">
       <Filter>Library</Filter>
     </ClInclude>
     <ClInclude Include="mut\basic_go.h">
+      <Filter>Mutator</Filter>
+    </ClInclude>
+    <ClInclude Include="mut\go.h">
       <Filter>Mutator</Filter>
     </ClInclude>
   </ItemGroup>
