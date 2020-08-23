@@ -34,15 +34,34 @@ bool _area2::operator<(const _area2& b) const noexcept
 	return ((x.min >= b.x.min) && (x.max <= b.x.max) && (y.min >= b.y.min) && (y.max <= b.y.max));
 }
 
-bool _area2::test(_coordinate2 b)
+bool _area2::test(_coo2 b)
 {
 	if (empty()) return false;
 	return ((b.x >= this->x.min) && (b.x <= this->x.max) && (b.y >= this->y.min) && (b.y <= this->y.max));
 }
 
+_size _area2::radius()
+{
+	if (empty()) return 0.0;
+	double dx = x.max - x.min;
+	double dy = y.max - y.min;
+	return ((dx < dy) ? dx : dy) / 2;
+}
+
+_area2 _area2::expansion(double b) const noexcept
+{
+	if (empty()) return *this;
+	return { {x.min - b, x.max + b}, {y.min - b, y.max + b} };
+}
+
+_area2 _area2::move(_coo2 d) const noexcept
+{
+	return { {x.min + d.x, x.max + d.x}, {y.min + d.y, y.max + d.y} };
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_transformation2 _transformation2::operator*(_transformation2 tr) const noexcept
+_trans _trans::operator*(_trans tr) const noexcept
 {
 	tr.offset.x = offset.x + tr.offset.x * scale;
 	tr.offset.y = offset.y + tr.offset.y * scale;
@@ -50,27 +69,52 @@ _transformation2 _transformation2::operator*(_transformation2 tr) const noexcept
 	return tr;
 }
 
-_coordinate2 _transformation2::inverse(_coordinate2 b) const noexcept
+_coo2 _trans::inverse(_coo2 b) const noexcept
 {
 	return { (b.x - offset.x) / scale, (b.y - offset.y) / scale };
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-_trans _trans::operator*(_trans tr)
+_trans _trans::inverse() const noexcept
 {
-	tr.offset.x = offset.x + tr.offset.x * scale;
-	tr.offset.y = offset.y + tr.offset.y * scale;
-	tr.scale *= scale;
-	return tr;
+	double mm = 1.0 / scale;
+	return { mm, {-offset.x * mm, -offset.y * mm} };
 }
 
-_trans _trans::operator/(_trans tr)
+_trans _trans::operator/(_trans tr) const noexcept
 {
-	tr.scale    = scale / tr.scale;
+	tr.scale = scale / tr.scale;
 	tr.offset.x = offset.x - tr.offset.x * tr.scale;
 	tr.offset.y = offset.y - tr.offset.y * tr.scale;
 	return tr;
+}
+
+bool _trans::operator!=(const _trans& b) const noexcept
+{
+	return ((scale != b.scale) || (offset.x != b.offset.x) || (offset.y != b.offset.y));
+}
+
+_coo2 _trans::operator()(const _coo2& b) const noexcept
+{
+	return _coo2{ b.x * scale + offset.x, b.y * scale + offset.y };
+}
+
+_area2 _trans::inverse(const _area2& b) const noexcept
+{
+	if (b.empty()) return b;
+	_area2 c;
+	double mm = 1.0 / scale;
+	c.x.min = (b.x.min - offset.x) * mm;
+	c.x.max = (b.x.max - offset.x) * mm;
+	c.y.min = (b.y.min - offset.y) * mm;
+	c.y.max = (b.y.max - offset.y) * mm;
+	return c;
+}
+
+void _trans::MasToch(_coo2 b, double m)
+{
+	offset.x = b.x + m * (offset.x - b.x);
+	offset.y = b.y + m * (offset.y - b.y);
+	scale *= m;
 }
 
 void _trans::operator/=(_trans tr)
@@ -80,62 +124,7 @@ void _trans::operator/=(_trans tr)
 	offset.y -= tr.offset.y * scale;
 }
 
-void _trans::operator*=(_trans tr)
-{
-	offset.x += tr.offset.x * scale;
-	offset.y += tr.offset.y * scale;
-	scale *= tr.scale;
-}
-
-bool _trans::operator==(_trans& b) { return ((scale == b.scale) && (offset.x == b.offset.x) && (offset.y == b.offset.y)); }
-
-bool _trans::operator!=(const _trans& b) { return ((scale != b.scale) || (offset.x != b.offset.x) || (offset.y != b.offset.y)); }
-
-void _trans::MasToch(vec2f b, double m)
-{
-	offset.x = b.x + m * (offset.x - b.x);
-	offset.y = b.y + m * (offset.y - b.y);
-	scale *= m;
-}
-
-_trans _trans::inverse() const noexcept
-{
-	double mm = 1.0 / scale;
-	return {mm, {-offset.x * mm, -offset.y * mm}};
-}
-
-vec2f _trans::inverse(const vec2f b) const noexcept { return {(b.x - offset.x) / scale, (b.y - offset.y) / scale}; }
-
-_area_old _trans::inverse(const _area_old& b) const noexcept
-{
-	if (b.type != _tarea::normal) return b;
-	_area_old c(_tarea::normal);
-	double mm = 1.0 / scale;
-	c.x.min   = (b.x.min - offset.x) * mm;
-	c.x.max   = (b.x.max - offset.x) * mm;
-	c.y.min   = (b.y.min - offset.y) * mm;
-	c.y.max   = (b.y.max - offset.y) * mm;
-	return c;
-}
-
-vec2f _trans::operator()(const vec2f& b) const noexcept { return vec2f{b.x * scale + offset.x, b.y * scale + offset.y}; }
-
-double _trans::operator()(const double b) const noexcept { return scale * b; }
-
-_area_old _trans::operator()(const _area_old& b) const noexcept
-{
-	if (b.type != _tarea::normal) return b;
-	_area_old c(_tarea::normal);
-	c.x.min = b.x.min * scale + offset.x;
-	c.x.max = b.x.max * scale + offset.x;
-	c.y.min = b.y.min * scale + offset.y;
-	c.y.max = b.y.max * scale + offset.y;
-	return c;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-_area2 _transformation2::operator()(const _area2& b) const noexcept
+_area2 _trans::operator()(const _area2& b) const noexcept
 {
 //	if (b.empty()) return b;
 	return { {b.x.min * scale + offset.x, b.x.max * scale + offset.x},
@@ -144,7 +133,7 @@ _area2 _transformation2::operator()(const _area2& b) const noexcept
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-uint test_line(_xy p1, _xy p2, _xy b)
+uint test_line(_coo2 p1, _coo2 p2, _coo2 b)
 {
 	if (p2.x < p1.x) std::swap(p1, p2);
 	if ((p1.x > b.x) || (p2.x <= b.x)) return 0;

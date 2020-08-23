@@ -24,10 +24,10 @@ struct _wjson
 	_wjson& add(std::string_view name, std::wstring_view b); //!!!!!
 	_wjson& add(std::string_view name, const _multi_string &b);
 	_wjson& add(std::string_view name, _trans b);
-	_wjson& add(std::string_view name, _xy b);
-	_wjson& add(std::string_view name, _area_old b);
+	_wjson& add(std::string_view name, _coo2 b);
+	_wjson& add(std::string_view name, _area2 b);
 	_wjson& add(std::string_view name, const _picture &b);
-	template <typename _t> _wjson& add(std::string_view name, _interval<_t> b);
+	_wjson& add(std::string_view name, _area b);
 
 	template <typename _t> _wjson& add(_t &b) { return add("", b); }
 
@@ -58,13 +58,13 @@ struct _rjson
 	void end(); // конец структуры или массива
 
 	const char* read_string(std::string_view name = "");
-	_area_old read_area(std::string_view name = "");
+	_area2 read_area2(std::string_view name = "");
 	_trans read_trans(std::string_view name = "");
-	_interval<double> read_interval(std::string_view name = "");
+	_area read_area(std::string_view name = "");
 
 	void read(std::string_view name, _picture& b);
 	void read(std::string_view name, _multi_string& b);
-	void read(std::string_view name, _xy& b);
+	void read(std::string_view name, _coo2& b);
 	void read(std::string_view name, double& b);
 	void read(std::string_view name, int64& b);
 	void read(std::string_view name, uint64& b);

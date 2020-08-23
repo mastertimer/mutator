@@ -181,16 +181,16 @@ namespace mutator
 
 	void draw(_size2i r)
 	{
-		if (master_bm.resize(r.x, r.y)) master_obl_izm = _area_old(0, r.x + 1.0, 0, r.y + 1.0);
+		if (master_bm.resize(r.x, r.y)) master_obl_izm = { {0, r.x + 1.0}, {0, r.y + 1.0} };
 		if (master_obl_izm.empty()) return;
 		master_bm.set_area((_area2)master_obl_izm);
-		_area_old erkan(0, (double)master_bm.size.x, 0, (double)master_bm.size.y);
+		_area2 erkan = { {0, (double)master_bm.size.x}, {0, (double)master_bm.size.y} };
 		master_obl_izm = master_obl_izm.expansion(0.1);
 		master_obl_izm &= erkan;
 		master_bm.clear(c_background);
 		master_chain_go.clear();
 		n_ko->operator _t_trans* ()->ris(_trans(), false);
-		master_obl_izm = _tarea::empty;
+		master_obl_izm.clear();
 	}
 
 	bool start(std::filesystem::path fn)
