@@ -184,7 +184,7 @@ void _g_tetron::ris2(_trans tr, bool final)
 			gl->add_flags(gg, flag_specialty, false);
 			gl->add_flags(gg2, flag_specialty2, false);
 			_t_trans* ttr3 = new _t_trans;
-			ttr3->set_layer(-1);
+			ttr3->set_layer(-1.0);
 			ttr3->add_flags(n_temp_go, flag_parent);
 			ttr3->add_flags(gl, flag_part + flag_sub_go, false);
 			ttr->add_flags(ttr3, flag_part + flag_sub_go, false);

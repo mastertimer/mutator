@@ -45,6 +45,7 @@ struct _t_trans;
 struct _t_string;
 struct _t_basic_go;
 struct _t_int;
+struct _t_double;
 struct _t_go;
 struct _g_scrollbar;
 struct _g_text;
@@ -123,31 +124,32 @@ struct _tetron
 	template <typename _t> _t* find_intermediate(_tetron* t, uint64 flags_before, uint64 flags_after); // промежуточный
 	void find_all_intermediate(_tetron* t, uint64 flags_before, uint64 flags_after, _vector_id& res); // все промежуточные (у родителей тоже)
 
-	        operator _tetron		* () { return this; }
-	virtual operator double			* () { return nullptr; }
-	virtual operator int64			* () { return nullptr; }
-	virtual operator _xy			* () { return nullptr; }
-	virtual operator std::wstring	* () { return nullptr; }
-	virtual operator _t_string		* () { return nullptr; }
-	virtual operator _multi_string	* () { return nullptr; }
-	virtual operator _picture		* () { return nullptr; }
-	virtual operator _t_function	* () { return nullptr; }
-	virtual operator _t_go			* () { return nullptr; }
-	virtual operator _t_int			* () { return nullptr; }
-	virtual operator _g_scrollbar	* () { return nullptr; }
-	virtual operator _g_text		* () { return nullptr; }
-	virtual operator _g_bitmap		* () { return nullptr; }
-	virtual operator _g1list		* () { return nullptr; }
-	virtual operator _g_tetron		* () { return nullptr; }
-	virtual operator _g_circle		* () { return nullptr; }
-	virtual operator _g_picture		* () { return nullptr; }
-	virtual operator _g_edit64bit	* () { return nullptr; }
-	virtual operator _g_list_link	* () { return nullptr; }
-	virtual operator _g_button		* () { return nullptr; }
-	virtual operator _g_rect		* () { return nullptr; }
-	virtual operator _t_trans		* () { return nullptr; }
-	virtual operator _t_basic_go	* () { return nullptr; }
-	virtual operator _one_tetron	* () { return nullptr; }
+	        operator _tetron       * () { return this; }
+	virtual operator double        * () { return nullptr; }
+	virtual operator int64         * () { return nullptr; }
+	virtual operator _xy           * () { return nullptr; }
+	virtual operator std::wstring  * () { return nullptr; }
+	virtual operator _t_string     * () { return nullptr; }
+	virtual operator _multi_string * () { return nullptr; }
+	virtual operator _picture      * () { return nullptr; }
+	virtual operator _t_function   * () { return nullptr; }
+	virtual operator _t_go         * () { return nullptr; }
+	virtual operator _t_int        * () { return nullptr; }
+	virtual operator _t_double     * () { return nullptr; }
+	virtual operator _g_scrollbar  * () { return nullptr; }
+	virtual operator _g_text       * () { return nullptr; }
+	virtual operator _g_bitmap     * () { return nullptr; }
+	virtual operator _g1list       * () { return nullptr; }
+	virtual operator _g_tetron     * () { return nullptr; }
+	virtual operator _g_circle     * () { return nullptr; }
+	virtual operator _g_picture    * () { return nullptr; }
+	virtual operator _g_edit64bit  * () { return nullptr; }
+	virtual operator _g_list_link  * () { return nullptr; }
+	virtual operator _g_button     * () { return nullptr; }
+	virtual operator _g_rect       * () { return nullptr; }
+	virtual operator _t_trans      * () { return nullptr; }
+	virtual operator _t_basic_go   * () { return nullptr; }
+	virtual operator _one_tetron   * () { return nullptr; }
 
 private:
 	typedef void (*func_fl)(uint64&, uint64);
@@ -176,7 +178,7 @@ struct _id
 
 inline std::vector<_id*> master_chosen; // дублирование особых связей
 
-inline std::map<int, _id> master_layers; // тетроны слоёв
+inline std::map<double, _id> master_layers; // тетроны слоёв
 
 inline _id n_ko;				// !!корневой графический объект (трансформация)
 inline _id n_s_shift;			// !!зажата клавиша Shift

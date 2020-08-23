@@ -177,13 +177,13 @@ void _t_basic_go::before_delete_link(_link* li)
 		if (li->pairr(this)->operator _t_basic_go * ()) del_area();
 }
 
-void _t_basic_go::set_layer(int n)
+void _t_basic_go::set_layer(double n)
 {
 	_id tt = master_layers[n];
-	_t_int* t;
+	_t_double* t;
 	if (!tt)
 	{
-		t = new _t_int;
+		t = new _t_double;
 		t->a = n;
 		t->add_flags(n_go_layer, flag_parent);
 		master_layers[n] = t;
@@ -711,8 +711,8 @@ _layers_go::_layers_go(_tetron* t) : tetron(t)
 		_tetron* tt = j->pairr(t);
 		if (!j->test_flags(t, flag_sub_go)) continue;
 		if (tt->operator _t_basic_go *() == nullptr) continue;
-		_t_int* ti = tt->find_intermediate<_t_int>(n_go_layer, inverted_flags(flag_information), flag_parent);
-		int n = (ti) ? (int)ti->a : 0;
+		_t_double* ti = tt->find_intermediate<_t_double>(n_go_layer, inverted_flags(flag_information), flag_parent);
+		double n = (ti) ? ti->a : 0;
 		map_.insert({n, tt});
 	}
 	i_m = map_.begin();

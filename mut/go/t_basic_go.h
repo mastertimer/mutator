@@ -34,7 +34,7 @@ struct _t_basic_go : public _tetron
 	virtual void priem_gv();              // сюда перетащен гвоздь активного элемента
 	virtual _t_trans* ttrans() { return nullptr; } // ищет первый тетрон с трансофрмацией, указывающий на этот _t_go
 	virtual double final_radius() { return 8.0; } // минимальный полуразмер, после которого не рисуется структура
-	void set_layer(int n); // задать слой
+	void set_layer(double n); // задать слой
 	_t_trans* set_t_trans(_tetron* go, uint64 flags); // именяет прокладочный тетрон ??
 };
 
@@ -133,8 +133,8 @@ struct _layers_go // для цикла по слоям графических о
 
 private:
 	_tetron* tetron = nullptr;
-	std::multimap<int, _id> map_;
-	std::map<int, _id>::iterator i_m;
+	std::multimap<double, _id> map_;
+	std::map<double, _id>::iterator i_m;
 	_t_basic_go* tetron2 = nullptr;
 };
 

@@ -2,6 +2,8 @@
 
 #include "tetron.h"
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct _t_int : public _tetron
 {
 	int64 a = 0;
@@ -17,19 +19,25 @@ struct _t_int : public _tetron
 	void  pop(_rjson& b)       override { _tetron::pop(b); b.read("a", a); }
 };
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct _t_double : public _tetron
 {
 	double a = 0.0;
 
-	uchar type()               override { return 7; }
-	int   get_froglif()        override { return 0x50; }
-	void  push(_stack* mem)    override { _tetron::push(mem); *mem << a; }
-	void  pop(_stack* mem)     override { _tetron::pop(mem); *mem >> a; }
-	void  push(_wjson& b)      override { _tetron::push(b); b.add("a", a); }
-	void  pop(_rjson& b)       override { _tetron::pop(b); b.read("a", a); }
+	operator _t_double* ()  override { return this; }
 
-	operator double* ()        override { return &a; }
+	uchar type()            override { return 7; }
+	int   get_froglif()     override { return 0x50; }
+	void  push(_stack* mem) override { _tetron::push(mem); *mem << a; }
+	void  pop(_stack* mem)  override { _tetron::pop(mem); *mem >> a; }
+	void  push(_wjson& b)   override { _tetron::push(b); b.add("a", a); }
+	void  pop(_rjson& b)    override { _tetron::pop(b); b.read("a", a); }
+
+	operator double* ()     override { return &a; }
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _t_string : public _tetron
 {
@@ -46,6 +54,8 @@ struct _t_string : public _tetron
 	operator _t_string* ()    override { return this; }
 };
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct _t_multi_string : public _tetron
 {
 	_multi_string s;
@@ -59,6 +69,8 @@ struct _t_multi_string : public _tetron
 
 	operator _multi_string* () override { return &s; }
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _one_tetron : public _tetron
 {
