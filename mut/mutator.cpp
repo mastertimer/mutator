@@ -20,7 +20,6 @@
 #include "mjson.h"
 #include "g_list_link.h"
 #include "t_function.h"
-#include "basic_tetrons.h"
 #include "t_function.h"
 #include "mjson.h"
 #include "g_graph.h"

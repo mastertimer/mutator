@@ -25,9 +25,6 @@
     <Filter Include="SET">
       <UniqueIdentifier>{48c4533f-e2a8-4202-8cd9-ad05add0a1aa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="graphics">
-      <UniqueIdentifier>{ad916be6-8001-449b-9ce0-fa270b3ad86f}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -75,12 +72,6 @@
     <ClCompile Include="set\super_stat.cpp">
       <Filter>SET</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\mgraphics.cpp">
-      <Filter>graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="mut\basic_tetrons.cpp">
-      <Filter>Mutator</Filter>
-    </ClCompile>
     <ClCompile Include="mut\go\t_basic_go.cpp">
       <Filter>Mutator\go</Filter>
     </ClCompile>
@@ -89,6 +80,9 @@
     </ClCompile>
     <ClCompile Include="mut\go\go_edit.cpp">
       <Filter>Mutator\go</Filter>
+    </ClCompile>
+    <ClCompile Include="library\mgraphics.cpp">
+      <Filter>Library</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -140,12 +134,6 @@
     <ClInclude Include="set\super_stat.h">
       <Filter>SET</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\mgraphics.h">
-      <Filter>graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="mut\basic_tetrons.h">
-      <Filter>Mutator</Filter>
-    </ClInclude>
     <ClInclude Include="mut\go\t_basic_go.h">
       <Filter>Mutator\go</Filter>
     </ClInclude>
@@ -154,6 +142,9 @@
     </ClInclude>
     <ClInclude Include="mut\go\go_edit.h">
       <Filter>Mutator\go</Filter>
+    </ClInclude>
+    <ClInclude Include="library\mgraphics.h">
+      <Filter>Library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

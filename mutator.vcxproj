@@ -157,11 +157,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="graphics\mgraphics.cpp" />
     <ClCompile Include="library\mbasic.cpp" />
     <ClCompile Include="library\mgeometry.cpp" />
+    <ClCompile Include="library\mgraphics.cpp" />
     <ClCompile Include="library\mjson.cpp" />
-    <ClCompile Include="mut\basic_tetrons.cpp" />
     <ClCompile Include="mut\go\g1list.cpp" />
     <ClCompile Include="mut\go\go_edit.cpp" />
     <ClCompile Include="mut\go\go_lite.cpp" />
@@ -179,12 +178,11 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="graphics\mgraphics.h" />
     <ClInclude Include="library\mbasic.h" />
     <ClInclude Include="library\mgeometry.h" />
+    <ClInclude Include="library\mgraphics.h" />
     <ClInclude Include="library\mjson.h" />
     <ClInclude Include="library\mspeed.hpp" />
-    <ClInclude Include="mut\basic_tetrons.h" />
     <ClInclude Include="mut\go\g1list.h" />
     <ClInclude Include="mut\go\go_edit.h" />
     <ClInclude Include="mut\go\go_lite.h" />

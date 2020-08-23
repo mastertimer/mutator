@@ -1,7 +1,5 @@
 ﻿#include "g1list.h"
 
-#include "basic_tetrons.h"
-
 void _g1list::init_sel() //вызывается только при отсутствии
 {
 	for (auto i : link)

@@ -1,5 +1,4 @@
 ﻿#include "g_tetron.h"
-#include "basic_tetrons.h"
 #include "g_list_link.h"
 #include "go_edit.h"
 #include "g1list.h"
