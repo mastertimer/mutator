@@ -58,7 +58,7 @@ void smena_avt()
 				_t_go* ra = *n_ramk2;
 
 				_area_old a2 = g->local_area;
-				if (!a2) a2 = g->calc_area();
+				if (a2.empty()) a2 = g->calc_area();
 				a2 = n_ko->operator _t_trans * ()->trans.inverse(g->oko_trans()(a2).expansion(3.0));
 
 				_t_trans* rat = n_ko->operator _t_basic_go * ()->set_t_trans(n_ramk2, flag_sub_go);
@@ -171,7 +171,7 @@ void find_ris_pot_act()
 		if (pred) ra->del_area();
 		_t_go* g = *n_pot_act;
 		_area_old a2 = g->local_area;
-		if (!a2) a2 = g->calc_area();
+		if (a2.empty()) a2 = g->calc_area();
 		a2 = n_ko->operator _t_trans * ()->trans.inverse(g->oko_trans()(a2).expansion(3.0));
 		_t_trans* rat = n_ko->operator _t_basic_go * ()->set_t_trans(ra, flag_sub_go);
 		rat->trans.offset = { a2.x.min, a2.y.min };

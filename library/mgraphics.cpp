@@ -2599,7 +2599,7 @@ void _picture::fill_ring(_xy p, double r, double d, uint c, uint c2)
 
 void _picture::fill_ellipse(_area_old o, double d, uint c, uint c2)
 {
-	if (!o) return;
+	if (o.empty()) return;
 	double rx3 = o.x.max - o.x.min;
 	double ry3 = o.y.max - o.y.min;
 	if (rx3 * ry3 < 0.25) return;
@@ -2761,7 +2761,7 @@ void _picture::fill_ellipse(_area_old o, double d, uint c, uint c2)
 
 void _picture::fill_ellipse2(_area_old o, double d, uint c, uint c2)
 {
-	if (!o) return;
+	if (o.empty()) return;
 	double rx3 = o.x.max - o.x.min;
 	double ry3 = o.y.max - o.y.min;
 	if (rx3 * ry3 < 0.25) return;

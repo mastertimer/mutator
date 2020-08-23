@@ -85,7 +85,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		init_shift(wParam);
 		mouse_xy = { ((double)(short)LOWORD(lParam)), ((double)(short)HIWORD(lParam)) };
 		n_move->run(0, n_move, flag_run);
-		if (master_obl_izm) paint(hWnd);
+		if (!master_obl_izm.empty()) paint(hWnd);
 		return 0;
 	case WM_MOUSELEAVE:
 		tracking_mouse = false;
@@ -109,21 +109,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		init_shift(GET_KEYSTATE_WPARAM(wParam));
 		*n_wheel->operator int64* () = GET_WHEEL_DELTA_WPARAM(wParam);
 		n_wheel->run(0, n_wheel, flag_run);
-		if (master_obl_izm) paint(hWnd);
+		if (!master_obl_izm.empty()) paint(hWnd);
 		return 0;
 	case WM_LBUTTONDOWN: case WM_RBUTTONDOWN: case WM_MBUTTONDOWN:
 		init_shift(wParam);
 		if (message == WM_LBUTTONDOWN) mutator::mouse_button_left(true);
 		if (message == WM_RBUTTONDOWN) mutator::mouse_button_right(true);
 		if (message == WM_MBUTTONDOWN) mutator::mouse_button_middle(true);
-		if (master_obl_izm) paint(hWnd);
+		if (!master_obl_izm.empty()) paint(hWnd);
 		return 0;
 	case WM_LBUTTONUP: case WM_RBUTTONUP: case WM_MBUTTONUP:
 		init_shift(wParam);
 		if (message == WM_LBUTTONUP) mutator::mouse_button_left(false);
 		if (message == WM_RBUTTONUP) mutator::mouse_button_right(false);
 		if (message == WM_MBUTTONUP) mutator::mouse_button_middle(false);
-		if (master_obl_izm) paint(hWnd);
+		if (!master_obl_izm.empty()) paint(hWnd);
 		return 0;
 	case WM_LBUTTONDBLCLK: case WM_RBUTTONDBLCLK: case WM_MBUTTONDBLCLK:
 		init_shift(wParam);
@@ -131,7 +131,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (message == WM_LBUTTONDBLCLK) n_down_left->run(0, n_down_left, flag_run);
 		if (message == WM_RBUTTONDBLCLK) n_down_right->run(0, n_down_right, flag_run);
 		if (message == WM_MBUTTONDBLCLK) n_down_middle->run(0, n_down_middle, flag_run);
-		if (master_obl_izm) paint(hWnd);
+		if (!master_obl_izm.empty()) paint(hWnd);
 		return 0;
 	case WM_KEYDOWN:
 		if (wParam == VK_F1)
@@ -161,12 +161,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		//		InitShift(Shift);
 		*n_down_key->operator int64* () = wParam;
 		n_down_key->run(0, n_down_key, flag_run);
-		if (master_obl_izm) paint(hWnd);
+		if (!master_obl_izm.empty()) paint(hWnd);
 		return 0;
 	case WM_CHAR:
 		*n_press_key->operator int64* () = wParam;
 		n_press_key->run(0, n_press_key, flag_run);
-		if (master_obl_izm) paint(hWnd);
+		if (!master_obl_izm.empty()) paint(hWnd);
 		return 0;
 	case WM_PAINT:
 	{
@@ -181,7 +181,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (wParam == 1)
 		{
 			n_timer1000->run(0, n_timer1000, flag_run);
-			if (master_obl_izm) paint(hWnd);
+			if (!master_obl_izm.empty()) paint(hWnd);
 		}
 		return 0;
 	case WM_CREATE:

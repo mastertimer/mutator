@@ -280,7 +280,7 @@ t_t struct __area // базовая область
 	__area(const __area& b) = default;
 	__area(const _area2& b);
 
-	operator bool() const { return type == _tarea::normal; } // обычная область?
+	bool empty() const noexcept { return type == _tarea::empty; }
 
 	operator _area2() const noexcept;
 

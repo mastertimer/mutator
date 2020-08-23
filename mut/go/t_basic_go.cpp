@@ -367,7 +367,7 @@ _t_trans* _t_basic_go::set_t_trans(_tetron* go, uint64 flags)
 void _t_trans::ris(_trans tr, bool final)
 {
 	tr *= trans;
-	if (!((tr(calc_area())) & master_obl_izm)) return;
+	if (((tr(calc_area())) & master_obl_izm).empty()) return;
 	if (!final) final = final_fractal(tr);
 	master_chain_go.push(this, tr);
 	for (_frozen_link a(this, flag_parent); a; a++)
@@ -512,7 +512,7 @@ _t_go::_t_go() : _t_basic_go(), local_area(_tarea::empty), key_fokus(false)
 
 void _t_go::ris(_trans tr, bool final)
 {
-	if (!((tr(calc_area())) & master_obl_izm)) return;
+	if (((tr(calc_area())) & master_obl_izm).empty()) return;
 	if (!final) final = final_fractal(tr);
 	master_chain_go.push(this, tr);
 	for (_frozen_link a(this, flag_parent); a; a++)
