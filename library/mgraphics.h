@@ -28,12 +28,12 @@ struct _picture
 	void invert_alpha(); // инвертировать альфа канал
 
 	void clear(uint c = 0xFF000000);
-	void line(_number2 p1, _number2 p2, uint c, bool rep = false); // линия rep - полное замещение цвета
+	void line(_num2 p1, _num2 p2, uint c, bool rep = false); // линия rep - полное замещение цвета
 	void lines(_xy p1, _xy p2, double l, uint c); // точная линия заданной толщины
 	void text16(int64 x, int64 y, const char* s, uint c); // простой текст высотой 16
 	void text16n(int64 x, int64 y, const char* s, int64 n, uint c); // простой текст высотой 16*n
 	static _size2i size_text16(std::string_view s, int64 n = 1); // размер текста *n
-	void froglif(_coordinate2 p, double r, uchar* f, int rf, uint c, uint c2 = 0);
+	void froglif(_coo2 p, double r, uchar* f, int rf, uint c, uint c2 = 0);
 
 	void fill_circle(double x, double y, double r, uint c);
 	void fill_ring(_xy p, double r, double d, uint c, uint c2);
@@ -56,7 +56,7 @@ struct _picture
 protected:
 	_area2i area; // разрешенная область для рисования
 
-	void line_vert_rep_speed(_number2 p, _number y2, uint c); // вертикальная линия замещения без проверок диапазона
+	void line_vert_rep_speed(_num2 p, _num y2, uint c); // вертикальная линия замещения без проверок диапазона
 
 	void fill_rect_rep_speed(_area2i r, uint c); // прямоугольник - просто замена цвета без проверок диапазона
 	void fill_rect_transparent_speed(_area2i r, uint c);

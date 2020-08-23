@@ -7,47 +7,30 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-using _coordinate  = double;
-using _size        = double;
+using _num = long long; // номер [x...x+1)
 
-using _coordinatei = long long;
-using _sizei       = long long;
-using _number      = long long;
-
-constexpr double de_i = 0.0001; // для больших чисел - не правильно!
-
-struct _size2;
-struct _area2;
-
-struct _coordinate2i
+struct _num2
 {
-	_coordinatei x, y;
+	_num x, y;
 };
 
-struct _coordinate2
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+using _coo = double; // координата [x...x]
+
+struct _coo2
 {
-	_coordinate x, y;
+	_coo x, y;
 
-	_coordinate2 operator-(_coordinate2 b) const noexcept { return { x - b.x, y - b.y }; }
-	_coordinate2 operator*(double b)       const noexcept { return { x * b, y * b }; }
+	_coo2 operator-(_coo2 b)  const noexcept { return { x - b.x, y - b.y }; }
+	_coo2 operator*(double b) const noexcept { return { x * b, y * b }; }
 
-	void operator+=(_coordinate2 b)              noexcept { x += b.x; y += b.y; }
+	void operator+=(_coo2 b)        noexcept { x += b.x; y += b.y; }
 };
 
-struct _number2
-{
-	_number x, y;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	operator _coordinate2() { return { x + 0.5, y + 0.5 }; }
-};
-
-struct _size2 // [0...x], [0...y]
-{
-	_size x, y;
-
-	bool empty() const noexcept { return (x < 0) || (y < 0); }
-	_coordinate2 center() const noexcept { return { x * 0.5, y * 0.5 }; }
-};
+using _sizei = long long; // размер [0...x)
 
 struct _size2i // [0...x), [0...y)
 {
@@ -59,25 +42,32 @@ struct _size2i // [0...x), [0...y)
 	bool   empty()  const noexcept { return ((x <= 0) || (y <= 0)); }
 	void   clear()        noexcept { x = y = 0; }
 	_sizei square() const noexcept { return ((x <= 0) || (y <= 0)) ? 0 : (x * y); }
-	_coordinate2 center() const noexcept { return { x * 0.5, y * 0.5 }; }
+	_coo2  center() const noexcept { return { x * 0.5, y * 0.5 }; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// min > max --> область не задана
+using _size = double; // размер [0...x]
+
+struct _size2 // [0...x], [0...y]
+{
+	_size x, y;
+
+	bool empty() const noexcept { return (x < 0) || (y < 0); }
+	_coo2 center() const noexcept { return { x * 0.5, y * 0.5 }; }
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct _areai // [...)
 {
-	_coordinatei min = 0;
-	_coordinatei max = 0;
-
-//	void set_from(_coordinatei b) noexcept { max = min = b; }       // наглядный пример,
-//	void set_from(_number b)          noexcept { max = (min = b) + 1; } // в чем разница,
-//	void set_from(_sizei b)             noexcept { min = 0; max = b; }    // хотя все 3 - long long!
+	_num min = 0;
+	_num max = 0;
 
 	void operator&=(const _areai& b) noexcept { if (b.min > min) min = b.min; if (b.max < max) max = b.max; }
 
 	_sizei size() const noexcept { return (min < max) ? (max - min) : 0; }
-//	bool empty()  const noexcept { return (max <= min); }
+	bool empty()  const noexcept { return (max <= min); }
 };
 
 struct _area2i
@@ -100,12 +90,12 @@ struct _area2i
 
 struct _area // [...]
 {
-	_coordinate min = 1;
-	_coordinate max = 0;
+	_coo min = 1;
+	_coo max = 0;
 
 	operator _areai() const noexcept
 	{
-		_areai res{ (_coordinatei)min, (_coordinatei)max };
+		_areai res{ (_num)min, (_num)max };
 		if (min < 0.0) if (min != res.min) res.min--;
 		if ((max >= 0.0)||(max == res.max)) res.max++;
 		return res;
@@ -116,6 +106,8 @@ struct _area // [...]
 	_size length() { return (max > min) ? (max - min) : 0; }
 };
 
+constexpr double de_i = 0.0001; // для больших чисел - не правильно!
+
 struct _area2
 {
 	_area x, y; // [...] [...]
@@ -125,7 +117,7 @@ struct _area2
 	_area2(_area x_, _area y_) : x(x_), y(y_) {}
 	_area2(_size2i b) : x{ 0.0, b.x - de_i }, y{ 0.0, b.y - de_i } {}
 	_area2(_size2 b) : x{ 0.0, b.x }, y{ 0.0, b.y } {}
-	_area2(_coordinate2 b) : x{ b.x, b.x }, y{ b.y, b.y } {}
+	_area2(_coo2 b) : x{ b.x, b.x }, y{ b.y, b.y } {}
 
 	void operator=(const _size2i b) noexcept { x = { 0, b.x - de_i }; y = { 0, b.y - de_i }; }
 
@@ -143,23 +135,23 @@ struct _area2
 
 	bool empty() const noexcept { return (x.min > x.max) || (y.min > y.max); }
 	void clear() noexcept { x = { 1.0, 0.0 }; }
-	_coordinate2 center() const noexcept { return { (x.max + x.min) * 0.5, (y.max + y.min) * 0.5 }; }
+	_coo2 center() const noexcept { return { (x.max + x.min) * 0.5, (y.max + y.min) * 0.5 }; }
 
-	bool test(_coordinate2 b); // принадлежит ли точка области
+	bool test(_coo2 b); // принадлежит ли точка области
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _transformation2
+struct _trans2
 {
-	double scale        = 1.0;
-	_coordinate2 offset = { 0.0, 0.0 };
+	double scale = 1.0;
+	_coo2 offset = { 0.0, 0.0 };
 
 	_area2 operator()(const _area2& b) const noexcept; // применение трансформации
-	void operator*=(_transformation2 tr) noexcept { offset += tr.offset * scale; scale *= tr.scale; }
-	_transformation2 operator*(_transformation2 tr) const noexcept;  // сместить и промасштабировать
+	void operator*=(_trans2 tr) noexcept { offset += tr.offset * scale; scale *= tr.scale; }
+	_trans2 operator*(_trans2 tr) const noexcept;  // сместить и промасштабировать
 
-	_coordinate2 inverse(_coordinate2 b) const noexcept;
+	_coo2 inverse(_coo2 b) const noexcept;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -175,10 +167,9 @@ t_t struct vec2
 	vec2() = default;
 
 //	TB operator vec2<_b>() const noexcept { return {_b(x), _b(y)}; };
-	operator _coordinate2()  const noexcept { return { (double)x, (double)y }; };
-	operator _coordinate2i() const noexcept { return { (int64)x, (int64)y }; };
+	operator _coo2()         const noexcept { return { (double)x, (double)y }; };
 	operator _size2i()       const noexcept { return { (int64)x, (int64)y }; };
-	operator _number2()      const noexcept { return { (int64)x, (int64)y }; };
+	operator _num2()         const noexcept { return { (int64)x, (int64)y }; };
 
 	[[nodiscard]] vec2 operator-() const noexcept;
 

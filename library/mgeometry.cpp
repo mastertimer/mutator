@@ -34,7 +34,7 @@ bool _area2::operator<(const _area2& b) const noexcept
 	return ((x.min >= b.x.min) && (x.max <= b.x.max) && (y.min >= b.y.min) && (y.max <= b.y.max));
 }
 
-bool _area2::test(_coordinate2 b)
+bool _area2::test(_coo2 b)
 {
 	if (empty()) return false;
 	return ((b.x >= this->x.min) && (b.x <= this->x.max) && (b.y >= this->y.min) && (b.y <= this->y.max));
@@ -42,7 +42,7 @@ bool _area2::test(_coordinate2 b)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_transformation2 _transformation2::operator*(_transformation2 tr) const noexcept
+_trans2 _trans2::operator*(_trans2 tr) const noexcept
 {
 	tr.offset.x = offset.x + tr.offset.x * scale;
 	tr.offset.y = offset.y + tr.offset.y * scale;
@@ -50,7 +50,7 @@ _transformation2 _transformation2::operator*(_transformation2 tr) const noexcept
 	return tr;
 }
 
-_coordinate2 _transformation2::inverse(_coordinate2 b) const noexcept
+_coo2 _trans2::inverse(_coo2 b) const noexcept
 {
 	return { (b.x - offset.x) / scale, (b.y - offset.y) / scale };
 }
@@ -135,7 +135,7 @@ _area_old _trans::operator()(const _area_old& b) const noexcept
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_area2 _transformation2::operator()(const _area2& b) const noexcept
+_area2 _trans2::operator()(const _area2& b) const noexcept
 {
 //	if (b.empty()) return b;
 	return { {b.x.min * scale + offset.x, b.x.max * scale + offset.x},

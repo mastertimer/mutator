@@ -240,7 +240,7 @@ void _picture::clear(uint c)
 	fill_rectangle(size, c, true);
 }
 
-void _picture::line(_number2 p1, _number2 p2, uint c, bool rep)
+void _picture::line(_num2 p1, _num2 p2, uint c, bool rep)
 {
 	uint kk = 255 - (c >> 24);
 	if ((kk == 0xFF) && (!rep)) return; // полностью прозрачная
@@ -706,7 +706,7 @@ void _picture::stretch_draw3(_picture* bm, int64 x, int64 y, double m)
 	}
 }
 
-void _picture::line_vert_rep_speed(_number2 p, _number y2, uint c)
+void _picture::line_vert_rep_speed(_num2 p, _num y2, uint c)
 {
 	uint* c2 = &data[p.y * size.x + p.x];
 	for (int64 y = p.y - y2; y <= 0; y++) { *c2 = c; c2 += size.x; }
@@ -1109,7 +1109,7 @@ void _picture::text16(int64 x, int64 y, const char* s, uint c)
 //  9 -  43691
 // 10 - 174763
 // 11 - 699051
-void _picture::froglif(_coordinate2 p, double r, uchar* f, int rf, uint c, uint c2)
+void _picture::froglif(_coo2 p, double r, uchar* f, int rf, uint c, uint c2)
 {
 	if (r < 1) return; // нечего рисовать
 	if (((c | c2) >> 24) == 0x00) return; // полностью прозрачный
