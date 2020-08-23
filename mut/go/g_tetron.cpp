@@ -190,7 +190,7 @@ void _g_tetron::ris2(_trans tr, bool final)
 			ttr->add_flags(ttr3, flag_part + flag_sub_go, false);
 			gl->k = kr / (n_orb * (2 + kr) - 2); // 0==0 k=1, 0= 0 k=0.5
 			gl->calc_local_area();
-			gl->area = _tarea::indefinite;
+			gl->area_definite = false;
 			inn++;
 		}
 		uze_nar += nn;

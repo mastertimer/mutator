@@ -25,7 +25,7 @@ void _g_scrollbar::prilip(_t_go* r)
 	if (vid == 4) local_area = _area_old(o.x.min, o.x.max, o.y.min - l, o.y.min);
 	if (vid == 5) local_area = _area_old(o.x.min - l, o.x.min, o.y.min, o.y.max);
 	//	if (vid > 1) trans = _trans(); //глобальная замена trans
-	area = _tarea::indefinite;
+	area_definite = false;
 	add_area();
 }
 

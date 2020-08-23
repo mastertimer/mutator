@@ -211,7 +211,6 @@ _wjson& _wjson::add(std::string_view name, _area_old b)
 	{
 	case _tarea::normal:     add("type", "normal");     break;
 	case _tarea::empty:      add("type", "empty");      break;
-	case _tarea::indefinite: add("type", "indefinite"); break;
 	}
 	add("x", b.x);
 	add("y", b.y);
@@ -425,8 +424,7 @@ _area_old _rjson::read_area(std::string_view name)
 	if (!obj(name)) return res;
 	_string type = read_string("type");
 	if (type == "normal")     res.type = _tarea::normal;     else
-	if (type == "empty")      res.type = _tarea::empty;      else
-	if (type == "indefinite") res.type = _tarea::indefinite; else { error = 11; return res; }
+	if (type == "empty")      res.type = _tarea::empty;      else { error = 11; return res; }
 	res.x = read_interval("x");
 	res.y = read_interval("y");
 	end();

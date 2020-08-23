@@ -14,15 +14,16 @@ extern _xy par_koo1; // .....вспомогательная переменная
 struct _t_basic_go : public _tetron
 {
 	_area_old area; // визуальная область полная
+	bool area_definite = false; // area задана
 
 	operator _t_basic_go* () { return this; }
 	void after_create_link(_link* li);          // вызывается после создания связи
 	void before_delete_link(_link* li);         // вызывается перед удалением связи
 	_area_old calc_area();                          // вычислить область
-	void cha_area(_area_old a = _tarea::indefinite); // эта область изменена внутри
+	void cha_area(_area_old a = {}, bool first = true); // эта область изменена внутри
 	void cha_area(_trans tr); // эта область изменена внутри c известной трансформацией
-	void add_area(_area_old a = _tarea::indefinite);         // эта область добавлена
-	void del_area(_area_old a = _tarea::indefinite);         // эта область удалена
+	void add_area(_area_old a = {}, bool first = true);         // эта область добавлена
+	void del_area(_area_old a = {}, bool first = true);         // эта область удалена
 	void find_pot_act(_xy r);                           // найти потенциально активный
 	virtual bool mouse_move(_trans tr, bool final) = 0; // перемещение мышки
 	virtual void ris(_trans tr, bool final) = 0; // нарисовать

@@ -266,14 +266,14 @@ struct _interval
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-enum class _tarea { normal = 0, empty, indefinite };
+enum class _tarea { normal = 0, empty };
 
 t_t struct __area // базовая область
 {
 	_interval<_t> x, y;
 	_tarea        type;
 
-	__area(_tarea t = _tarea::indefinite) : x(), y(), type(t) {}
+	__area(_tarea t = _tarea::empty) : x(), y(), type(t) {}
 	__area(_t minx, _t maxx, _t miny, _t maxy);
 	__area(_size2i s);
 	__area(__xy<_t> b) : x{ b.x, b.x }, y{ b.y, b.y }, type{ _tarea::normal } {}
@@ -533,7 +533,7 @@ t_t __area<_t> __area<_t>::expansion(_t b) const noexcept
 {
 	if (type != _tarea::normal)
 	{
-		if ((type == _tarea::empty) && (b > 0)) return _tarea::indefinite;
+		if ((type == _tarea::empty) && (b > 0)) return _tarea::empty;
 		return type;
 	}
 	return __area(this->x.min - b, this->x.max + b, this->y.min - b, this->y.max + b);
@@ -570,12 +570,6 @@ t_t void __area<_t>::operator+=(const __area& b) noexcept
 			*this = b;
 			return;
 		}
-		if (type == _tarea::indefinite) return;
-		if (b.type == _tarea::indefinite)
-		{
-			type = _tarea::indefinite;
-			return;
-		}
 	}
 	if (b.x.min < this->x.min) this->x.min = b.x.min;
 	if (b.x.max > this->x.max) this->x.max = b.x.max;
@@ -587,10 +581,9 @@ t_t __area<_t> __area<_t>::operator/(const __area& b) const noexcept
 {
 	if ((type != _tarea::normal) | (b.type != _tarea::normal))
 	{
-		if ((type == _tarea::indefinite) || (b.type == _tarea::indefinite)) return _tarea::indefinite;
 		if (type == _tarea::empty)
 		{
-			if (type == b.type) return _tarea::indefinite;
+			if (type == b.type) return _tarea::empty;
 			return type;
 		}
 		if (b.type == _tarea::empty) return _tarea::empty;
@@ -610,11 +603,6 @@ t_t void __area<_t>::operator&=(const __area& b) noexcept
 			type = _tarea::empty;
 			return;
 		}
-		if ((type == _tarea::indefinite) || (b.type == _tarea::indefinite))
-		{
-			type = _tarea::indefinite;
-			return;
-		}
 	}
 	if (b.x.min > this->x.min) this->x.min = b.x.min;
 	if (b.x.max < this->x.max) this->x.max = b.x.max;
@@ -632,7 +620,6 @@ t_t __area<_t> __area<_t>::operator&(const __area& b) const noexcept
 
 t_t bool __area<_t>::operator!=(const __area& b) const noexcept
 {
-	if ((type == _tarea::indefinite) || (b.type == _tarea::indefinite)) return true;
 	if ((type == _tarea::empty) || (b.type == _tarea::empty)) return (type != b.type);
 	return ((this->x.min != b.x.min) || (this->y.min != b.y.min) || (this->x.max != b.x.max) ||
 	        (this->y.max != b.y.max));
@@ -642,7 +629,6 @@ t_t void __area<_t>::operator=(_tarea t) { type = t; }
 
 t_t bool __area<_t>::operator==(const __area& b) const noexcept
 {
-	if ((type == _tarea::indefinite) || (b.type == _tarea::indefinite)) return false;
 	if ((type == _tarea::empty) || (b.type == _tarea::empty)) return (type == b.type);
 	return ((this->x.min == b.x.min) && (this->y.min == b.y.min) && (this->x.max == b.x.max) &&
 	        (this->y.max == b.y.max));

@@ -66,7 +66,7 @@ void smena_avt()
 				rat->trans.scale = 1.0 / n_ko->operator _t_trans * ()->trans.scale;
 				ra->local_area = _area_old(0, a2.x.length() / rat->trans.scale, 0, a2.y.length() / rat->trans.scale);
 
-				ra->area = _tarea::indefinite;
+				ra->area_definite = false;
 				init_shuba2();
 				ra->add_area();
 			}
@@ -177,7 +177,7 @@ void find_ris_pot_act()
 		rat->trans.offset = { a2.x.min, a2.y.min };
 		rat->trans.scale = 1.0 / n_ko->operator _t_trans * ()->trans.scale;
 		ra->local_area = _area_old(0, a2.x.length() / rat->trans.scale, 0, a2.y.length() / rat->trans.scale);
-		ra->area = _tarea::indefinite;
+		ra->area_definite = false;
 		init_shuba();
 		ra->add_area();
 		/*		if (pred)
@@ -282,7 +282,7 @@ void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 				ra->local_area.x.max += (mouse_xy.x - mouse_xy_pr.x) / t2.scale;
 				if (ra->local_area.x.max < ra->local_area.x.min)
 					ra->local_area.x.max = ra->local_area.x.min;
-				ra->area.type = _tarea::indefinite;
+				ra->area_definite = false;
 				ra->add_area();
 				ra = *n_act;
 				if (ra)
@@ -292,7 +292,7 @@ void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 					double q = ra->local_area.x.max;
 					ra->local_area.x.max += (mouse_xy.x - mouse_xy_pr.x) / t2.scale;
 					if (ra->local_area.x.max <= ra->local_area.x.min) ra->local_area.x.max = q; // или выделять нулевую ширину
-					ra->area.type = _tarea::indefinite;
+					ra->area_definite = false;
 					ra->add_area();
 					ra->resize();
 				}
@@ -303,7 +303,7 @@ void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 				ra->local_area.y.max += (mouse_xy.y - mouse_xy_pr.y) / t2.scale;
 				if (ra->local_area.y.max < ra->local_area.y.min)
 					ra->local_area.y.max = ra->local_area.y.min;
-				ra->area.type = _tarea::indefinite;
+				ra->area_definite = false;
 				ra->add_area();
 				ra = *n_act;
 				if (ra)
@@ -313,7 +313,7 @@ void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 					double q = ra->local_area.y.max;
 					ra->local_area.y.max += (mouse_xy.y - mouse_xy_pr.y) / t2.scale;
 					if (ra->local_area.y.max <= ra->local_area.y.min) ra->local_area.y.max = q; // или выделять нулевую ширину
-					ra->area.type = _tarea::indefinite;
+					ra->area_definite = false;
 					ra->add_area();
 					ra->resize();
 				}
@@ -693,7 +693,7 @@ void gen_ring()
 		pic->new_size(24, 24);
 		pic->pic.clear();
 		pic->local_area = pic->local_area.move({ -12,-12 });
-		pic->area = _tarea::indefinite;
+		pic->area_definite = false;
 		ttr->add_flags(pic, flag_sub_go + flag_part);
 	};
 

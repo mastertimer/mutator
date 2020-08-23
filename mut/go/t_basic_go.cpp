@@ -13,7 +13,8 @@ _xy       par_koo1;             // .....вспомогательная пере�
 
 _area_old _t_basic_go::calc_area()
 { // рекурсия невозможна
-	if (area.type != _tarea::indefinite) return area;
+	if (area_definite) return area;
+	area_definite = true;
 	if (_t_go* tgo = *this)
 		area = tgo->local_area;
 	else
@@ -37,18 +38,18 @@ _area_old _t_basic_go::calc_area()
 	return area;
 }
 
-void _t_basic_go::add_area(_area_old a)
+void _t_basic_go::add_area(_area_old a, bool first)
 {
 	static _speed<_hash_table_tetron> hash(false);
 	bool start = (hash.a == nullptr);
 	if (start) hash.start();
 	_t_go* tgo = *this;
 	_t_trans* ttr = *this;
-	if (a.type == _tarea::indefinite)
+	if (first)
 		a = calc_area();
 	else
 	{
-		if (!(a <= area)) area.type = _tarea::indefinite;
+		if (!(a <= area)) area_definite = false;
 		if (n_ko == this)
 		{
 			add_obl_izm((tgo) ? a : ttr->trans(a));
@@ -62,8 +63,8 @@ void _t_basic_go::add_area(_area_old a)
 		_tetron* t = i->pairr(this);
 		_t_basic_go* b = *t; if (b == nullptr) continue;
 		if (hash->find(t)) continue; // рекурсия не допускается
-		if (i->test_flags(t, flag_sub_go)) b->add_area((tgo) ? a : ttr->trans(a)); // можно ли
-		if (i->test_flags(t, flag_parent)) b->add_area(a); // И то И то?
+		if (i->test_flags(t, flag_sub_go)) b->add_area((tgo) ? a : ttr->trans(a), false); // можно ли
+		if (i->test_flags(t, flag_parent)) b->add_area(a, false); // И то И то?
 	}
 	hash->erase(this);
 	if (start) hash.stop();
@@ -76,7 +77,7 @@ void _t_basic_go::cha_area(_trans tr)
 	add_obl_izm(tr(tgo->local_area));
 }
 
-void _t_basic_go::cha_area(_area_old a)
+void _t_basic_go::cha_area(_area_old a, bool first)
 {
 	static _speed<_hash_table_tetron> hash(false);
 	bool start = (hash.a == nullptr);
@@ -89,7 +90,7 @@ void _t_basic_go::cha_area(_area_old a)
 		if (start) hash.stop(); // лишнее (предохранитель на будущее)
 		return;
 	}
-	if (a.type == _tarea::indefinite)
+	if (first)
 		if (tgo) a = tgo->local_area;
 	hash->insert(this);
 	for (auto i : link)
@@ -97,25 +98,25 @@ void _t_basic_go::cha_area(_area_old a)
 		_tetron* t = i->pairr(this);
 		_t_basic_go* b = *t; if (b == nullptr) continue;
 		if (hash->find(t)) continue; // рекурсия не допускается
-		if (i->test_flags(t, flag_sub_go)) b->cha_area((tgo) ? a : ttr->trans(a)); // можно ли
-		if (i->test_flags(t, flag_parent)) b->cha_area(a); // И то И то?
+		if (i->test_flags(t, flag_sub_go)) b->cha_area((tgo) ? a : ttr->trans(a), false); // можно ли
+		if (i->test_flags(t, flag_parent)) b->cha_area(a, false); // И то И то?
 	}
 	hash->erase(this);
 	if (start) hash.stop();
 }
 
-void _t_basic_go::del_area(_area_old a)
+void _t_basic_go::del_area(_area_old a, bool first)
 {
 	static _speed<_hash_table_tetron> hash(false);
 	bool start = (hash.a == nullptr);
 	if (start) hash.start();
 	_t_go* tgo = *this;
 	_t_trans* ttr = *this;
-	if (a.type == _tarea::indefinite)
+	if (first)
 		a = calc_area();
 	else
 	{
-		if (!(a < area)) area.type = _tarea::indefinite;
+		if (!(a < area)) area_definite = false;
 		if (n_ko == this)
 		{
 			add_obl_izm((tgo) ? a : ttr->trans(a));
@@ -129,8 +130,8 @@ void _t_basic_go::del_area(_area_old a)
 		_tetron* t = i->pairr(this);
 		_t_basic_go* b = *t; if (b == nullptr) continue;
 		if (hash->find(t)) continue; // рекурсия не допускается
-		if (i->test_flags(t, flag_sub_go)) b->del_area((tgo) ? a : ttr->trans(a)); // можно ли
-		if (i->test_flags(t, flag_parent)) b->del_area(a); // И то И то?
+		if (i->test_flags(t, flag_sub_go)) b->del_area((tgo) ? a : ttr->trans(a), false); // можно ли
+		if (i->test_flags(t, flag_parent)) b->del_area(a, false); // И то И то?
 	}
 	hash->erase(this);
 	if (start) hash.stop();
@@ -324,7 +325,7 @@ void _t_basic_go::priem_gv()
 	_t_trans* trr = set_t_trans(c, flag_part + flag_sub_go);
 	trr->del_area();
 	trr->trans = oko_trans().inverse() * tr;
-	trr->area = _tarea::indefinite;
+	trr->area_definite = false;
 	trr->add_area();
 }
 

@@ -28,7 +28,7 @@ void _g_circle::run(_tetron* tt0, _tetron* tt, uint64 flags)
 	if (a) width = a->d[0];
 	del_area();
 	calc_local_area();
-	area = _tarea::indefinite;
+	area_definite = false;
 	add_area();
 	_t_go::run(tt0, tt, flags);
 }
@@ -69,7 +69,7 @@ void _g_line::run(_tetron* tt0, _tetron* tt, uint64 flags)
 	if (a) width = a->d[0];
 	del_area();
 	calc_local_area();
-	area = _tarea::indefinite;
+	area_definite = false;
 	add_area();
 	_t_go::run(tt0, tt, flags);
 }
@@ -143,7 +143,7 @@ void _g_picture::new_size(int rx3, int ry3)
 	if (!pic.resize(rx3, ry3)) return;
 	del_area();
 	local_area = _area_old(0, (double)pic.size.x, 0, (double)pic.size.y);
-	area.type = _tarea::indefinite;
+	area_definite = false;
 	add_area();
 }
 
@@ -157,7 +157,7 @@ bool _g_picture::load_from_file(_path fn)
 	if (!bf) return false;
 	pic = std::move(bf);
 	local_area = _area_old(0, (double)pic.size.x, 0, (double)pic.size.y);
-	area.type = _tarea::indefinite;
+	area_definite = false;
 	add_area();
 	return true;*/
 	return true;
@@ -190,7 +190,7 @@ void _g_text::set_text(std::wstring_view s2)
 	s = s2;
 	vec2i size = master_bm.size_text(s2, 13);
 	local_area = _area_old(-1, size.x, 0, size.y);
-	area.type = _tarea::indefinite;
+	area_definite = false;
 	add_area();
 }
 

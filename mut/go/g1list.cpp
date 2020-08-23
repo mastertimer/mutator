@@ -76,7 +76,7 @@ void _g1list::calc_local_area()
 	}
 	local_area.y.max += ((int64)n - na) * 16;
 	local_area.y.min -= (na - 1LL) * 16;
-	area.type = _tarea::indefinite;
+	area_definite = false;
 }
 
 _g1list::_g1list()
