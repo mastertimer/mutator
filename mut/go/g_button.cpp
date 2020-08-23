@@ -1,5 +1,4 @@
-﻿#include "go_lite.h"
-#include "g_button.h"
+﻿#include "g_button.h"
 
 void _g_button::RisIco(const char* kod, const char* s)
 {

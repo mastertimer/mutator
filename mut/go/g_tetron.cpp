@@ -1,5 +1,4 @@
-﻿#include "go_lite.h"
-#include "g_tetron.h"
+﻿#include "g_tetron.h"
 
 bool _g_tetron::mouse_move2(_xy r)
 {

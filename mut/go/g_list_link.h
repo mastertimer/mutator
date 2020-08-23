@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "go_lite.h"
+#include "t_basic_go.h"
 
 struct _g_list_link : public _g_rect // графический объект - список связей
 {

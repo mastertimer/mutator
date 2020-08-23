@@ -75,9 +75,6 @@
     <ClCompile Include="mut\go\t_basic_go.cpp">
       <Filter>Mutator\go</Filter>
     </ClCompile>
-    <ClCompile Include="mut\go\go_lite.cpp">
-      <Filter>Mutator\go</Filter>
-    </ClCompile>
     <ClCompile Include="mut\go\go_edit.cpp">
       <Filter>Mutator\go</Filter>
     </ClCompile>
@@ -135,9 +132,6 @@
       <Filter>SET</Filter>
     </ClInclude>
     <ClInclude Include="mut\go\t_basic_go.h">
-      <Filter>Mutator\go</Filter>
-    </ClInclude>
-    <ClInclude Include="mut\go\go_lite.h">
       <Filter>Mutator\go</Filter>
     </ClInclude>
     <ClInclude Include="mut\go\go_edit.h">
