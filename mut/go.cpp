@@ -403,7 +403,7 @@ void _g_edit_multi_string::ris2(_trans tr, bool final)
 	if (cursor.y >= (int)str->line.size()) cursor.y = (int)str->line.size() - 1;
 	if (cursor.y < 0) cursor.y = 0;
 	if (first > cursor.y) first = cursor.y;
-	if (first + len2 > (int)str->line.size()) first = (int)str->line.size() - len2;
+	if (first + len2 > (int)str->line.size()) first = (int64)str->line.size() - len2;
 	if (first < 0) first = 0;
 	int64 k = len2;
 	if ((int)str->line.size() < first + k) k = (int64)str->line.size() - first;
@@ -523,7 +523,7 @@ void _g_edit_multi_string::key_down(ushort key)
 			if (cursor.x > l) cursor.x = l;
 			if (_g_scrollbar * polz = find1<_g_scrollbar>(flag_part))
 			{
-				int first = (int)(polz->position * max_i + 0.5);
+				int64 first = (int64)(polz->position * max_i + 0.5);
 				if (cursor.y >= first + len2)
 				{
 					polz->position = (double)(1LL + cursor.y - len2) / max_i;
@@ -628,10 +628,10 @@ void _g_edit64bit::ris2(_trans tr, bool final)
 	for (int j = 0; j < 8; j++)
 		for (int i = 0; i < 8; i++)
 			if (*c & (1ULL << (j * 8 + i)))
-				master_bm.fill_rectangle({ {(int)(oo.x.min + 1 + (d - 1) * 0.125 * i),
-					(int)(oo.x.min + (d - 1) * 0.125 * (i + 1.0))+1},
-					{(int)(oo.y.min + 1 + (d2 - 1) * 0.125 * j),
-					(int)(oo.y.min + (d2 - 1) * 0.125 * (j + 1.0))+1} }, c_max);
+				master_bm.fill_rectangle({ {(int64)(oo.x.min + 1 + (d - 1) * 0.125 * i),
+					(int64)(oo.x.min + (d - 1) * 0.125 * (i + 1.0))+1},
+					{(int64)(oo.y.min + 1 + (d2 - 1) * 0.125 * j),
+					(int64)(oo.y.min + (d2 - 1) * 0.125 * (j + 1.0))+1} }, c_max);
 	if ((d < 25) || (d2 < 25)) { master_bm.rectangle((_area2)oo, c_def); }
 	else
 	{
@@ -716,11 +716,11 @@ void _g_edit_one::ris2(_trans tr, bool final)
 	int  sf2 = (int)(13 * tr.scale + 0.5);
 	if (sf2 < 5) return;
 	if (mode == 0)
-		master_bm.fill_rectangle({ {(int)(bb.x(0.03)), (int)(bb.x(0.12))+1}, {(int)(bb.y(0.1)), (int)(bb.y(0.45))+1} }, c_def);
+		master_bm.fill_rectangle({ {(int64)(bb.x(0.03)), (int64)(bb.x(0.12))+1}, {(int64)(bb.y(0.1)), (int64)(bb.y(0.45))+1} }, c_def);
 	else
 		master_bm.rectangle({ {(int64)(bb.x(0.03)), (int64)(bb.x(0.12)) + 1}, {(int64)(bb.y(0.1)), (int64)(bb.y(0.45)) + 1} }, c_def);
 	if (mode == 1)
-		master_bm.fill_rectangle({ {(int)(bb.x(0.03)), (int)(bb.x(0.12))+1}, {(int)(bb.y(0.55)), (int)(bb.y(0.9))+1} }, c_def);
+		master_bm.fill_rectangle({ {(int64)(bb.x(0.03)), (int64)(bb.x(0.12))+1}, {(int64)(bb.y(0.55)), (int64)(bb.y(0.9))+1} }, c_def);
 	else
 		master_bm.rectangle({ {(int64)(bb.x(0.03)), (int64)(bb.x(0.12)) + 1}, {(int64)(bb.y(0.55)), (int64)(bb.y(0.9)) + 1} }, c_def);
 	master_bm.text((int)(bb.x(0.15)), (int)(bb.y.min + 5), std::to_wstring(n).c_str(), sf2, c0, 0xff000000);

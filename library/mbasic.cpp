@@ -279,6 +279,33 @@ std::wstring double_to_string(double a, int z)
 	return s;
 }
 
+std::string double_to_astring(double a, int z)
+{
+	static const double delta[16] = { 5E-1, 5E-2, 5E-3, 5E-4, 5E-5, 5E-6, 5E-7, 5E-8, 5E-9, 5E-10, 5E-11, 5E-12, 5E-13,
+		5E-14, 5E-15, 5E-16 };
+	std::string s;
+	if (a < 0)
+	{
+		a = -a;
+		s = "-";
+	}
+	if (z < 16)	a += delta[z];
+	int64 b = static_cast<int64>(a);
+	s += std::to_string(b);
+	if (z < 1) return s;
+	int l = (int)s.size();
+	s.resize(1i64 + l + z);
+	s[l] = '.';
+	for (int i = 1; i <= z; i++)
+	{
+		a -= b;
+		a *= 10;
+		b = static_cast<int64>(a);
+		s[(int64)l + i] = '0' + (char)b;
+	}
+	return s;
+}
+
 wstr uint64_to_wstr_hex(uint64 a)
 {
 	static const wchar_t zz[] = L"0123456789abcdef";

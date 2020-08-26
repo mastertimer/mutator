@@ -39,9 +39,10 @@ bool load_file(std::filesystem::path fn, char** data, uint* n);
 
 std::wstring string_to_wstring(std::string_view s);
 std::wstring u8string_to_wstring(std::string s);
-wstr     uint64_to_wstr_hex(uint64 a);
+wstr         uint64_to_wstr_hex(uint64 a);
 
 std::wstring double_to_string(double a, int z);
+std::string  double_to_astring(double a, int z);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -79,30 +80,27 @@ struct _stack
 	_stack(int64 r = 0);              // конструктор, r - зарезервировать размер
 	_stack(void* data2, int vdata); // конструктор, инициализация куском памяти
 	~_stack() { delete[] data; }
-	void clear()
-	{
-		size  = 0;
-		adata = 0;
-	}
+
+	void clear() { size  = 0; adata = 0; }
 	void erase(uint64 N, uint64 K);
 	bool save_to_file(std::filesystem::path fn);
 	bool load_from_file(std::filesystem::path fn);
 
 	t_b _stack& operator<<(const std::vector<_b>& b) noexcept;
 	t_b _stack& operator<<(_b a) noexcept;
-	_stack&    operator<<(const _stack& a) noexcept;
-	_stack&    operator<<(const std::wstring& a) noexcept;
-	void       push_data(const void* data2, uint64 vdata);
-	void       push_fill(int vdata, char c); // занести кучу одинаковых символов
-	void       push_int24(int a);            // записать 3 байта
+	    _stack& operator<<(const _stack& a) noexcept;
+	    _stack& operator<<(const std::wstring& a) noexcept;
+	    void    push_data(const void* data2, uint64 vdata);
+	    void    push_fill(int vdata, char c); // занести кучу одинаковых символов
+	    void    push_int24(int a);            // записать 3 байта
 
-	_stack&    operator>>(_stack& a) noexcept;
-	_stack&    operator>>(std::wstring& s) noexcept;
+	    _stack& operator>>(_stack& a) noexcept;
+	    _stack& operator>>(std::wstring& s) noexcept;
 	t_b _stack& operator>>(std::vector<_b>& b) noexcept;
 	t_b _stack& operator>>(_b& a) noexcept;
-	void       pop_data(void* data2, uint64 vdata);
+	    void    pop_data(void* data2, uint64 vdata);
 	t_b void    pop_end(_b& a); // извлечь переменную из стека С КОНЦА
-	void       pop_int24(int& a);
+	    void    pop_int24(int& a);
 
 	void revert(size_t bytes); // вернуть данные
 	void skip(size_t bytes);   // пропустить данные

@@ -794,7 +794,268 @@ _super_stat::_super_stat()
 	load_from_file(L"baza.cen");
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void _g_graph::ris2(_trans tr, bool final)
 {
-
+	_area2i a = tr(local_area);
+	draw();
+	master_bm.draw(a.x.min, a.y.min, bm.size.x, bm.size.y, &bm);
 }
+
+// вынести в общий модуль?
+void OSpordis(double min, double max, int64 maxN, double& mi, double& step)
+{
+	int64 n;
+	double step2;
+	if (maxN < 2) maxN = 2;
+	step = exp(round(log((max - min) / maxN) / log(10)) * log(10));
+	do
+	{
+		{
+			mi = (int64(min / step)) * step;
+			if (mi < min) mi += step;
+			n = (int64((max - mi) / step)) + 1;
+		}
+		if (n < maxN) step = step * 0.1; else break;
+	} while (true);
+	while (n > maxN)
+	{
+		step = step * 10;
+		{
+			mi = (int64(min / step)) * step;
+			if (mi < min) mi += step;
+			n = (int64((max - mi) / step)) + 1;
+		}
+	}
+	step2 = step;
+	step = step2 * 0.2;
+	{
+		mi = (int64(min / step)) * step;
+		if (mi < min) mi += step;
+		n = (int64((max - mi) / step)) + 1;
+	}
+	if (n <= maxN) return;
+	step = step2 * 0.5;
+	{
+		mi = (int64(min / step)) * step;
+		if (mi < min) mi += step;
+		n = (int64((max - mi) / step)) + 1;
+	}
+	if (n <= maxN) return;
+	step = step2;
+	{
+		mi = (int64(min / step)) * step;
+		if (mi < min) mi += step;
+		n = (int64((max - mi) / step)) + 1;
+	}
+}
+
+std::string date_to_ansi_string(int time)
+{
+	std::string res = "22.12.20";
+	_date_time a;
+	a = time;
+	res[0] = (a.day / 10) + '0';
+	res[1] = (a.day % 10) + '0';
+	int m = ((a.month - 1) % 12) + 1;
+	res[3] = (m / 10) + '0';
+	res[4] = (m % 10) + '0';
+	int g = ((a.month - 1) / 12) + 17;
+	res[6] = (g / 10) + '0';
+	res[7] = (g % 10) + '0';
+	return res;
+}
+
+void _g_graph::draw()
+{
+	if (!obn) return;
+	obn = false;
+	bm.clear();
+
+	_area y_; // диапазон у (grid)
+	static std::vector<int> time_; // отсчеты времени (grid)
+
+	double polzi_ = 0; // !! ползунок
+
+	_g_scrollbar* sb = find1<_g_scrollbar>(flag_part);
+	if (sb)	polzi_ = sb->position;
+
+	int ll = (int)curve.size();
+	if (ll == 0) return;
+
+	int64 k_el = bm.size.x / size_el;
+	if (k_el < 1) return;
+	double r_el = (double)bm.size.x / k_el;
+
+	int n = curve[0]->get_n();
+	if (n == 0) return;
+	//	v_vib_ = n - k_el;
+	v_vib = n - 1;
+	if (v_vib < 0) v_vib = 0;
+	int vib = (int)(polzi_ * v_vib + 0.5); // !! ползунок
+
+	int period = 60;
+	int pause_max = 3;
+	_element_chart* al = new _element_chart[ll]; // элементы линий
+	// 1-й проход - вычисление zmin, zmax
+	double zmin = 1E100;
+	double zmax = -1E100;
+	curve[0]->get_n_info(vib, &al[0]);
+	int timelast = al[0].time;
+	for (int i = 1; i < ll; i++) curve[i]->get_t_info(timelast, &al[i]);
+	timelast -= period;
+	int ke = 0; // количество построенных элементов
+	while (ke < k_el)
+	{
+		int timenext = 2000000000; // следующее врем€
+		for (int i = 0; i < ll; i++)
+			if (al[i].n >= 0)
+				if (al[i].time < timenext) timenext = al[i].time;
+		if (timenext == 2000000000) break;
+
+		//int dt = (timenext - timelast) / period;
+		//ke += (dt <= (pause_max + 1)) ? dt : 2;
+		//if (ke > k_el) break;
+		ke++;
+		timelast = timenext;
+
+		for (int i = 0; i < ll; i++)
+		{
+			if (al[i].n < 0) continue;
+			if (al[i].time == timelast)
+			{ // сработало
+				if (al[i].min < zmin) zmin = al[i].min;
+				if (al[i].max > zmax) zmax = al[i].max;
+				curve[i]->get_n_info(al[i].n + 1, &al[i]);
+			}
+		}
+	}
+	if (zmin == zmax) zmax = zmin + 1.0;
+	y_ = { zmin, zmax };
+	time_.clear();
+	// 2-й проход - рисование
+	curve[0]->get_n_info(vib, &al[0]);
+	timelast = al[0].time;
+	for (int i = 1; i < ll; i++) curve[i]->get_t_info(timelast, &al[i]);
+	timelast -= period;
+	ke = 0; // количество построенных элементов
+	while (ke < k_el)
+	{
+		int timenext = 2000000000; // следующее врем€
+		for (int i = 0; i < ll; i++)
+			if (al[i].n >= 0)
+				if (al[i].time < timenext) timenext = al[i].time;
+		if (timenext == 2000000000) break;
+
+		//int dt = (timenext - timelast) / period;
+		//ke += (dt <= (pause_max + 1)) ? dt : 2;
+		//if (ke > k_el) break;
+		ke++;
+		timelast = timenext;
+		time_.push_back(timelast);
+
+		for (int i = 0; i < ll; i++)
+		{
+			if (al[i].n < 0) continue;
+			if (al[i].time == timelast)
+			{ // сработало
+				double ymi = bm.size.y - (al[i].min - zmin) * bm.size.y / (zmax - zmin);
+				double yma = bm.size.y - (al[i].max - zmin) * bm.size.y / (zmax - zmin);
+				double x = r_el * (ke - 1i64);
+				curve[i]->draw(al[i].n, { {x, x + r_el}, {yma, ymi} }, &bm);
+				curve[i]->get_n_info(al[i].n + 1, &al[i]);
+			}
+		}
+	}
+	delete[] al;
+
+	// рисование сетки
+
+	uint col_setka = c_max - 0xE0000000; // цвет сетки
+	uint col_setka_font = c_def; // цвет подписи сетки
+	if (time_.size() < 1)
+	{
+		bm.line({ 0, 0 }, { bm.size.x - 1, bm.size.y - 1 }, 0xFF800000);
+		bm.line({ 0, bm.size.y - 1 }, { bm.size.x - 1 , 0 }, 0xFF800000);
+		return;
+	}
+	// рисование горизонтальных линий сетки с подпис€ми
+	int64 dex = 35; // длина подписи
+	int64 maxN = bm.size.y / 15;
+	if (maxN > 1)
+	{
+		double mi, step;
+		OSpordis(y_.min, y_.max, maxN, mi, step);
+		for (double y = mi; y < y_.max; y += step)
+		{
+			double yy = bm.size.y - 0.5 - (y - y_.min) * bm.size.y / (y_.max - y_.min);
+			bm.line({ dex, (int)(yy) }, { bm.size.x - dex, (int)(yy) }, col_setka);
+			bm.text16(0, (int)(yy - 7), double_to_astring(y, 2).c_str(), col_setka_font);
+			bm.text16(bm.size.x - dex, (int)(yy - 7), double_to_astring(y, 2).data(), col_setka_font);
+		}
+	}
+	// рисование вертикальных линий сетки с подпис€ми
+	static int g_delta_time[] = {
+		1, 2, 3, 5, 10, 15, 20, 30, // секунды
+		60, 120, 180, 300, 600, 900, 1200, 1800, // минуты
+		3600, 7200, 10800, 14400, 21600, 28800, 43200, // часы
+		86400, 172800, 345600, 691200, 1382400, // дни
+		2764800, 5529600, 8294400, 11059200, 16588800, // мес€ца
+		33177600 }; // год
+
+	double rel = r_el;
+	int stept = (((int)(dex / rel)) + 1) * period;
+	int ks = sizeof(g_delta_time) / sizeof(g_delta_time[0]);
+	for (int i = 0; i < ks; i++)
+		if (g_delta_time[i] >= stept)
+		{
+			stept = g_delta_time[i];
+			break;
+		}
+	int dele[] = { 1, 60, 3600, 86400, 2764800, 33177600 };
+	int ost[] = { 60, 60, 24, 32, 12, 1000 };
+	int ido = 0;
+	if (stept % 33177600) ido = 4;
+	if (stept % 2764800) ido = 3;
+	if (stept % 86400) ido = 2;
+	if (stept % 3600) ido = 1;
+	if (stept % 60) ido = 0;
+	std::string s = "00:00";
+	int mintime = 0;
+	int pr_time = 0;
+	for (uint i = 0; i < time_.size(); i++)
+	{
+		if (time_[i] == 0) continue;
+		if (mintime == 0) mintime = time_[i];
+		bool sca = ((pr_time > 0) && (time_[i] - pr_time > 36000));
+		pr_time = time_[i];
+		if (time_[i] % stept == 0)
+		{ // вертикальна€ лини€ с подписью
+			double x = rel * i;
+			if ((x <= dex) || (x >= (int64)bm.size.x - dex)) continue;
+			uint cl = (sca) ? (0x80FF0000) : col_setka;
+			bm.line({ (int)x, 0 }, { (int)x, bm.size.y - 1 }, cl);
+			if ((x - 13 <= dex) || (x + 13 >= (int64)bm.size.x - dex)) continue;
+			int ii = (time_[i] / dele[ido]) % ost[ido];
+			s[4] = '0' + (ii % 10);
+			s[3] = '0' + (ii / 10);
+			ii = (time_[i] / dele[ido + 1]) % ost[ido + 1];
+			s[1] = '0' + (ii % 10);
+			s[0] = '0' + (ii / 10);
+			bm.text16((int)(x - 13), bm.size.y - 11, s.data(), col_setka_font);
+			bm.text16((int)(x - 13), -2, s.data(), col_setka_font);
+			continue;
+		}
+		if (sca)
+		{
+			double x = rel * i;
+			if ((x <= dex) || (x >= (int64)bm.size.x - dex)) continue;
+			bm.line({ (int)x, 0 }, { (int)x, bm.size.y - 1 }, 0x80FF0000);
+		}
+	}
+	// рисование даты
+	bm.text16n(dex + 10, 10, date_to_ansi_string(mintime).data(), 4, c_max - 0x80000000);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
