@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-bool save_file(_path fn, const void* data, uint n)
+bool save_file(std::filesystem::path fn, const void* data, uint n)
 {
 	std::ofstream f(fn, std::ofstream::binary);
 	if (!f) return false;
@@ -10,7 +10,7 @@ bool save_file(_path fn, const void* data, uint n)
 	return f.good();
 }
 
-bool load_file(_path fn, char** data, uint* n)
+bool load_file(std::filesystem::path fn, char** data, uint* n)
 {
 	*data = 0;
 	*n    = 0;
@@ -79,12 +79,12 @@ void _stack::erase(uint64 N, uint64 K)
 	memmove(&data[N], &data[N + K], size - N);
 }
 
-bool _stack::save_to_file(_path fn)
+bool _stack::save_to_file(std::filesystem::path fn)
 { 
 	return save_file(fn, data, (uint)size);
 }
 
-bool _stack::load_from_file(_path fn)
+bool _stack::load_from_file(std::filesystem::path fn)
 {
 	if (data) delete[] data;
 	data     = 0;
@@ -104,7 +104,7 @@ _stack& _stack::operator<<(const _stack& a) noexcept
 	return *this;
 }
 
-_stack& _stack::operator<<(const _wstring& a) noexcept
+_stack& _stack::operator<<(const std::wstring& a) noexcept
 {
 	uint l = (uint)a.size();
 	*this << l;
@@ -139,7 +139,7 @@ _stack& _stack::operator>>(_stack& a) noexcept
 	return *this;
 }
 
-_stack& _stack::operator>>(_wstring& s) noexcept
+_stack& _stack::operator>>(std::wstring& s) noexcept
 {
 	uint v = 0;
 	*this >> v;
@@ -241,12 +241,12 @@ std::wstring string_to_wstring(std::string_view s)
 		L'Л', L'М', L'Н', L'О', L'П', L'Р', L'С', L'Т', L'У', L'Ф', L'Х', L'Ц', L'Ч', L'Ш', L'Щ', L'Ъ', L'Ы', L'Ь',
 		L'Э', L'Ю', L'Я', L'а', L'б', L'в', L'г', L'д', L'е', L'ж', L'з', L'и', L'й', L'к', L'л', L'м', L'н', L'о',
 		L'п', L'р', L'с', L'т', L'у', L'ф', L'х', L'ц', L'ч', L'ш', L'щ', L'ъ', L'ы', L'ь', L'э', L'ю', L'я'};
-	std::wstring res(s.size(), L' ');
+		std::wstring res(s.size(), L' ');
 	for (int i = 0; i < s.size(); i++) res[i] = conv[(uchar)s[i]];
 	return res;
 }
 
-_wstring u8string_to_wstring(std::string s)
+std::wstring u8string_to_wstring(std::string s)
 {
 	// TODO (u8 - utf-8)
 	return string_to_wstring(s);
@@ -298,7 +298,7 @@ wstr uint64_to_wstr_hex(uint64 a)
 	return (s + k0);
 }
 
-void _prng::init(uint64 b)
+void _rng::init(uint64 b)
 {
 	static constexpr uint64 dd[521] = {
 		0xBE3B0D3E773B3EAC, 0xE35381E6D8B09960, 0x8BC79403A0FFBC4A, 0x590FF05C9DB44258, 0x8E149C5DF9924DA6,

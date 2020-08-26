@@ -19,10 +19,10 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_tetron* create_tetron(const _string& name)
+_tetron* create_tetron(const std::string& name)
 {
 #define make(name) {""#name, []() -> _tetron* { return new name; }}
-	static std::map<_string, std::function<_tetron* ()>> ss_tetron =
+	static std::map<std::string, std::function<_tetron* ()>> ss_tetron =
 	{
 		make(_tetron),
 		make(_g_edit64bit),
@@ -149,7 +149,7 @@ namespace mutator
 		{
 			tet.obj();
 			if (tet.null) break;
-			_string name = tet.read_string("name");
+			std::string name = tet.read_string("name");
 			uint64 my_id;
 			tet.read("id", my_id);
 			id_tetron = my_id;

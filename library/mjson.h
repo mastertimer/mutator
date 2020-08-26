@@ -6,7 +6,7 @@
 
 struct _wjson
 {
-	_wjson(_path fn);
+	_wjson(std::filesystem::path fn);
 	~_wjson() {	end(); }
 
 	_wjson& str(std::string_view name = "", bool lin = false); // стуктура
@@ -51,7 +51,7 @@ struct _rjson
 	int error = 0; // если != 0, файл сломан, все функции сразу должны вылетать
 	bool null = false;
 
-	_rjson(_path fn);
+	_rjson(std::filesystem::path fn);
 
 	bool obj(std::string_view name = ""); // стуктура
 	bool arr(std::string_view name = ""); // массив
@@ -70,7 +70,7 @@ struct _rjson
 	void read(std::string_view name, uint64& b);
 	void read(std::string_view name, uint& b);
 	void read(std::string_view name, char& b);
-	void read(std::string_view name, _wstring& b);
+	void read(std::string_view name, std::wstring& b);
 
 	void read_mem(std::string_view name, void* b, uint64 size); // блок памяти в виде строки
 

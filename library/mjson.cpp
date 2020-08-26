@@ -63,7 +63,7 @@ _wjson& _wjson::end()
 	return *this;
 }
 
-_wjson::_wjson(_path fn)
+_wjson::_wjson(std::filesystem::path fn)
 {
 	file.open(fn);
 	file << std::setprecision(18);
@@ -246,7 +246,7 @@ _wjson& _wjson::add_mem(std::string_view name, void* b, uint64 size)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_rjson::_rjson(_path fn)
+_rjson::_rjson(std::filesystem::path fn)
 {
 	file.open(fn);
 	if (!file.good()) { error = 55; return; }
@@ -336,7 +336,7 @@ bool _rjson::read_start(std::string_view name)
 	}
 	start = false;
 	if (name == "") return true;
-	_string s = read_just_string();
+	std::string s = read_just_string();
 	if (s != name) { error = 7; return false; }
 	char c = 0;
 	file >> c;
@@ -464,7 +464,7 @@ void _rjson::read(std::string_view name, _multi_string& b)
 
 void _rjson::read(std::string_view name, _picture& b)
 {
-	std::vector<_string> temp;
+	std::vector<std::string> temp;
 	if (!arr(name)) return;
 	while (!error)
 	{
@@ -491,7 +491,7 @@ void _rjson::read_mem(std::string_view name, void* b, uint64 size)
 	if (!string_to_mem(read_just_string(), b, (int)size)) error = 13;
 }
 
-void _rjson::read(std::string_view name, _wstring& b)
+void _rjson::read(std::string_view name, std::wstring& b)
 {
 	b = string_to_wstring2(read_string(name));
 }

@@ -865,7 +865,7 @@ void _g_picture::new_size(int rx3, int ry3)
 	add_area();
 }
 
-bool _g_picture::load_from_file(_path fn)
+bool _g_picture::load_from_file(std::filesystem::path fn)
 {
 	/*	del_area();
 		_stack fs;
@@ -881,7 +881,7 @@ bool _g_picture::load_from_file(_path fn)
 	return true;
 }
 
-bool _g_picture::save_to_file(_path fn) const
+bool _g_picture::save_to_file(std::filesystem::path fn) const
 {
 	/*	_stack fs((size_t)pic.size.x * pic.size.y * sizeof(_color));
 		fs << _bitmap_file(pic);
@@ -964,7 +964,7 @@ void _g_test_graph::ris2(_trans tr, bool final)
 		_picture te(120, 90);
 		te.clear();
 		for (int i = 0; i < 100; i++)
-			te.line({ prng.random(120), prng.random(90) }, { prng.random(120), prng.random(90) }, 0xFF2080FF);
+			te.line({ rng.random(120), rng.random(90) }, { rng.random(120), rng.random(90) }, 0xFF2080FF);
 		first = false;
 		a.clear(0xFF0000FF);
 		_area2i ogr({ 30, 225 }, { 25, 125 });

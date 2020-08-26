@@ -80,9 +80,6 @@
     <ClInclude Include="mut\t_function.h">
       <Filter>Mutator</Filter>
     </ClInclude>
-    <ClInclude Include="library\mspeed.hpp">
-      <Filter>Library</Filter>
-    </ClInclude>
     <ClInclude Include="library\mjson.h">
       <Filter>Library</Filter>
     </ClInclude>

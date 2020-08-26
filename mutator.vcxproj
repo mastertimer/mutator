@@ -175,7 +175,6 @@
     <ClInclude Include="library\mgeometry.h" />
     <ClInclude Include="library\mgraphics.h" />
     <ClInclude Include="library\mjson.h" />
-    <ClInclude Include="library\mspeed.hpp" />
     <ClInclude Include="mut\basic_go.h" />
     <ClInclude Include="mut\go.h" />
     <ClInclude Include="mut\mutator.h" />

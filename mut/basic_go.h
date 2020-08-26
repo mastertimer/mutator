@@ -248,8 +248,8 @@ struct _g_picture : public _t_go
 	void ris2(_trans tr, bool final) override;
 
 	void new_size(int rx3, int ry3);
-	bool load_from_file(_path fn);
-	bool save_to_file(_path fn) const;
+	bool load_from_file(std::filesystem::path fn);
+	bool save_to_file(std::filesystem::path fn) const;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
