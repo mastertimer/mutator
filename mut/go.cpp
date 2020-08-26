@@ -855,7 +855,7 @@ _g_edit_one::_g_edit_one()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_button::RisIco(const char* kod, const char* s)
+void _g_button::RisIco(astr kod, const char* s)
 {
 	picture.resize(24, 24);
 	picture.clear(0xFF000000);
@@ -868,7 +868,7 @@ void _g_button::RisIco(const char* kod, const char* s)
 	}
 	if (*s == 0) return;
 	int n = 1;
-	for (const char* i = s; *i; i++)
+	for (astr i = s; *i; i++)
 		if (*i == '\n') n++;
 	int y0 = -5;
 	int dy = 6;
@@ -883,9 +883,9 @@ void _g_button::RisIco(const char* kod, const char* s)
 		y0 = -3;
 		dy = 7;
 	}
-	const char* ss = s;
+	astr ss = s;
 	int y = y0;
-	for (const char* i = s; *i; i++)
+	for (astr i = s; *i; i++)
 		if (*i == '\n')
 		{
 			picture.text16(0, y, ss, c_def);

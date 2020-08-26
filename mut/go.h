@@ -37,7 +37,7 @@ struct _g_edit_int : public _t_go
 	int   get_froglif()               override { return 0xF9; }
 
 	void  ris2(_trans tr, bool final) override;
-	bool  mouse_wheel2(_coo2 r)         override;
+	bool  mouse_wheel2(_coo2 r)       override;
 	void  key_down(ushort key)        override;
 	void  key_press(ushort key)       override;
 };
@@ -78,7 +78,7 @@ struct _g_edit_multi_string : public _t_go
 	void ris2(_trans tr, bool final)                  override;
 	void key_press(ushort key)                        override;
 	void key_down(ushort key)                         override;
-	bool mouse_down_left2(_coo2 r)                      override;
+	bool mouse_down_left2(_coo2 r)                    override;
 	void run(_tetron* tt0, _tetron* tt, uint64 flags) override;
 
 private:
@@ -143,19 +143,19 @@ struct _g_button : public _t_go
 
 	uchar type()                     override { return 34; }
 	int   get_froglif()              override { return 0xF3; }
-	void  mouse_up_left2(_coo2 r)      override { cha_area(); }
-	void  mouse_move_left2(_coo2 r)    override {}
+	void  mouse_up_left2(_coo2 r)    override { cha_area(); }
+	void  mouse_move_left2(_coo2 r)  override {}
 
 	void ris2(_trans tr, bool final) override;
-	bool mouse_move2(_coo2 r)          override;
+	bool mouse_move2(_coo2 r)        override;
 	void mouse_finish_move()         override;
-	bool mouse_down_left2(_coo2 r)     override;
+	bool mouse_down_left2(_coo2 r)   override;
 	void push(_stack* mem)           override;
 	void pop(_stack* mem)            override;
 	void push(_wjson& b)             override;
 	void pop(_rjson& b)              override;
 
-	void RisIco(const char* kod, const char* s);
+	void RisIco(astr kod, const char* s);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -168,9 +168,9 @@ struct _g_color_ring : public _t_go
 	uchar type() { return 17; }
 	int get_froglif() { return 0x72; }
 	void ris2(_trans tr, bool final) override;
-	bool mouse_down_left2(_coo2 r)  override { change(r, true); return true; }
-	void mouse_move_left2(_coo2 r) override { change(r, false); }
-	void mouse_up_left2(_coo2 r)  override {}
+	bool mouse_down_left2(_coo2 r)   override { change(r, true); return true; }
+	void mouse_move_left2(_coo2 r)   override { change(r, false); }
+	void mouse_up_left2(_coo2 r)     override {}
 
 private:
 	static constexpr double li_r_1 = 0.35;
@@ -218,9 +218,9 @@ struct _g1list : public _t_go
 	operator _g1list* ()       override { return this; }
 
 	void ris2(_trans tr, bool final) override;
-	bool mouse_wheel2(_coo2 r)         override;
+	bool mouse_wheel2(_coo2 r)       override;
 	void mouse_finish_move()         override;
-	bool mouse_move2(_coo2 r)          override;
+	bool mouse_move2(_coo2 r)        override;
 
 private:
 	void init_sel(); // задать F_sel
@@ -248,9 +248,9 @@ struct _g_tetron : public _t_go
 	operator std::wstring* () { return &hint; }
 
 	void ris2(_trans tr, bool final) override;
-	bool mouse_move2(_coo2 r)          override;
+	bool mouse_move2(_coo2 r)        override;
 	void mouse_finish_move()         override;
-	bool test_local_area(_coo2 b)      override; // лежит ли точка внутри
+	bool test_local_area(_coo2 b)    override; // лежит ли точка внутри
 	void add_unique_flags(_tetron* t, uint64 flags, bool after = true) override; // создать уникальную связь
 
 private:

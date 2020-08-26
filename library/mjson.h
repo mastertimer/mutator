@@ -19,7 +19,7 @@ struct _wjson
 	_wjson& add(std::string_view name, int64 b)            { add_start(name) << b; return *this; }
 	_wjson& add(std::string_view name, double b)           { add_start(name) << b; return *this; }
 	_wjson& add(std::string_view name, std::string_view b) { add_start(name) << "\"" << b << "\""; return *this; }
-	_wjson& add(std::string_view name, const char* b)      { add_start(name) << "\"" << b << "\""; return *this; }
+	_wjson& add(std::string_view name, astr b)      { add_start(name) << "\"" << b << "\""; return *this; }
 
 	_wjson& add(std::string_view name, std::wstring_view b); //!!!!!
 	_wjson& add(std::string_view name, const _multi_string &b);
@@ -57,7 +57,7 @@ struct _rjson
 	bool arr(std::string_view name = ""); // массив
 	void end(); // конец структуры или массива
 
-	const char* read_string(std::string_view name = "");
+	astr read_string(std::string_view name = "");
 	_area2 read_area2(std::string_view name = "");
 	_trans read_trans(std::string_view name = "");
 	_area read_area(std::string_view name = "");
@@ -81,5 +81,5 @@ private:
 
 	bool read_start(std::string_view name = "");
 
-	const char* read_just_string();
+	astr read_just_string();
 };

@@ -299,7 +299,7 @@ void _rjson::end()
 	start = false;
 }
 
-const char * _rjson::read_just_string()
+astr _rjson::read_just_string()
 {
 	if (error) return "";
 	char c = 0;
@@ -345,7 +345,7 @@ bool _rjson::read_start(std::string_view name)
 	return false;
 }
 
-const char * _rjson::read_string(std::string_view name)
+astr _rjson::read_string(std::string_view name)
 {
 	if (!read_start(name)) return "";
 	return read_just_string();
@@ -455,7 +455,7 @@ void _rjson::read(std::string_view name, _multi_string& b)
 	if (!arr(name)) return;
 	while (!error)
 	{
-		const char* s = read_string();
+		astr s = read_string();
 		if (null) break;
 		b.line.push_back(string_to_wstring2(s));
 	}
@@ -468,7 +468,7 @@ void _rjson::read(std::string_view name, _picture& b)
 	if (!arr(name)) return;
 	while (!error)
 	{
-		const char* s = read_string();
+		astr s = read_string();
 		if (null) break;
 		temp.push_back(s);
 	}

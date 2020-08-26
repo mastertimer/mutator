@@ -889,7 +889,7 @@ _size2i  _picture::size_text16(std::string_view s, int64 n)
 	return {l*n, 13*n};
 }
 
-void _picture::text16n(int64 x, int64 y, const char* s, int64 n, uint c)
+void _picture::text16n(int64 x, int64 y, astr s, int64 n, uint c)
 {
 	if (n <= 1)
 	{
@@ -1008,7 +1008,7 @@ void _picture::text16n(int64 x, int64 y, const char* s, int64 n, uint c)
 	}
 }
 
-void _picture::text16(int64 x, int64 y, const char* s, uint c)
+void _picture::text16(int64 x, int64 y, astr s, uint c)
 {
 	constexpr int ly = 13;
 	if ((y >= area.y.max) || (y + ly <= area.y.min)) return;
