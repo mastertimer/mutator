@@ -45,12 +45,6 @@
     <ClCompile Include="library\mjson.cpp">
       <Filter>Library</Filter>
     </ClCompile>
-    <ClCompile Include="set\g_graph.cpp">
-      <Filter>SET</Filter>
-    </ClCompile>
-    <ClCompile Include="set\super_stat.cpp">
-      <Filter>SET</Filter>
-    </ClCompile>
     <ClCompile Include="library\mgraphics.cpp">
       <Filter>Library</Filter>
     </ClCompile>
@@ -59,6 +53,9 @@
     </ClCompile>
     <ClCompile Include="mut\go.cpp">
       <Filter>Mutator</Filter>
+    </ClCompile>
+    <ClCompile Include="set\set.cpp">
+      <Filter>SET</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -83,12 +80,6 @@
     <ClInclude Include="library\mjson.h">
       <Filter>Library</Filter>
     </ClInclude>
-    <ClInclude Include="set\g_graph.h">
-      <Filter>SET</Filter>
-    </ClInclude>
-    <ClInclude Include="set\super_stat.h">
-      <Filter>SET</Filter>
-    </ClInclude>
     <ClInclude Include="library\mgraphics.h">
       <Filter>Library</Filter>
     </ClInclude>
@@ -97,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="mut\go.h">
       <Filter>Mutator</Filter>
+    </ClInclude>
+    <ClInclude Include="set\set.h">
+      <Filter>SET</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

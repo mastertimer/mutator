@@ -1,9 +1,6 @@
-#define NOMINMAX
-#include <windows.h>
+#include "set.h"
 
-#include "super_stat.h"
-
-_super_stat ss; // СЃР¶Р°С‚С‹Рµ С†РµРЅС‹
+_super_stat ss; // сжатые цены
 
 constexpr _prices cena_zero_ = { {}, {}, { 1,1,1,1,1 } };
 
@@ -106,12 +103,12 @@ void _super_stat::read(int n, _prices& c, _info_pak* inf)
 	if (n == read_n)
 	{
 		c = read_cc;
-		if (inf) *inf = ip_n;
+		if (inf)* inf = ip_n;
 		return;
 	}
 	if (n == size - 1)
 	{
-		if (inf) *inf = ip_last;
+		if (inf)* inf = ip_last;
 		c = last_cc;
 		return;
 	}
@@ -155,7 +152,7 @@ void _super_stat::read(int n, _prices& c, _info_pak* inf)
 	}
 	c.pro[0].c = c.pok[0].c + delta + 1;
 	size_t aa1 = data.adata;
-	// РґРµРєРѕРґРёСЂРѕРІР°РЅРёРµ РїСЂРѕРґР°Р¶Рё
+	// декодирование продажи
 	for (int j = c.pro[0].c, n2 = 0, n = 0; n2 < rceni;)
 	{
 		data >> a;
@@ -201,7 +198,7 @@ void _super_stat::read(int n, _prices& c, _info_pak* inf)
 		}
 	}
 	size_t aa2 = data.adata;
-	// РґРµРєРѕРґРёСЂРѕРІР°РЅРёРµ РїРѕРєСѓРїРєРё
+	// декодирование покупки
 	for (int j = c.pok[0].c, n2 = 0, n = 0; n2 < rceni;)
 	{
 		data >> a;
@@ -252,12 +249,12 @@ void _super_stat::read(int n, _prices& c, _info_pak* inf)
 	ip_n.r = int(data.adata - aa0);
 	ip_n.r_pro = int(aa2 - aa1);
 	ip_n.r_pok = int(data.adata - aa2);
-	if (inf)*inf = ip_n;
+	if (inf)* inf = ip_n;
 }
 
 void _super_stat::add(_prices& c)
 {
-	// РЅР°СЃС‚СЂРѕР№РєР°, С‡С‚РѕР±С‹ РЅР°РІРµСЂРЅСЏРєР° РЅРµ СЃРѕРІРїР°Р»Рѕ 
+	// настройка, чтобы наверняка не совпало 
 	int delta = c.pro[0].c - c.pok[0].c - 1;
 	if (delta > 255) return; // !!!!!!!!!!!!!!!!!!!!
 	//  *TEMP.Add() = c;
@@ -270,10 +267,10 @@ void _super_stat::add(_prices& c)
 	else
 		ip_last.ok = true;
 	size++;
-	// РєРѕРґРёСЂРѕРІР°РЅРёРµ РІСЂРµРјРµРЅРё
+	// кодирование времени
 	size_t aa0 = data.size;
 	int dt = (int)c.time - (int)last_cc.time;
-	if (dt < 0) dt = 0; // РІСЂРµРјСЏ РјРѕР¶РµС‚ РёРґС‚Рё РЅР°Р·Р°Рґ!
+	if (dt < 0) dt = 0; // время может идти назад!
 	if (dt >= 255)
 	{
 		uchar dt2 = 255;
@@ -285,7 +282,7 @@ void _super_stat::add(_prices& c)
 		uchar dt2 = dt;
 		data << dt2;
 	}
-	// РєРѕРґРёСЂРѕРІР°РЅРёРµ РїСЂРѕСЃР»РѕР№РєРё
+	// кодирование прослойки
 	uchar a = (delta <= 6) ? delta : 7;
 	int delta2 = c.pok[0].c - last_cc.pok[0].c;
 	// 0..30   31 +2
@@ -306,11 +303,11 @@ void _super_stat::add(_prices& c)
 		data << a;
 	}
 	size_t aa1 = data.size;
-	int deko[64]; // РґРµР»СЊС‚Р° РєРѕРґРёСЂСѓРµРјР°СЏ
-	int reko[64]; // СЂРµР¶РёРј РєРѕРґРёСЂРѕРІР°РЅРёСЏ
-	// РєРѕРґРёСЂРѕРІР°РЅРёРµ РїСЂРѕРґР°Р¶Рё
-	int rez = 0; // РєРѕР»РёС‡РµСЃС‚РІРѕ Р±Р°Р№С‚ РЅР° РґРµР»СЊС‚Сѓ
-	int Vrez = 0; // РєРѕР»РёС‡РµСЃС‚РІРѕ РѕС‚СЃС‡РµС‚РѕРІ
+	int deko[64]; // дельта кодируемая
+	int reko[64]; // режим кодирования
+	// кодирование продажи
+	int rez = 0; // количество байт на дельту
+	int Vrez = 0; // количество отсчетов
 	for (int j = c.pro[0].c, n2 = 0, n = 0; j <= c.pro[rceni - 1].c; j++)
 	{
 		if (Vrez == 64)
@@ -544,10 +541,10 @@ void _super_stat::add(_prices& c)
 		}
 	}
 	otgruzka(rez, Vrez, deko);
-	// РєРѕРґРёСЂРѕРІР°РЅРёРµ РїРѕРєСѓРїРєРё
+	// кодирование покупки
 	size_t aa2 = data.size;
-	rez = 0; // РєРѕР»РёС‡РµСЃС‚РІРѕ Р±Р°Р№С‚ РЅР° РґРµР»СЊС‚Сѓ
-	Vrez = 0; // РєРѕР»РёС‡РµСЃС‚РІРѕ РѕС‚СЃС‡РµС‚РѕРІ
+	rez = 0; // количество байт на дельту
+	Vrez = 0; // количество отсчетов
 	for (int j = c.pok[0].c, n2 = 0, n = 0; j >= c.pok[rceni - 1].c; j--)
 	{
 		if (Vrez == 64)
@@ -797,3 +794,7 @@ _super_stat::_super_stat()
 	load_from_file(L"baza.cen");
 }
 
+void _g_graph::ris2(_trans tr, bool final)
+{
+
+}
