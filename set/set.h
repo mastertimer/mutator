@@ -198,7 +198,7 @@ struct _oracle3 : public _basic_curve // оракул 3-я версия
 
 struct _g_graph : public _t_go
 {
-	_g_graph()                                { local_area = { {0, 100}, {0, 100} }; }
+	_g_graph()                                { local_area = { {0, 200}, {0, 100} }; }
 
 	uchar type()                     override { return 9; }
 	int get_froglif()                override { return 0xF6; } // !!!!!
@@ -213,7 +213,7 @@ private:
 	int x_tani = 0; // предыдущая координата x при перетаскивании
 	int v_vib = 0; // диапазон полосы прокрутки
 
-	void draw();
+	void draw(_size2i size);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

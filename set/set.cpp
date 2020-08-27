@@ -801,7 +801,7 @@ _super_stat::_super_stat()
 void _g_graph::ris2(_trans tr, bool final)
 {
 	_area2i a = tr(local_area);
-	draw();
+	draw(a.size());
 	master_bm.draw(a.x.min, a.y.min, bm.size.x, bm.size.y, &bm);
 }
 
@@ -869,11 +869,14 @@ std::string date_to_ansi_string(int time)
 	return res;
 }
 
-void _g_graph::draw()
+void _g_graph::draw(_size2i size)
 {
+	if (size.x > 8000) size.x = 8000;
+	if (size.y > 4000) size.y = 4000;
+	if (bm.resize(size)) obn = true;
 	if (!obn) return;
 	obn = false;
-	bm.clear();
+	bm.clear(c_minn);
 
 	_area y_; // диапазон у (grid)
 	static std::vector<int> time_; // отсчеты времени (grid)

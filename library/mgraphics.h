@@ -23,7 +23,7 @@ struct _picture
 	uint& px(int64 x, int64 y) { return data[y * size.x + x]; }
 
 	void set_area(const _area2i &q) { area = q & size; }
-	bool resize(int64 w, int64 h);
+	bool resize(_size2i wh);
 	void set_transparent(); // узнать, есть ли прозрачные пиксели
 	void invert_alpha(); // инвертировать альфа канал
 
@@ -38,8 +38,6 @@ struct _picture
 	void fill_circle(double x, double y, double r, uint c);
 	void fill_ring(_coo2 p, double r, double d, uint c, uint c2);
 	void ring(_coo2 p, double r, double d, uint c);
-	void fill_ellipse(_area2 o, double d, uint c, uint c2);
-	void fill_ellipse2(_area2 o, double d, uint c, uint c2);
 
 	void fill_rectangle(_area2i r, uint c, bool rep = false);
 	void fill_rect_d(double x1, double y1, double x2, double y2, uint c); // полупрозрачный пр-к на !!непр-й!! подложке
@@ -82,7 +80,7 @@ struct _bitmap: public _picture
 	explicit _bitmap(int rx3 = 0, int ry3 = 0);
 	~_bitmap();
 
-	bool resize(int64 w, int64 h);
+	bool resize(_size2i wh);
 
 	void text(int x, int y, std::wstring_view s, int h, uint c, uint bg);
 	void text(int x, int y, std::string_view s, int h, uint c, uint bg);

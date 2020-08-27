@@ -1,4 +1,5 @@
 ﻿#include "go.h"
+#include "set.h"
 #include "t_function.h"
 
 _stack clipboard; // буффер обмена
@@ -643,119 +644,12 @@ void fun32(_tetron* tt0, _tetron* tt, uint64 flags)
 {
 }
 
-void gen_1krug()
-{
-	constexpr double width = 3.0;
-	constexpr double radius = 20.0;
-	_one_tetron* d = new _one_tetron(width);
-	d->add_flags(n_width, flag_parent);
-	_t_int* c = new _t_int;
-	c->a = c_max;
-	c->add_flags(n_color_line, flag_parent);
-	_g_circle* g2 = new _g_circle;
-	n_ko->operator _t_basic_go* ()->set_t_trans(g2, flag_sub_go + flag_part);
-	_one_tetron* r2 = new _one_tetron(radius);
-	r2->add_flags(n_radius, flag_parent);
-	g2->add_flags(r2, flag_part + flag_information);
-	g2->add_flags(d, flag_part + flag_information);
-	g2->add_flags(c, flag_part + flag_information);
-	g2->run(nullptr, g2, flag_run);
-}
-
-void gen_ring()
-{ // 1 - 6 - 13 - 20 (для r = 20, d = 2.7)
-	constexpr double width = 2.7;
-	constexpr double radius = 20.0;
-	_one_tetron* d = new _one_tetron(width);
-	d->add_flags(n_width, flag_parent);
-	_t_int* c = new _t_int;
-	c->a = 0x60000000ULL + c_background;
-	c->add_flags(n_color_bg, flag_parent);
-
-	auto ris_line = [](_g_circle* g, _coo2 k1, _coo2 k2)
-	{
-		_g_line* li = new _g_line;
-		_one_tetron* p1 = new _one_tetron(k1.x, k1.y);
-		_one_tetron* p2 = new _one_tetron(k2.x, k2.y);
-		p1->add_flags(n_begin, flag_parent);
-		p2->add_flags(n_end, flag_parent);
-		li->add_flags(p1, flag_part + flag_information);
-		li->add_flags(p2, flag_part + flag_information);
-		g->set_t_trans(li, flag_sub_go + flag_part + flag_run);
-	};
-
-	auto create_picture = [radius](_t_trans* ttr)
-	{
-		_g_picture* pic = new _g_picture;
-		pic->new_size(24, 24);
-		pic->pic.clear();
-		pic->local_area = pic->local_area.move({ -12,-12 });
-		pic->area_definite = false;
-		ttr->add_flags(pic, flag_sub_go + flag_part);
-	};
-
-	auto create_froglif = [radius](_t_trans* ttr)
-	{
-		_g_froglif* pic = new _g_froglif;
-		pic->local_area = { {-12, 12}, {-12, 12} };
-		pic->f_int = 0;// 0xAF;
-		ttr->add_flags(pic, flag_sub_go + flag_part);
-	};
-
-	std::wstring sss = L"😀";
-
-	auto create_text = [&sss, radius](_t_trans* ttr)
-	{
-		_g_text* pic = new _g_text;
-		pic->set_text(sss);
-		sss[1]++;
-		pic->local_area = pic->local_area.move({ -6, -6 });
-		ttr->trans.scale = 2.0;
-		ttr->add_flags(pic, flag_sub_go + flag_part);
-	};
-
-	//	auto create_button = create_text;
-	//	auto create_button = create_picture;
-	auto create_button = create_froglif;
-
-	_tetron* par = n_ko;
-	uint64 mm = 0;
-	_g_circle* g_main = nullptr;
-	for (uint64 i = 4; i >= 1; i--)
-	{
-		_g_circle* g2 = new _g_circle;
-		if (mm == 0) g_main = g2;
-		par->operator _t_basic_go* ()->set_t_trans(g2, flag_sub_go + flag_part + flag_run * mm);
-		_one_tetron* r2 = new _one_tetron((2 * i - 1) * radius + i * width);
-		r2->add_flags(n_radius, flag_parent);
-		g2->add_flags(r2, flag_part + flag_information);
-		g2->add_flags(d, flag_part + flag_information);
-		g2->add_flags(c, flag_part + flag_information);
-		mm = 1;
-		par = g2;
-		if (i == 1)
-		{
-			_t_trans* ttr = new _t_trans;
-			g2->add_flags(ttr, flag_part + flag_sub_go);
-			create_button(ttr);
-			continue;
-		}
-		int nn = (int)(pi / asin(radius / ((2 * i - 2) * radius + (i - 1) * width)));
-		for (int j = 0; j < nn; j++)
-		{
-			_coo2 v = { cos(2 * pi * (j + 0.5) / nn), sin(2 * pi * (j + 0.5) / nn) };
-			ris_line(g2, v * ((2 * i - 1) * radius + (i - 0.5) * width), v * ((2 * i - 3) * radius + (i - 1.5) * width));
-			_t_trans* ttr = new _t_trans;
-			ttr->trans.offset = _coo2{ cos(2 * pi * j / nn), sin(2 * pi * j / nn) } *((2 * i - 2) * radius + (i - 1) * width);
-			g2->add_flags(ttr, flag_part + flag_sub_go);
-			create_button(ttr);
-		}
-	}
-	g_main->run(nullptr, g_main, flag_run);
-}
-
 void fun33(_tetron* tt0, _tetron* tt, uint64 flags)
 {
+	_g_graph* g = new _g_graph;
+	_t_trans* tr = n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
+
+
 	//	gen_ring();
 	//	gen_1krug();
 

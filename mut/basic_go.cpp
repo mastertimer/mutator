@@ -858,7 +858,7 @@ void _g_picture::ris2(_trans tr, bool final)
 
 void _g_picture::new_size(int rx3, int ry3)
 {
-	if (!pic.resize(rx3, ry3)) return;
+	if (!pic.resize({ rx3, ry3 })) return;
 	del_area();
 	local_area = { {0, (double)pic.size.x}, {0, (double)pic.size.y} };
 	area_definite = false;

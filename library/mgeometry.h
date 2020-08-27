@@ -58,6 +58,9 @@ struct _size2i // [0...x), [0...y)
 	void   clear()        noexcept { x = y = 0; }
 	_sizei square() const noexcept { return ((x <= 0) || (y <= 0)) ? 0 : (x * y); }
 	_coo2  center() const noexcept { return { x * 0.5, y * 0.5 }; }
+	void   correct()      noexcept { if ((x <= 0) || (y <= 0)) x = y = 0; } // для удобства
+
+	bool operator==(_size2i s) const noexcept { return (x == s.x) && (y == s.y); }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -98,6 +101,7 @@ struct _area2i
 	_area2i operator&(const _area2i& b) const noexcept { _area2i c(*this); c &= b; return c; }
 
 	bool empty() const noexcept { return (x.min >= x.max) || (y.min >= y.max); }
+	_size2i size() const noexcept { if (empty()) return { 0,0 }; return { x.max - x.min, y.max - y.min }; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

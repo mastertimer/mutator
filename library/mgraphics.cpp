@@ -6,12 +6,11 @@ _bitmap temp_bmp(10, 10);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool _bitmap::resize(int64 w, int64 h)
+bool _bitmap::resize(_size2i wh)
 {
-	if (w < 0) w = 0;
-	if (h < 0) h = 0;
-	if ((size.x == w) && (size.y == h)) return false;
-	size = { w, h };
+	wh.correct();
+	if (size == wh) return false;
+	size = wh;
 	area = size;
 	BITMAPINFO bmi = { sizeof(BITMAPINFOHEADER), (long)size.x, (long)-size.y, 1, 32, BI_RGB, 0, 0, 0, 0, 0 };
 	bitmap2 = CreateDIBSection(0, &bmi, DIB_RGB_COLORS, (void**)(&data), 0, 0);
@@ -221,15 +220,13 @@ void _picture::draw(int64 nXDest, int64 nYDest, int64 nWidth, int64 nHeight, _pi
 	}
 }
 
-bool _picture::resize(int64 w, int64 h)
+bool _picture::resize(_size2i wh)
 {
-	if ((size.x == w) && (size.y == h)) return false;
-	size.x = w;
-	size.y = h;
-	if (size.x < 0) size.x = 0;
-	if (size.y < 0) size.y = 0;
+	wh.correct();
+	if (size == wh) return false;
+	size = wh;
 	delete[] data;
-	data = (size.x * size.y) ? (new uint[(int64)size.x * size.y]) : 0;
+	data = (size.x * size.y) ? (new uint[size.x * size.y]) : 0;
 	area = size;
 	return true;
 }
@@ -2136,7 +2133,7 @@ void _picture::rectangle(_area2i oo, uint c)
 _stack& operator<<(_stack& o, _picture const& p)
 {
 	o << p.size << p.transparent;
-	o.push_data(p.data, 4LL * p.size.x * p.size.y);
+	o.push_data(p.data, 4 * p.size.square());
 	return o;
 }
 
@@ -2144,8 +2141,8 @@ _stack& operator>>(_stack& o, _picture& p)
 {
 	_size2i r;
 	o >> r >> p.transparent;
-	p.resize(r.x, r.y);
-	o.pop_data(p.data, 4LL * p.size.x * p.size.y);
+	p.resize(r);
+	o.pop_data(p.data, 4 * p.size.square());
 	return o;
 }
 
@@ -2591,302 +2588,6 @@ void _picture::fill_ring(_coo2 p, double r, double d, uint c, uint c2)
 				}
 			}
 			cc += 4;
-			dd += ab;
-			ab += 2;
-		}
-	}
-}
-
-void _picture::fill_ellipse(_area2 o, double d, uint c, uint c2)
-{
-	if (o.empty()) return;
-	double rx3 = o.x.max - o.x.min;
-	double ry3 = o.y.max - o.y.min;
-	if (rx3 * ry3 < 0.25) return;
-	double r  = rx3 * 0.5;
-	double r2 = (rx3 <= ry3) ? (r - d) : (r - d * rx3 / ry3);
-	if (r2 < 0) r2 = 0;
-	int64 y1 = (int)o.y.min;
-	y1     = std::max(area.y.min, y1);
-	int64 y2 = (int)o.y.max;
-	y2     = std::min(area.y.max - 1, y2);
-	int64 x1 = (int)o.x.min;
-	x1     = std::max(area.x.min, x1);
-	int64 x2 = (int)o.x.max;
-	x2     = std::min(area.x.max - 1, x2);
-	if ((x2 < x1) || (y2 < y1)) return;
-	double rrmin = (r - 0.5) * (r - 0.5);
-	double rrmax = (r + 0.5) * (r + 0.5);
-	double drr   = rrmax - rrmin;
-	double ddmin = (r2 - 0.5) * (r2 - 0.5);
-	double ddmax = (r2 + 0.5) * (r2 + 0.5);
-	double ddd   = ddmax - ddmin;
-	double x     = (o.x.max + o.x.min) * 0.5 - 0.5;
-	double y     = (o.y.max + o.y.min) * 0.5 - 0.5;
-	double ky    = rx3 * rx3 / (ry3 * ry3);
-	double dxdx0 = (x1 - x) * (x1 - x);
-	double ab0 = 2 * (x1 - x) + 1;
-	uint kk = 255 - (c >> 24);
-	uint k2 = 256 - kk;
-	uint c_0 = (c & 255);
-	uint c_1 = ((c >> 8) & 255);
-	uint c_2 = ((c >> 16) & 255);
-	uint d1 = c_0 * k2;
-	uint d2 = c_1 * k2;
-	uint d3 = c_2 * k2;
-	uint kk_ = 255 - (c2 >> 24);
-	uint k2_ = 256 - kk_;
-	uint c2_0 = (c2 & 255);
-	uint c2_1 = ((c2 >> 8) & 255);
-	uint c2_2 = ((c2 >> 16) & 255);
-	uint dd1 = c2_0 * k2_;
-	uint dd2 = c2_1 * k2_;
-	uint dd3 = c2_2 * k2_;
-	if ((kk == 0) && (kk_ == 0))
-	{
-		for (int64 i = y1; i <= y2; i++)
-		{
-			double dd = (i - y) * (i - y) * ky + dxdx0;
-			double ab = ab0;
-			uchar* cc = (uchar*)&px(x1, i);
-			int64 d  = x1 - x2;
-			while (d++ <= 0)
-			{
-				if (dd < rrmax)
-				{
-					if (dd <= ddmin) { *((uint*)cc) = c2; }
-					else if (dd > rrmin)
-					{
-						if (dd >= ddmax)
-						{
-							uint k22 = (uint)(k2 * (rrmax - dd) / drr);
-							uint kk2 = 256 - k22;
-							cc[0]    = (cc[0] * kk2 + c_0 * k22) >> 8;
-							cc[1]    = (cc[1] * kk2 + c_1 * k22) >> 8;
-							cc[2]    = (cc[2] * kk2 + c_2 * k22) >> 8;
-						}
-						else
-						{ // тонкое кольцо
-							double m1  = (ddmax - dd) / ddd;
-							uint   k22 = (uint)(k2_ * m1);
-							uint   k33 = (uint)(k2 * ((rrmax - dd) / drr - m1));
-							uint   kk2 = 256 - k22 - k33;
-							cc[0]      = (cc[0] * kk2 + c2_0 * k22 + c_0 * k33) >> 8;
-							cc[1]      = (cc[1] * kk2 + c2_1 * k22 + c_1 * k33) >> 8;
-							cc[2]      = (cc[2] * kk2 + c2_2 * k22 + c_2 * k33) >> 8;
-						}
-					}
-					else if (dd >= ddmax)
-					{
-						*((uint*)cc) = c;
-					}
-					else
-					{
-						double m1  = (ddmax - dd) / ddd;
-						uint   k22 = (uint)(k2_ * m1);
-						uint   k33 = (uint)(k2 * (1 - m1));
-						uint   kk2 = 256 - k22 - k33;
-						cc[0]      = (cc[0] * kk2 + c2_0 * k22 + c_0 * k33) >> 8;
-						cc[1]      = (cc[1] * kk2 + c2_1 * k22 + c_1 * k33) >> 8;
-						cc[2]      = (cc[2] * kk2 + c2_2 * k22 + c_2 * k33) >> 8;
-					}
-				}
-				cc += 4;
-				dd += ab;
-				ab += 2;
-			}
-		}
-		return;
-	}
-	for (int64 i = y1; i <= y2; i++)
-	{
-		double dd = (i - y) * (i - y) * ky + dxdx0;
-		double ab = ab0;
-		uchar* cc = (uchar*)&px(x1, i);
-		int64 d  = x1 - x2;
-		while (d++ <= 0)
-		{
-			if (dd < rrmax)
-			{
-				if (dd <= ddmin)
-				{
-					cc[0] = (cc[0] * kk_ + dd1) >> 8;
-					cc[1] = (cc[1] * kk_ + dd2) >> 8;
-					cc[2] = (cc[2] * kk_ + dd3) >> 8;
-				}
-				else if (dd > rrmin)
-				{
-					if (dd >= ddmax)
-					{
-						uint k22 = (uint)(k2 * (rrmax - dd) / drr);
-						uint kk2 = 256 - k22;
-						cc[0]    = (cc[0] * kk2 + c_0 * k22) >> 8;
-						cc[1]    = (cc[1] * kk2 + c_1 * k22) >> 8;
-						cc[2]    = (cc[2] * kk2 + c_2 * k22) >> 8;
-					}
-					else
-					{ // тонкое кольцо
-						double m1  = (ddmax - dd) / ddd;
-						uint   k22 = (uint)(k2_ * m1);
-						uint   k33 = (uint)(k2 * ((rrmax - dd) / drr - m1));
-						uint   kk2 = 256 - k22 - k33;
-						cc[0]      = (cc[0] * kk2 + c2_0 * k22 + c_0 * k33) >> 8;
-						cc[1]      = (cc[1] * kk2 + c2_1 * k22 + c_1 * k33) >> 8;
-						cc[2]      = (cc[2] * kk2 + c2_2 * k22 + c_2 * k33) >> 8;
-					}
-				}
-				else if (dd >= ddmax)
-				{
-					cc[0] = (cc[0] * kk + d1) >> 8;
-					cc[1] = (cc[1] * kk + d2) >> 8;
-					cc[2] = (cc[2] * kk + d3) >> 8;
-				}
-				else
-				{
-					double m1  = (ddmax - dd) / ddd;
-					uint   k22 = (uint)(k2_ * m1);
-					uint   k33 = (uint)(k2 * (1 - m1));
-					uint   kk2 = 256 - k22 - k33;
-					cc[0]      = (cc[0] * kk2 + c2_0 * k22 + c_0 * k33) >> 8;
-					cc[1]      = (cc[1] * kk2 + c2_1 * k22 + c_1 * k33) >> 8;
-					cc[2]      = (cc[2] * kk2 + c2_2 * k22 + c_2 * k33) >> 8;
-				}
-			}
-			cc += 4;
-			dd += ab;
-			ab += 2;
-		}
-	}
-}
-
-void _picture::fill_ellipse2(_area2 o, double d, uint c, uint c2)
-{
-	if (o.empty()) return;
-	double rx3 = o.x.max - o.x.min;
-	double ry3 = o.y.max - o.y.min;
-	if (rx3 * ry3 < 0.25) return;
-	int64 y1 = (int)o.y.min;
-	y1     = std::max(area.y.min, y1);
-	int64 y2 = (int)o.y.max;
-	y2     = std::min(area.y.max - 1, y2);
-	int64 x1 = (int)o.x.min;
-	x1     = std::max(area.x.min, x1);
-	int64 x2 = (int)o.x.max;
-	x2     = std::min(area.x.max - 1, x2);
-	if ((x2 < x1) || (y2 < y1)) return;
-	double a  = rx3 * 0.5;
-	double b  = ry3 * 0.5;
-	double a1 = a + 0.5;
-	double a2 = a - 0.5;
-	double a3 = a - d + 0.5;
-	double a4 = a - d - 0.5;
-	double b1 = b + 0.5;
-	double b2 = b - 0.5;
-	double b3 = b - d + 0.5;
-	double b4 = b - d - 0.5;
-	if ((a4 <= 0) || (b4 <= 0)) return;
-	a1           = 1 / (a1 * a1);
-	a2           = 1 / (a2 * a2);
-	a3           = 1 / (a3 * a3);
-	a4           = 1 / (a4 * a4);
-	b1           = 1 / (b1 * b1);
-	b2           = 1 / (b2 * b2);
-	b3           = 1 / (b3 * b3);
-	b4           = 1 / (b4 * b4);
-	double x     = (o.x.max + o.x.min) * 0.5 - 0.5;
-	double y     = (o.y.max + o.y.min) * 0.5 - 0.5;
-	double dxdx0 = (x1 - x) * (x1 - x);
-	double ab0 = 2 * (x1 - x) + 1;
-	uint kk = 255 - (c >> 24);
-	uint k2 = 256 - kk;
-	uint c_0 = (c & 255);
-	uint c_1 = ((c >> 8) & 255);
-	uint c_2 = ((c >> 16) & 255);
-	uint d1 = c_0 * k2;
-	uint d2 = c_1 * k2;
-	uint d3 = c_2 * k2;
-	uint kk_ = 255 - (c2 >> 24);
-	uint k2_ = 256 - kk_;
-	uint c2_0 = (c2 & 255);
-	uint c2_1 = ((c2 >> 8) & 255);
-	uint c2_2 = ((c2 >> 16) & 255);
-	uint dd1 = c2_0 * k2_;
-	uint dd2 = c2_1 * k2_;
-	uint dd3 = c2_2 * k2_;
-	for (int64 i = y1; i <= y2; i++)
-	{
-		double yy  = (i - y) * (i - y);
-		double dd  = yy + dxdx0;
-		double sl1 = yy * b1;
-		double sl2 = yy * b2;
-		double sl3 = yy * b3;
-		double sl4 = yy * b4;
-		double xx  = dxdx0;
-		double ab  = ab0;
-		uchar* cc  = (uchar*)&px(x1, i);
-		int64 d   = x1 - x2;
-		while (d++ <= 0)
-		{
-
-			double ddmin = dd / (sl4 + xx * a4);
-			if (dd <= ddmin)
-			{
-				cc[0] = (cc[0] * kk_ + dd1) >> 8;
-				cc[1] = (cc[1] * kk_ + dd2) >> 8;
-				cc[2] = (cc[2] * kk_ + dd3) >> 8;
-			}
-			else
-			{
-				double rrmax = dd / (sl1 + xx * a1);
-				if (dd < rrmax)
-				{
-					double rrmin = dd / (sl2 + xx * a2);
-					double ddmax = dd / (sl3 + xx * a3);
-					if (dd > rrmin)
-					{
-						if (dd >= ddmax)
-						{
-							double drr = rrmax - rrmin;
-							uint   k22 = (uint)(k2 * (rrmax - dd) / drr);
-							uint   kk2 = 256 - k22;
-							cc[0]      = (cc[0] * kk2 + c_0 * k22) >> 8;
-							cc[1]      = (cc[1] * kk2 + c_1 * k22) >> 8;
-							cc[2]      = (cc[2] * kk2 + c_2 * k22) >> 8;
-						}
-						else
-						{ // тонкое кольцо
-							double ddd = ddmax - ddmin;
-							double drr = rrmax - rrmin;
-							double m1  = (ddmax - dd) / ddd;
-							uint   k22 = (uint)(k2_ * m1);
-							uint   k33 = (uint)(k2 * ((rrmax - dd) / drr - m1));
-							uint   kk2 = 256 - k22 - k33;
-							cc[0]      = (cc[0] * kk2 + c2_0 * k22 + c_0 * k33) >> 8;
-							cc[1]      = (cc[1] * kk2 + c2_1 * k22 + c_1 * k33) >> 8;
-							cc[2]      = (cc[2] * kk2 + c2_2 * k22 + c_2 * k33) >> 8;
-						}
-					}
-					else if (dd >= ddmax)
-					{
-						cc[0] = (cc[0] * kk + d1) >> 8;
-						cc[1] = (cc[1] * kk + d2) >> 8;
-						cc[2] = (cc[2] * kk + d3) >> 8;
-					}
-					else
-					{
-						double ddd = ddmax - ddmin;
-						double m1  = (ddmax - dd) / ddd;
-						uint   k22 = (uint)(k2_ * m1);
-						uint   k33 = (uint)(k2 * (1 - m1));
-						uint   kk2 = 256 - k22 - k33;
-						cc[0]      = (cc[0] * kk2 + c2_0 * k22 + c_0 * k33) >> 8;
-						cc[1]      = (cc[1] * kk2 + c2_1 * k22 + c_1 * k33) >> 8;
-						cc[2]      = (cc[2] * kk2 + c2_2 * k22 + c_2 * k33) >> 8;
-					}
-				}
-			}
-			cc += 4;
-			xx += ab;
 			dd += ab;
 			ab += 2;
 		}

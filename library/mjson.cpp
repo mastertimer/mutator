@@ -473,9 +473,9 @@ void _rjson::read(std::string_view name, _picture& b)
 		temp.push_back(s);
 	}
 	end();
-	if (temp.size() == 0) {	b.resize(0, 0);	return;	}
+	if (temp.size() == 0) { b.resize({ 0, 0 });	return; }
 	int rx = (int)(temp[0].size() / 8);
-	b.resize(rx, (int)temp.size());
+	b.resize({ rx, (int64)temp.size() });
 	for (int j = 0; j < temp.size(); j++)
 		if (!string_to_mem(temp[j], &b.data[j * b.size.x], b.size.x * 4))
 		{

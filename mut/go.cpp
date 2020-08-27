@@ -857,7 +857,7 @@ _g_edit_one::_g_edit_one()
 
 void _g_button::RisIco(astr kod, const char* s)
 {
-	picture.resize(24, 24);
+	picture.resize({ 24, 24 });
 	picture.clear(0xFF000000);
 	for (; *kod; kod++)
 	{
