@@ -118,6 +118,54 @@ struct _mctds_candle : public _basic_curve // источник данных для временного гра
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+struct _latest_events // последние события
+{
+	char event[4]; // [0] - последнее событие
+	int minute[4]; // на какой минуте случилось
+	double x[4]; // значения
+
+	int start(); // ща будет рост в X минут
+	bool stop(); // ща будет падение
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct _nervous_oracle : public _basic_curve // нервозный предсказатель
+{
+	struct _element_nervous // краткая информация элемента графика
+	{
+		int time       = 0; // время
+		_areai ncc;         // диапазон цен
+
+		ushort min_pok = 0; // минимальная покупка
+		ushort max_pok = 0; // максимальная покупка
+		ushort min_pro = 0; // минимальная продажа
+		ushort max_pro = 0; // максимальная продажа
+
+		int    v_r     = 0; // количество слагаемых
+		double r       = 0; // средний размер
+		double r_pok   = 0; // средний размер покупки
+		double r_pro   = 0; // средний размер продажи
+
+		bool operator < (int a) const noexcept { return (time < a); } // для алгоритма поиска по времени
+	};
+
+	_super_stat* ss = nullptr;
+	std::vector<_element_nervous> zn; // данные
+	double c_unpak = 0.01; // распаковка цен
+
+	int get_n(); // количество элементов
+	void get_n_info(int n, _element_chart* e); // получить краткую информацию n-го элемента
+	void get_t_info(int t, _element_chart* e); // получить краткую информацию элемента со временем >= t
+	void draw(int n, _area2 area, _bitmap* bm); // нарисовать 1 элемент
+	void recovery(); // выполнить
+	void push(_stack* mem);
+	void pop(_stack* mem);
+	_latest_events get_latest_events(int64 nn); // получить последние события
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct _g_graph : public _t_go
 {
 	_g_graph()                                { local_area = { {0, 100}, {0, 100} }; }

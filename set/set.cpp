@@ -1227,3 +1227,339 @@ void _mctds_candle::recovery()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+int _latest_events::start()
+{
+	if ((minute[2] == 2) && (event[0] == event[1]) && (event[0] == event[2])) // триплет
+	{
+		if (event[0] == 1) return 70;
+		if (event[0] == 2) // фиолетовый
+			if ((x[0] > x[1]) && (x[1] > x[2]))	return 13;
+		if (event[0] == 3)
+		{
+			if ((x[0] > x[1]) && (x[1] > x[2]))	return 40;
+			if ((x[0] < x[1]) && (x[1] < x[2]))	return 90;
+		}
+		//		if (event_[0] == 4) return 120;  //голубой
+		if (event[0] == 6) return 60;   //зеленый
+		return 0;
+	}
+	if ((minute[1] == 1) && (event[0] == event[1])) // дуплет
+	{
+		if (event[0] == 2) // фиолетовый
+		{
+			if (event[2] == 5) return 100; //песочный
+			if ((event[2] == 4) && (event[3] == 4)) return 40;
+		}
+		return 0;
+	}
+	return 0;
+}
+
+bool _latest_events::stop()
+{
+	if ((event[0] == 5) && (event[1] == 5) && (minute[1] == 1)) return true; // песочный
+	return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void _nervous_oracle::push(_stack* mem)
+{
+	*mem << zn;
+}
+
+void _nervous_oracle::pop(_stack* mem)
+{
+	*mem >> zn;
+}
+
+int _nervous_oracle::get_n()
+{
+	return (int)zn.size();
+}
+
+void _nervous_oracle::get_n_info(int n, _element_chart* e)
+{
+	if (n >= (int)zn.size())
+	{
+		e->n = -1;
+		return;
+	}
+	e->n = n;
+	e->time = zn[n].time;
+	e->middle = ((double)zn[n].max_pro + (double)zn[n].min_pok) * 0.5 * c_unpak;
+	e->min = e->middle;
+	e->max = e->middle;
+}
+
+void _nervous_oracle::get_t_info(int t, _element_chart* e)
+{
+	auto x = lower_bound(zn.begin(), zn.end(), t);
+	if (x == zn.end())
+	{
+		e->n = -1;
+		return;
+	}
+	int xx = (int)(x - zn.begin());
+	e->n = xx;
+	e->time = zn[xx].time;
+	e->middle = ((double)zn[xx].max_pro + (double)zn[xx].min_pok) * 0.5 * c_unpak;
+	e->min = e->middle;
+	e->max = e->middle;
+}
+
+_latest_events _nervous_oracle::get_latest_events(int64 nn)
+{
+	const int64 k = 4;
+	_latest_events e;
+	e.event[0] = e.event[1] = e.event[2] = e.event[3] = 0;
+	e.minute[0] = e.minute[1] = e.minute[2] = e.minute[3] = 0;
+	e.x[0] = e.x[1] = e.x[2] = e.x[3] = 0.0;
+	if (nn < 10) return e;
+	int64 ii = std::max(k, nn - 40);
+	int ee = 0;
+	for (int64 n = nn; n >= ii; n--)
+	{
+		if ((int64)zn[n].time - zn[n - k].time != k * 60) continue;
+		bool rost_pro = true;
+		bool rost_pok = true;
+		bool pade_pro = true;
+		bool pade_pok = true;
+		for (int64 i = n - k; i < n; i++)
+		{
+			if (zn[i].r_pro >= zn[i + 1].r_pro) rost_pro = false;
+			if (zn[i].r_pok >= zn[i + 1].r_pok) rost_pok = false;
+			if (zn[i].r_pro <= zn[i + 1].r_pro) pade_pro = false;
+			if (zn[i].r_pok <= zn[i + 1].r_pok) pade_pok = false;
+		}
+		char a = 0;
+		if ((rost_pro || rost_pok) && (pade_pro || pade_pok))
+			a = 7;
+		else
+		{
+			if (rost_pok) a += 1;
+			if (rost_pro) a += 2;
+			if (pade_pro || pade_pok) a += 3;
+			if (pade_pok) a += 1;
+			if (pade_pro) a += 2;
+		}
+		if (a == 0) continue;
+		e.event[ee] = a;
+		e.minute[ee] = (int)(nn - n);
+		e.x[ee] = ((double)zn[n].max_pro + (double)zn[n].min_pok) * 0.5 * c_unpak;
+		ee++;
+		if (ee == 4) break;
+	}
+	return e;
+}
+
+void _nervous_oracle::draw(int n, _area2 area, _bitmap* bm)
+{
+	const int64 k = 4;
+	if (n < k) return;
+	if ((int64)zn[n].time - zn[n - k].time != k * 60) return;
+	bool rost_pro = true;
+	bool rost_pok = true;
+	bool pade_pro = true;
+	bool pade_pok = true;
+	for (int64 i = n - k; i < n; i++)
+	{
+		if (zn[i].r_pro >= zn[i + 1].r_pro) rost_pro = false;
+		if (zn[i].r_pok >= zn[i + 1].r_pok) rost_pok = false;
+		if (zn[i].r_pro <= zn[i + 1].r_pro) pade_pro = false;
+		if (zn[i].r_pok <= zn[i + 1].r_pok) pade_pok = false;
+	}
+	_element_nervous& a = zn[n];
+	uint c = 0x808080;
+
+	if (rost_pro) c += 0x70;
+	if (rost_pok) c += 0x700000;
+	if (pade_pro) c -= 0x70;
+	if (pade_pok) c -= 0x700000;
+
+	double r = area.x.length() * 0.5 * 2;
+	if (get_latest_events(n).start())
+	{
+		c = 0xFF0000;
+		r *= 2;
+	}
+
+	if (c == 0x808080) return;
+
+	bm->fill_ring(area.center(), r, r * 0.1, c, c);
+}
+
+void _nervous_oracle::recovery()
+{
+	int64 vcc = 0;
+	if (zn.size()) vcc = zn.back().ncc.max;
+	int64 ssvcc = ss->size;
+	if (ssvcc == vcc) return; // ничего не изменилось
+	if (vcc < ssvcc) // добавились несколько цен
+	{
+		_prices cc;
+		_super_stat::_info_pak inf;
+		int t = 0;
+		_element_nervous* cp = 0;
+		if (zn.size())
+		{
+			cp = &zn.back();
+			if (cp->v_r)
+			{
+				cp->r *= cp->v_r;
+				cp->r_pok *= cp->v_r;
+				cp->r_pro *= cp->v_r;
+			}
+			t = cp->time;
+		}
+		for (int64 i = vcc; i < ssvcc; i++)
+		{
+			ss->read(i, cc, &inf);
+			int t2 = cc.time.to_minute();
+			if (t2 != t)
+			{
+				t = t2;
+				if (cp)
+				{
+					if (cp->v_r)
+					{
+						cp->r /= cp->v_r;
+						cp->r_pok /= cp->v_r;
+						cp->r_pro /= cp->v_r;
+					}
+				}
+				_element_nervous we;
+				we.time = t;
+				we.ncc.min = i;
+				we.ncc.max = i + 1;
+				we.max_pok = we.min_pok = cc.pok[0].c;
+				we.max_pro = we.min_pro = cc.pro[0].c;
+				if (inf.ok)
+				{
+					we.v_r = 1;
+					we.r = inf.r;
+					we.r_pok = inf.r_pok;
+					we.r_pro = inf.r_pro;
+				}
+				else
+					we.v_r = 0;
+				zn.push_back(we);
+				cp = &zn.back();
+			}
+			else
+			{
+				if (cp == 0) continue; // дл€ паранойи компил€тора
+				if (cc.pok[0].c < cp->min_pok) cp->min_pok = cc.pok[0].c;
+				if (cc.pok[0].c > cp->max_pok) cp->max_pok = cc.pok[0].c;
+				if (cc.pro[0].c < cp->min_pro) cp->min_pro = cc.pro[0].c;
+				if (cc.pro[0].c > cp->max_pro) cp->max_pro = cc.pro[0].c;
+				cp->ncc.max++;
+				if (inf.ok)
+				{
+					if (cp->v_r)
+					{
+						cp->v_r++;
+						cp->r += inf.r;
+						cp->r_pok += inf.r_pok;
+						cp->r_pro += inf.r_pro;
+					}
+					else
+					{
+						cp->v_r = 1;
+						cp->r = inf.r;
+						cp->r_pok = inf.r_pok;
+						cp->r_pro = inf.r_pro;
+					}
+				}
+			}
+		}
+		if (cp)
+		{
+			if (cp->v_r)
+			{
+				cp->r /= cp->v_r;
+				cp->r_pok /= cp->v_r;
+				cp->r_pro /= cp->v_r;
+			}
+		}
+		return;
+	}
+	_prices cc; // уменьшились цены, полный пересчет
+	_super_stat::_info_pak inf;
+	zn.clear();
+	int t = 0;
+	_element_nervous* cp = 0;
+	for (int i = 0; i < ssvcc; i++)
+	{
+		ss->read(i, cc, &inf);
+		int t2 = cc.time.to_minute();
+		if (t2 != t)
+		{
+			t = t2;
+			if (cp)
+			{
+				if (cp->v_r)
+				{
+					cp->r /= cp->v_r;
+					cp->r_pok /= cp->v_r;
+					cp->r_pro /= cp->v_r;
+				}
+			}
+			_element_nervous we;
+			we.time = t;
+			we.ncc.min = i;
+			we.ncc.max = i + 1;
+			we.max_pok = we.min_pok = cc.pok[0].c;
+			we.max_pro = we.min_pro = cc.pro[0].c;
+			if (inf.ok)
+			{
+				we.v_r = 1;
+				we.r = inf.r;
+				we.r_pok = inf.r_pok;
+				we.r_pro = inf.r_pro;
+			}
+			else
+				we.v_r = 0;
+			zn.push_back(we);
+			cp = &zn.back();
+		}
+		else
+		{
+			if (cp == 0) continue; // дл€ паранойи компил€тора
+			if (cc.pok[0].c < cp->min_pok) cp->min_pok = cc.pok[0].c;
+			if (cc.pok[0].c > cp->max_pok) cp->max_pok = cc.pok[0].c;
+			if (cc.pro[0].c < cp->min_pro) cp->min_pro = cc.pro[0].c;
+			if (cc.pro[0].c > cp->max_pro) cp->max_pro = cc.pro[0].c;
+			cp->ncc.max++;
+			if (inf.ok)
+			{
+				if (cp->v_r)
+				{
+					cp->v_r++;
+					cp->r += inf.r;
+					cp->r_pok += inf.r_pok;
+					cp->r_pro += inf.r_pro;
+				}
+				else
+				{
+					cp->v_r = 1;
+					cp->r = inf.r;
+					cp->r_pok = inf.r_pok;
+					cp->r_pro = inf.r_pro;
+				}
+			}
+		}
+	}
+	if (cp)
+	{
+		if (cp->v_r)
+		{
+			cp->r /= cp->v_r;
+			cp->r_pok /= cp->v_r;
+			cp->r_pro /= cp->v_r;
+		}
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
