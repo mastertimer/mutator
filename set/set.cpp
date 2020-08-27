@@ -42,7 +42,7 @@ void _super_stat::save_to_file(wstr fn)
 {
 	_stack mem;
 	mem << data;
-	mem << size;
+	mem << (int)size;
 	mem.push_data(&last_cc, sizeof(last_cc));
 	mem << u_dd2;
 	mem.save_to_file(fn);
@@ -53,7 +53,9 @@ void _super_stat::load_from_file(wstr fn)
 	_stack mem;
 	if (!mem.load_from_file(fn)) return;
 	mem >> data;
-	mem >> size;
+	int sisi;
+	mem >> sisi; // !!! пересохранить на 64
+	size = sisi;
 	mem >> last_cc;
 	mem >> u_dd2;
 	read_cc = cena_zero_;
@@ -96,7 +98,7 @@ void _super_stat::otgruzka(int rez, int Vrez, int* deko)
 			data.push_int24(deko[i]);
 }
 
-void _super_stat::read(int n, _prices& c, _info_pak* inf)
+void _super_stat::read(int64 n, _prices& c, _info_pak* inf)
 {
 	if (inf) inf->ok = false;
 	if ((n < 0) || (n >= size)) return;
@@ -114,7 +116,7 @@ void _super_stat::read(int n, _prices& c, _info_pak* inf)
 	}
 	if (read_n + 1 != n)
 	{
-		int k = n / step_pak_cc;
+		int64 k = n / step_pak_cc;
 		if ((read_n > n) || (read_n <= k * step_pak_cc - 1))
 		{
 			data.adata = u_dd2[k];
@@ -1056,6 +1058,172 @@ void _g_graph::draw()
 	}
 	// рисование даты
 	bm.text16n(dex + 10, 10, date_to_ansi_string(mintime).data(), 4, c_max - 0x80000000);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+int _mctds_candle::get_n()
+{
+	return (int)cen1m.size();
+}
+
+void _mctds_candle::get_n_info(int n, _element_chart* e)
+{
+	if (n >= (int)cen1m.size())
+	{
+		e->n = -1;
+		return;
+	}
+	e->n = n;
+	e->time = cen1m[n].time;
+	e->min = cen1m[n].min * c_unpak;
+	e->max = cen1m[n].max * c_unpak;
+	e->middle = cen1m[n].cc * c_unpak;
+}
+
+void _mctds_candle::get_t_info(int t, _element_chart* e)
+{
+	e->n = -1; // !! написать, когда потребуется!!
+}
+
+void _mctds_candle::push(_stack* mem)
+{
+	*mem << cen1m;
+}
+
+void _mctds_candle::pop(_stack* mem)
+{
+	*mem >> cen1m;
+}
+
+void _mctds_candle::draw(int n, _area2 area, _bitmap* bm)
+{
+	double min_ = cen1m[n].min * c_unpak;
+	double max_ = cen1m[n].max * c_unpak;
+	double first_ = cen1m[n].first * c_unpak;
+	double last_ = cen1m[n].last * c_unpak;
+
+	_area2 oo = area;
+	int x1 = (int)(oo.x.min + 1);
+	int x2 = (int)(oo.x.max - 1);
+	if (x2 < x1) return;
+
+	uint col_rost = 0xFF28A050; // цвет ростущей свечки
+	uint col_pade = 0xFF186030; // цвет падающей свечки
+	double yfi, yla;
+	if (min_ < max_)
+	{
+		yfi = oo.y.max - oo.y.length() * (first_ - min_) / (max_ - min_);
+		yla = oo.y.max - oo.y.length() * (last_ - min_) / (max_ - min_);
+	}
+	else
+	{
+		yfi = yla = oo.y.min;
+	}
+	if (first_ <= last_)
+	{
+		bm->fill_rectangle({ {x1, x2}, {(int)yla, (int)yfi} }, col_rost);
+		bm->line({ (x1 + x2) >> 1, (int)oo.y.max }, { (x1 + x2) >> 1, (int)oo.y.min }, col_rost);
+	}
+	else
+	{
+		bm->fill_rectangle({ {x1, x2}, {(int)yfi, (int)yla} }, col_pade);
+		bm->line({ (x1 + x2) >> 1, (int)oo.y.max }, { (x1 + x2) >> 1, (int)oo.y.min }, col_pade);
+	}
+
+}
+
+void _mctds_candle::recovery()
+{
+	int64 vcc = 0;
+	if (cen1m.size()) vcc = cen1m.back().ncc.max;
+	int ssvcc = (int)ss->size;
+	if (ssvcc == vcc) return; // ничего не изменилось
+	if (vcc < ssvcc) // добавились несколько цен
+	{
+		_prices cc;
+		int t = 0;
+		_cen_pak* cp = 0;
+		if (cen1m.size())
+		{
+			cp = &cen1m.back();
+			cp->cc *= ((double)cp->ncc.max - cp->ncc.min);
+			t = cp->time;
+		}
+		for (int64 i = vcc; i < ssvcc; i++)
+		{
+			if (i > 572737) // i > 572738
+			{
+				if (cp == 0) continue;
+			}
+			ss->read(i, cc);
+			int t2 = cc.time.to_minute();
+			if (t2 != t)
+			{
+				t = t2;
+				if (cp)	cp->cc /= ((double)cp->ncc.max - cp->ncc.min);
+				_cen_pak we;
+				we.time = t;
+				we.ncc.min = i;
+				we.ncc.max = i + 1;
+				we.first = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
+				we.last = we.first;
+				we.min = we.first;
+				we.max = we.first;
+				we.cc = we.first;
+				cen1m.push_back(we);
+				cp = &cen1m.back();
+			}
+			else
+			{
+				if (cp == 0) continue; // для паранойи компилятора
+				int aa = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
+				cp->cc += aa;
+				if (aa < cp->min) cp->min = aa;
+				if (aa > cp->max) cp->max = aa;
+				cp->ncc.max++;
+				cp->last = aa;
+			}
+		}
+		if (cp)	cp->cc /= ((double)cp->ncc.max - cp->ncc.min);
+		return;
+	}
+	_prices cc; // уменьшились цены, полный пересчет
+	cen1m.clear();
+	int t = 0;
+	_cen_pak* cp = 0;
+	for (int64 i = 0; i < ssvcc; i++)
+	{
+		ss->read(i, cc);
+		int t2 = cc.time.to_minute();
+		if (t2 != t)
+		{
+			t = t2;
+			if (cp)	cp->cc /= ((double)cp->ncc.max - cp->ncc.min);
+			_cen_pak we;
+			we.time = t;
+			we.ncc.min = i;
+			we.ncc.max = i + 1;
+			we.first = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
+			we.last = we.first;
+			we.min = we.first;
+			we.max = we.first;
+			we.cc = we.first;
+			cen1m.push_back(we);
+			cp = &cen1m.back();
+		}
+		else
+		{
+			if (cp == 0) continue; // для паранойи компилятора
+			int aa = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
+			cp->cc += aa;
+			if (aa < cp->min) cp->min = aa;
+			if (aa > cp->max) cp->max = aa;
+			cp->ncc.max++;
+			cp->last = aa;
+		}
+	}
+	if (cp)	cp->cc /= ((double)cp->ncc.max - cp->ncc.min);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

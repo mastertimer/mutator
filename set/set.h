@@ -47,11 +47,11 @@ struct _super_stat // супер статистика цен
 		int r_pro; // размер продаж
 		int r_pok; // размер покупок
 	};
-	int size; // количество записей
+	int64 size; // количество записей
 
 	_super_stat();
 	void add(_prices& c); // добавить цены (сжать)
-	void read(int n, _prices& c, _info_pak* inf = 0); // прочитать цены (расжать)
+	void read(int64 n, _prices& c, _info_pak* inf = 0); // прочитать цены (расжать)
 	void save_to_file(wstr fn);
 	void load_from_file(wstr fn);
 	void clear(); // удалить все данные
@@ -63,7 +63,7 @@ private:
 
 	static const int step_pak_cc = 100;
 	_prices read_cc; // последние прочитанные цены
-	int read_n; // номер последних прочитанных цен
+	int64 read_n; // номер последних прочитанных цен
 	_info_pak ip_last, ip_n; // дополнительна€ информаци€
 
 	void otgruzka(int rez, int Vrez, int* deko); // вспомогательна€ Pak()
@@ -84,10 +84,36 @@ struct _element_chart // кратка€ информаци€ элемента графика
 
 struct _basic_curve // база дл€ кривых
 {
-	virtual int get_n() = 0; // количество элементов
-	virtual void get_n_info(int n, _element_chart* e) = 0; // получить краткую информацию n-го элемента
-	virtual void get_t_info(int t, _element_chart* e) = 0; // получить краткую информацию элемента со временем >= t
+	virtual int get_n()                                = 0; // количество элементов
+	virtual void get_n_info(int n, _element_chart* e)  = 0; // получить краткую информацию n-го элемента
+	virtual void get_t_info(int t, _element_chart* e)  = 0; // получить краткую информацию элемента со временем >= t
 	virtual void draw(int n, _area2 area, _bitmap* bm) = 0; // нарисовать 1 элемент
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct _mctds_candle : public _basic_curve // источник данных дл€ временного графика - классические свечи
+{
+	struct _cen_pak // свечка
+	{
+		ushort min = 0, max = 0; // минимальна€ и макимальные цены
+		ushort first = 0, last = 0; // перва€ и последние цены
+		double cc = 0.0; // средн€€ цена
+		_areai ncc; // диапазон цен
+		int time = 0; // общее врем€
+	};
+
+	_super_stat* ss = nullptr;
+	std::vector<_cen_pak> cen1m; // упакованные цены по минутам
+	double c_unpak = 0.01; // распаковка цен
+
+	int get_n(); // количество элементов
+	void get_n_info(int n, _element_chart* e); // получить краткую информацию n-го элемента
+	void get_t_info(int t, _element_chart* e); // получить краткую информацию элемента со временем >= t
+	void draw(int n, _area2 area, _bitmap* bm); // нарисовать 1 элемент
+	void recovery(); // выполнить
+	void push(_stack* mem);
+	void pop(_stack* mem);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
