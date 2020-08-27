@@ -4,16 +4,31 @@ constexpr wchar_t ss_file[] = L"..\\..\\set\\baza.cen";
 
 _super_stat ss; // сжатые цены
 
+_g_graph* graph = nullptr; // график
+
+_nervous_oracle* oracle = nullptr; // оракул
+
 constexpr _prices cena_zero_ = { {}, {}, { 1,1,1,1,1 } };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void start_set(std::filesystem::path fn)
 {
-	static bool first = true;
-	if (!first) return;
-	first = false;
+	static bool first = true; if (!first) return; first = false;
 	ss.load_from_file(fn.wstring() + ss_file);
+	if (!graph) return;
+	constexpr bool ora3 = false;
+	_mctds_candle* sv = new _mctds_candle;
+	oracle = new _nervous_oracle;
+	_oracle3* o3 = (ora3) ? new _oracle3 : nullptr;
+	graph->curve.push_back(std::unique_ptr<_basic_curve>(sv));
+	graph->curve.push_back(std::unique_ptr<_basic_curve>(oracle));
+	if (ora3) graph->curve.push_back(std::unique_ptr<_basic_curve>(o3));
+	sv->recovery();
+	oracle->recovery();
+	if (ora3) o3->recovery();
+	graph->cha_area();
+	graph->obn = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -808,6 +823,12 @@ _super_stat::_super_stat()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+_g_graph::_g_graph()
+{
+	graph = this;
+	local_area = { {0, 200}, {0, 100} };
+}
 
 void _g_graph::ris2(_trans tr, bool final)
 {

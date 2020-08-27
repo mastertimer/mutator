@@ -197,7 +197,10 @@ struct _oracle3 : public _basic_curve // оракул 3-я версия
 
 struct _g_graph : public _t_go
 {
-	_g_graph()                                { local_area = { {0, 200}, {0, 100} }; }
+	std::vector<std::unique_ptr<_basic_curve>> curve; // кривая
+	bool obn = true; // обновить картинку
+
+	_g_graph();
 
 	uchar type()                     override { return 9; }
 	int get_froglif()                override { return 0xF6; } // !!!!!
@@ -206,8 +209,6 @@ struct _g_graph : public _t_go
 
 private:
 	_bitmap bm;
-	bool obn = true; // обновить картинку
-	std::vector<std::unique_ptr<_basic_curve>> curve; // кривая
 	int size_el = 6; // размер элемента
 	int x_tani = 0; // предыдущая координата x при перетаскивании
 	int v_vib = 0; // диапазон полосы прокрутки
