@@ -40,10 +40,10 @@ struct _coo2
 	void operator*=(double b)       noexcept { x *= b; y *= b; }
 	void operator/=(double b)       noexcept { x /= b; y /= b; }
 
-	double len() const noexcept { return sqrt(x * x + y * y); }  // длина вектора
-	double len2() const noexcept { return x * x + y * y; } // квадрат длины вектора
+	double len()              const noexcept { return sqrt(x * x + y * y); }  // длина вектора
+	double len2()             const noexcept { return x * x + y * y; } // квадрат длины вектора
 
-	double scalar(_coo2 b) const noexcept { return x * b.x + y * b.y; } // скалярное произведение
+	double scalar(_coo2 b)    const noexcept { return x * b.x + y * b.y; } // скалярное произведение
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,10 +52,7 @@ using _sizei = int64; // размер [0...x)
 
 struct _size2i // [0...x), [0...y)
 {
-	_sizei x, y;
-
-	_size2i(_sizei x_, _sizei y_) : x(x_), y(y_) {}
-	_size2i() = default;
+	_sizei x = 0, y = 0;
 
 	bool   empty()  const noexcept { return ((x <= 0) || (y <= 0)); }
 	void   clear()        noexcept { x = y = 0; }
@@ -67,13 +64,13 @@ struct _size2i // [0...x), [0...y)
 
 using _size = double; // размер [0...x]
 
-struct _size2 // [0...x], [0...y]
+/*struct _size2 // [0...x], [0...y]
 {
-	_size x, y;
+	_size x = 0.0, y = 0.0;
 
-	bool empty() const noexcept { return (x < 0) || (y < 0); }
+	bool empty()   const noexcept { return (x < 0) || (y < 0); }
 	_coo2 center() const noexcept { return { x * 0.5, y * 0.5 }; }
-};
+};*/
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -93,7 +90,6 @@ struct _area2i
 	_areai x, y; // [...) [...)
 
 	_area2i() = default;
-	_area2i(const _area2i&) = default;
 	_area2i(_size2i b) : x{ 0, b.x }, y{ 0, b.y } {}
 	_area2i(_areai x_, _areai y_) : x(x_), y(y_) {}
 
@@ -137,7 +133,6 @@ struct _area2
 	_area2(const _area2&) = default;
 	_area2(_area x_, _area y_) : x(x_), y(y_) {}
 	_area2(_size2i b) : x{ 0.0, b.x - de_i }, y{ 0.0, b.y - de_i } {}
-	_area2(_size2 b) : x{ 0.0, b.x }, y{ 0.0, b.y } {}
 	_area2(_coo2 b) : x{ b.x, b.x }, y{ b.y, b.y } {}
 
 	void operator=(const _size2i b) noexcept { x = { 0, b.x - de_i }; y = { 0, b.y - de_i }; }

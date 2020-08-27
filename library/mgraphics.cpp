@@ -118,7 +118,7 @@ void _bitmap::podg_cc(uint c, uint cf)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_picture::_picture(int rx3, int ry3) : data(nullptr), size(rx3, ry3)
+_picture::_picture(int rx3, int ry3) : data(nullptr), size{ rx3, ry3 }
 {
 	if (!size.empty()) data = new uint[size.square()];
 	area = size;
