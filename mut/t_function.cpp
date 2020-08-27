@@ -451,9 +451,7 @@ void fun12(_tetron* tt0, _tetron* tt, uint64 flags)
 	delete a;
 }
 
-void fun13(_tetron* tt0, _tetron* tt, uint64 flags)
-{
-}
+void fun13(_tetron* tt0, _tetron* tt, uint64 flags);
 
 void fun14(_tetron* tt0, _tetron* tt, uint64 flags)
 {
@@ -1002,7 +1000,7 @@ void _t_function::run(_tetron* tt0, _tetron* tt, uint64 flags)
 	case 10: fun10(tt0, tt, flags); return; // ! к вызывающему удалить флаги(inf2) к тетронам(inf1)
 	case 11: fun11(tt0, tt, flags); return; // ! к вызывающему добавить флаги(inf2) к тетронам(inf1)
 	case 12: fun12(tt0, tt, flags); return; // отжато колесо мышки
-	case 13: fun13(tt0, tt, flags); return;
+	case 13: fun13(tt0, tt, flags); return; // загрузка цен
 	case 14: fun14(tt0, tt, flags); return; // создать графический объект
 	case 15: fun15(tt0, tt, flags); return;
 	case 16: fun16(tt0, tt, flags); return;

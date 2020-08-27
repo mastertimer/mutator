@@ -4,7 +4,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 constexpr wchar_t tetfile[] = L"..\\..\\tetrons.txt";
-std::filesystem::path exe_path; // путь к запущенному exe файлу
 HCURSOR g_cu = LoadCursor(0, IDC_ARROW); // активный курсор
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -157,12 +156,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			int r = MessageBox(hWnd, L"сохранить?", L"предупреждение", MB_YESNO);
 			if (r == IDYES) mutator::save_to_txt_file(exe_path.wstring() + tetfile);
 			run_timer = true;
-			return 0;
-		}
-		if (wParam == VK_F9)
-		{
-			start_set(exe_path);
-			if (!master_obl_izm.empty()) paint(hWnd);
 			return 0;
 		}
 		//		InitShift(Shift);

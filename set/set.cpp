@@ -12,11 +12,17 @@ constexpr _prices cena_zero_ = { {}, {}, { 1,1,1,1,1 } };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void start_set(std::filesystem::path fn)
+void fun13(_tetron* tt0, _tetron* tt, uint64 flags)
 {
 	static bool first = true; if (!first) return; first = false;
-	ss.load_from_file(fn.wstring() + ss_file);
+	ss.load_from_file(exe_path.wstring() + ss_file);
 	if (!graph) return;
+	if (!graph->find1<_g_scrollbar>(flag_part))
+	{
+		_g_scrollbar* sb = new _g_scrollbar;
+		sb->vid = 2;
+		graph->add_flags(sb, flag_sub_go + flag_part + (flag_run << 32));
+	}
 	constexpr bool ora3 = false;
 	_mctds_candle* sv = new _mctds_candle;
 	oracle = new _nervous_oracle;
@@ -908,7 +914,7 @@ void _g_graph::draw(_size2i size)
 	if (bm.resize(size)) obn = true;
 	if (!obn) return;
 	obn = false;
-	bm.clear(c_minn);
+	bm.clear(c_background);
 
 	_area y_; // диапазон у (grid)
 	static std::vector<int> time_; // отсчеты времени (grid)

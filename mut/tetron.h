@@ -15,6 +15,8 @@ constexpr uint c_minn       = 0xFF082010;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+inline std::filesystem::path exe_path; // путь к запущенному exe файлу
+
 inline _cursor g_cursor = _cursor::normal; // установленный курсор
 
 inline uint64 id_tetron = 1; // глобальный счетчик id тетронов
