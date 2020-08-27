@@ -1,8 +1,20 @@
 #include "set.h"
 
+constexpr wchar_t ss_file[] = L"..\\..\\set\\baza.cen";
+
 _super_stat ss; // сжатые цены
 
 constexpr _prices cena_zero_ = { {}, {}, { 1,1,1,1,1 } };
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void start_set(std::filesystem::path fn)
+{
+	static bool first = true;
+	if (!first) return;
+	first = false;
+	ss.load_from_file(fn.wstring() + ss_file);
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -10,18 +22,18 @@ void _date_time::now()
 {
 	SYSTEMTIME t;
 	GetLocalTime(&t);
-	month = t.wMonth + (t.wYear - 2017) * 12;
-	day = (uchar)t.wDay;
-	hour = (uchar)t.wHour;
+	month  = t.wMonth + (t.wYear - 2017) * 12;
+	day    = (uchar)t.wDay;
+	hour   = (uchar)t.wHour;
 	minute = (uchar)t.wMinute;
 	second = (uchar)t.wSecond;
 }
 
 void _date_time::operator =(int a)
 {
-	month = (uchar)(a / 2764800L);
-	day = (uchar)((a -= month * 2764800L) / 86400L);
-	hour = (uchar)((a -= day * 86400L) / 3600L);
+	month  = (uchar)(a / 2764800L);
+	day    = (uchar)((a -= month * 2764800L) / 86400L);
+	hour   = (uchar)((a -= day * 86400L) / 3600L);
 	minute = (uchar)((a -= hour * 3600L) / 60L);
 	second = (uchar)(a - minute * 60L);
 }
@@ -48,7 +60,7 @@ void _super_stat::save_to_file(wstr fn)
 	mem.save_to_file(fn);
 }
 
-void _super_stat::load_from_file(wstr fn)
+void _super_stat::load_from_file(std::wstring_view fn)
 {
 	_stack mem;
 	if (!mem.load_from_file(fn)) return;
@@ -793,7 +805,6 @@ _super_stat::_super_stat()
 	read_n = -666;
 	ip_last.ok = false;
 	ip_n.ok = false;
-	load_from_file(L"baza.cen");
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1140,7 +1151,7 @@ void _mctds_candle::recovery()
 {
 	int64 vcc = 0;
 	if (cen1m.size()) vcc = cen1m.back().ncc.max;
-	int ssvcc = (int)ss->size;
+	int64 ssvcc = ss.size;
 	if (ssvcc == vcc) return; // ничего не изменилось
 	if (vcc < ssvcc) // добавились несколько цен
 	{
@@ -1159,7 +1170,7 @@ void _mctds_candle::recovery()
 			{
 				if (cp == 0) continue;
 			}
-			ss->read(i, cc);
+			ss.read(i, cc);
 			int t2 = cc.time.to_minute();
 			if (t2 != t)
 			{
@@ -1197,7 +1208,7 @@ void _mctds_candle::recovery()
 	_cen_pak* cp = 0;
 	for (int64 i = 0; i < ssvcc; i++)
 	{
-		ss->read(i, cc);
+		ss.read(i, cc);
 		int t2 = cc.time.to_minute();
 		if (t2 != t)
 		{
@@ -1397,7 +1408,7 @@ void _nervous_oracle::recovery()
 {
 	int64 vcc = 0;
 	if (zn.size()) vcc = zn.back().ncc.max;
-	int64 ssvcc = ss->size;
+	int64 ssvcc = ss.size;
 	if (ssvcc == vcc) return; // ничего не изменилось
 	if (vcc < ssvcc) // добавились несколько цен
 	{
@@ -1418,7 +1429,7 @@ void _nervous_oracle::recovery()
 		}
 		for (int64 i = vcc; i < ssvcc; i++)
 		{
-			ss->read(i, cc, &inf);
+			ss.read(i, cc, &inf);
 			int t2 = cc.time.to_minute();
 			if (t2 != t)
 			{
@@ -1495,7 +1506,7 @@ void _nervous_oracle::recovery()
 	_element_nervous* cp = 0;
 	for (int64 i = 0; i < ssvcc; i++)
 	{
-		ss->read(i, cc, &inf);
+		ss.read(i, cc, &inf);
 		int t2 = cc.time.to_minute();
 		if (t2 != t)
 		{
@@ -1606,7 +1617,7 @@ void _oracle3::recovery()
 {
 	int64 vcc = 0;
 	if (zn.size()) vcc = zn.back().ncc.max;
-	int64 ssvcc = ss->size;
+	int64 ssvcc = ss.size;
 	if (ssvcc == vcc) return; // ничего не изменилось
 	if (vcc < ssvcc) // добавились несколько цен
 	{
@@ -1620,7 +1631,7 @@ void _oracle3::recovery()
 		}
 		for (int64 i = vcc; i < ssvcc; i++)
 		{
-			ss->read(i, cc);
+			ss.read(i, cc);
 			int t2 = cc.time.to_minute();
 			if (t2 != t)
 			{
@@ -1650,7 +1661,7 @@ void _oracle3::recovery()
 	_element_oracle* cp = 0;
 	for (int64 i = 0; i < ssvcc; i++)
 	{
-		ss->read(i, cc);
+		ss.read(i, cc);
 		int t2 = cc.time.to_minute();
 		if (t2 != t)
 		{
@@ -1724,7 +1735,7 @@ void _oracle3::draw(int n, _area2 area, _bitmap* bm)
 				}
 		}
 		int64 ii = i - begin_ss;
-		if (part_ss[ii].empty()) ss->read(i, part_ss[ii]);
+		if (part_ss[ii].empty()) ss.read(i, part_ss[ii]);
 		pri[part_ss[ii].time.second] = part_ss[ii];
 		min = zn[n].min - 1;
 		max = zn[n].max;

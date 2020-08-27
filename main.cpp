@@ -1,9 +1,10 @@
 ﻿#include "mutator.h"
+#include "set.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 constexpr wchar_t tetfile[] = L"..\\..\\tetrons.txt";
-std::wstring exe_path; // путь к запущенному exe файлу
+std::filesystem::path exe_path; // путь к запущенному exe файлу
 HCURSOR g_cu = LoadCursor(0, IDC_ARROW); // активный курсор
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -154,8 +155,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			run_timer = false;
 			int r = MessageBox(hWnd, L"сохранить?", L"предупреждение", MB_YESNO);
-			if (r == IDYES) mutator::save_to_txt_file(exe_path + tetfile);
+			if (r == IDYES) mutator::save_to_txt_file(exe_path.wstring() + tetfile);
 			run_timer = true;
+			return 0;
+		}
+		if (wParam == VK_F9)
+		{
+			start_set(exe_path);
+			if (!master_obl_izm.empty()) paint(hWnd);
 			return 0;
 		}
 		//		InitShift(Shift);
@@ -199,9 +206,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 {
 	wchar_t buffer[MAX_PATH];
 	GetModuleFileName(hInstance, buffer, MAX_PATH);
+	std::filesystem::path fn = buffer;
+	fn.remove_filename();
 	exe_path = buffer;
-	exe_path = exe_path.substr(0, exe_path.rfind(L'\\') + 1);
-	if (!mutator::start(exe_path + tetfile)) return 1;
+	exe_path.remove_filename();
+	if (!mutator::start(exe_path.wstring() + tetfile)) return 1;
 
 	static TCHAR szWindowClass[] = L"win64app";
 	WNDCLASSEX wcex;

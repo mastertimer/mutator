@@ -6,6 +6,8 @@
 
 constexpr int rceni = 20; // предложений продажи, предложений покупки ( ВСЕГО = Rceni * 2 );
 
+void start_set(std::filesystem::path fn); // инициализация торговли
+						  
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _offer // предложение
@@ -55,7 +57,7 @@ struct _super_stat // супер статистика цен
 	void add(_prices& c); // добавить цены (сжать)
 	void read(int64 n, _prices& c, _info_pak* inf = 0); // прочитать цены (расжать)
 	void save_to_file(wstr fn);
-	void load_from_file(wstr fn);
+	void load_from_file(std::wstring_view fn);
 	void clear(); // удалить все данные
 
 private:
@@ -105,7 +107,6 @@ struct _mctds_candle : public _basic_curve // источник данных для временного гра
 		int time = 0; // общее время
 	};
 
-	_super_stat* ss = nullptr;
 	std::vector<_cen_pak> cen1m; // упакованные цены по минутам
 	double c_unpak = 0.01; // распаковка цен
 
@@ -152,7 +153,6 @@ struct _nervous_oracle : public _basic_curve // нервозный предсказатель
 		bool operator < (int a) const noexcept { return (time < a); } // для алгоритма поиска по времени
 	};
 
-	_super_stat* ss = nullptr;
 	std::vector<_element_nervous> zn; // данные
 	double c_unpak = 0.01; // распаковка цен
 
@@ -181,7 +181,6 @@ struct _oracle3 : public _basic_curve // оракул 3-я версия
 	};
 	static const int max_part = 22000; // максимально количество элементов ss
 
-	_super_stat* ss = nullptr;
 	std::deque<_prices> part_ss; // часть супер-статистики
 	int64 begin_ss = 0; // начало куска супер-статистики
 	std::vector<_element_oracle> zn; // данные

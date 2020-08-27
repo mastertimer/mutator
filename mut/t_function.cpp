@@ -646,16 +646,9 @@ void fun32(_tetron* tt0, _tetron* tt, uint64 flags)
 
 void fun33(_tetron* tt0, _tetron* tt, uint64 flags)
 {
-	_g_graph* g = new _g_graph;
-	_t_trans* tr = n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
-
-
-	//	gen_ring();
-	//	gen_1krug();
-
-		//_g_tetron* g = new _g_tetron;
-		//g->add_flags(master.n_go_layer, flag_specialty);
-		//_t_trans* tr = master.n_ko->set_t_trans(g, flag_sub_go + flag_part);
+	//_g_tetron* g = new _g_tetron;
+	//g->add_flags(master.n_go_layer, flag_specialty);
+	//_t_trans* tr = master.n_ko->set_t_trans(g, flag_sub_go + flag_part);
 
 	//	MessageBox(0, to_wstring(c).c_str(), L"упс", MB_OK | MB_TASKMODAL);
 		//MessageBox(0, double_to_string(v, 4), L"упс", MB_OK | MB_TASKMODAL);
