@@ -1371,7 +1371,7 @@ void _nervous_oracle::draw(int n, _area2 area, _bitmap* bm)
 		if (zn[i].r_pok <= zn[i + 1].r_pok) pade_pok = false;
 	}
 	_element_nervous& a = zn[n];
-	uint c = 0x808080;
+	uint c = 0xFF808080;
 
 	if (rost_pro) c += 0x70;
 	if (rost_pok) c += 0x700000;
@@ -1381,11 +1381,11 @@ void _nervous_oracle::draw(int n, _area2 area, _bitmap* bm)
 	double r = area.x.length() * 0.5 * 2;
 	if (get_latest_events(n).start())
 	{
-		c = 0xFF0000;
+		c = 0xFFFF0000;
 		r *= 2;
 	}
 
-	if (c == 0x808080) return;
+	if (c == 0xFF808080) return;
 
 	bm->fill_ring(area.center(), r, r * 0.1, c, c);
 }
@@ -1490,7 +1490,7 @@ void _nervous_oracle::recovery()
 	zn.clear();
 	int t = 0;
 	_element_nervous* cp = 0;
-	for (int i = 0; i < ssvcc; i++)
+	for (int64 i = 0; i < ssvcc; i++)
 	{
 		ss->read(i, cc, &inf);
 		int t2 = cc.time.to_minute();
@@ -1558,6 +1558,227 @@ void _nervous_oracle::recovery()
 			cp->r /= cp->v_r;
 			cp->r_pok /= cp->v_r;
 			cp->r_pro /= cp->v_r;
+		}
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void _oracle3::get_n_info(int n, _element_chart* e)
+{
+	if (n >= (int)zn.size())
+	{
+		e->n = -1;
+		return;
+	}
+	e->n = n;
+	e->time = zn[n].time;
+	e->min = (zn[n].min - 1) * c_unpak;
+	e->max = zn[n].max * c_unpak;
+	e->middle = (e->min + e->max) * 0.5;
+}
+
+void _oracle3::get_t_info(int t, _element_chart* e)
+{
+	auto x = lower_bound(zn.begin(), zn.end(), t);
+	if (x == zn.end())
+	{
+		e->n = -1;
+		return;
+	}
+	int xx = (int)(x - zn.begin());
+	e->n = xx;
+	e->time = zn[xx].time;
+	e->min = (zn[xx].min - 1) * c_unpak;
+	e->max = zn[xx].max * c_unpak;
+	e->middle = (e->min + e->max) * 0.5;
+}
+
+int _oracle3::get_n()
+{
+	return (int)zn.size();
+}
+
+void _oracle3::recovery()
+{
+	int64 vcc = 0;
+	if (zn.size()) vcc = zn.back().ncc.max;
+	int64 ssvcc = ss->size;
+	if (ssvcc == vcc) return; // ничего не изменилось
+	if (vcc < ssvcc) // добавились несколько цен
+	{
+		_prices cc;
+		int t = 0;
+		_element_oracle* cp = 0;
+		if (zn.size())
+		{
+			cp = &zn.back();
+			t = cp->time;
+		}
+		for (int64 i = vcc; i < ssvcc; i++)
+		{
+			ss->read(i, cc);
+			int t2 = cc.time.to_minute();
+			if (t2 != t)
+			{
+				t = t2;
+				_element_oracle we;
+				we.time = t;
+				we.ncc.min = i;
+				we.ncc.max = i + 1;
+				we.max = cc.pro[rceni - 1].c;
+				we.min = cc.pok[rceni - 1].c;
+				zn.push_back(we);
+				cp = &zn.back();
+			}
+			else
+			{
+				if (cp == 0) continue; // для паранойи компилятора
+				if (cc.pok[rceni - 1].c < cp->min) cp->min = cc.pok[rceni - 1].c;
+				if (cc.pro[rceni - 1].c > cp->max) cp->max = cc.pro[rceni - 1].c;
+				cp->ncc.max++;
+			}
+		}
+		return;
+	}
+	_prices cc; // уменьшились цены, полный пересчет
+	zn.clear();
+	int t = 0;
+	_element_oracle* cp = 0;
+	for (int64 i = 0; i < ssvcc; i++)
+	{
+		ss->read(i, cc);
+		int t2 = cc.time.to_minute();
+		if (t2 != t)
+		{
+			t = t2;
+			_element_oracle we;
+			we.time = t;
+			we.ncc.min = i;
+			we.ncc.max = i + 1;
+			we.max = cc.pro[rceni - 1].c;
+			we.min = cc.pok[rceni - 1].c;
+			zn.push_back(we);
+			cp = &zn.back();
+		}
+		else
+		{
+			if (cp == 0) continue; // для паранойи компилятора
+			if (cc.pok[rceni - 1].c < cp->min) cp->min = cc.pok[rceni - 1].c;
+			if (cc.pro[rceni - 1].c > cp->max) cp->max = cc.pro[rceni - 1].c;
+			cp->ncc.max++;
+		}
+	}
+}
+
+void _oracle3::draw(int n, _area2 area, _bitmap* bm)
+{
+	static _prices pri[61]; // цены
+	static int min, max; // разброс по y
+	min = 0;
+	max = 1;
+	for (auto& i : pri) i.clear();
+
+	for (int64 i = zn[n].ncc.min; i < zn[n].ncc.max; i++)
+	{
+		if (i < begin_ss)
+		{
+			int64 delta = begin_ss - i;
+			if (delta >= max_part)
+				part_ss.clear();
+			else
+			{
+				_prices w;
+				w.clear();
+				for (int i = 0; i < delta; i++)
+				{
+					part_ss.push_front(w);
+					if (part_ss.size() > max_part) part_ss.pop_back();
+				}
+			}
+			begin_ss = i;
+		}
+		if (i >= begin_ss + (int64)part_ss.size())
+		{
+			_prices w;
+			w.clear();
+			int64 delta = i - (begin_ss + (int)part_ss.size()) + 1;
+			if (delta >= max_part)
+			{
+				part_ss.clear();
+				part_ss.push_back(w);
+				begin_ss = i;
+			}
+			else
+				for (int i = 0; i < delta; i++)
+				{
+					part_ss.push_back(w);
+					if (part_ss.size() > max_part)
+					{
+						part_ss.pop_front();
+						begin_ss++;
+					}
+				}
+		}
+		int64 ii = i - begin_ss;
+		if (part_ss[ii].empty()) ss->read(i, part_ss[ii]);
+		pri[part_ss[ii].time.second] = part_ss[ii];
+		min = zn[n].min - 1;
+		max = zn[n].max;
+	}
+
+	_area2 oo = area;
+	int x1 = (int)oo.x.min;
+	int x2 = (int)oo.x.max;
+	int dx = x2 - x1;
+	if (dx < 2) return;
+	int step = 60;
+	if (dx >= 4) step = 30;
+	if (dx >= 6) step = 20;
+	if (dx >= 8) step = 15;
+	if (dx >= 10) step = 12;
+	if (dx >= 12) step = 10;
+	if (dx >= 20) step = 6;
+	if (dx >= 24) step = 5;
+	if (dx >= 30) step = 4;
+	if (dx >= 40) step = 3;
+	if (dx >= 60) step = 2;
+	if (dx >= 120) step = 1;
+	int kol = 60 / step;
+	int dd = max - min;
+	double ddy = oo.y.max - oo.y.min;
+	for (int i = 0; i < kol; i++)
+	{
+		int ss = i * step;
+		while (pri[ss].empty())
+		{
+			if (ss + 1 >= (i + 1) * step) break;
+			ss++;
+		}
+		if (pri[ss].empty()) continue;
+		int xx1 = x1 + (x2 - x1) * i / kol;
+		int xx2 = x1 + (x2 - x1) * (i + 1) / kol - 1;
+		for (int j = rceni - 1; j >= 0; j--)
+		{
+			int64 ce = pri[ss].pro[j].c;
+			int yy1 = (int)(oo.y.min + (max - ce) * ddy / dd);
+			int yy2 = (int)(oo.y.min + (max - ce + 1) * ddy / dd) - 1;
+			if (yy2 < yy1) continue;
+			uint q = (uint)sqrt(pri[ss].pro[j].k) + 32;
+			if (q > 255) q = 255;
+			uint cc = (q << 8) + (q << 16) + 0xA0000000;
+			bm->fill_rectangle({ {xx1, xx2}, {yy1, yy2} }, cc);
+		}
+		for (int j = 0; j < rceni; j++)
+		{
+			int64 ce = pri[ss].pok[j].c;
+			int yy1 = (int)(oo.y.min + (max - ce) * ddy / dd);
+			int yy2 = (int)(oo.y.min + (max - ce + 1) * ddy / dd) - 1;
+			if (yy2 < yy1) continue;
+			uint q = (uint)sqrt(pri[ss].pok[j].k) + 32;
+			if (q > 255) q = 255;
+			uint cc = q + (q << 8) + 0xA0000000;
+			bm->fill_rectangle({ {xx1, xx2}, {yy1, yy2} }, cc);
 		}
 	}
 }

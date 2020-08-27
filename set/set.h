@@ -1,5 +1,7 @@
 #pragma once
 
+#include <deque>
+
 #include "basic_go.h"
 
 constexpr int rceni = 20; // предложений продажи, предложений покупки ( ВСЕГО = Rceni * 2 );
@@ -162,6 +164,34 @@ struct _nervous_oracle : public _basic_curve // нервозный предсказатель
 	void push(_stack* mem);
 	void pop(_stack* mem);
 	_latest_events get_latest_events(int64 nn); // получить последние события
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct _oracle3 : public _basic_curve // оракул 3-я версия
+{
+	struct _element_oracle
+	{
+		int time = 0; // время
+		_areai ncc; // диапазон цен
+
+		ushort min = 0, max = 0; // разброс по y
+
+		bool operator < (int a) const noexcept { return (time < a); } // для алгоритма поиска по времени
+	};
+	static const int max_part = 22000; // максимально количество элементов ss
+
+	_super_stat* ss = nullptr;
+	std::deque<_prices> part_ss; // часть супер-статистики
+	int64 begin_ss = 0; // начало куска супер-статистики
+	std::vector<_element_oracle> zn; // данные
+	double c_unpak = 0.01; // распаковка цен
+
+	int get_n(); // количество элементов
+	void get_n_info(int n, _element_chart* e); // получить краткую информацию n-го элемента
+	void get_t_info(int t, _element_chart* e); // получить краткую информацию элемента со временем >= t
+	void draw(int n, _area2 area, _bitmap* bm); // нарисовать 1 элемент
+	void recovery(); // выполнить
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
