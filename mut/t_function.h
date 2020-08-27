@@ -16,7 +16,7 @@ struct _t_function : public _tetron
 	void  push(_wjson& b)    override { _tetron::push(b); b.add("a", a); }
 	void  pop(_rjson& b)     override { _tetron::pop(b); b.read("a", a); }
 
-	void run(_tetron* tt0, _tetron* tt, uint64 flags)override;
+	void run(_tetron* tt0, _tetron* tt, uint64 flags) override;
 };
 
 void smena_avt();

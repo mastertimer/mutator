@@ -830,6 +830,35 @@ _super_stat::_super_stat()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+bool _g_graph::mouse_down_left2(_coo2 r)
+{
+	x_tani = r.x;
+	return true;
+}
+
+void _g_graph::mouse_move_left2(_coo2 r)
+{
+	int dx = (r.x - x_tani) / size_el;
+	if (dx == 0) return;
+	x_tani += dx * size_el;
+
+	_g_scrollbar* polz = find1<_g_scrollbar>(flag_part); 
+	if (!polz) return;
+	double* ii = &polz->position;
+	if (!ii) return;
+	*ii -= double(dx) / v_vib;
+	if (*ii < 0) *ii = 0;
+	if (*ii > 1) *ii = 1;
+	polz->cha_area();
+	polz->run(0, polz, flag_run);
+}
+
+void _g_graph::run(_tetron* tt0, _tetron* tt, uint64 flags)
+{
+	obn = true;
+	cha_area();
+}
+
 _g_graph::_g_graph()
 {
 	graph = this;
