@@ -210,8 +210,8 @@ struct _g_graph : public _t_go
 
 private:
 	_bitmap bm;
-	int size_el = 6; // размер элемента
-	int x_tani = 0; // предыдущая координата x при перетаскивании
+	int64 size_el = 6; // размер элемента
+	int64 x_tani = 0; // предыдущая координата x при перетаскивании
 	int v_vib = 0; // диапазон полосы прокрутки
 
 	void draw(_size2i size);

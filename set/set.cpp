@@ -37,6 +37,11 @@ void fun13(_tetron* tt0, _tetron* tt, uint64 flags)
 	graph->obn = true;
 }
 
+void fun15(_tetron* tt0, _tetron* tt, uint64 flags)
+{
+
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void _date_time::now()
@@ -832,13 +837,13 @@ _super_stat::_super_stat()
 
 bool _g_graph::mouse_down_left2(_coo2 r)
 {
-	x_tani = r.x;
+	x_tani = (int64)r.x;
 	return true;
 }
 
 void _g_graph::mouse_move_left2(_coo2 r)
 {
-	int dx = (r.x - x_tani) / size_el;
+	int64 dx = ((int64)r.x - x_tani) / size_el;
 	if (dx == 0) return;
 	x_tani += dx * size_el;
 

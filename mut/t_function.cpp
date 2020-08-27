@@ -470,9 +470,7 @@ void fun14(_tetron* tt0, _tetron* tt, uint64 flags)
 	tt->_tetron::run(0, n_act, flags);
 }
 
-void fun15(_tetron* tt0, _tetron* tt, uint64 flags)
-{
-}
+void fun15(_tetron* tt0, _tetron* tt, uint64 flags);
 
 void fun16(_tetron* tt0, _tetron* tt, uint64 flags)
 {
@@ -644,9 +642,9 @@ void fun32(_tetron* tt0, _tetron* tt, uint64 flags)
 
 void fun33(_tetron* tt0, _tetron* tt, uint64 flags)
 {
-	//_g_tetron* g = new _g_tetron;
-	//g->add_flags(master.n_go_layer, flag_specialty);
-	//_t_trans* tr = master.n_ko->set_t_trans(g, flag_sub_go + flag_part);
+//	_g_tetron* g = new _g_tetron;
+//	g->add_flags(n_checkbox, flag_specialty);
+//	_t_trans* tr = n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
 
 	//	MessageBox(0, to_wstring(c).c_str(), L"упс", MB_OK | MB_TASKMODAL);
 		//MessageBox(0, double_to_string(v, 4), L"упс", MB_OK | MB_TASKMODAL);
@@ -1002,7 +1000,7 @@ void _t_function::run(_tetron* tt0, _tetron* tt, uint64 flags)
 	case 12: fun12(tt0, tt, flags); return; // отжато колесо мышки
 	case 13: fun13(tt0, tt, flags); return; // загрузка цен
 	case 14: fun14(tt0, tt, flags); return; // создать графический объект
-	case 15: fun15(tt0, tt, flags); return;
+	case 15: fun15(tt0, tt, flags); return; // переключение режима сканирования цен
 	case 16: fun16(tt0, tt, flags); return;
 	case 17: fun17(tt0, tt, flags); return; // перетаскивание гвоздя активного объекта
 	case 18: fun18(tt0, tt, flags); return; // НОВОЕ изменение активного тетрона
