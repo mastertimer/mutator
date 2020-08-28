@@ -246,12 +246,6 @@ std::wstring string_to_wstring(std::string_view s)
 	return res;
 }
 
-std::wstring u8string_to_wstring(std::string s)
-{
-	// TODO (u8 - utf-8)
-	return string_to_wstring(s);
-}
-
 std::wstring double_to_string(double a, int z)
 {
 	static const double delta[16] = {5E-1, 5E-2,  5E-3,  5E-4,  5E-5,  5E-6,  5E-7,  5E-8,

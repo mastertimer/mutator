@@ -8,14 +8,23 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+using int64  = long long;
 using uchar  = unsigned char;
 using ushort = unsigned short;
 using uint   = unsigned int;
 using uint64 = unsigned long long;
-using int64  =          long long;
 
-using astr   = const    char*;
-using wstr   = const    wchar_t*;
+using astr = const char*;
+using wstr = const wchar_t*;
+
+using i1 = char;
+using i2 = short;
+using i4 = int;
+using i8 = long long;
+using u1 = unsigned char;
+using u2 = unsigned short;
+using u4 = unsigned int;
+using u8 = unsigned long long;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -50,7 +59,6 @@ bool save_file(std::filesystem::path fn, const void* data, uint n);
 bool load_file(std::filesystem::path fn, char** data, uint* n);
 
 std::wstring string_to_wstring(std::string_view s);
-std::wstring u8string_to_wstring(std::string s);
 wstr         uint64_to_wstr_hex(uint64 a);
 
 std::wstring double_to_string(double a, int z);

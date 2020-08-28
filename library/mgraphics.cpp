@@ -943,9 +943,9 @@ void _picture::text16n(int64 x, int64 y, astr s, int64 n, uint c)
 			continue;
 		}
 		int64 i0 = 0;
-		int64 i1 = lx;
+		int64 i1_ = lx;
 		if (x < area.x.min) i0 = (area.x.min + n - 1 - x) / n;
-		if (x + lx * n > area.x.max) i1 = (area.x.max - x) / n;
+		if (x + lx * n > area.x.max) i1_ = (area.x.max - x) / n;
 		for (int64 j = j0; j < j1; j++)
 		{
 			ushort mask = (ushort(1) << j);
@@ -955,7 +955,7 @@ void _picture::text16n(int64 x, int64 y, astr s, int64 n, uint c)
 				if (kk == 0)
 				{
 					uint* c2 = &data[(y + j * n + jj) * size.x + x + i0 * n];
-					for (int64 i = i0; i < i1; i++)
+					for (int64 i = i0; i < i1_; i++)
 					{
 						if (*sss & mask)
 						{
@@ -975,7 +975,7 @@ void _picture::text16n(int64 x, int64 y, astr s, int64 n, uint c)
 					uchar* c2 = (uchar*)&data[(y + j * n + jj) * size.x + x + i0 * n];
 					if (!transparent)
 					{
-						for (int64 i = i0; i < i1; i++)
+						for (int64 i = i0; i < i1_; i++)
 						{
 							if (*sss & mask)
 							{
@@ -994,7 +994,7 @@ void _picture::text16n(int64 x, int64 y, astr s, int64 n, uint c)
 					}
 					else
 					{
-						for (int64 i = i0; i < i1; i++)
+						for (int64 i = i0; i < i1_; i++)
 						{
 							if (*sss & mask)
 							{
@@ -1057,9 +1057,9 @@ void _picture::text16(int64 x, int64 y, astr s, uint c)
 			continue;
 		}
 		int64 i0 = 0;
-		int64 i1 = lx;
+		int64 i1_ = lx;
 		if (x < area.x.min) i0 = area.x.min - x;
-		if (x + lx > area.x.max) i1 = area.x.max - x;
+		if (x + lx > area.x.max) i1_ = area.x.max - x;
 		for (int64 j = j0; j < j1; j++)
 		{
 			ushort        mask = (ushort(1) << j);
@@ -1067,7 +1067,7 @@ void _picture::text16(int64 x, int64 y, astr s, uint c)
 			if (kk == 0)
 			{
 				uint* c2 = &data[(y + j) * size.x + x + i0];
-				for (int64 i = i0; i < i1; i++)
+				for (int64 i = i0; i < i1_; i++)
 				{
 					if (*sss++ & mask) *c2 = c;
 					c2++;
@@ -1078,7 +1078,7 @@ void _picture::text16(int64 x, int64 y, astr s, uint c)
 				uchar* c2 = (uchar*)&data[(y + j) * size.x + x + i0];
 				if (!transparent)
 				{
-					for (int64 i = i0; i < i1; i++)
+					for (int64 i = i0; i < i1_; i++)
 					{
 						if (*sss++ & mask)
 						{
@@ -1091,7 +1091,7 @@ void _picture::text16(int64 x, int64 y, astr s, uint c)
 				}
 				else
 				{
-					for (int64 i = i0; i < i1; i++)
+					for (int64 i = i0; i < i1_; i++)
 					{
 						if (*sss++ & mask)
 						{
