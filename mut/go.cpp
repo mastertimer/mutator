@@ -1,4 +1,4 @@
-#include "t_function.h"
+п»ї#include "t_function.h"
 #include "go.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -221,7 +221,7 @@ void _g_edit_int::key_press(ushort key)
 	else
 		if ((key >= L'0') && (key <= L'9'))
 		{
-			if (*a == 0) cursor = 1; // особый случай
+			if (*a == 0) cursor = 1; // РѕСЃРѕР±С‹Р№ СЃР»СѓС‡Р°Р№
 			int l = (int)std::to_wstring(*a).size();
 			if (cursor > l) cursor = l;
 			int64 mn = 1;
@@ -678,8 +678,8 @@ bool _g_edit_one::mouse_down_left2(_coo2 r)
 		_one_tetron* ot = find1_plus_gtetron<_one_tetron>(this, flag_specialty);
 		if (ot)
 		{
-			if (mode == 0) a_i = ot->i[n] + 1;   // чтобы обновилось
-			if (mode == 1) a = ot->d[n] * 2 + 1; // чтобы обновилось
+			if (mode == 0) a_i = ot->i[n] + 1;   // С‡С‚РѕР±С‹ РѕР±РЅРѕРІРёР»РѕСЃСЊ
+			if (mode == 1) a = ot->d[n] * 2 + 1; // С‡С‚РѕР±С‹ РѕР±РЅРѕРІРёР»РѕСЃСЊ
 		}
 		cursor = 0;
 		cha_area();
@@ -693,8 +693,8 @@ bool _g_edit_one::mouse_down_left2(_coo2 r)
 		_one_tetron* ot = find1_plus_gtetron<_one_tetron>(this, flag_specialty);
 		if (ot)
 		{
-			if (mode == 0) a_i = ot->i[n] + 1;   // чтобы обновилось
-			if (mode == 1) a = ot->d[n] * 2 + 1; // чтобы обновилось
+			if (mode == 0) a_i = ot->i[n] + 1;   // С‡С‚РѕР±С‹ РѕР±РЅРѕРІРёР»РѕСЃСЊ
+			if (mode == 1) a = ot->d[n] * 2 + 1; // С‡С‚РѕР±С‹ РѕР±РЅРѕРІРёР»РѕСЃСЊ
 		}
 		cursor = 0;
 		cha_area();
@@ -949,11 +949,11 @@ _g_button::_g_button() : checked(0)
 
 bool _g_button::mouse_move2(_coo2 r)
 {
-	if (n_go_move != this) // первое перемещение
+	if (n_go_move != this) // РїРµСЂРІРѕРµ РїРµСЂРµРјРµС‰РµРЅРёРµ
 	{
 		cha_area();
 	}
-	if (!n_hint) add_hint(hint, this); // нет подсказки
+	if (!n_hint) add_hint(hint, this); // РЅРµС‚ РїРѕРґСЃРєР°Р·РєРё
 	return true;
 }
 
@@ -983,8 +983,8 @@ void _g_color_ring::ris2(_trans tr, bool final)
 	master_bm.fill_circle(c.x, c.y, r * 0.3, color);
 	double r1 = 0.4 * r;
 	double r2 = 0.5 * r;
-	double r1_ = li_r_1 * r; // для ползунка
-	double r2_ = li_r_2 * r; // для ползунка
+	double r1_ = li_r_1 * r; // РґР»СЏ РїРѕР»Р·СѓРЅРєР°
+	double r2_ = li_r_2 * r; // РґР»СЏ РїРѕР»Р·СѓРЅРєР°
 	double dk = 1.0 / ((pi * 0.5 - zazor) * r2);
 	for (double k = 0; k <= 1; k += dk)
 	{
@@ -1085,8 +1085,8 @@ bool _g_list_link::mouse_down_left2(_coo2 r)
 		if (a == nullptr) return true;
 		if ((cursor < 0) || (cursor >= (int)a->link.size())) return true;
 		_id t = a->link[cursor]->pairr(a);
-		n_act = t; // заменить на новое!!
-		smena_avt(); // заменить на новое!!
+		n_act = t; // Р·Р°РјРµРЅРёС‚СЊ РЅР° РЅРѕРІРѕРµ!!
+		smena_avt(); // Р·Р°РјРµРЅРёС‚СЊ РЅР° РЅРѕРІРѕРµ!!
 		g->add_unique_flags(t, flag_specialty);
 		g->run(0, g, flag_run);
 	}
@@ -1158,7 +1158,7 @@ void _g_list_link::ris2(_trans tr, bool final)
 		if (ee)
 		{
 			ee->a = a1;
-			//			ee->Recovery(); // должны рисоваться после этого списка или все вычисления вынести из Ris в run
+			//			ee->Recovery(); // РґРѕР»Р¶РЅС‹ СЂРёСЃРѕРІР°С‚СЊСЃСЏ РїРѕСЃР»Рµ СЌС‚РѕРіРѕ СЃРїРёСЃРєР° РёР»Рё РІСЃРµ РІС‹С‡РёСЃР»РµРЅРёСЏ РІС‹РЅРµСЃС‚Рё РёР· Ris РІ run
 		}
 	}
 }
@@ -1172,7 +1172,7 @@ void _g_list_link::run(_tetron* tt0, _tetron* tt, uint64 flags)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g1list::init_sel() //вызывается только при отсутствии
+void _g1list::init_sel() //РІС‹Р·С‹РІР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ РїСЂРё РѕС‚СЃСѓС‚СЃС‚РІРёРё
 {
 	for (auto i : link)
 	{
@@ -1213,7 +1213,7 @@ void _g1list::ris2(_trans tr, bool final)
 			master_bm.text((int)(oo2.x.min + 4), (int)(oo2.y.min + dx * 16.0 * tr.scale),
 				a->operator std::wstring * ()->c_str(), sf, c, 0);
 		}
-		if (link[i]->test_flags(this, flag_specialty)) start = true; // если будет несколько - будут проблемы
+		if (link[i]->test_flags(this, flag_specialty)) start = true; // РµСЃР»Рё Р±СѓРґРµС‚ РЅРµСЃРєРѕР»СЊРєРѕ - Р±СѓРґСѓС‚ РїСЂРѕР±Р»РµРјС‹
 	}
 	start = false;
 	dx = 0;
@@ -1228,7 +1228,7 @@ void _g1list::ris2(_trans tr, bool final)
 			master_bm.text((int)(oo2.x.min + 4), (int)(oo2.y.min + dx * 16.0 * tr.scale),
 				a->operator std::wstring * ()->c_str(), sf, c, 0);
 		}
-		if (i->test_flags(this, flag_specialty)) start = true; // если будет несколько - будут проблемы
+		if (i->test_flags(this, flag_specialty)) start = true; // РµСЃР»Рё Р±СѓРґРµС‚ РЅРµСЃРєРѕР»СЊРєРѕ - Р±СѓРґСѓС‚ РїСЂРѕР±Р»РµРјС‹
 	}
 }
 
@@ -1338,7 +1338,7 @@ bool _g1list::mouse_wheel2(_coo2 r)
 
 bool _g_tetron::mouse_move2(_coo2 r)
 {
-	if (n_hint) return true; // есть подсказка
+	if (n_hint) return true; // РµСЃС‚СЊ РїРѕРґСЃРєР°Р·РєР°
 	_tetron* a = find1<_tetron>(flag_specialty);
 	std::wstring re;
 	if (a) re = string_to_wstring(a->name()) + L" " + uint64_to_wstr_hex(a->id);
@@ -1382,9 +1382,9 @@ void _g_tetron::ris2(_trans tr, bool final)
 	double y = 0.7 * (r - d) * 2;
 	uint c = c_min;
 
-	_tetron* t2 = find1<_tetron>(flag_specialty); // связанный тетрон
-	bool im_temp = test_flags(n_temp_go, flag_parent); // текущий _g_tetron - временный
-	// выделение красным цветом
+	_tetron* t2 = find1<_tetron>(flag_specialty); // СЃРІСЏР·Р°РЅРЅС‹Р№ С‚РµС‚СЂРѕРЅ
+	bool im_temp = test_flags(n_temp_go, flag_parent); // С‚РµРєСѓС‰РёР№ _g_tetron - РІСЂРµРјРµРЅРЅС‹Р№
+	// РІС‹РґРµР»РµРЅРёРµ РєСЂР°СЃРЅС‹Рј С†РІРµС‚РѕРј
 	static _tetron* root_tetron = nullptr;
 	if (!im_temp)
 		root_tetron = t2;
@@ -1393,16 +1393,16 @@ void _g_tetron::ris2(_trans tr, bool final)
 
 	master_bm.fill_ring(p, r, d, c, (im_temp) ? 0 : c_background);
 
-	_t_trans* ttr = nullptr; // звезда
+	_t_trans* ttr = nullptr; // Р·РІРµР·РґР°
 	if (star) ttr = *star;
 
-	if (t2 == nullptr) // нет связанного тетрона
+	if (t2 == nullptr) // РЅРµС‚ СЃРІСЏР·Р°РЅРЅРѕРіРѕ С‚РµС‚СЂРѕРЅР°
 	{
 		if (star) delete_hvost(star, true, false);
 		return;
 	}
 
-	if (final) // нужно заканчивать
+	if (final) // РЅСѓР¶РЅРѕ Р·Р°РєР°РЅС‡РёРІР°С‚СЊ
 	{
 		if (star)
 			if (cmp_drawn())
@@ -1415,13 +1415,13 @@ void _g_tetron::ris2(_trans tr, bool final)
 	if (star) return;
 
 	_g_tetron* gg2;
-	// ищет существующий временный _g_tetron
+	// РёС‰РµС‚ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёР№ РІСЂРµРјРµРЅРЅС‹Р№ _g_tetron
 	_g_tetron* aa = t2->find_intermediate<_g_tetron>(n_temp_go, inverted_flags(flag_specialty), flag_parent);
 	if (aa)
 		if (aa != this)
-		{ // может уже есть звезда?
-			gg2 = aa; // не this
-			ttr = nullptr; // подходящая звезда для использования
+		{ // РјРѕР¶РµС‚ СѓР¶Рµ РµСЃС‚СЊ Р·РІРµР·РґР°?
+			gg2 = aa; // РЅРµ this
+			ttr = nullptr; // РїРѕРґС…РѕРґСЏС‰Р°СЏ Р·РІРµР·РґР° РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ
 			if (gg2->star) ttr = *gg2->star;
 			if (ttr)
 			{
@@ -1437,7 +1437,7 @@ void _g_tetron::ris2(_trans tr, bool final)
 			}
 		}
 	drawn_create_star = master_chain_go.chain;
-	constexpr double kr = 0.333; // 0.4 растояние между тетронами = kr * radius
+	constexpr double kr = 0.333; // 0.4 СЂР°СЃС‚РѕСЏРЅРёРµ РјРµР¶РґСѓ С‚РµС‚СЂРѕРЅР°РјРё = kr * radius
 	int vl = 0;
 	for (auto& i : t2->link)
 		if (!i->pairr(t2)->test_flags(n_temp_go, flag_parent)) vl++;
@@ -1551,7 +1551,7 @@ void _g_tetron2::ris2(_trans tr, bool final)
 	double y = 0.7 * (r - d) * 2;
 	uint c = c_min;
 	master_bm.fill_ring(p, r, d, c, c_background);
-	_tetron* t2 = find1<_tetron>(flag_specialty); // связанный тетрон
+	_tetron* t2 = find1<_tetron>(flag_specialty); // СЃРІСЏР·Р°РЅРЅС‹Р№ С‚РµС‚СЂРѕРЅ
 	if (final || (t2 == nullptr))
 	{
 		mo.clear();
@@ -1561,7 +1561,7 @@ void _g_tetron2::ris2(_trans tr, bool final)
 	if (mo.empty())
 	{
 		SuperDelTetron2::PodgSpUnikSv(t2);
-		SuperDelTetron2::ud->push_back(t2); // т.к. в списке главного тетрона нет
+		SuperDelTetron2::ud->push_back(t2); // С‚.Рє. РІ СЃРїРёСЃРєРµ РіР»Р°РІРЅРѕРіРѕ С‚РµС‚СЂРѕРЅР° РЅРµС‚
 
 		for (auto i : *SuperDelTetron2::ud)
 		{

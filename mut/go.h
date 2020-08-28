@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 
 #include "basic_go.h"
 
@@ -46,9 +46,9 @@ struct _g_edit_int : public _t_go
 
 struct _g_edit_string : public _t_go
 {
-	int cursor = 0; // абсолютное положение курсора
-	int first = 0; // номер первого символа
-	int len2 = 0; // длина куска
+	int cursor = 0; // Р°Р±СЃРѕР»СЋС‚РЅРѕРµ РїРѕР»РѕР¶РµРЅРёРµ РєСѓСЂСЃРѕСЂР°
+	int first = 0; // РЅРѕРјРµСЂ РїРµСЂРІРѕРіРѕ СЃРёРјРІРѕР»Р°
+	int len2 = 0; // РґР»РёРЅР° РєСѓСЃРєР°
 
 	_g_edit_string();
 	uchar type() { return 25; }
@@ -64,7 +64,7 @@ struct _g_edit_multi_string : public _t_go
 {
 	_multi_string strings;
 	_num2 cursor;
-	int64 first = 0; // номер первого элемента в списке
+	int64 first = 0; // РЅРѕРјРµСЂ РїРµСЂРІРѕРіРѕ СЌР»РµРјРµРЅС‚Р° РІ СЃРїРёСЃРєРµ
 
 	_g_edit_multi_string();
 
@@ -82,7 +82,7 @@ struct _g_edit_multi_string : public _t_go
 	void run(_tetron* tt0, _tetron* tt, uint64 flags) override;
 
 private:
-	int max_i = 0, len2 = 0; // вспомогательные
+	int max_i = 0, len2 = 0; // РІСЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -109,7 +109,7 @@ private:
 
 struct _g_edit_one : public _g_rect
 {
-	int n = 0; // идекс массива 
+	int n = 0; // РёРґРµРєСЃ РјР°СЃСЃРёРІР° 
 	size_t cursor = 0;
 	int zn = 5;
 	double a = 0.0;
@@ -176,16 +176,16 @@ private:
 	static constexpr double li_r_1 = 0.35;
 	static constexpr double li_r_2 = 0.55;
 	static constexpr double zazor = (2 * 3.14159265358979323846) * 0.02;
-	int iii = 0; // номер четверти при перетаскивании
+	int iii = 0; // РЅРѕРјРµСЂ С‡РµС‚РІРµСЂС‚Рё РїСЂРё РїРµСЂРµС‚Р°СЃРєРёРІР°РЅРёРё
 	void change(_coo2 r, bool start);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _g_list_link : public _g_rect // графический объект - список связей
+struct _g_list_link : public _g_rect // РіСЂР°С„РёС‡РµСЃРєРёР№ РѕР±СЉРµРєС‚ - СЃРїРёСЃРѕРє СЃРІСЏР·РµР№
 {
-	int cursor = 0; // абсолютный номер элемента
-	int first = 0; // номер первого элемента в списке
+	int cursor = 0; // Р°Р±СЃРѕР»СЋС‚РЅС‹Р№ РЅРѕРјРµСЂ СЌР»РµРјРµРЅС‚Р°
+	int first = 0; // РЅРѕРјРµСЂ РїРµСЂРІРѕРіРѕ СЌР»РµРјРµРЅС‚Р° РІ СЃРїРёСЃРєРµ
 
 	uchar type() { return 28; }
 	int get_froglif() { return 0xF5; }
@@ -195,16 +195,16 @@ struct _g_list_link : public _g_rect // графический объект - список связей
 	operator _g_list_link* () { return this; }
 
 private:
-	_tetron* tf = nullptr; // для какого тетрона отображены флаги
-	int curf = 0; // курсор у которого отображены флаги
+	_tetron* tf = nullptr; // РґР»СЏ РєР°РєРѕРіРѕ С‚РµС‚СЂРѕРЅР° РѕС‚РѕР±СЂР°Р¶РµРЅС‹ С„Р»Р°РіРё
+	int curf = 0; // РєСѓСЂСЃРѕСЂ Сѓ РєРѕС‚РѕСЂРѕРіРѕ РѕС‚РѕР±СЂР°Р¶РµРЅС‹ С„Р»Р°РіРё
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _g1list : public _t_go
 {
-	_area2 oo; // область
-	bool rez1; // вывод только 1 элемента
+	_area2 oo; // РѕР±Р»Р°СЃС‚СЊ
+	bool rez1; // РІС‹РІРѕРґ С‚РѕР»СЊРєРѕ 1 СЌР»РµРјРµРЅС‚Р°
 
 	_g1list();
 
@@ -223,8 +223,8 @@ struct _g1list : public _t_go
 	bool mouse_move2(_coo2 r)        override;
 
 private:
-	void init_sel(); // задать F_sel
-	void calc_local_area(); // область только этого объекта
+	void init_sel(); // Р·Р°РґР°С‚СЊ F_sel
+	void calc_local_area(); // РѕР±Р»Р°СЃС‚СЊ С‚РѕР»СЊРєРѕ СЌС‚РѕРіРѕ РѕР±СЉРµРєС‚Р°
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -242,7 +242,7 @@ struct _g_tetron : public _t_go
 	void   pop(_stack* mem)  override { _t_go::pop(mem); *mem >> hint; }
 	void   push(_wjson& b)   override { _t_go::push(b); b.add("hint", hint); }
 	void   pop(_rjson& b)    override { _t_go::pop(b); b.read("hint", hint); }
-	double final_radius()    override { return 21.0; } // минимальный полуразмер, после которого не рисуется
+	double final_radius()    override { return 21.0; } // РјРёРЅРёРјР°Р»СЊРЅС‹Р№ РїРѕР»СѓСЂР°Р·РјРµСЂ, РїРѕСЃР»Рµ РєРѕС‚РѕСЂРѕРіРѕ РЅРµ СЂРёСЃСѓРµС‚СЃСЏ
 
 	operator _g_tetron* () { return this; }
 	operator std::wstring* () { return &hint; }
@@ -250,20 +250,20 @@ struct _g_tetron : public _t_go
 	void ris2(_trans tr, bool final) override;
 	bool mouse_move2(_coo2 r)        override;
 	void mouse_finish_move()         override;
-	bool test_local_area(_coo2 b)    override; // лежит ли точка внутри
-	void add_unique_flags(_tetron* t, uint64 flags, bool after = true) override; // создать уникальную связь
+	bool test_local_area(_coo2 b)    override; // Р»РµР¶РёС‚ Р»Рё С‚РѕС‡РєР° РІРЅСѓС‚СЂРё
+	void add_unique_flags(_tetron* t, uint64 flags, bool after = true) override; // СЃРѕР·РґР°С‚СЊ СѓРЅРёРєР°Р»СЊРЅСѓСЋ СЃРІСЏР·СЊ
 
 private:
-	std::vector<_t_basic_go*> drawn_create_star; // стек отрисованных в момент создания звезды
+	std::vector<_t_basic_go*> drawn_create_star; // СЃС‚РµРє РѕС‚СЂРёСЃРѕРІР°РЅРЅС‹С… РІ РјРѕРјРµРЅС‚ СЃРѕР·РґР°РЅРёСЏ Р·РІРµР·РґС‹
 
-	bool cmp_drawn(); // сравнение стеков
+	bool cmp_drawn(); // СЃСЂР°РІРЅРµРЅРёРµ СЃС‚РµРєРѕРІ
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _molecule
 {
-	_id tetron; // тетрон
+	_id tetron; // С‚РµС‚СЂРѕРЅ
 	_id tr_t;
 };
 
@@ -276,7 +276,7 @@ struct _g_tetron2 : public _t_go
 	uchar type() { return 18; }
 	int get_froglif() { return 0xFF; }
 	void ris2(_trans tr, bool final) override;
-	double final_radius()  override { return 21.0; } // минимальный полуразмер, после которого не рисуется структура
+	double final_radius()  override { return 21.0; } // РјРёРЅРёРјР°Р»СЊРЅС‹Р№ РїРѕР»СѓСЂР°Р·РјРµСЂ, РїРѕСЃР»Рµ РєРѕС‚РѕСЂРѕРіРѕ РЅРµ СЂРёСЃСѓРµС‚СЃСЏ СЃС‚СЂСѓРєС‚СѓСЂР°
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -288,7 +288,7 @@ _t* find1_plus_gtetron(_tetron* tet, uint64 flags)
 	{
 		_tetron* a = i->pairr(tet);
 		if (!i->test_flags(tet, flags)) continue;
-		if (_g_tetron * g = *a) // как редактировать hint _g_tetron?
+		if (_g_tetron * g = *a) // РєР°Рє СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ hint _g_tetron?
 		{
 			_t* t2 = g->find1<_t>(flag_specialty);
 			if (t2 != nullptr) return t2;
@@ -317,7 +317,7 @@ struct _g_link : public _t_go
 	int get_froglif() { return 0x7A; }
 	void calc_local_area();
 	void ris2(_trans tr, bool final) override;
-	bool test_local_area(_coo2 b) override; // лежит ли точка внутри
+	bool test_local_area(_coo2 b) override; // Р»РµР¶РёС‚ Р»Рё С‚РѕС‡РєР° РІРЅСѓС‚СЂРё
 	bool mouse_move2(_coo2 r) override;
 	void mouse_finish_move();
 	bool mouse_down_left2(_coo2 r) override;

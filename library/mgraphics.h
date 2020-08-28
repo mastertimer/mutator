@@ -21,6 +21,7 @@ struct _picture
 	_picture& operator=(_picture&& move) noexcept;
 
 	uint& px(int64 x, int64 y) { return data[y * size.x + x]; }
+	uint* sl(int64 y) const noexcept { return &data[y * size.x]; }
 
 	void set_area(const _area2i &q) { area = q & size; }
 	bool resize(_size2i wh);
@@ -74,6 +75,7 @@ struct _bitmap: public _picture
 	uint f_c = 0; // цвет шрифта
 	uint f_cf = 0; // цвет фона шрифта
 
+	void set_font(wstr name, bool bold);
 	void podg_font(int r); // подготовка шрифта в выводу
 	void podg_cc(uint c, uint cf); // подготовка цветов к выводу
 
@@ -86,6 +88,8 @@ struct _bitmap: public _picture
 	void text(int x, int y, std::string_view s, int h, uint c, uint bg);
 	_size2i size_text(std::wstring_view s, int h);
 	_size2i size_text(std::string_view s, int h);
+
+	void grab_ecran_oo2(HWND hwnd); // украсть часть экрана
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -472,9 +472,7 @@ void fun14(_tetron* tt0, _tetron* tt, uint64 flags)
 
 void fun15(_tetron* tt0, _tetron* tt, uint64 flags);
 
-void fun16(_tetron* tt0, _tetron* tt, uint64 flags)
-{
-}
+void fun16(_tetron* tt0, _tetron* tt, uint64 flags);
 
 void fun17(_tetron* tt0, _tetron* tt, uint64 flags)
 {
@@ -664,13 +662,9 @@ void fun34(_tetron* tt0, _tetron* tt, uint64 flags)
 {
 }
 
-void fun35(_tetron* tt0, _tetron* tt, uint64 flags)
-{
-}
+void fun35(_tetron* tt0, _tetron* tt, uint64 flags);
 
-void fun36(_tetron* tt0, _tetron* tt, uint64 flags)
-{
-}
+void fun36(_tetron* tt0, _tetron* tt, uint64 flags);
 
 void fun37(_tetron* tt0, _tetron* tt, uint64 flags)
 {
@@ -1001,7 +995,7 @@ void _t_function::run(_tetron* tt0, _tetron* tt, uint64 flags)
 	case 13: fun13(tt0, tt, flags); return; // загрузка цен
 	case 14: fun14(tt0, tt, flags); return; // создать графический объект
 	case 15: fun15(tt0, tt, flags); return; // переключение режима сканирования цен
-	case 16: fun16(tt0, tt, flags); return;
+	case 16: fun16(tt0, tt, flags); return; // сканирование цен
 	case 17: fun17(tt0, tt, flags); return; // перетаскивание гвоздя активного объекта
 	case 18: fun18(tt0, tt, flags); return; // НОВОЕ изменение активного тетрона
 	case 19: fun19(tt0, tt, flags); return;
@@ -1020,8 +1014,8 @@ void _t_function::run(_tetron* tt0, _tetron* tt, uint64 flags)
 	case 32: fun32(tt0, tt, flags); return;
 	case 33: fun33(tt0, tt, flags); return; // РАЗНОЕ
 	case 34: fun34(tt0, tt, flags); return;
-	case 35: fun35(tt0, tt, flags); return;
-	case 36: fun36(tt0, tt, flags); return;
+	case 35: fun35(tt0, tt, flags); return; // купить акции
+	case 36: fun36(tt0, tt, flags); return; // продать акции
 	case 37: fun37(tt0, tt, flags); return; // ! создать тетрон
 	case 38: fun38(tt0, tt, flags); return; // ! присвоить внутренние значения
 	case 39: fun39(tt0, tt, flags); return; // задать масштаб графического объекта

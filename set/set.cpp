@@ -1,14 +1,17 @@
+п»ї#include "t_function.h"
 #include "set.h"
 
-constexpr wchar_t ss_file[] = L"..\\..\\set\\baza.cen";
-
-_super_stat ss; // сжатые цены
-
-_g_graph* graph = nullptr; // график
-
-_nervous_oracle* oracle = nullptr; // оракул
-
+constexpr wchar_t ss_file[]  = L"..\\..\\set\\baza.cen";
 constexpr _prices cena_zero_ = { {}, {}, { 1,1,1,1,1 } };
+
+_super_stat      ss;                  // СЃР¶Р°С‚С‹Рµ С†РµРЅС‹
+_g_graph*        graph     = nullptr; // РіСЂР°С„РёРє
+_nervous_oracle* oracle    = nullptr; // РѕСЂР°РєСѓР»
+_recognize       recognize;
+
+wstr             mmm1      = L"1";
+wstr             mmm2      = L"2";
+wstr             mmm3      = L"3";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -38,8 +41,94 @@ void fun13(_tetron* tt0, _tetron* tt, uint64 flags)
 }
 
 void fun15(_tetron* tt0, _tetron* tt, uint64 flags)
-{
+{ // РїРµСЂРµРєР»СЋС‡РµРЅРёРµ СЂРµР¶РёРјР° СЃРєР°РЅРёСЂРѕРІР°РЅРёСЏ
+}
 
+bool can_trade     = false; // СЂР°Р·СЂРµС€РµРЅРёРµ РЅР° С‚РѕСЂРіРѕРІР»СЋ
+bool zamok_pokupki = false; // РїСЂРѕСЃС‚РѕР№ Р±Р»РѕРєРёСЂР°С‚РѕСЂ
+int popitok_prodaz = 2;     // СЃРєРѕР»СЊРєРѕ СЂР°Р· РјРѕР¶РЅРѕ РєСѓРїРёС‚СЊ/РїСЂРѕРґР°С‚СЊ
+int gotovo_prodaz  = 0;     // СЃРєРѕР»СЊРєРѕ СЃРґРµР»РѕРє
+int vrema_prodat   = 0;     // РІСЂРµРјСЏ РєРѕРіРґР° РЅСѓР¶РЅРѕ РїСЂРѕРґР°С‚СЊ
+
+void fun16(_tetron* tt0, _tetron* tt, uint64 flags)
+{
+	if (zamok_pokupki) return;
+	_prices a;
+	int ok = recognize.read_prices_from_screen(&a);
+	if (ok != 0)
+	{
+		/*#ifdef DEBUG_MMM
+				wstring fn = exe_path + L"errorscr.bmp";
+				if (!FileExists(fn.c_str()))
+				{
+					recognize.image_.SaveToFile(fn.c_str());
+					ofstream file(exe_path + L"errorscr.txt");
+					file << ok;
+					file.close();
+				}
+		#endif // DEBUG_MMM*/
+		return;
+	}
+	ss.add(a);
+	graph->run(nullptr, graph, flag_run);
+	// РІСЃСЏРєРёРµ РїСЂРѕРІРµСЂРєРё РЅР° РЅР°С‡Р°Р»Рѕ РїРѕРєСѓРїРєРё !!!!
+
+	if (!can_trade) return;
+	if (oracle->zn.size() < 10) return;
+	if (oracle->zn.back().time + 60 != a.time.to_minute()) return;
+
+
+	if (gotovo_prodaz & 1) // Р±С‹Р»Р° РїРѕРєСѓРїРєР°, РЅРѕ РЅРµР±С‹Р»Рѕ РїСЂРѕРґР°Р¶Рё
+	{
+		if ((a.time >= vrema_prodat) || ((a.time.hour == 18) && (a.time.minute > 30)) || oracle->get_latest_events(oracle->zn.size() - 1).stop())
+		{
+			/*			int b;
+						recognize.ReadTablicaZayavok(0, b);
+						if (b != gotovo_prodaz)// Р»Р°Р¶Р°, РЅРµ РІСЃРµ РєСѓРїРёР»РѕСЃСЊ, РїСЂРµРєСЂР°С‚РёС‚СЊ
+						{
+							gotovo_prodaz = 0;
+							popitok_prodaz = 0;
+							return;
+						}*/
+			zamok_pokupki = true;
+			gotovo_prodaz++;
+			_t_function* fu = new _t_function;
+			fu->a = 36;
+			fu->run(0, fu, flag_run);
+		}
+		return;
+	}
+
+	if (popitok_prodaz < 1) return;
+	if (a.time.hour >= 18) return; // СЃР»РёС€РєРѕРј РїРѕР·РґРЅРѕ
+	int ti = oracle->get_latest_events(oracle->zn.size() - 1).start();
+
+
+	if (ti == 0) return;
+	// РєСѓРїРёС‚СЊ Р°РєС†РёРё
+/*	int b;
+	recognize.ReadTablicaZayavok(0, b);
+	if (b != gotovo_prodaz)// Р»Р°Р¶Р°, РЅРµ РІСЃРµ РєСѓРїРёР»РѕСЃСЊ, РїСЂРµРєСЂР°С‚РёС‚СЊ
+	{
+		gotovo_prodaz = 0;
+		popitok_prodaz = 0;
+		return;
+	}*/
+	zamok_pokupki = true;
+	vrema_prodat = a.time + ti * 60;
+	popitok_prodaz--;
+	gotovo_prodaz++;
+	_t_function* fu = new _t_function;
+	fu->a = 35;
+	fu->run(0, fu, flag_run);
+}
+
+void fun35(_tetron* tt0, _tetron* tt, uint64 flags)
+{
+}
+
+void fun36(_tetron* tt0, _tetron* tt, uint64 flags)
+{
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -92,7 +181,7 @@ void _super_stat::load_from_file(std::wstring_view fn)
 	if (!mem.load_from_file(fn)) return;
 	mem >> data;
 	int sisi;
-	mem >> sisi; // !!! пересохранить на 64
+	mem >> sisi; // !!! РїРµСЂРµСЃРѕС…СЂР°РЅРёС‚СЊ РЅР° 64
 	size = sisi;
 	mem >> last_cc;
 	mem >> u_dd2;
@@ -192,7 +281,7 @@ void _super_stat::read(int64 n, _prices& c, _info_pak* inf)
 	}
 	c.pro[0].c = c.pok[0].c + delta + 1;
 	size_t aa1 = data.adata;
-	// декодирование продажи
+	// РґРµРєРѕРґРёСЂРѕРІР°РЅРёРµ РїСЂРѕРґР°Р¶Рё
 	for (int j = c.pro[0].c, n2 = 0, n = 0; n2 < rceni;)
 	{
 		data >> a;
@@ -238,7 +327,7 @@ void _super_stat::read(int64 n, _prices& c, _info_pak* inf)
 		}
 	}
 	size_t aa2 = data.adata;
-	// декодирование покупки
+	// РґРµРєРѕРґРёСЂРѕРІР°РЅРёРµ РїРѕРєСѓРїРєРё
 	for (int j = c.pok[0].c, n2 = 0, n = 0; n2 < rceni;)
 	{
 		data >> a;
@@ -294,7 +383,7 @@ void _super_stat::read(int64 n, _prices& c, _info_pak* inf)
 
 void _super_stat::add(_prices& c)
 {
-	// настройка, чтобы наверняка не совпало 
+	// РЅР°СЃС‚СЂРѕР№РєР°, С‡С‚РѕР±С‹ РЅР°РІРµСЂРЅСЏРєР° РЅРµ СЃРѕРІРїР°Р»Рѕ 
 	int delta = c.pro[0].c - c.pok[0].c - 1;
 	if (delta > 255) return; // !!!!!!!!!!!!!!!!!!!!
 	//  *TEMP.Add() = c;
@@ -307,10 +396,10 @@ void _super_stat::add(_prices& c)
 	else
 		ip_last.ok = true;
 	size++;
-	// кодирование времени
+	// РєРѕРґРёСЂРѕРІР°РЅРёРµ РІСЂРµРјРµРЅРё
 	size_t aa0 = data.size;
 	int dt = (int)c.time - (int)last_cc.time;
-	if (dt < 0) dt = 0; // время может идти назад!
+	if (dt < 0) dt = 0; // РІСЂРµРјСЏ РјРѕР¶РµС‚ РёРґС‚Рё РЅР°Р·Р°Рґ!
 	if (dt >= 255)
 	{
 		uchar dt2 = 255;
@@ -322,7 +411,7 @@ void _super_stat::add(_prices& c)
 		uchar dt2 = dt;
 		data << dt2;
 	}
-	// кодирование прослойки
+	// РєРѕРґРёСЂРѕРІР°РЅРёРµ РїСЂРѕСЃР»РѕР№РєРё
 	uchar a = (delta <= 6) ? delta : 7;
 	int delta2 = c.pok[0].c - last_cc.pok[0].c;
 	// 0..30   31 +2
@@ -343,11 +432,11 @@ void _super_stat::add(_prices& c)
 		data << a;
 	}
 	size_t aa1 = data.size;
-	int deko[64]; // дельта кодируемая
-	int reko[64]; // режим кодирования
-	// кодирование продажи
-	int rez = 0; // количество байт на дельту
-	int Vrez = 0; // количество отсчетов
+	int deko[64]; // РґРµР»СЊС‚Р° РєРѕРґРёСЂСѓРµРјР°СЏ
+	int reko[64]; // СЂРµР¶РёРј РєРѕРґРёСЂРѕРІР°РЅРёСЏ
+	// РєРѕРґРёСЂРѕРІР°РЅРёРµ РїСЂРѕРґР°Р¶Рё
+	int rez = 0; // РєРѕР»РёС‡РµСЃС‚РІРѕ Р±Р°Р№С‚ РЅР° РґРµР»СЊС‚Сѓ
+	int Vrez = 0; // РєРѕР»РёС‡РµСЃС‚РІРѕ РѕС‚СЃС‡РµС‚РѕРІ
 	for (int j = c.pro[0].c, n2 = 0, n = 0; j <= c.pro[rceni - 1].c; j++)
 	{
 		if (Vrez == 64)
@@ -581,10 +670,10 @@ void _super_stat::add(_prices& c)
 		}
 	}
 	otgruzka(rez, Vrez, deko);
-	// кодирование покупки
+	// РєРѕРґРёСЂРѕРІР°РЅРёРµ РїРѕРєСѓРїРєРё
 	size_t aa2 = data.size;
-	rez = 0; // количество байт на дельту
-	Vrez = 0; // количество отсчетов
+	rez = 0; // РєРѕР»РёС‡РµСЃС‚РІРѕ Р±Р°Р№С‚ РЅР° РґРµР»СЊС‚Сѓ
+	Vrez = 0; // РєРѕР»РёС‡РµСЃС‚РІРѕ РѕС‚СЃС‡РµС‚РѕРІ
 	for (int j = c.pok[0].c, n2 = 0, n = 0; j >= c.pok[rceni - 1].c; j--)
 	{
 		if (Vrez == 64)
@@ -877,7 +966,7 @@ void _g_graph::ris2(_trans tr, bool final)
 	master_bm.draw(a.x.min, a.y.min, bm.size.x, bm.size.y, &bm);
 }
 
-// вынести в общий модуль?
+// РІС‹РЅРµСЃС‚Рё РІ РѕР±С‰РёР№ РјРѕРґСѓР»СЊ?
 void OSpordis(double min, double max, int64 maxN, double& mi, double& step)
 {
 	int64 n;
@@ -950,10 +1039,10 @@ void _g_graph::draw(_size2i size)
 	obn = false;
 	bm.clear(c_background);
 
-	_area y_; // диапазон у (grid)
-	static std::vector<int> time_; // отсчеты времени (grid)
+	_area y_; // РґРёР°РїР°Р·РѕРЅ Сѓ (grid)
+	static std::vector<int> time_; // РѕС‚СЃС‡РµС‚С‹ РІСЂРµРјРµРЅРё (grid)
 
-	double polzi_ = 0; // !! ползунок
+	double polzi_ = 0; // !! РїРѕР»Р·СѓРЅРѕРє
 
 	_g_scrollbar* sb = find1<_g_scrollbar>(flag_part);
 	if (sb)	polzi_ = sb->position;
@@ -970,22 +1059,22 @@ void _g_graph::draw(_size2i size)
 	//	v_vib_ = n - k_el;
 	v_vib = n - 1;
 	if (v_vib < 0) v_vib = 0;
-	int vib = (int)(polzi_ * v_vib + 0.5); // !! ползунок
+	int vib = (int)(polzi_ * v_vib + 0.5); // !! РїРѕР»Р·СѓРЅРѕРє
 
 	int period = 60;
 	int pause_max = 3;
-	_element_chart* al = new _element_chart[ll]; // элементы линий
-	// 1-й проход - вычисление zmin, zmax
+	_element_chart* al = new _element_chart[ll]; // СЌР»РµРјРµРЅС‚С‹ Р»РёРЅРёР№
+	// 1-Р№ РїСЂРѕС…РѕРґ - РІС‹С‡РёСЃР»РµРЅРёРµ zmin, zmax
 	double zmin = 1E100;
 	double zmax = -1E100;
 	curve[0]->get_n_info(vib, &al[0]);
 	int timelast = al[0].time;
 	for (int i = 1; i < ll; i++) curve[i]->get_t_info(timelast, &al[i]);
 	timelast -= period;
-	int ke = 0; // количество построенных элементов
+	int ke = 0; // РєРѕР»РёС‡РµСЃС‚РІРѕ РїРѕСЃС‚СЂРѕРµРЅРЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ
 	while (ke < k_el)
 	{
-		int timenext = 2000000000; // следующее время
+		int timenext = 2000000000; // СЃР»РµРґСѓСЋС‰РµРµ РІСЂРµРјСЏ
 		for (int i = 0; i < ll; i++)
 			if (al[i].n >= 0)
 				if (al[i].time < timenext) timenext = al[i].time;
@@ -1001,7 +1090,7 @@ void _g_graph::draw(_size2i size)
 		{
 			if (al[i].n < 0) continue;
 			if (al[i].time == timelast)
-			{ // сработало
+			{ // СЃСЂР°Р±РѕС‚Р°Р»Рѕ
 				if (al[i].min < zmin) zmin = al[i].min;
 				if (al[i].max > zmax) zmax = al[i].max;
 				curve[i]->get_n_info(al[i].n + 1, &al[i]);
@@ -1011,15 +1100,15 @@ void _g_graph::draw(_size2i size)
 	if (zmin == zmax) zmax = zmin + 1.0;
 	y_ = { zmin, zmax };
 	time_.clear();
-	// 2-й проход - рисование
+	// 2-Р№ РїСЂРѕС…РѕРґ - СЂРёСЃРѕРІР°РЅРёРµ
 	curve[0]->get_n_info(vib, &al[0]);
 	timelast = al[0].time;
 	for (int i = 1; i < ll; i++) curve[i]->get_t_info(timelast, &al[i]);
 	timelast -= period;
-	ke = 0; // количество построенных элементов
+	ke = 0; // РєРѕР»РёС‡РµСЃС‚РІРѕ РїРѕСЃС‚СЂРѕРµРЅРЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ
 	while (ke < k_el)
 	{
-		int timenext = 2000000000; // следующее время
+		int timenext = 2000000000; // СЃР»РµРґСѓСЋС‰РµРµ РІСЂРµРјСЏ
 		for (int i = 0; i < ll; i++)
 			if (al[i].n >= 0)
 				if (al[i].time < timenext) timenext = al[i].time;
@@ -1036,7 +1125,7 @@ void _g_graph::draw(_size2i size)
 		{
 			if (al[i].n < 0) continue;
 			if (al[i].time == timelast)
-			{ // сработало
+			{ // СЃСЂР°Р±РѕС‚Р°Р»Рѕ
 				double ymi = bm.size.y - (al[i].min - zmin) * bm.size.y / (zmax - zmin);
 				double yma = bm.size.y - (al[i].max - zmin) * bm.size.y / (zmax - zmin);
 				double x = r_el * (ke - 1i64);
@@ -1047,18 +1136,18 @@ void _g_graph::draw(_size2i size)
 	}
 	delete[] al;
 
-	// рисование сетки
+	// СЂРёСЃРѕРІР°РЅРёРµ СЃРµС‚РєРё
 
-	uint col_setka = c_max - 0xE0000000; // цвет сетки
-	uint col_setka_font = c_def; // цвет подписи сетки
+	uint col_setka = c_max - 0xE0000000; // С†РІРµС‚ СЃРµС‚РєРё
+	uint col_setka_font = c_def; // С†РІРµС‚ РїРѕРґРїРёСЃРё СЃРµС‚РєРё
 	if (time_.size() < 1)
 	{
 		bm.line({ 0, 0 }, { bm.size.x - 1, bm.size.y - 1 }, 0xFF800000);
 		bm.line({ 0, bm.size.y - 1 }, { bm.size.x - 1 , 0 }, 0xFF800000);
 		return;
 	}
-	// рисование горизонтальных линий сетки с подписями
-	int64 dex = 35; // длина подписи
+	// СЂРёСЃРѕРІР°РЅРёРµ РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅС‹С… Р»РёРЅРёР№ СЃРµС‚РєРё СЃ РїРѕРґРїРёСЃСЏРјРё
+	int64 dex = 35; // РґР»РёРЅР° РїРѕРґРїРёСЃРё
 	int64 maxN = bm.size.y / 15;
 	if (maxN > 1)
 	{
@@ -1072,14 +1161,14 @@ void _g_graph::draw(_size2i size)
 			bm.text16(bm.size.x - dex, (int)(yy - 7), double_to_astring(y, 2).data(), col_setka_font);
 		}
 	}
-	// рисование вертикальных линий сетки с подписями
+	// СЂРёСЃРѕРІР°РЅРёРµ РІРµСЂС‚РёРєР°Р»СЊРЅС‹С… Р»РёРЅРёР№ СЃРµС‚РєРё СЃ РїРѕРґРїРёСЃСЏРјРё
 	static int g_delta_time[] = {
-		1, 2, 3, 5, 10, 15, 20, 30, // секунды
-		60, 120, 180, 300, 600, 900, 1200, 1800, // минуты
-		3600, 7200, 10800, 14400, 21600, 28800, 43200, // часы
-		86400, 172800, 345600, 691200, 1382400, // дни
-		2764800, 5529600, 8294400, 11059200, 16588800, // месяца
-		33177600 }; // год
+		1, 2, 3, 5, 10, 15, 20, 30, // СЃРµРєСѓРЅРґС‹
+		60, 120, 180, 300, 600, 900, 1200, 1800, // РјРёРЅСѓС‚С‹
+		3600, 7200, 10800, 14400, 21600, 28800, 43200, // С‡Р°СЃС‹
+		86400, 172800, 345600, 691200, 1382400, // РґРЅРё
+		2764800, 5529600, 8294400, 11059200, 16588800, // РјРµСЃСЏС†Р°
+		33177600 }; // РіРѕРґ
 
 	double rel = r_el;
 	int stept = (((int)(dex / rel)) + 1) * period;
@@ -1108,7 +1197,7 @@ void _g_graph::draw(_size2i size)
 		bool sca = ((pr_time > 0) && (time_[i] - pr_time > 36000));
 		pr_time = time_[i];
 		if (time_[i] % stept == 0)
-		{ // вертикальная линия с подписью
+		{ // РІРµСЂС‚РёРєР°Р»СЊРЅР°СЏ Р»РёРЅРёСЏ СЃ РїРѕРґРїРёСЃСЊСЋ
 			double x = rel * i;
 			if ((x <= dex) || (x >= (int64)bm.size.x - dex)) continue;
 			uint cl = (sca) ? (0x80FF0000) : col_setka;
@@ -1131,7 +1220,7 @@ void _g_graph::draw(_size2i size)
 			bm.line({ (int)x, 0 }, { (int)x, bm.size.y - 1 }, 0x80FF0000);
 		}
 	}
-	// рисование даты
+	// СЂРёСЃРѕРІР°РЅРёРµ РґР°С‚С‹
 	bm.text16n(dex + 10, 10, date_to_ansi_string(mintime).data(), 4, c_max - 0x80000000);
 }
 
@@ -1158,7 +1247,7 @@ void _mctds_candle::get_n_info(int n, _element_chart* e)
 
 void _mctds_candle::get_t_info(int t, _element_chart* e)
 {
-	e->n = -1; // !! написать, когда потребуется!!
+	e->n = -1; // !! РЅР°РїРёСЃР°С‚СЊ, РєРѕРіРґР° РїРѕС‚СЂРµР±СѓРµС‚СЃСЏ!!
 }
 
 void _mctds_candle::push(_stack* mem)
@@ -1183,8 +1272,8 @@ void _mctds_candle::draw(int n, _area2 area, _bitmap* bm)
 	int x2 = (int)(oo.x.max - 1);
 	if (x2 < x1) return;
 
-	uint col_rost = 0xFF28A050; // цвет ростущей свечки
-	uint col_pade = 0xFF186030; // цвет падающей свечки
+	uint col_rost = 0xFF28A050; // С†РІРµС‚ СЂРѕСЃС‚СѓС‰РµР№ СЃРІРµС‡РєРё
+	uint col_pade = 0xFF186030; // С†РІРµС‚ РїР°РґР°СЋС‰РµР№ СЃРІРµС‡РєРё
 	double yfi, yla;
 	if (min_ < max_)
 	{
@@ -1213,8 +1302,8 @@ void _mctds_candle::recovery()
 	int64 vcc = 0;
 	if (cen1m.size()) vcc = cen1m.back().ncc.max;
 	int64 ssvcc = ss.size;
-	if (ssvcc == vcc) return; // ничего не изменилось
-	if (vcc < ssvcc) // добавились несколько цен
+	if (ssvcc == vcc) return; // РЅРёС‡РµРіРѕ РЅРµ РёР·РјРµРЅРёР»РѕСЃСЊ
+	if (vcc < ssvcc) // РґРѕР±Р°РІРёР»РёСЃСЊ РЅРµСЃРєРѕР»СЊРєРѕ С†РµРЅ
 	{
 		_prices cc;
 		int t = 0;
@@ -1251,7 +1340,7 @@ void _mctds_candle::recovery()
 			}
 			else
 			{
-				if (cp == 0) continue; // для паранойи компилятора
+				if (cp == 0) continue; // РґР»СЏ РїР°СЂР°РЅРѕР№Рё РєРѕРјРїРёР»СЏС‚РѕСЂР°
 				int aa = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
 				cp->cc += aa;
 				if (aa < cp->min) cp->min = aa;
@@ -1263,7 +1352,7 @@ void _mctds_candle::recovery()
 		if (cp)	cp->cc /= ((double)cp->ncc.max - cp->ncc.min);
 		return;
 	}
-	_prices cc; // уменьшились цены, полный пересчет
+	_prices cc; // СѓРјРµРЅСЊС€РёР»РёСЃСЊ С†РµРЅС‹, РїРѕР»РЅС‹Р№ РїРµСЂРµСЃС‡РµС‚
 	cen1m.clear();
 	int t = 0;
 	_cen_pak* cp = 0;
@@ -1289,7 +1378,7 @@ void _mctds_candle::recovery()
 		}
 		else
 		{
-			if (cp == 0) continue; // для паранойи компилятора
+			if (cp == 0) continue; // РґР»СЏ РїР°СЂР°РЅРѕР№Рё РєРѕРјРїРёР»СЏС‚РѕСЂР°
 			int aa = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
 			cp->cc += aa;
 			if (aa < cp->min) cp->min = aa;
@@ -1305,25 +1394,25 @@ void _mctds_candle::recovery()
 
 int _latest_events::start()
 {
-	if ((minute[2] == 2) && (event[0] == event[1]) && (event[0] == event[2])) // триплет
+	if ((minute[2] == 2) && (event[0] == event[1]) && (event[0] == event[2])) // С‚СЂРёРїР»РµС‚
 	{
 		if (event[0] == 1) return 70;
-		if (event[0] == 2) // фиолетовый
+		if (event[0] == 2) // С„РёРѕР»РµС‚РѕРІС‹Р№
 			if ((x[0] > x[1]) && (x[1] > x[2]))	return 13;
 		if (event[0] == 3)
 		{
 			if ((x[0] > x[1]) && (x[1] > x[2]))	return 40;
 			if ((x[0] < x[1]) && (x[1] < x[2]))	return 90;
 		}
-		//		if (event_[0] == 4) return 120;  //голубой
-		if (event[0] == 6) return 60;   //зеленый
+		//		if (event_[0] == 4) return 120;  //РіРѕР»СѓР±РѕР№
+		if (event[0] == 6) return 60;   //Р·РµР»РµРЅС‹Р№
 		return 0;
 	}
-	if ((minute[1] == 1) && (event[0] == event[1])) // дуплет
+	if ((minute[1] == 1) && (event[0] == event[1])) // РґСѓРїР»РµС‚
 	{
-		if (event[0] == 2) // фиолетовый
+		if (event[0] == 2) // С„РёРѕР»РµС‚РѕРІС‹Р№
 		{
-			if (event[2] == 5) return 100; //песочный
+			if (event[2] == 5) return 100; //РїРµСЃРѕС‡РЅС‹Р№
 			if ((event[2] == 4) && (event[3] == 4)) return 40;
 		}
 		return 0;
@@ -1333,7 +1422,7 @@ int _latest_events::start()
 
 bool _latest_events::stop()
 {
-	if ((event[0] == 5) && (event[1] == 5) && (minute[1] == 1)) return true; // песочный
+	if ((event[0] == 5) && (event[1] == 5) && (minute[1] == 1)) return true; // РїРµСЃРѕС‡РЅС‹Р№
 	return false;
 }
 
@@ -1470,8 +1559,8 @@ void _nervous_oracle::recovery()
 	int64 vcc = 0;
 	if (zn.size()) vcc = zn.back().ncc.max;
 	int64 ssvcc = ss.size;
-	if (ssvcc == vcc) return; // ничего не изменилось
-	if (vcc < ssvcc) // добавились несколько цен
+	if (ssvcc == vcc) return; // РЅРёС‡РµРіРѕ РЅРµ РёР·РјРµРЅРёР»РѕСЃСЊ
+	if (vcc < ssvcc) // РґРѕР±Р°РІРёР»РёСЃСЊ РЅРµСЃРєРѕР»СЊРєРѕ С†РµРЅ
 	{
 		_prices cc;
 		_super_stat::_info_pak inf;
@@ -1524,7 +1613,7 @@ void _nervous_oracle::recovery()
 			}
 			else
 			{
-				if (cp == 0) continue; // для паранойи компилятора
+				if (cp == 0) continue; // РґР»СЏ РїР°СЂР°РЅРѕР№Рё РєРѕРјРїРёР»СЏС‚РѕСЂР°
 				if (cc.pok[0].c < cp->min_pok) cp->min_pok = cc.pok[0].c;
 				if (cc.pok[0].c > cp->max_pok) cp->max_pok = cc.pok[0].c;
 				if (cc.pro[0].c < cp->min_pro) cp->min_pro = cc.pro[0].c;
@@ -1560,7 +1649,7 @@ void _nervous_oracle::recovery()
 		}
 		return;
 	}
-	_prices cc; // уменьшились цены, полный пересчет
+	_prices cc; // СѓРјРµРЅСЊС€РёР»РёСЃСЊ С†РµРЅС‹, РїРѕР»РЅС‹Р№ РїРµСЂРµСЃС‡РµС‚
 	_super_stat::_info_pak inf;
 	zn.clear();
 	int t = 0;
@@ -1601,7 +1690,7 @@ void _nervous_oracle::recovery()
 		}
 		else
 		{
-			if (cp == 0) continue; // для паранойи компилятора
+			if (cp == 0) continue; // РґР»СЏ РїР°СЂР°РЅРѕР№Рё РєРѕРјРїРёР»СЏС‚РѕСЂР°
 			if (cc.pok[0].c < cp->min_pok) cp->min_pok = cc.pok[0].c;
 			if (cc.pok[0].c > cp->max_pok) cp->max_pok = cc.pok[0].c;
 			if (cc.pro[0].c < cp->min_pro) cp->min_pro = cc.pro[0].c;
@@ -1679,8 +1768,8 @@ void _oracle3::recovery()
 	int64 vcc = 0;
 	if (zn.size()) vcc = zn.back().ncc.max;
 	int64 ssvcc = ss.size;
-	if (ssvcc == vcc) return; // ничего не изменилось
-	if (vcc < ssvcc) // добавились несколько цен
+	if (ssvcc == vcc) return; // РЅРёС‡РµРіРѕ РЅРµ РёР·РјРµРЅРёР»РѕСЃСЊ
+	if (vcc < ssvcc) // РґРѕР±Р°РІРёР»РёСЃСЊ РЅРµСЃРєРѕР»СЊРєРѕ С†РµРЅ
 	{
 		_prices cc;
 		int t = 0;
@@ -1708,7 +1797,7 @@ void _oracle3::recovery()
 			}
 			else
 			{
-				if (cp == 0) continue; // для паранойи компилятора
+				if (cp == 0) continue; // РґР»СЏ РїР°СЂР°РЅРѕР№Рё РєРѕРјРїРёР»СЏС‚РѕСЂР°
 				if (cc.pok[rceni - 1].c < cp->min) cp->min = cc.pok[rceni - 1].c;
 				if (cc.pro[rceni - 1].c > cp->max) cp->max = cc.pro[rceni - 1].c;
 				cp->ncc.max++;
@@ -1716,7 +1805,7 @@ void _oracle3::recovery()
 		}
 		return;
 	}
-	_prices cc; // уменьшились цены, полный пересчет
+	_prices cc; // СѓРјРµРЅСЊС€РёР»РёСЃСЊ С†РµРЅС‹, РїРѕР»РЅС‹Р№ РїРµСЂРµСЃС‡РµС‚
 	zn.clear();
 	int t = 0;
 	_element_oracle* cp = 0;
@@ -1738,7 +1827,7 @@ void _oracle3::recovery()
 		}
 		else
 		{
-			if (cp == 0) continue; // для паранойи компилятора
+			if (cp == 0) continue; // РґР»СЏ РїР°СЂР°РЅРѕР№Рё РєРѕРјРїРёР»СЏС‚РѕСЂР°
 			if (cc.pok[rceni - 1].c < cp->min) cp->min = cc.pok[rceni - 1].c;
 			if (cc.pro[rceni - 1].c > cp->max) cp->max = cc.pro[rceni - 1].c;
 			cp->ncc.max++;
@@ -1748,8 +1837,8 @@ void _oracle3::recovery()
 
 void _oracle3::draw(int n, _area2 area, _bitmap* bm)
 {
-	static _prices pri[61]; // цены
-	static int min, max; // разброс по y
+	static _prices pri[61]; // С†РµРЅС‹
+	static int min, max; // СЂР°Р·Р±СЂРѕСЃ РїРѕ y
 	min = 0;
 	max = 1;
 	for (auto& i : pri) i.clear();
@@ -1859,3 +1948,537 @@ void _oracle3::draw(int n, _area2 area, _bitmap* bm)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+_recognize::_recognize()
+{
+	static const int vf_ = 2; // РєРѕР»РёС‡РµСЃС‚РІРѕ С€СЂРёС„С‚РѕРІ
+	_bitmap bm_[vf_]; // С…РѕР»СЃС‚ РґР»СЏ СЂРёСЃРѕРІР°РЅРёСЏ
+	bm_[0].set_font(L"MS Sans Serif", false);
+	bm_[1].set_font(L"MS Sans Serif", true);
+	std::wstring nabor = L"0123456789.,:;-()[]><=Р°Р±РІРіРґРµР¶Р·РёР№РєР»РјРЅРѕРїСЂСЃС‚СѓС„С…С†С‡С€С‰СЉС‹СЊСЌСЋСЏРђР‘Р’Р“Р”Р•Р–Р—РР™РљР›РњРќРћРџР РЎРўРЈР¤РҐР¦Р§РЁР©РЄР«Р¬Р­Р®РЇ"
+		L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	int L = (int)nabor.size();
+	std::wstring ss = L"0";
+	ushort aa[20];
+	for (int nf = 0; nf < vf_; nf++)
+		for (int i = 0; i < L; i++)
+		{
+			wchar_t c = nabor[i];
+			ss[0] = c;
+			_size2i size = bm_[nf].size_text(ss.data(), 8);
+			//			if (c == ' ') ShowMessage(IntToStr((int)size.cx));
+			//			if (size.cy != 13) ShowMessage(ss+" "+IntToStr((int)size.cy));
+			if (size.x > 20) return;//С‡С‚Рѕ-С‚Рѕ РЅРµ С‚Рѕ...
+			if ((size.x > bm_[nf].size.x) || (size.y > bm_[nf].size.y))
+				bm_[nf].resize({ std::max(size.x, bm_[nf].size.x), std::max(size.y, bm_[nf].size.y) });
+			bm_[nf].clear();
+			bm_[nf].text(0, 0, ss.data(), 8, 0xffffff, 0xff000000);
+			ZeroMemory(aa, sizeof(ushort) * size.x);
+			for (int64 j = size.y - 1; j >= 0; j--)
+			{
+				uint* sl = bm_[nf].sl(j);
+				for (int i = 0; i < size.x; i++) aa[i] = (aa[i] << 1) + (sl[i] > 0);
+			}
+			int na = 0;
+			int ko = (int)size.x - 1;
+			while ((aa[na] == 0) && (na < ko)) na++;
+			while ((aa[ko] == 0) && (ko > na)) ko--;
+			int nbit = 0;
+			for (int j = na; j <= ko; j++) nbit += bit16(aa[j]);
+			bu.cod(aa + na, ko - na + 1, c, nf, nbit);
+		}
+}
+
+int _recognize::read_okno_soobsenii()
+{
+	HWND w = FindWindow(0, mmm2);
+	if (!w) return 1;
+	offset = { 0, 0 };
+	ClientToScreen(w, &offset);
+	image.clear(0xFFFFFF); // С‚.Рє. РµСЃР»Рё РѕРєРЅРѕ СЃРІРµСЂРЅСѓС‚Рѕ, С‚Рѕ РЅРµ РіСЂР°Р±РёС‚СЃСЏ
+	image.grab_ecran_oo2(w);
+	find_text13(0);
+	return 0;
+}
+
+int _recognize::read_vnimanie_pokupka()
+{
+	HWND w = FindWindow(0, L"Р’РЅРёРјР°РЅРёРµ");
+	if (!w) return 1;
+	offset = { 0, 0 };
+	ClientToScreen(w, &offset);
+	image.clear(0xFFFFFF); // С‚.Рє. РµСЃР»Рё РѕРєРЅРѕ СЃРІРµСЂРЅСѓС‚Рѕ, С‚Рѕ РЅРµ РіСЂР°Р±РёС‚СЃСЏ
+	image.grab_ecran_oo2(w);
+	find_text13(0);
+	if ((elem.size() < 17) || (elem.size() > 18)) return 2; // РЅРµРїСЂР°РІРёР»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ
+	if (find_elem(L"Р’С‹РґРµР№СЃС‚РІРёС‚РµР»С‹-РѕР¶РµР»Р°РµС‚РµРІС‹РїРѕР»РЅРёС‚СЊС‚СЂР°РЅР·Р°РєС†РёСЋ") < 0) return 3;
+	if (find_elem(L"Р›РёРјРёС‚РёСЂРѕРІР°РЅРЅР°СЏРџРѕРєСѓРїРєР°") < 0) return 4;
+	return 0;
+}
+
+int _recognize::read_vnimanie_prodaza()
+{
+	HWND w = FindWindow(0, L"Р’РЅРёРјР°РЅРёРµ");
+	if (!w) return 1;
+	offset = { 0, 0 };
+	ClientToScreen(w, &offset);
+	image.clear(0xFFFFFF); // С‚.Рє. РµСЃР»Рё РѕРєРЅРѕ СЃРІРµСЂРЅСѓС‚Рѕ, С‚Рѕ РЅРµ РіСЂР°Р±РёС‚СЃСЏ
+	image.grab_ecran_oo2(w);
+	find_text13(0);
+	if ((elem.size() < 17) || (elem.size() > 18)) return 2; // РЅРµРїСЂР°РІРёР»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ
+	if (find_elem(L"Р’С‹РґРµР№СЃС‚РІРёС‚РµР»С‹-РѕР¶РµР»Р°РµС‚РµРІС‹РїРѕР»РЅРёС‚СЊС‚СЂР°РЅР·Р°РєС†РёСЋ") < 0) return 3;
+	if (find_elem(L"Р›РёРјРёС‚РёСЂРѕРІР°РЅРЅР°СЏРџСЂРѕРґР°Р¶Р°") < 0) return 4;
+	return 0;
+}
+
+int _recognize::read_vvod_zaya()
+{
+	HWND w = FindWindow(0, L"РњР‘ Р¤Р : Рў+ РђРєС†РёРё Рё Р”Р  Р’РІРѕРґ Р·Р°СЏРІРєРё");
+	if (!w) return 1;
+	offset = { 0, 0 };
+	ClientToScreen(w, &offset);
+	image.clear(0xFFFFFF); // С‚.Рє. РµСЃР»Рё РѕРєРЅРѕ СЃРІРµСЂРЅСѓС‚Рѕ, С‚Рѕ РЅРµ РіСЂР°Р±РёС‚СЃСЏ
+	image.grab_ecran_oo2(w);
+	find_text13(0);
+	if ((elem.size() < 20) || (elem.size() > 28)) return 2; // РЅРµРїСЂР°РІРёР»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ
+	return 0;
+}
+
+struct FindWnd
+{
+	std::wstring class_name_; // РёРјСЏ РєР»Р°СЃСЃР°
+	std::wstring window_name_; // РёРјСЏ РѕРєРЅР°
+	HWND hwnd_{}; // СѓРєР°Р·Р°С‚РµР»СЊ РѕРєРЅР°
+};
+
+BOOL CALLBACK PoiskOkna(HWND hwnd, LPARAM lParam)
+{
+	FindWnd* aa = (FindWnd*)lParam;
+	wchar_t str[255];
+	GetWindowText(hwnd, str, 255);
+	if (aa->window_name_ != str) return TRUE;
+	GetClassName(hwnd, str, 255);
+	if (aa->class_name_ != str) return TRUE;
+	aa->hwnd_ = hwnd;
+	return FALSE;
+
+
+	//FindWnd* aa = (FindWnd*)lParam;
+	//wchar_t str[255];
+	//wstring s;
+	//GetWindowText(hwnd, str, 255);
+	//if (aa->window_name_ != str) return TRUE;
+	//s = str;
+	//GetClassName(hwnd, str, 255);
+	//s = s + L" : " + str;
+	//MessageBox(0, s.c_str(), L"СѓРїСЃ", MB_OK | MB_TASKMODAL);
+
+	//if (aa->class_name_ != str) return TRUE;
+	//aa->hwnd_ = hwnd;
+	//return FALSE;
+
+}
+
+HWND FindSubWindow(HWND w, const wchar_t* classname, const wchar_t* windowname)
+{
+	//		HWND w2 = FindWindowEx(w, 0, L"HostWindow", 0);
+	FindWnd aa;
+	aa.class_name_ = classname;
+	aa.window_name_ = windowname;
+	aa.hwnd_ = 0;
+	//	EnumWindows(fnEnumWindowProc, 0);
+	EnumChildWindows(w, PoiskOkna, (LPARAM)& aa);
+	return aa.hwnd_;
+}
+
+int _recognize::read_tablica_zayavok(int a, int& b)
+{
+	b = 0;
+	HWND w = FindWindow(0, mmm3);
+	if (!w) return 1;
+	HWND w2 = FindSubWindow(w, L"InfoMDITableCommon", L"РўР°Р±Р»РёС†Р° Р·Р°СЏРІРѕРє РћСЃРЅРѕРІРЅРѕР№ СЂС‹РЅРѕРє"); // InfoPriceTable HostWindow
+	if (!w2) return 2;
+	RECT rr;
+	GetWindowRect(w2, &rr);
+
+	image.clear(0xFFFFFF); // С‚.Рє. РµСЃР»Рё РѕРєРЅРѕ СЃРІРµСЂРЅСѓС‚Рѕ, С‚Рѕ РЅРµ РіСЂР°Р±РёС‚СЃСЏ
+	image.grab_ecran_oo2(w2);
+	//	image_.SaveToFile(L"err.bmp");
+	find_text13(0x40FF, 10); // СЃРёРЅРёРј С†РІРµС‚РѕРј 
+
+	std::wstring ss = std::to_wstring(a);
+	for (uint i = 0; i < elem.size(); i++)
+		if (elem[i].s == ss) b++;
+	return 0;
+}
+
+bool _recognize::find_window_prices(RECT* rr)
+{
+	HWND w = FindWindow(0, mmm3);
+	if (!w) return false;
+	HWND w2 = FindSubWindow(w, L"InfoPriceTable", L"РЎР±РµСЂР±Р°РЅРє [РњР‘ Р¤Р : Рў+ РђРєС†РёРё Рё Р”Р ] РљРѕС‚РёСЂРѕРІРєРё"); // InfoPriceTable HostWindow
+	if (!w2) return false;
+	GetWindowRect(w2, rr);
+	return true;
+}
+
+int64 to_int(const std::wstring& s) // РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІ С‡РёСЃР»Рѕ СЃ РёРіРЅРѕСЂРёСЂРѕРІР°РЅРёРµРј РЅРµС‡РёСЃР»РѕРІС‹С… СЃРёРјРІРѕР»РѕРІ
+{
+	int64 r = 0;
+	bool znak = false;
+	int l = (int)s.size();
+	const wchar_t* data = s.data();
+	for (int i = 0; i < l; i++)
+	{
+		ushort delta = data[i] - L'0';
+		if (delta <= 9) r = r * 10 + delta;
+		if (data[i] == L'-') znak = !znak;
+	}
+	if (znak) r = -r;
+	return r;
+}
+
+int _recognize::test_image(_prices* pr)
+{
+	find_text13(0xFF); // СЃРёРЅРёРј С†РІРµС‚РѕРј РїРѕРєСѓРїРєРё
+	if (elem.size() != rceni * 2) return 3;
+	int64 pre = 0;
+	for (int i = 0; i < rceni; i++)
+	{
+		int64 a = to_int(elem[i * 2i64].s);
+		if (a <= pre) return 4;
+		pre = a;
+		if ((a < 1) || (a > 65000)) return 5;
+		pr->pok[rceni - 1 - i].c = static_cast<ushort>(a);
+		a = to_int(elem[i * 2i64 + 1i64].s);
+		if ((a < 1) || (a > 2000000000)) return 6;
+		pr->pok[rceni - 1 - i].k = static_cast<int>(a);
+	}
+	find_red_text13(24); // РєСЂР°СЃРЅС‹Рј С†РІРµС‚РѕРј РїСЂРѕРґР°Р¶Рё
+	if (elem.size() != rceni * 2) return 7;
+	for (int i = 0; i < rceni; i++)
+	{
+		int64 a = to_int(elem[i * 2i64].s);
+		if (a <= pre) return 8;
+		pre = a;
+		if ((a < 1) || (a > 65000)) return 9;
+		pr->pro[i].c = static_cast<ushort>(a);
+		a = to_int(elem[i * 2i64 + 1i64].s);
+		if ((a < 1) || (a > 2000000000)) return 10;
+		pr->pro[i].k = static_cast<int>(a);
+	}
+	return 0;
+}
+
+int _recognize::read_prices_from_screen(_prices* pr)
+{
+	HWND w = FindWindow(0, mmm3);
+	if (!w) return 1;
+	HWND w2 = FindSubWindow(w, L"InfoPriceTable", L"РЎР±РµСЂР±Р°РЅРє [РњР‘ Р¤Р : Рў+ РђРєС†РёРё Рё Р”Р ] РљРѕС‚РёСЂРѕРІРєРё"); // InfoPriceTable HostWindow
+	if (!w2) return 2;
+	image.clear(0xFFFFFF); // С‚.Рє. РµСЃР»Рё РѕРєРЅРѕ СЃРІРµСЂРЅСѓС‚Рѕ, С‚Рѕ РЅРµ РіСЂР°Р±РёС‚СЃСЏ
+	pr->time.now();
+	image.grab_ecran_oo2(w2);
+	find_text13(0xFF); // СЃРёРЅРёРј С†РІРµС‚РѕРј РїРѕРєСѓРїРєРё
+	if (elem.size() != rceni * 2) return 3;
+	int64 pre = 0;
+	for (int i = 0; i < rceni; i++)
+	{
+		int64 a = to_int(elem[i * 2i64].s);
+		if (a <= pre) return 4;
+		pre = a;
+		if ((a < 1) || (a > 65000)) return 5;
+		pr->pok[rceni - 1 - i].c = static_cast<ushort>(a);
+		a = to_int(elem[i * 2i64 + 1i64].s);
+		if ((a < 1) || (a > 2000000000)) return 6;
+		pr->pok[rceni - 1 - i].k = static_cast<int>(a);
+	}
+	find_red_text13(24); // РєСЂР°СЃРЅС‹Рј С†РІРµС‚РѕРј РїСЂРѕРґР°Р¶Рё
+	if (elem.size() != rceni * 2) return 7;
+	for (int i = 0; i < rceni; i++)
+	{
+		int64 a = to_int(elem[i * 2i64].s);
+		if (a <= pre) return 8;
+		pre = a;
+		if ((a < 1) || (a > 65000)) return 9;
+		pr->pro[i].c = static_cast<ushort>(a);
+		a = to_int(elem[i * 2i64 + 1i64].s);
+		if ((a < 1) || (a > 2000000000)) return 10;
+		pr->pro[i].k = static_cast<int>(a);
+	}
+	return 0;
+}
+
+void _recognize::find_red_text13(uint err)
+{
+	elem.clear();
+	int64 rx = image.size.x;
+	ushort* lin = new ushort[rx];
+	ZeroMemory(lin, sizeof(ushort) * rx);
+	for (int64 j = image.size.y - 1; j >= 0; j--)
+	{
+		uint* sl = image.sl(j);
+		int first = -1;
+		int last = -100;
+		bool norm;
+		for (int i = 0; i < rx; i++) {
+			uint cc = sl[i];
+			uint e2 = (255 - ((cc >> 16) & 255)) + ((cc >> 8) & 255) + (cc & 255);
+			lin[i] = (lin[i] << 1) + (e2 <= err);
+			if (lin[i])
+			{
+				if (first < 0)
+				{
+					first = i;
+					norm = false;
+				}
+				last = i;
+				if (lin[i] & 1) norm = true;
+				continue;
+			}
+			if (i - last == 8)
+			{ // РљР РРўРР§Р•РЎРљРђРЇ Р РђР—РќРР¦Рђ!!!!
+				if (!norm)
+				{
+					_area_string aa;
+					ushort s = 0;
+					for (int k = first; k <= last; k++)	s |= lin[k];
+					aa.area = { {first, last + 1}, {j + 1, j + bit16(s) + 1} };
+					aa.s = rasp_text(lin + first, last - first + 1);
+					elem.push_back(aa);
+					ZeroMemory(lin + first, sizeof(ushort) * (last + 1i64 - first));
+				}
+				first = -1;
+			}
+		}
+	}
+	delete[] lin;
+}
+
+void _recognize::find_text13(uint c, int err)
+{
+	int c0 = c & 255;
+	int c1 = (c >> 8) & 255;
+	int c2 = (c >> 16) & 255;
+
+	elem.clear();
+	int64 rx = image.size.x;
+	ushort* lin = new ushort[rx];
+	ZeroMemory(lin, sizeof(ushort) * rx);
+	for (int64 j = image.size.y - 1; j >= 0; j--)
+	{
+		uint* sl = image.sl(j);
+		int first = -1;
+		int last = -100;
+		bool norm;
+		for (int i = 0; i < rx; i++) {
+			uint cc = sl[i];
+			int e0 = (int)(cc & 255) - c0;
+			int e1 = (int)((cc >> 8) & 255) - c1;
+			int e2 = (int)((cc >> 16) & 255) - c2;
+			if (e0 < 0) e0 = -e0;
+			if (e1 < 0) e1 = -e1;
+			if (e2 < 0) e2 = -e2;
+			lin[i] = (lin[i] << 1) + ((e0 + e1 + e2) <= err);
+			if (lin[i])
+			{
+				if (first < 0)
+				{
+					first = i;
+					norm = false;
+				}
+				last = i;
+				if (lin[i] & 1) norm = true;
+				continue;
+			}
+			if (i - last == 8)
+			{ // РљР РРўРР§Р•РЎРљРђРЇ Р РђР—РќРР¦Рђ!!!!
+				if (!norm)
+				{
+					_area_string aa;
+					ushort s = 0;
+					for (int k = first; k <= last; k++)	s |= lin[k];
+					aa.area = { {first, last + 1}, {j + 1, j + bit16(s) + 1} };
+					aa.s = rasp_text(lin + first, last - first + 1);
+					elem.push_back(aa);
+					ZeroMemory(lin + first, sizeof(ushort) * (last + 1i64 - first));
+				}
+				first = -1;
+			}
+		}
+	}
+	delete[] lin;
+}
+
+void _recognize::find_text13(uint c)
+{
+	elem.clear();
+	int64 rx = image.size.x;
+	ushort* lin = new ushort[rx];
+	ZeroMemory(lin, sizeof(ushort) * rx);
+	for (int64 j = image.size.y - 1; j >= 0; j--)
+	{
+		uint* sl = image.sl(j);
+		int first = -1;
+		int last = -100;
+		bool norm;
+		for (int i = 0; i < rx; i++) {
+			lin[i] = (lin[i] << 1) + (sl[i] == c);
+			if (lin[i])
+			{
+				if (first < 0)
+				{
+					first = i;
+					norm = false;
+				}
+				last = i;
+				if (lin[i] & 1) norm = true;
+				continue;
+			}
+			if (i - last == 8)
+			{ // РљР РРўРР§Р•РЎРљРђРЇ Р РђР—РќРР¦Рђ!!!!
+				if (!norm)
+				{
+					_area_string aa;
+					ushort s = 0;
+					for (int k = first; k <= last; k++)	s |= lin[k];
+					aa.area = { {first, last + 1}, {j + 1, j + bit16(s) + 1} };
+					aa.s = rasp_text(lin + first, last - first + 1);
+					elem.push_back(aa);
+					ZeroMemory(lin + first, sizeof(ushort) * (last + 1i64 - first));
+				}
+				first = -1;
+			}
+		}
+	}
+	delete[] lin;
+}
+
+std::wstring _recognize::rasp_text(ushort* aa, int vaa)
+{
+	std::wstring s;
+	wchar_t* s2 = new wchar_t[vaa + 1i64];
+	ushort b = 0;
+	for (int k = 0; k < vaa; k++) b |= aa[k];
+	int vb = bit16(b);
+	short bestbit = 0;
+	for (int ii = 0; ii < 3; ii++)
+	{
+		int sm = 12 - vb - ii;
+		if (sm < -1) break;
+		int L = 0;
+		int i = 0;
+		short nbit = 0;
+		while (i < vaa)
+		{
+			if (aa[i] == 0)
+			{
+				i++;
+				continue;
+			}
+			wchar_t c = 0;
+			int rc = 0;
+			short bbb = 0;
+			_kusok_bukva* bb = &bu;
+			for (int j = i; j < vaa; j++)
+			{
+				ushort m = (sm >= 0) ? (aa[j] << sm) : ((aa[j] >> (-sm)));
+
+				auto fi = std::lower_bound(bb->dalee.begin(), bb->dalee.end(), m);
+				if (fi == bb->dalee.end()) break;
+				if (*fi != m) break;
+				bb = &*fi;
+//				uint n;
+//				if (!bb->dalee.find_sort(m, &n)) break;
+//				bb = &bb->dalee.data[n];
+
+				if (bb->vc)
+				{
+					c = bb->c[0];
+					bbb = bb->nbit[0];
+					rc = j - i + 1;
+				}
+			}
+			if (rc == 0)
+			{
+				i++;
+				continue;
+				// break;
+			}
+			i += rc;
+			s2[L++] = c;
+			nbit += bbb;
+		}
+		//if (L > s.size())
+		//{
+		//	s2[L] = 0;
+		//	s = s2;
+		//}
+		if (nbit > bestbit)
+		{
+			s2[L] = 0;
+			s = s2;
+			bestbit = nbit;
+		}
+
+	}
+	delete[] s2;
+	return s;
+}
+
+int _recognize::find_elem(std::wstring s)
+{
+	int l = (int)elem.size();
+	for (int i = 0; i < l; i++)
+		if (elem[i].s == s) return i;
+	return -1;
+}
+
+int _recognize::find_elem_kusok(std::wstring s)
+{
+	int l = (int)elem.size();
+	for (int i = 0; i < l; i++)
+		if (elem[i].s.find(s) >= 0) return i;
+	return -1;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void _kusok_bukva::cod(ushort* aa, int vaa, wchar_t cc, char nf, int nbitt)
+{
+	if (vaa == 0)
+	{
+		if (vc < rc)
+		{
+			c[vc] = cc;
+			f[vc] = nf;
+			nbit[vc] = nbitt;
+			vc++;
+		}
+		return;
+	}
+	auto fi = std::lower_bound(dalee.begin(), dalee.end(), *aa);
+	uint64 n = fi - dalee.begin();
+	bool nena = false;
+	if (fi == dalee.end())
+		nena = true;
+	else
+		if (*fi != *aa)
+			nena = true;
+	if (nena)
+	{
+		_kusok_bukva b;
+		b.mask = *aa;
+		dalee.insert(fi, b);
+	}
+/*	uint n;
+	if (!dalee.find_sort(*aa, &n))
+	{
+		_kusok_bukva b;
+		b.mask = *aa;
+		dalee.insert(n, b);
+	}*/
+
+	dalee[n].cod(aa + 1, vaa - 1, cc, nf, nbitt);
+}
+

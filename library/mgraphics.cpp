@@ -115,6 +115,23 @@ void _bitmap::podg_cc(uint c, uint cf)
 	}
 }
 
+void _bitmap::set_font(wstr name, bool bold)
+{
+	izm_font = true;
+	font.lfWeight = (bold) ? 700 : 100;
+	wcscpy_s(font.lfFaceName, name);
+}
+
+void _bitmap::grab_ecran_oo2(HWND hwnd)
+{
+	RECT rr;
+	GetClientRect(hwnd, &rr);
+	resize({ (int64)rr.right - rr.left, (int64)rr.bottom - rr.top });
+	HDC X = GetDC(hwnd);
+	BitBlt(hdc, 0, 0, rr.right - rr.left, rr.bottom - rr.top, X, rr.left, rr.top, SRCCOPY);
+	ReleaseDC(hwnd, X);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 _picture::_picture(int rx3, int ry3) : data(nullptr), size{ rx3, ry3 }
