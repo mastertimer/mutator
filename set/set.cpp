@@ -92,8 +92,7 @@ void fun16(_tetron* tt0, _tetron* tt, uint64 flags)
 						}*/
 			zamok_pokupki = true;
 			gotovo_prodaz++;
-			_t_function* fu = new _t_function;
-			fu->a = 36;
+			_t_function* fu = new _t_function(36);
 			fu->run(0, fu, flag_run);
 		}
 		return;
@@ -118,8 +117,7 @@ void fun16(_tetron* tt0, _tetron* tt, uint64 flags)
 	vrema_prodat = a.time + ti * 60;
 	popitok_prodaz--;
 	gotovo_prodaz++;
-	_t_function* fu = new _t_function;
-	fu->a = 35;
+	_t_function* fu = new _t_function(35);
 	fu->run(0, fu, flag_run);
 }
 
@@ -1983,7 +1981,7 @@ _recognize::_recognize()
 			int ko = (int)size.x - 1;
 			while ((aa[na] == 0) && (na < ko)) na++;
 			while ((aa[ko] == 0) && (ko > na)) ko--;
-			int nbit = 0;
+			int64 nbit = 0;
 			for (int j = na; j <= ko; j++) nbit += bit16(aa[j]);
 			bu.cod(aa + na, ko - na + 1, c, nf, nbit);
 		}
@@ -2218,8 +2216,8 @@ void _recognize::find_red_text13(uint err)
 	for (int64 j = image.size.y - 1; j >= 0; j--)
 	{
 		uint* sl = image.sl(j);
-		int first = -1;
-		int last = -100;
+		int64 first = -1;
+		int64 last = -100;
 		bool norm;
 		for (int i = 0; i < rx; i++) {
 			uint cc = sl[i];
@@ -2242,7 +2240,7 @@ void _recognize::find_red_text13(uint err)
 				{
 					_area_string aa;
 					ushort s = 0;
-					for (int k = first; k <= last; k++)	s |= lin[k];
+					for (int64 k = first; k <= last; k++) s |= lin[k];
 					aa.area = { {first, last + 1}, {j + 1, j + bit16(s) + 1} };
 					aa.s = rasp_text(lin + first, last - first + 1);
 					elem.push_back(aa);
@@ -2268,8 +2266,8 @@ void _recognize::find_text13(uint c, int err)
 	for (int64 j = image.size.y - 1; j >= 0; j--)
 	{
 		uint* sl = image.sl(j);
-		int first = -1;
-		int last = -100;
+		int64 first = -1;
+		int64 last = -100;
 		bool norm;
 		for (int i = 0; i < rx; i++) {
 			uint cc = sl[i];
@@ -2297,7 +2295,7 @@ void _recognize::find_text13(uint c, int err)
 				{
 					_area_string aa;
 					ushort s = 0;
-					for (int k = first; k <= last; k++)	s |= lin[k];
+					for (int64 k = first; k <= last; k++) s |= lin[k];
 					aa.area = { {first, last + 1}, {j + 1, j + bit16(s) + 1} };
 					aa.s = rasp_text(lin + first, last - first + 1);
 					elem.push_back(aa);
@@ -2319,8 +2317,8 @@ void _recognize::find_text13(uint c)
 	for (int64 j = image.size.y - 1; j >= 0; j--)
 	{
 		uint* sl = image.sl(j);
-		int first = -1;
-		int last = -100;
+		int64 first = -1;
+		int64 last = -100;
 		bool norm;
 		for (int i = 0; i < rx; i++) {
 			lin[i] = (lin[i] << 1) + (sl[i] == c);
@@ -2341,7 +2339,7 @@ void _recognize::find_text13(uint c)
 				{
 					_area_string aa;
 					ushort s = 0;
-					for (int k = first; k <= last; k++)	s |= lin[k];
+					for (int64 k = first; k <= last; k++) s |= lin[k];
 					aa.area = { {first, last + 1}, {j + 1, j + bit16(s) + 1} };
 					aa.s = rasp_text(lin + first, last - first + 1);
 					elem.push_back(aa);
@@ -2354,21 +2352,21 @@ void _recognize::find_text13(uint c)
 	delete[] lin;
 }
 
-std::wstring _recognize::rasp_text(ushort* aa, int vaa)
+std::wstring _recognize::rasp_text(ushort* aa, int64 vaa)
 {
 	std::wstring s;
 	wchar_t* s2 = new wchar_t[vaa + 1i64];
 	ushort b = 0;
 	for (int k = 0; k < vaa; k++) b |= aa[k];
-	int vb = bit16(b);
-	short bestbit = 0;
-	for (int ii = 0; ii < 3; ii++)
+	int64 vb = bit16(b);
+	int64 bestbit = 0;
+	for (int64 ii = 0; ii < 3; ii++)
 	{
-		int sm = 12 - vb - ii;
+		int64 sm = 12 - vb - ii;
 		if (sm < -1) break;
 		int L = 0;
 		int i = 0;
-		short nbit = 0;
+		int64 nbit = 0;
 		while (i < vaa)
 		{
 			if (aa[i] == 0)
@@ -2378,7 +2376,7 @@ std::wstring _recognize::rasp_text(ushort* aa, int vaa)
 			}
 			wchar_t c = 0;
 			int rc = 0;
-			short bbb = 0;
+			int64 bbb = 0;
 			_kusok_bukva* bb = &bu;
 			for (int j = i; j < vaa; j++)
 			{
@@ -2444,7 +2442,7 @@ int _recognize::find_elem_kusok(std::wstring s)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _kusok_bukva::cod(ushort* aa, int vaa, wchar_t cc, char nf, int nbitt)
+void _kusok_bukva::cod(ushort* aa, int vaa, wchar_t cc, char nf, int64 nbitt)
 {
 	if (vaa == 0)
 	{

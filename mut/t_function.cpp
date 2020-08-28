@@ -30,12 +30,10 @@ void init_shuba2()
 	_t_trans* tr = n_ramk2->operator _t_basic_go * ()->set_t_trans(a, flag_part + flag_sub_go);
 	tr->trans.offset = { -27, 0 };
 
-	_t_function* fu = new _t_function();
-	fu->a = 17;
+	_t_function* fu = new _t_function(17);
 	fu->add_flags(n_fun_tani, flag_parent);
 	a->add_flags(fu, flag_part + flag_information);
-	fu = new _t_function();
-	fu->a = 26;
+	fu = new _t_function(26);
 	fu->add_flags(n_fun_tani1, flag_parent);
 	a->add_flags(fu, flag_part + flag_information);
 	_tetron* b = new _tetron;
@@ -505,8 +503,7 @@ void fun18(_tetron* tt0, _tetron* tt, uint64 flags)
 		if (!det)
 		{
 			_t_trans* b = new _t_trans;
-			_t_function* ff = new _t_function();
-			ff->a = 24;
+			_t_function* ff = new _t_function(24);
 			b->add_flags(ff, flag_part + flag_run);
 			b->add_flags(a, flag_parent);
 			n_ko->add_flags(b, flag_part + flag_sub_go);

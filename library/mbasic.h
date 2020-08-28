@@ -8,9 +8,20 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+using uchar  = unsigned char;
+using ushort = unsigned short;
+using uint   = unsigned int;
+using uint64 = unsigned long long;
+using int64  =          long long;
+
+using astr   = const    char*;
+using wstr   = const    wchar_t*;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 constexpr double pi = 3.1415926535897932384626;
 
-constexpr int bit8[256] = {
+constexpr int64 bit8[256] = {
 	0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
 	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
 	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
@@ -22,21 +33,10 @@ constexpr int bit8[256] = {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#define t_t template <typename _t>
-#define t_b template <typename _b>
-
 #define bit16(x) (bit8[(unsigned char)(x)]+bit8[(unsigned char)((x)>>8)]) // количество 1-бит в 16-битном числе
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-using uchar  = unsigned char;
-using ushort = unsigned short;
-using uint   = unsigned int;
-using uint64 = unsigned long long;
-using int64  =          long long;
-
-using astr   = const    char*;
-using wstr   = const    wchar_t*;
+#define t_t template <typename _t>
+#define t_b template <typename _b>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -182,8 +182,7 @@ inline uint hash_func(const uint64& a) { return (uint)(a * 27644437); }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // хэш таблица, с мгновенной очисткой, и любыми данными, но с дополнительной переменной id
-template <typename _t>
-struct __hash_table
+t_t struct __hash_table
 {
 	struct _hash_info
 	{
@@ -212,8 +211,8 @@ struct __hash_table
 	void clear() noexcept { id++; size = 0; }
 	bool insert(const _t& b) noexcept; // return - элемента небыло? (!!присваивание в любом случае!!)
 	bool insert(_t&& b) noexcept; // return - элемента небыло? (!!присваивание в любом случае!!)
-	template <typename _t2> _iterator find(const _t2& x); // хэш функции должны одинаковые значания выдавать
-	template <typename _t2> void erase(const _t2& x) { erase(find(x)); } // удалить элемент
+	t_b _iterator find(const _b& x); // хэш функции должны одинаковые значания выдавать
+	t_b void erase(const _b& x) { erase(find(x)); } // удалить элемент
 	void erase(_t* x); // удалить элемент
 	void erase(const _iterator& x); // удалить элемент
 
@@ -226,8 +225,7 @@ private:
 	void reserve() noexcept;
 };
 
-template <typename _t>
-void __hash_table<_t>::erase(const _iterator& x)
+t_t void __hash_table<_t>::erase(const _iterator& x)
 {
 	if (x.hi->id != id) return; // элемента нет
 	uint n = (uint)(x.hi - data);
@@ -243,8 +241,7 @@ void __hash_table<_t>::erase(const _iterator& x)
 	size--;
 }
 
-template <typename _t>
-void __hash_table<_t>::erase(_t* x)
+t_t void __hash_table<_t>::erase(_t* x)
 {
 	uint n = (uint)(((uint64)x - (uint64)data) / sizeof(_hash_info));
 	if (n < capacity)
@@ -253,9 +250,7 @@ void __hash_table<_t>::erase(_t* x)
 		erase(find(*x));
 }
 
-template <typename _t>
-template <typename _t2>
-typename __hash_table<_t>::_iterator __hash_table<_t>::find(const _t2& x)
+t_t t_b typename __hash_table<_t>::_iterator __hash_table<_t>::find(const _b& x)
 {
 	if (size * 2 >= capacity) reserve(); // 3x - 1.25 итерации, 2x - 1.5 итерации, 1.5x - 2.0 итерации
 	uint i;
@@ -264,8 +259,7 @@ typename __hash_table<_t>::_iterator __hash_table<_t>::find(const _t2& x)
 	return { &data[i], this };
 }
 
-template <typename _t>
-void __hash_table<_t>::reserve() noexcept
+t_t void __hash_table<_t>::reserve() noexcept
 { // 3x - 1.25 итерации, 2x - 1.5 итерации, 1.5x - 2.0 итерации
 	uint capacity_old = capacity;
 	capacity = (capacity) ? capacity * 2 : 2;
@@ -282,31 +276,27 @@ void __hash_table<_t>::reserve() noexcept
 	data = data2;
 }
 
-template <typename _t>
-bool __hash_table<_t>::insert(const _t& b) noexcept
+t_t bool __hash_table<_t>::insert(const _t& b) noexcept
 {
 	_iterator n = find(b);
 	n.hi->a = b;
 	return n.life();
 }
 
-template <typename _t>
-bool __hash_table<_t>::insert(_t&& b) noexcept
+t_t bool __hash_table<_t>::insert(_t&& b) noexcept
 {
 	_iterator n = find(b);
 	n.hi->a = std::move(b);
 	return n.life();
 }
 
-template <typename _t>
-typename __hash_table<_t>::_iterator __hash_table<_t>::begin() noexcept
+t_t typename __hash_table<_t>::_iterator __hash_table<_t>::begin() noexcept
 {
 	for (uint i = 0; i < capacity; i++)	if (data[i].id == id) return { (data + i), this };
 	return { (data + capacity), this };
 }
 
-template <typename _t>
-typename __hash_table<_t>::_iterator& __hash_table<_t>::_iterator::operator++()
+t_t typename __hash_table<_t>::_iterator& __hash_table<_t>::_iterator::operator++()
 {
 	_hash_info* en = (ht->data + ht->capacity);
 	for (++hi; hi != en; ++hi) if (hi->id == ht->id) break;
@@ -425,8 +415,7 @@ void _hash_map<_t, _tt>::erase(_t b)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename _t>
-struct _bank
+t_t struct _bank
 {
 	_t** data = nullptr;
 	uint size = 0;
@@ -440,8 +429,7 @@ private:
 	void reserve(uint rdata);
 };
 
-template <typename _t>
-void _bank<_t>::reserve(uint rdata)
+t_t void _bank<_t>::reserve(uint rdata)
 {
 	if (rdata <= capacity) return;
 	_t** data2 = new _t * [rdata];
@@ -452,8 +440,7 @@ void _bank<_t>::reserve(uint rdata)
 	capacity = rdata;
 }
 
-template <typename _t>
-_bank<_t>::~_bank()
+t_t _bank<_t>::~_bank()
 {
 	for (uint i = 0; i < capacity; i++) delete data[i];
 	delete[] data;
@@ -462,8 +449,7 @@ _bank<_t>::~_bank()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // проверить выигрыш!! если не большой, то удалить до тёмных времен
-template <typename _t>
-struct _speed
+t_t struct _speed
 {
 	_t* a = nullptr;
 

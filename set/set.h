@@ -234,13 +234,13 @@ struct _kusok_bukva // узел дерева кодирования символ
 	std::vector<_kusok_bukva> dalee; // следующий столбец !!!! СЛОЖНО заменить, т.т. использует сортировку
 	wchar_t c[rc]{}; // возможные символы
 	char f[rc]{}; // соответствующие шрифты
-	short nbit[rc]{}; // количество бит в символе
+	int64 nbit[rc]{}; // количество бит в символе
 	int vc = 0; // количество соответствий
 
-	void cod(ushort* aa, int vaa, wchar_t cc, char nf, int nbitt); // кодирование
+	void cod(ushort* aa, int vaa, wchar_t cc, char nf, int64 nbitt); // кодирование
 	bool operator!=(ushort a) const noexcept { return (mask != a); } // сравнить
 	bool operator==(ushort a) const noexcept { return (mask == a); } // сравнить
-	bool operator<(ushort a) const noexcept { return (mask < a); } // сравнить
+	bool operator< (ushort a) const noexcept { return (mask <  a); } // сравнить
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -269,5 +269,5 @@ struct _recognize // распознавание с экрана
 private:
 	_kusok_bukva bu; // дерево алфавита для распознавания
 
-	std::wstring rasp_text(ushort* aa, int vaa); // распознать текст
+	std::wstring rasp_text(ushort* aa, int64 vaa); // распознать текст
 };
