@@ -853,7 +853,7 @@ void _g_picture::ris2(_trans tr, bool final)
 		return;
 	}
 	_area2 oo = tr(local_area);
-	master_bm.stretch_draw3(&pic, (int)oo.x.min, (int)oo.y.min, tr.scale);
+	master_bm.stretch_draw(&pic, (int)oo.x.min, (int)oo.y.min, tr.scale);
 }
 
 void _g_picture::new_size(int rx3, int ry3)
@@ -969,7 +969,7 @@ void _g_test_graph::ris2(_trans tr, bool final)
 		a.clear(0xFF0000FF);
 		_area2i ogr({ 30, 225 }, { 25, 125 });
 		a.set_area(ogr);
-		a.stretch_draw3(&te, 0, 0, 3.3);
+		a.stretch_draw(&te, 0, 0, 3.3);
 		a.rectangle(ogr, 0x80FF0000);
 	}
 	_area2 oo = tr(local_area);

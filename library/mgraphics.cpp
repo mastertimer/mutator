@@ -431,7 +431,7 @@ void _picture::lines(_coo2 p1, _coo2 p2, double l, uint c)
 	}
 }
 
-void _picture::stretch_draw2(_picture* bm, int64 nXDest, int64 nYDest, double m)
+void _picture::stretch_draw_speed(_picture* bm, int64 nXDest, int64 nYDest, double m)
 {
 	if (bm->size.x * bm->size.y == 0) return;
 	int64 nWidth  = (int)(bm->size.x * m + 0.5);
@@ -494,7 +494,7 @@ void _picture::stretch_draw2(_picture* bm, int64 nXDest, int64 nYDest, double m)
 	}
 }
 
-void _picture::stretch_draw3(_picture* bm, int64 x, int64 y, double m)
+void _picture::stretch_draw(_picture* bm, int64 x, int64 y, double m)
 {
 	if (bm->size.x * bm->size.y == 0) return;
 	int rx2 = (int)(bm->size.x * m + 0.5);
@@ -2277,143 +2277,6 @@ void _picture::fill_rect_d(double x1, double y1, double x2, double y2, uint c)
 		c2[1] = (c2[1] * kkk + r2 * kk2) >> 8;
 		c2[2] = (c2[2] * kkk + r3 * kk2) >> 8;
 	}
-}
-
-void _picture::stretch_draw(_picture* bm, int64 x, int64 y, double m)
-{
-	if (bm->size.x * bm->size.y == 0) return;
-	int rx2 = (int)(bm->size.x * m + 0.5);
-	int ry2 = (int)(bm->size.y * m + 0.5);
-	if ((rx2 == bm->size.x) && (ry2 == bm->size.y))
-	{
-		draw({ x, y }, *bm);
-		return;
-	}
-	int64 xn = (x >= area.x.min) ? x : area.x.min;
-	int64 yn = (y >= area.y.min) ? y : area.y.min;
-	int64 xk = x + rx2 - 1;
-	int64 yk = y + ry2 - 1;
-	if (xk >= area.x.max) xk = area.x.max - 1;
-	if (yk >= area.y.max) yk = area.y.max - 1;
-	if ((xk < xn) || (yk < yn)) return;
-	uchar** sl = new uchar * [size.y];
-	uchar** ll = new uchar * [size.y];
-	for (int i = 0; i < size.y; ++i) sl[i] = (uchar*)&data[i * size.x];
-	for (int i = 0; i < size.y; ++i) ll[i] = (uchar*)&(bm->data[i * size.x]);
-	// для старой функции
-	int64 nox1 = xn - x;
-	int64 noy1 = yn - y;
-	int64 nox2 = xk - x;
-	int64 noy2 = yk - y;
-	int64 f1x  = bm->size.x;
-	int64 f1y  = bm->size.y;
-	int f1xx = rx2;
-	int f1yy = ry2;
-	for (int64 j = noy1; j <= noy2; j++)
-	{
-		int64 pyn = (int64(j)) * f1y / f1yy;
-		int64 pyk = ((j + 1LL) * f1y - 1) / f1yy;
-		uchar* nn  = (uchar*)sl[j + y];
-		for (int64 i = nox1; i <= nox2; i++)
-		{
-			int64 pxn = (int64(i)) * f1x / f1xx;
-			int64 pxk = ((i + 1LL) * f1x - 1) / f1xx;
-			uchar* p1  = nn + 4 * ((int64)i + x);
-			if ((pyn == pyk) && (pxn == pxk))
-			{
-				uchar* p2 = ll[pyn] + 4LL * pxn;
-				*p1++     = *p2++;
-				*p1++     = *p2++;
-				*p1++     = *p2++;
-				*p1++     = *p2++;
-				continue;
-			}
-			if (pyn == pyk)
-			{
-				uchar* p2 = ll[pyn];
-				double k1 = pxn + 1LL - ((double(i) * f1x) / f1xx);
-				double k2 = ((double(i + 1LL)) * f1x / f1xx) - pxk;
-				double S  = k1 + k2 + pxk - pxn - 1;
-				double R  = p2[pxn * 4] * k1 + p2[pxk * 4] * k2;
-				double G  = p2[pxn * 4 + 1] * k1 + p2[pxk * 4 + 1] * k2;
-				double B  = p2[pxn * 4 + 2] * k1 + p2[pxk * 4 + 2] * k2;
-				for (int64 x = pxn + 1; x < pxk; x++)
-				{
-					R += p2[x * 4];
-					G += p2[x * 4 + 1];
-					B += p2[x * 4 + 2];
-				}
-				p1[0] = (uchar)(R / S + 0.5);
-				p1[1] = (uchar)(G / S + 0.5);
-				p1[2] = (uchar)(B / S + 0.5);
-				p1[3] = 255;
-				continue;
-			}
-			if (pxn == pxk)
-			{
-				double k1 = pyn + 1LL - (double(j) * f1y / f1yy);
-				double k2 = (double(j + 1LL) * f1y / f1yy) - pyk;
-				double S  = k1 + k2 + pyk - pyn - 1;
-				double R  = ll[pyn][pxn * 4] * k1 + ll[pyk][pxn * 4] * k2;
-				double G  = ll[pyn][pxn * 4 + 1] * k1 + ll[pyk][pxn * 4 + 1] * k2;
-				double B  = ll[pyn][pxn * 4 + 2] * k1 + ll[pyk][pxn * 4 + 2] * k2;
-				for (int64 y = pyn + 1; y < pyk; y++)
-				{
-					R += ll[y][pxn * 4];
-					G += ll[y][pxn * 4 + 1];
-					B += ll[y][pxn * 4 + 2];
-				}
-				p1[0] = (uchar)(R / S + 0.5);
-				p1[1] = (uchar)(G / S + 0.5);
-				p1[2] = (uchar)(B / S + 0.5);
-				p1[3] = 255;
-				continue;
-			}
-			double kx1 = pxn + 1LL - (double(i) * f1x / f1xx);
-			double kx2 = (double(i + 1LL) * f1x / f1xx) - pxk;
-			double ky1 = pyn + 1LL - (double(j) * f1y / f1yy);
-			double ky2 = (double(j + 1LL) * f1y / f1yy) - pyk;
-			double S   = kx1 * ky1 + kx1 * ky2 + kx2 * ky1 + kx2 * ky2 + (kx1 + kx2) * (pyk - 1LL - pyn) +
-			           (ky1 + ky2) * (pxk - 1LL - pxn) + double(pxk - 1LL - pxn) * (pyk - 1LL - pyn);
-			double R = ll[pyn][pxn * 4] * kx1 * ky1 + ll[pyk][pxn * 4] * kx1 * ky2 + ll[pyn][pxk * 4] * kx2 * ky1 +
-			           ll[pyk][pxk * 4] * kx2 * ky2;
-			double G = ll[pyn][pxn * 4 + 1] * kx1 * ky1 + ll[pyk][pxn * 4 + 1] * kx1 * ky2 +
-			           ll[pyn][pxk * 4 + 1] * kx2 * ky1 + ll[pyk][pxk * 4 + 1] * kx2 * ky2;
-			double B = ll[pyn][pxn * 4 + 2] * kx1 * ky1 + ll[pyk][pxn * 4 + 2] * kx1 * ky2 +
-			           ll[pyn][pxk * 4 + 2] * kx2 * ky1 + ll[pyk][pxk * 4 + 2] * kx2 * ky2;
-			for (int64 x = pxn + 1; x < pxk; x++)
-			{
-				R += ll[pyn][x * 4] * ky1;
-				G += ll[pyn][x * 4 + 1] * ky1;
-				B += ll[pyn][x * 4 + 2] * ky1;
-				R += ll[pyk][x * 4] * ky2;
-				G += ll[pyk][x * 4 + 1] * ky2;
-				B += ll[pyk][x * 4 + 2] * ky2;
-			}
-			for (int64 y = pyn + 1; y < pyk; y++)
-			{
-				R += ll[y][pxn * 4] * kx1;
-				G += ll[y][pxn * 4 + 1] * kx1;
-				B += ll[y][pxn * 4 + 2] * kx1;
-				R += ll[y][pxk * 4] * kx2;
-				G += ll[y][pxk * 4 + 1] * kx2;
-				B += ll[y][pxk * 4 + 2] * kx2;
-			}
-			for (int64 y = pyn + 1; y < pyk; y++)
-				for (int64 x = pxn + 1; x < pxk; x++)
-				{
-					R += ll[y][x * 4];
-					G += ll[y][x * 4 + 1];
-					B += ll[y][x * 4 + 2];
-				}
-			p1[0] = (uchar)(R / S + 0.5);
-			p1[1] = (uchar)(G / S + 0.5);
-			p1[2] = (uchar)(B / S + 0.5);
-			p1[3] = 255;
-		}
-	}
-	delete[] sl;
-	delete[] ll;
 }
 
 void _picture::fill_ring(_coo2 p, double r, double d, uint c, uint c2)

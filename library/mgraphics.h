@@ -45,9 +45,8 @@ struct _picture
 	void rectangle(_area2i oo, uint c);
 
 	void draw(_num2 r, _picture &bm);
-	void stretch_draw(_picture* bm, int64 x, int64 y, double m); // правильное растягивание, но без прозрачности!!
-	void stretch_draw2(_picture* bm, int64 nXDest, int64 nYDest, double m); // тупое масштабирование, зато с прозрачностью!!
-	void stretch_draw3(_picture* bm, int64 x, int64 y, double m); // нарисовать с масштабированием
+	void stretch_draw(_picture* bm, int64 x, int64 y, double m);
+	void stretch_draw_speed(_picture* bm, int64 nXDest, int64 nYDest, double m);
 
 //	void text0(int x, int y, std::string_view s, int h, uint c, uint bg);
 

@@ -904,7 +904,7 @@ void _g_button::ris2(_trans tr, bool final)
 		int64 rx2 = (int64)(picture.size.x * tr.scale + 0.5);
 		int64 ry2 = (int64)(picture.size.y * tr.scale + 0.5);
 		_num2 ce = oo.center();
-		master_bm.stretch_draw3(&picture, ce.x - rx2 / 2, ce.y - ry2 / 2, tr.scale);
+		master_bm.stretch_draw(&picture, ce.x - rx2 / 2, ce.y - ry2 / 2, tr.scale);
 	}
 	else
 		c = c_def;
