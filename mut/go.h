@@ -286,7 +286,7 @@ _t* find1_plus_gtetron(_tetron* tet, uint64 flags)
 {
 	for (auto i : tet->link)
 	{
-		_tetron* a = i->pairr(tet);
+		_tetron* a = (*i)(tet);
 		if (!i->test_flags(tet, flags)) continue;
 		if (_g_tetron * g = *a) // как редактировать hint _g_tetron?
 		{

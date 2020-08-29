@@ -42,7 +42,7 @@ constexpr int64 bit8[256] = {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#define bit16(x) (bit8[(unsigned char)(x)]+bit8[(unsigned char)((x)>>8)]) // количество 1-бит в 16-битном числе
+#define bit16(x) (bit8[(x)&255]+bit8[((x)>>8)&255]) // количество 1-бит в 16-битном числе
 
 #define t_t template <typename _t>
 #define t_b template <typename _b>

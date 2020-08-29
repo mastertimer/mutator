@@ -241,8 +241,10 @@ struct _pair_tetron // пара тетронов
 	{
 		if (t1 > t2) { low_tetron = t2;  high_tetron = t1; }
 	}
-	_tetron* pairr(_tetron* t) { return (t == low_tetron) ? high_tetron : low_tetron; }
+
 	bool operator==(const _pair_tetron& pt) { return (low_tetron == pt.low_tetron) && (high_tetron == pt.high_tetron); }
+
+	_tetron* operator()(_tetron* t) { return (t == low_tetron) ? high_tetron : low_tetron; }
 };
 
 struct _link : public _pair_tetron
@@ -345,7 +347,7 @@ uint hash_func(const _pair_t<_t>& a)
 template <typename _t> _t* _link::get(_tetron* t, uint64 f)
 {
 	if (!test_flags(t, f)) return nullptr;
-	_t* a = *pairr(t);
+	_t* a = *(*this)(t);
 	return a;
 }
 
@@ -353,7 +355,7 @@ template <typename _t> _t* _tetron::find_intermediate(_tetron* t, uint64 flags_b
 {
 	auto ii = hash_intermediate.find(_he_intermediate(this, t, flags_before, flags_after));
 	if (ii)
-	{ // !!!!!!!!!!!!!!!!!! вызываются функции у мЄртвых тетронов !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	{ // !!!!!!!!!!!!!!!!!! вызываются функции у мёртвых тетронов !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		if (ii->tetron_before->test_flags(ii->tetron_intermediate, flags_before) &&
 			ii->tetron_intermediate->test_flags(ii->tetron_after, flags_after))
 		{
@@ -371,7 +373,7 @@ template <typename _t> _t* _tetron::find_intermediate(_tetron* t, uint64 flags_b
 	{
 		for (auto i : link)
 		{
-			_tetron* a = i->pairr(this);
+			_tetron* a = (*i)(this);
 			if (!i->test_flags(this, flags_before)) continue;
 			_t* x = *a;
 			if (x == nullptr) continue;
@@ -385,7 +387,7 @@ template <typename _t> _t* _tetron::find_intermediate(_tetron* t, uint64 flags_b
 	else
 		for (auto i : t->link)
 		{
-			_tetron* a = i->pairr(t);
+			_tetron* a = (*i)(t);
 			if (!i->test_flags(t, inverted_flags(flags_after))) continue;
 			_t* x = *a;
 			if (x == nullptr) continue;
@@ -407,7 +409,7 @@ template <typename _t> _t* _tetron::find1(uint64 flags)
 {
 	for (auto i : link)
 	{
-		_tetron* a = i->pairr(this);
+		_tetron* a = (*i)(this);
 		if (!i->test_flags(this, flags)) continue;
 		if (_t* x = *a) return x;
 	}

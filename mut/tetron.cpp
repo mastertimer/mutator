@@ -19,7 +19,7 @@ void _tetron::find_all_intermediate(_tetron* t, uint64 flags_before, uint64 flag
 { // !! может дублироватьс¤
 	for (auto i : link)
 	{
-		_tetron* a = i->pairr(this);
+		_tetron* a = (*i)(this);
 		if (!i->test_flags(this, flag_parent)) continue;
 		a->find_all_intermediate(t, flags_before, flags_after, res);
 	}
@@ -49,7 +49,7 @@ namespace SuperDelTetron2
 		ud->push_back(b);
 		for (auto i : b->link)
 		{
-			_tetron* a = i->pairr(b);
+			_tetron* a = (*i)(b);
 			if (!i->test_flags(b, flag_part)) continue;
 			MetkaDelB12(a);
 		}
@@ -59,7 +59,7 @@ namespace SuperDelTetron2
 	{
 		for (auto i : b->link)
 		{
-			_tetron* a = i->pairr(b);
+			_tetron* a = (*i)(b);
 			if (!i->test_flags(a, flag_part)) continue;
 			if (a == start)
 				continue; // NEW
@@ -81,7 +81,7 @@ namespace SuperDelTetron2
 		{
 			for (auto i : b->link)
 			{
-				_tetron* a = i->pairr(b);
+				_tetron* a = (*i)(b);
 				if (!i->test_flags(b, flag_part)) continue;
 				AntiMetkaB12(a);
 			}
@@ -102,7 +102,7 @@ namespace SuperDelTetron2
 		Ba->insert(b); // NEW
 		for (auto i : b->link)
 		{
-			_tetron* a = i->pairr(b);
+			_tetron* a = (*i)(b);
 			if (!i->test_flags(b, flag_part)) continue;
 			AntiMetkaB12(a);
 		}
@@ -111,7 +111,7 @@ namespace SuperDelTetron2
 		Sp2.insert(b);
 		for (auto i : b->link)
 		{
-			_tetron* a = i->pairr(b);
+			_tetron* a = (*i)(b);
 			if (!i->test_flags(b, flag_part)) continue;
 			MetkaDelB12(a);
 		}
@@ -141,7 +141,7 @@ _tetron* _tetron::copy_plus()
 		_tetron* aa = SuperDelTetron2::Sp2.find(a)->a;
 		for (auto j : a->link)
 		{
-			_tetron* b = j->pairr(a);
+			_tetron* b = (*j)(a);
 			auto     n = SuperDelTetron2::Sp2.find(b);
 			if (!n)
 			{
@@ -213,7 +213,7 @@ void _tetron::traversal(_hash_table_tetron* ht, uint64 flags, _vector_tetron* lt
 	if (lt) lt->push_back(this);
 	for (auto i : link)
 	{
-		_tetron* a = i->pairr(this);
+		_tetron* a = (*i)(this);
 		if (!i->test_flags(this, flags)) continue;
 		a->traversal(ht, flags, lt);
 	}
@@ -330,8 +330,8 @@ _frozen_link::_frozen_link(_tetron* t, uint64 flags_) : tetron(t), i(0), tetron2
 	for (auto j : t->link)
 	{
 		if (!j->test_flags(t, flags)) continue;
-		if (!tetron2) tetron2 = j->pairr(t);
-		lt->push_back(j->pairr(t)); // проверить на move
+		if (!tetron2) tetron2 = (*j)(t);
+		lt->push_back((*j)(t)); // проверить на move
 	}
 }
 

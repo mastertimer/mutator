@@ -146,8 +146,8 @@ namespace mutator
 			t->push(tet);
 			tet.arr("links");
 			std::map<uint64, _link*> li;
-			for (auto j : t->link) li[j->pairr(t)->id] = j;
-			for (auto j : li) tet.str("", true).add("id", j.second->pairr(t)->id).add_hex("flags", j.second->get_flags(t)).end();
+			for (auto j : t->link) li[(*j)(t)->id] = j;
+			for (auto j : li) tet.str("", true).add("id", (*j.second)(t)->id).add_hex("flags", j.second->get_flags(t)).end();
 			tet.end().end();
 		}
 		tet.end().arr("chosen");
@@ -161,7 +161,7 @@ namespace mutator
 		if (!n_go_layer) return;
 		for (auto i : n_go_layer->link)
 		{
-			_tetron* a = i->pairr(n_go_layer);
+			_tetron* a = (*i)(n_go_layer);
 			if (!i->test_flags(a, flag_parent)) continue;
 			_t_double* b = *a;
 			if (b == nullptr) continue;

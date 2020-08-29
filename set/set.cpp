@@ -42,6 +42,11 @@ void fun13(_tetron* tt0, _tetron* tt, uint64 flags)
 
 void fun15(_tetron* tt0, _tetron* tt, uint64 flags)
 { // переключение режима сканирования
+	_tetron* timer = n_timer1000;
+	for (auto i : timer->link)
+	{
+		_t_function* f = *(*i)(timer);
+	}
 }
 
 bool can_trade     = false; // разрешение на торговлю

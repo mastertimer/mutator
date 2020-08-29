@@ -1084,7 +1084,7 @@ bool _g_list_link::mouse_down_left2(_coo2 r)
 		_tetron* a = g->find1<_tetron>(flag_specialty);
 		if (a == nullptr) return true;
 		if ((cursor < 0) || (cursor >= (int)a->link.size())) return true;
-		_id t = a->link[cursor]->pairr(a);
+		_id t = (*a->link[cursor])(a);
 		n_act = t; // заменить на новое!!
 		smena_avt(); // заменить на новое!!
 		g->add_unique_flags(t, flag_specialty);
@@ -1130,7 +1130,7 @@ void _g_list_link::ris2(_trans tr, bool final)
 	{
 		int ii = first + i;
 		std::wstring s;
-		s = string_to_wstring(a->link[ii]->pairr(a)->name());
+		s = string_to_wstring((*a->link[ii])(a)->name());
 		//		s = int_to_hex((uint64)a->link[ii].tetron);
 		//		int nn = a->link[ii].nom_link();
 		//			s += L" " + IntToString(nn);
@@ -1152,7 +1152,7 @@ void _g_list_link::ris2(_trans tr, bool final)
 		curf = cursor;
 		int64 a1 = 0;
 		if ((cursor >= 0) || (cursor < (int)a->link.size()))
-			if (a->link[cursor]->pairr(a))
+			if ((*a->link[cursor])(a))
 				a1 = a->link[cursor]->get_flags(a);
 		_g_edit64bit* ee = find1<_g_edit64bit>(flag_information);
 		if (ee)
@@ -1176,7 +1176,7 @@ void _g1list::init_sel() //вызывается только при отсутс
 {
 	for (auto i : link)
 	{
-		_tetron* t = i->pairr(this);
+		_tetron* t = (*i)(this);
 		if (!t->operator _t_string * ()) continue;
 		if (!i->test_flags(this, flag_part)) continue;
 		i->set_flags(this, i->get_flags(this) | flag_specialty);
@@ -1204,7 +1204,7 @@ void _g1list::ris2(_trans tr, bool final)
 	int dx = 0;
 	for (int i = (int)link.size() - 1; i >= 0; i--)
 	{
-		_tetron* a = link[i]->pairr(this);
+		_tetron* a = (*link[i])(this);
 		if (!a->operator std::wstring * ()) continue;
 		if (!link[i]->test_flags(this, flag_part)) continue;
 		if (start)
@@ -1219,7 +1219,7 @@ void _g1list::ris2(_trans tr, bool final)
 	dx = 0;
 	for (auto i : link)
 	{
-		_tetron* a = i->pairr(this);
+		_tetron* a = (*i)(this);
 		if (!a->operator std::wstring * ()) continue;
 		if (!i->test_flags(this, flag_part)) continue;
 		if (start)
@@ -1240,7 +1240,7 @@ void _g1list::calc_local_area()
 	int na = 0;
 	for (auto i : link)
 	{
-		_tetron* t = i->pairr(this);
+		_tetron* t = (*i)(this);
 		if (!t->operator _t_string * ()) continue;
 		if (!i->test_flags(this, flag_part)) continue;
 		n++;
@@ -1298,7 +1298,7 @@ bool _g1list::mouse_wheel2(_coo2 r)
 	{
 		for (int i = (int)link.size() - 1; i >= 0; i--)
 		{
-			_tetron* a = link[i]->pairr(this);
+			_tetron* a = (*link[i])(this);
 			if (!a->operator _t_string * ()) continue;
 			if (!link[i]->test_flags(this, flag_part)) continue;
 			if (start)
@@ -1314,7 +1314,7 @@ bool _g1list::mouse_wheel2(_coo2 r)
 	{
 		for (auto i : link)
 		{
-			_tetron* a = i->pairr(this);
+			_tetron* a = (*i)(this);
 			if (!a->operator _t_string * ()) continue;
 			if (!i->test_flags(this, flag_part)) continue;
 			if (start)
@@ -1440,7 +1440,7 @@ void _g_tetron::ris2(_trans tr, bool final)
 	constexpr double kr = 0.333; // 0.4 растояние между тетронами = kr * radius
 	int vl = 0;
 	for (auto& i : t2->link)
-		if (!i->pairr(t2)->test_flags(n_temp_go, flag_parent)) vl++;
+		if (!(*i)(t2)->test_flags(n_temp_go, flag_parent)) vl++;
 	int vl2 = vl;
 	int orbit = 0;
 	while (vl2 > 0)
@@ -1493,7 +1493,7 @@ void _g_tetron::ris2(_trans tr, bool final)
 		int inn = 0;
 		for (; (ilink < t2->link.size()) && (inn < nn); ilink++)
 		{
-			_tetron* t = t2->link[ilink]->pairr(t2);
+			_tetron* t = (*t2->link[ilink])(t2);
 			if (t->test_flags(n_temp_go, flag_parent)) continue;
 			aa = t->find_intermediate<_g_tetron>(n_temp_go, inverted_flags(flag_specialty), flag_parent);
 			_g_tetron* gg;

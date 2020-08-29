@@ -702,7 +702,7 @@ void fun40(_tetron* tt0, _tetron* tt, uint64 flags)
 {
 	for (auto i : tt->link)
 	{
-		_tetron* a = i->pairr(tt);
+		_tetron* a = (*i)(tt);
 		if (!i->test_flags(tt, flag_part)) continue;
 		tt->_tetron::run(0, a, flags);
 	}

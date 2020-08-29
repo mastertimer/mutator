@@ -20,7 +20,7 @@ _area2 _t_basic_go::calc_area()
 		area.clear();
 	for (auto i : link)
 	{
-		_tetron* a = i->pairr(this);
+		_tetron* a = (*i)(this);
 		if (!(i->get_flags(this) & (flag_parent + flag_sub_go))) continue;
 		_t_basic_go* b = *a; if (b == nullptr) continue;
 		b->calc_area();
@@ -59,7 +59,7 @@ void _t_basic_go::add_area(_area2 a, bool first)
 	hash->insert(this);
 	for (auto i : link)
 	{
-		_tetron* t = i->pairr(this);
+		_tetron* t = (*i)(this);
 		_t_basic_go* b = *t; if (b == nullptr) continue;
 		if (hash->find(t)) continue; // рекурсия не допускается
 		if (i->test_flags(t, flag_sub_go)) b->add_area((tgo) ? a : ttr->trans(a), false); // можно ли
@@ -94,7 +94,7 @@ void _t_basic_go::cha_area(_area2 a, bool first)
 	hash->insert(this);
 	for (auto i : link)
 	{
-		_tetron* t = i->pairr(this);
+		_tetron* t = (*i)(this);
 		_t_basic_go* b = *t; if (b == nullptr) continue;
 		if (hash->find(t)) continue; // рекурсия не допускается
 		if (i->test_flags(t, flag_sub_go)) b->cha_area((tgo) ? a : ttr->trans(a), false); // можно ли
@@ -126,7 +126,7 @@ void _t_basic_go::del_area(_area2 a, bool first)
 	hash->insert(this);
 	for (auto i : link)
 	{
-		_tetron* t = i->pairr(this);
+		_tetron* t = (*i)(this);
 		_t_basic_go* b = *t; if (b == nullptr) continue;
 		if (hash->find(t)) continue; // рекурсия не допускается
 		if (i->test_flags(t, flag_sub_go)) b->del_area((tgo) ? a : ttr->trans(a), false); // можно ли
@@ -149,7 +149,7 @@ _trans _t_basic_go::oko_trans(bool* ko)
 		nai = false;
 		for (auto i : b->link)
 		{
-			_tetron* aa = i->pairr(b);
+			_tetron* aa = (*i)(b);
 			if (!i->test_flags(aa, flag_sub_go)) continue;
 			if (hash->find(aa)) continue;
 			if (!aa->operator _t_basic_go * ()) continue;
@@ -166,14 +166,14 @@ void _t_basic_go::after_create_link(_link* li)
 {
 	_tetron::after_create_link(li);
 	if (li->test_flags(this, inverted_flags(flag_sub_go)))
-		if (li->pairr(this)->operator _t_basic_go * ()) add_area();
+		if ((*li)(this)->operator _t_basic_go * ()) add_area();
 }
 
 void _t_basic_go::before_delete_link(_link* li)
 {
 	_tetron::before_delete_link(li);
 	if (li->test_flags(this, inverted_flags(flag_sub_go)))
-		if (li->pairr(this)->operator _t_basic_go * ()) del_area();
+		if ((*li)(this)->operator _t_basic_go * ()) del_area();
 }
 
 void _t_basic_go::set_layer(double n)
@@ -196,7 +196,7 @@ bool _t_basic_go::mouse_down_left(_trans tr)
 {
 	for (int i = (int)link.size() - 1; i >= 0; i--)
 	{
-		_tetron* a = link[i]->pairr(this);
+		_tetron* a = (*link[i])(this);
 		if (!link[i]->test_flags(this, flag_sub_go)) continue;
 		if (_t_basic_go* aa = *a)
 		{
@@ -233,7 +233,7 @@ bool _t_basic_go::mouse_down_left(_trans tr)
 		}
 	for (int i = (int)link.size() - 1; i >= 0; i--)
 	{
-		_tetron* a = link[i]->pairr(this);
+		_tetron* a = (*link[i])(this);
 		if (!link[i]->test_flags(this, flag_parent)) continue;
 		if (_t_basic_go* aa = *a)
 		{
@@ -248,7 +248,7 @@ void _t_basic_go::find_pot_act(_coo2 r)
 {
 	for (int i = (int)link.size() - 1; i >= 0; i--)
 	{
-		_tetron* a = link[i]->pairr(this);
+		_tetron* a = (*link[i])(this);
 		if (!link[i]->test_flags(this, flag_sub_go)) continue;
 		if (_t_basic_go* aa = *a)
 		{
@@ -274,7 +274,7 @@ bool _t_basic_go::mouse_wheel(_trans tr)
 {
 	for (int i = (int)link.size() - 1; i >= 0; i--)
 	{
-		_tetron* a = link[i]->pairr(this);
+		_tetron* a = (*link[i])(this);
 		if (!link[i]->test_flags(this, flag_sub_go)) continue;
 		if (_t_basic_go* aa = *a)
 		{
@@ -296,7 +296,7 @@ bool _t_basic_go::mouse_wheel(_trans tr)
 		}
 	for (int i = (int)link.size() - 1; i >= 0; i--)
 	{
-		_tetron* a = link[i]->pairr(this);
+		_tetron* a = (*link[i])(this);
 		if (!link[i]->test_flags(this, flag_parent)) continue;
 		if (_t_basic_go* aa = *a)
 		{
@@ -334,7 +334,7 @@ _t_trans* _t_basic_go::set_t_trans(_tetron* go, uint64 flags)
 	if (link.size() <= go->link.size())
 	{
 		for (auto i : link)
-			if (_t_trans* b = *i->pairr(this))
+			if (_t_trans* b = *(*i)(this))
 				if (b->get_flags(go))
 				{
 					ttr = b;
@@ -344,7 +344,7 @@ _t_trans* _t_basic_go::set_t_trans(_tetron* go, uint64 flags)
 	else
 	{
 		for (auto i : go->link)
-			if (_t_trans* b = *i->pairr(go))
+			if (_t_trans* b = *(*i)(go))
 				if (b->get_flags(this))
 				{
 					ttr = b;
@@ -386,7 +386,7 @@ void _t_trans::clear_go_rod()
 {
 	for (int i = (int)link.size() - 1; i >= 0; i--)
 	{
-		_tetron* a = link[i]->pairr(this);
+		_tetron* a = (*link[i])(this);
 		//		if (!a->operator TGO*()) continue;
 		if (!link[i]->test_flags(a, flag_sub_go)) continue;
 		link[i]->~_link();
@@ -399,7 +399,7 @@ bool _t_trans::mouse_move(_trans tr, bool final)
 	master_chain_go.push(this, tr);
 	for (int i = (int)link.size() - 1; i >= 0; i--)
 	{
-		_tetron* a = link[i]->pairr(this);
+		_tetron* a = (*link[i])(this);
 		if (!link[i]->test_flags(this, flag_sub_go)) continue;
 		if (_t_basic_go * aa = *a)
 		{
@@ -415,7 +415,7 @@ bool _t_trans::mouse_move(_trans tr, bool final)
 	_coo2 r = tr.inverse(mouse_xy);
 	for (int i = (int)link.size() - 1; i >= 0; i--)
 	{
-		_tetron* a = link[i]->pairr(this);
+		_tetron* a = (*link[i])(this);
 		if (!link[i]->test_flags(this, flag_parent)) continue;
 		if (_t_basic_go * aa = *a)
 		{
@@ -552,7 +552,7 @@ _t_trans* _t_go::ttrans()
 {
 	for (auto i : link)
 	{
-		_tetron* a = i->pairr(this);
+		_tetron* a = (*i)(this);
 		if (!i->test_flags(a, flag_sub_go)) continue;
 		if (_t_trans * ttg = *a) return ttg;
 	}
@@ -563,7 +563,7 @@ void _t_go::clear_go_rod()
 {
 	for (int i = (int)link.size() - 1; i >= 0; i--)
 	{
-		_t_trans* tr = *link[i]->pairr(this);
+		_t_trans* tr = *(*link[i])(this);
 		if (!tr) continue;
 		if (!link[i]->test_flags(tr, flag_sub_go + flag_part)) continue;
 		delete tr;
@@ -592,7 +592,7 @@ bool _t_go::mouse_move(_trans tr, bool final)
 	if (!final)
 		for (int i = (int)link.size() - 1; i >= 0; i--)
 		{
-			_tetron* a = link[i]->pairr(this);
+			_tetron* a = (*link[i])(this);
 			if (!link[i]->test_flags(this, flag_sub_go)) continue;
 			if (_t_basic_go * aa = *a)
 			{
@@ -629,7 +629,7 @@ bool _t_go::mouse_move(_trans tr, bool final)
 	}
 	for (int i = (int)link.size() - 1; i >= 0; i--)
 	{
-		_tetron* a = link[i]->pairr(this);
+		_tetron* a = (*link[i])(this);
 		if (!link[i]->test_flags(this, flag_parent)) continue;
 		if (_t_basic_go * aa = *a)
 		{
@@ -707,7 +707,7 @@ _layers_go::_layers_go(_tetron* t) : tetron(t)
 {
 	for (auto j : t->link)
 	{
-		_tetron* tt = j->pairr(t);
+		_tetron* tt = (*j)(t);
 		if (!j->test_flags(t, flag_sub_go)) continue;
 		if (tt->operator _t_basic_go *() == nullptr) continue;
 		_t_double* ti = tt->find_intermediate<_t_double>(n_go_layer, inverted_flags(flag_information), flag_parent);
@@ -1017,7 +1017,7 @@ void _g_scrollbar::after_create_link(_link* li)
 	if (vid > 1)
 		if (li->test_flags(this, inverted_flags(flag_sub_go)))
 		{
-			_t_go* r = *li->pairr(this);
+			_t_go* r = *(*li)(this);
 			prilip(r);
 		}
 	_t_go::after_create_link(li);
