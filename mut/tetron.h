@@ -181,55 +181,56 @@ inline std::vector<_id*> master_chosen; // дублирование особых
 
 inline std::map<double, _id> master_layers; // тетроны слоёв
 
-inline _id n_ko;				// !!корневой графический объект (трансформация)
-inline _id n_s_shift;			// !!зажата клавиша Shift
-inline _id n_s_alt;				// !!зажата клавиша Alt
-inline _id n_s_ctrl;			// !!зажата клавиша Ctrl
-inline _id n_s_left;			// зажата левая кнопка мышки
-inline _id n_s_right;			// зажата правая кнопка мышки
-inline _id n_s_middle;			// зажато колесо мышки
-inline _id n_s_double;			// двойной щелчок мышки
-inline _id n_down_left;			// нажата левая кнопка мышки
-inline _id n_down_right;		// нажата правая кнопка мышки
-inline _id n_down_middle;		// нажато колесо мышки
-inline _id n_up_left;			// отжата левая кнопка мышки
-inline _id n_up_right;			// отжата правая кнопка мышки
-inline _id n_up_middle;			// отжато колесо мышки
-inline _id n_move;				// перемещен курсор мышки
-inline _id n_wheel;				// повернуто колесо мышки
-inline _id n_hint;				// подсказка для элемента под курсором мышки
-inline _id n_hex;				// АБСТРАКТНАЯ ИНФОРМАЦИЯ 16-ричная система счисления
-inline _id n_go_move;			// !!цепочка!! GO, над которым перемещается мышка
-inline _id n_perenos;			// режим переноса
-inline _id n_move_all;			// вызывается после глобального смещения или масштабирования
-inline _id n_ramk;				// рамка выделения потенциально активного
-inline _id n_ramk2;				// рамка выделения активного
-inline _id n_pot_act;			// потенциально активный тетрон
-inline _id n_act;				// активный тетрон
-inline _id n_zagolovok;			// АБСТРАКТНЫЙ ПРЕДОК  - заголовки
-inline _id n_checkbox;			// АБСТРАКТНЫЙ ПРЕДОК  - переключатель
-inline _id n_go_layer;			// АБСТРАКТНЫЙ ПРЕДОК  - графический слой
-inline _id n_color_line;		// АБСТРАКТНЫЙ ПРЕДОК  - цвет линий и текста
-inline _id n_color_bg;			// АБСТРАКТНЫЙ ПРЕДОК  - цвет фона
-inline _id n_act_key;			// активный тетрон для управления клавиатурой
-inline _id n_down_key;			// нажата кнопка клавиатуры
-inline _id n_press_key;			// введен символ
-inline _id n_timer1000;			// таймер с периодом 1000
-inline _id n_tani;				// объект, который тянется, перемещается
-inline _id n_fun_tani0;			// АБСТРАКТНЫЙ ПРЕДОК  функция начала тяни-толкай
-inline _id n_fun_tani;			// АБСТРАКТНЫЙ ПРЕДОК  функция тяни-толкай
-inline _id n_fun_tani1;			// АБСТРАКТНЫЙ ПРЕДОК  функция конца тяни-толкай
-inline _id n_temp_go;			// АБСТРАКТНЫЙ ПРЕДОК  временный графический объект
-inline _id n_center;			// АБСТРАКТНЫЙ ПРЕДОК  центр
-inline _id n_radius;			// АБСТРАКТНЫЙ ПРЕДОК  радиус
-inline _id n_width;				// АБСТРАКТНЫЙ ПРЕДОК  толщина
-inline _id n_begin;				// АБСТРАКТНЫЙ ПРЕДОК  начало
-inline _id n_end;				// АБСТРАКТНЫЙ ПРЕДОК  конец
-inline _id n_mouse_inactive;	// АБСТРАКТНАЯ ИНФОРМАЦИЯ неактивный для перемещения мышки
-inline _id n_start_mouse_move;	// АБСТРАКТНЫЙ ПРЕДОК  функция начала перемещения мышки над объектом
-inline _id n_mouse_move;		// АБСТРАКТНЫЙ ПРЕДОК  функция перемещения мышки над объектом
-inline _id n_finish_mouse_move;	// АБСТРАКТНЫЙ ПРЕДОК  функция конца перемещения мышки над объектом
-inline _id n_fun_up_middle;		// АБСТРАКТНЫЙ ПРЕДОК  функция отжато колесо мышки
+inline _id n_ko;                // !!корневой графический объект (трансформация)
+inline _id n_s_shift;           // !!зажата клавиша Shift
+inline _id n_s_alt;             // !!зажата клавиша Alt
+inline _id n_s_ctrl;            // !!зажата клавиша Ctrl
+inline _id n_s_left;            // зажата левая кнопка мышки
+inline _id n_s_right;           // зажата правая кнопка мышки
+inline _id n_s_middle;          // зажато колесо мышки
+inline _id n_s_double;          // двойной щелчок мышки
+inline _id n_down_left;         // нажата левая кнопка мышки
+inline _id n_down_right;        // нажата правая кнопка мышки
+inline _id n_down_middle;       // нажато колесо мышки
+inline _id n_up_left;           // отжата левая кнопка мышки
+inline _id n_up_right;          // отжата правая кнопка мышки
+inline _id n_up_middle;         // отжато колесо мышки
+inline _id n_move;              // перемещен курсор мышки
+inline _id n_wheel;             // повернуто колесо мышки
+inline _id n_hint;              // подсказка для элемента под курсором мышки
+inline _id n_hex;               // АБСТРАКТНАЯ ИНФОРМАЦИЯ 16-ричная система счисления
+inline _id n_go_move;           // !!цепочка!! GO, над которым перемещается мышка
+inline _id n_perenos;           // режим переноса
+inline _id n_move_all;          // вызывается после глобального смещения или масштабирования
+inline _id n_ramk;              // рамка выделения потенциально активного
+inline _id n_ramk2;             // рамка выделения активного
+inline _id n_pot_act;           // потенциально активный тетрон
+inline _id n_act;               // активный тетрон
+inline _id n_zagolovok;         // АБСТРАКТНЫЙ ПРЕДОК  - заголовки
+inline _id n_checkbox;          // АБСТРАКТНЫЙ ПРЕДОК  - переключатель
+inline _id n_go_layer;          // АБСТРАКТНЫЙ ПРЕДОК  - графический слой
+inline _id n_color_line;        // АБСТРАКТНЫЙ ПРЕДОК  - цвет линий и текста
+inline _id n_color_bg;          // АБСТРАКТНЫЙ ПРЕДОК  - цвет фона
+inline _id n_act_key;           // активный тетрон для управления клавиатурой
+inline _id n_down_key;          // нажата кнопка клавиатуры
+inline _id n_press_key;         // введен символ
+inline _id n_timer1000;         // таймер с периодом 1000
+inline _id n_tani;              // объект, который тянется, перемещается
+inline _id n_fun_tani0;         // АБСТРАКТНЫЙ ПРЕДОК  функция начала тяни-толкай
+inline _id n_fun_tani;          // АБСТРАКТНЫЙ ПРЕДОК  функция тяни-толкай
+inline _id n_fun_tani1;         // АБСТРАКТНЫЙ ПРЕДОК  функция конца тяни-толкай
+inline _id n_temp_go;           // АБСТРАКТНЫЙ ПРЕДОК  временный графический объект
+inline _id n_center;            // АБСТРАКТНЫЙ ПРЕДОК  центр
+inline _id n_radius;            // АБСТРАКТНЫЙ ПРЕДОК  радиус
+inline _id n_width;             // АБСТРАКТНЫЙ ПРЕДОК  толщина
+inline _id n_begin;             // АБСТРАКТНЫЙ ПРЕДОК  начало
+inline _id n_end;               // АБСТРАКТНЫЙ ПРЕДОК  конец
+inline _id n_mouse_inactive;    // АБСТРАКТНАЯ ИНФОРМАЦИЯ неактивный для перемещения мышки
+inline _id n_start_mouse_move;  // АБСТРАКТНЫЙ ПРЕДОК  функция начала перемещения мышки над объектом
+inline _id n_mouse_move;        // АБСТРАКТНЫЙ ПРЕДОК  функция перемещения мышки над объектом
+inline _id n_finish_mouse_move; // АБСТРАКТНЫЙ ПРЕДОК  функция конца перемещения мышки над объектом
+inline _id n_fun_up_middle;     // АБСТРАКТНЫЙ ПРЕДОК  функция отжато колесо мышки
+inline _id n_timer250;          // таймер с периодом 1000
 
 struct _pair_tetron // пара тетронов
 {
@@ -299,9 +300,9 @@ struct _he_intermediate
 	}
 };
 
-struct _frozen_link // для цикла по слепку связей
+struct _frozen // для цикла по слепку связей
 {
-	_frozen_link(_tetron* t, uint64 flags_);
+	_frozen(_tetron* t, uint64 flags_);
 	void operator++(int);
 	operator bool() { return tetron2; }
 	operator _tetron* () { return tetron2; }

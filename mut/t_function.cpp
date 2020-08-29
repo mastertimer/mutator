@@ -425,7 +425,7 @@ void fun10(_tetron* tt0, _tetron* tt, uint64 flags)
 {
 	_one_tetron* a = tt->find1<_one_tetron>(flag_information2);
 	if (a)
-		for (_frozen_link i(tt, flag_information); i; i++) tt0->del_flags(i, a->i[0]);
+		for (_frozen i(tt, flag_information); i; i++) tt0->del_flags(i, a->i[0]);
 	tt->_tetron::run(0, tt, flags); // продолжить выполнение
 }
 
@@ -433,7 +433,7 @@ void fun11(_tetron* tt0, _tetron* tt, uint64 flags)
 {
 	_one_tetron* a = tt->find1<_one_tetron>(flag_information2);
 	if (a)
-		for (_frozen_link i(tt, flag_information); i; i++) tt0->add_flags(i, a->i[0]);
+		for (_frozen i(tt, flag_information); i; i++) tt0->add_flags(i, a->i[0]);
 	tt->_tetron::run(0, tt, flags); // продолжить выполнение
 }
 
@@ -795,7 +795,7 @@ void fun52(_tetron* tt0, _tetron* tt, uint64 flags)
 
 void fun53(_tetron* tt0, _tetron* tt, uint64 flags)
 { // !! флаги читать из параметра
-	for (_frozen_link i(tt, flag_information); i; i++) i->add_unique_flags(tt0, flag_specialty);
+	for (_frozen i(tt, flag_information); i; i++) i->add_unique_flags(tt0, flag_specialty);
 	tt->_tetron::run(0, tt, flags); // продолжить выполнение
 }
 

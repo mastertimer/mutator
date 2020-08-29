@@ -203,8 +203,8 @@ void _tetron::set2_flags(_tetron* t, uint64 flags, func_fl trans, bool after)
 
 void _tetron::run(_tetron* tt0, _tetron* tt, uint64 flags)
 {
-	for (_frozen_link i(this, flag_parent); i; i++) i->run(tt0, tt, flags);
-	for (_frozen_link i(this, flags); i; i++) i->run(tt, i, flags);
+	for (_frozen i(this, flag_parent); i; i++) i->run(tt0, tt, flags);
+	for (_frozen i(this, flags); i; i++) i->run(tt, i, flags);
 }
 
 void _tetron::traversal(_hash_table_tetron* ht, uint64 flags, _vector_tetron* lt)
@@ -312,7 +312,7 @@ _link::~_link()
 	link.erase(this);
 }
 
-void _frozen_link::operator++(int)
+void _frozen::operator++(int)
 {
 	for (i++; i < lt->size(); i++)
 	{
@@ -325,7 +325,7 @@ void _frozen_link::operator++(int)
 	tetron2 = nullptr;
 }
 
-_frozen_link::_frozen_link(_tetron* t, uint64 flags_) : tetron(t), i(0), tetron2(nullptr), flags(flags_)
+_frozen::_frozen(_tetron* t, uint64 flags_) : tetron(t), i(0), tetron2(nullptr), flags(flags_)
 {
 	for (auto j : t->link)
 	{

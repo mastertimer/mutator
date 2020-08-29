@@ -1,4 +1,5 @@
 ﻿#include "t_function.h"
+#include "go.h"
 #include "set.h"
 
 constexpr wchar_t ss_file[]  = L"..\\..\\set\\baza.cen";
@@ -12,6 +13,8 @@ _recognize       recognize;
 wstr             mmm1      = L"1";
 wstr             mmm2      = L"2";
 wstr             mmm3      = L"3";
+
+int kkk2 = 88; // количество продаваемых акций
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -41,12 +44,15 @@ void fun13(_tetron* tt0, _tetron* tt, uint64 flags)
 }
 
 void fun15(_tetron* tt0, _tetron* tt, uint64 flags)
-{ // переключение режима сканирования
-	_tetron* timer = n_timer1000;
-	for (auto i : timer->link)
+{
+	for (_frozen i(n_timer1000, flag_run); i; i++)
 	{
-		_t_function* f = *(*i)(timer);
+		_t_function* f = *i;
+		if (!f) continue;
+		if (f->a == 16) delete f;
 	}
+	_g_button* b = *tt0;
+	if (b->checked) n_timer1000->add_flags(new _t_function(16), flag_run);
 }
 
 bool can_trade     = false; // разрешение на торговлю
@@ -126,12 +132,326 @@ void fun16(_tetron* tt0, _tetron* tt, uint64 flags)
 	fu->run(0, fu, flag_run);
 }
 
+void MouseMoveClick(i8 x, i8 y)
+{
+	SetCursorPos((i4)x, (i4)y);
+	//	Mouse->CursorPos = a;
+	//	mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0,GetMessageExtraInfo());
+	//	mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0,GetMessageExtraInfo());
+	mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+	mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+	//down press up
+	//		keybd_event('8', 0, 0, 0);
+	//		keybd_event('8', 0, KEYEVENTF_KEYUP, 0);
+
+}
+
+void MouseClick()
+{
+	//	mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0,GetMessageExtraInfo());
+	//	mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0,GetMessageExtraInfo());
+	mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+	mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+}
+
+int bad_string_to_int(std::wstring& s)
+{
+	int r = 0;
+	int ii;
+	int l = (int)s.size();
+	wstr ss = s.data();
+	for (ii = 0; ii < l; ii++) if ((ss[ii] >= L'0') && (ss[ii] <= L'9')) break;
+	for (int i = ii; i < l; i++)
+		if ((ss[i] >= L'0') && (ss[i] <= L'9'))
+			r = r * 10 + (ss[i] - L'0');
+		else
+			break;
+	return r;
+}
+
+void buy_stock(_tetron* tt, bool buy)
+{
+	int otst_20 = 1;                                                      // 20 >= x >= 1, 1 - лучшая цена
+	static int KKK;
+	static bool win8 = false;
+	static __int64 n = 0;
+	// шаг 01: внедрение и инициализация
+	if (tt->link.empty())
+	{
+		n_timer250->add_flags(tt, flag_run);
+		return;
+	}
+	// пауза
+	if (n < 1)
+	{
+		n = n + 1;
+		return;
+	}
+	// шаг 01: двойной клик по цене
+	if (n == 1)
+	{
+		n = 1000;
+		RECT rr;
+		if (!recognize.find_window_prices(&rr)) return;
+		if (buy)
+			MouseMoveClick(rr.left + 20, rr.top + 15 * (4 - otst_20) + 6);
+		else
+			MouseMoveClick(rr.left + 20, rr.top + 15 * (37 + otst_20) + 6);
+		MouseClick();
+		n = 2;
+		return;
+	}
+	// шаг 02: поиск окна и нажатие на код клиента
+	if (n < 13)
+	{
+		int er = recognize.read_vvod_zaya();
+		if (er)
+		{
+			n = n + 1;
+			if (n == 13)
+			{
+				n = 1000;
+				//        ra2.kar_->bitmap_->SaveToFile("xxx.bmp");
+				//				MessageBox(0, (L"не найдено окно, ошибка " + to_wstring(er)).data(), L"упс..", MB_OK | MB_TASKMODAL);
+			}
+			return;
+		}
+		n = 1000;
+		int n_pok = recognize.find_elem(L"Покупка");
+		int n_pro = recognize.find_elem(L"Продажа");
+		if ((n_pok < 0) || (n_pro < 0))
+		{
+			//			MessageBox(0, L"не найдена покупка/продажа", L"упс..", MB_OK | MB_TASKMODAL);
+			return;
+		}
+		bool cfpok = (recognize.image.sl(recognize.elem[n_pok].area.y.min)[recognize.elem[n_pok].area.x.min - 1] != recognize.image.data[0]);
+		bool cfpro = (recognize.image.sl(recognize.elem[n_pro].area.y.min)[recognize.elem[n_pro].area.x.min - 1] != recognize.image.data[0]);
+		if (cfpok == cfpro)
+		{
+			//			MessageBox(0, L"одинаковые цвета покупка/продажа", L"упс..", MB_OK | MB_TASKMODAL);
+			return;
+		}
+		if (buy)
+		{
+			if (!cfpok)
+			{
+				//				MessageBox(0, L"НЕ покупка", L"упс..", MB_OK | MB_TASKMODAL);
+				return;
+			}
+		}
+		else
+		{
+			if (!cfpro)
+			{
+				//				MessageBox(0, L"НЕ продажа", L"упс..", MB_OK | MB_TASKMODAL);
+				return;
+			}
+
+		}
+		int kk = recognize.find_elem(L"КодКлиента");
+		int kk2 = recognize.find_elem(L"Поручение");
+		if ((kk < 0) || (kk2 < 0))
+		{
+			//			MessageBox(0, L"странно нет кода клиента", L"упс..", MB_OK | MB_TASKMODAL);
+			return;
+		}
+		if (abs(recognize.elem[kk].area.x.min - recognize.elem[kk2].area.x.min) < 5) win8 = true;
+		if (win8)
+			MouseMoveClick(recognize.elem[kk].area.x.min + 260 + recognize.offset.x, recognize.elem[kk].area.y.min + 3 + recognize.offset.y);
+		else
+			MouseMoveClick(recognize.elem[kk].area.x.min + 110 + recognize.offset.x, recognize.elem[kk].area.y.min + 30 + recognize.offset.y);
+		n = 13;
+		return;
+	}
+	// шаг 03: выбор кода клиента 
+	if (n == 13)
+	{
+		int kk = recognize.find_elem(L"КодКлиента");
+		if (kk < 0)
+		{
+			n = 1000;
+			return;
+		}
+		if (win8)
+			MouseMoveClick(recognize.elem[kk].area.x.min + 220 + recognize.offset.x, recognize.elem[kk].area.y.min + 20 + recognize.offset.y);
+		else
+			MouseMoveClick(recognize.elem[kk].area.x.min + 70 + recognize.offset.x, recognize.elem[kk].area.y.min + 47 + recognize.offset.y);
+		n = 14;
+		return;
+	}
+	// шаг 04: щелканье кода клиента
+	if (n == 14)
+	{
+		int kk = recognize.find_elem(L"КодКлиента");
+		if (kk < 0)
+		{
+			n = 1000;
+			return;
+		}
+		if (win8)
+			MouseMoveClick(recognize.elem[kk].area.x.min + 220 + recognize.offset.x, recognize.elem[kk].area.y.min + 3 + recognize.offset.y);
+		else
+			MouseMoveClick(recognize.elem[kk].area.x.min + 70 + recognize.offset.x, recognize.elem[kk].area.y.min + 30 + recognize.offset.y);
+		n = 15;
+		return;
+	}
+	// шаг 05: поиск кода клиента, щелчок по количеству
+	if (n == 15)
+	{
+		int er = recognize.read_vvod_zaya();
+		if (er)
+		{
+			n = 1000;
+			return;
+		}
+		if (recognize.find_elem(mmm1) < 0)
+		{
+			n = 1000;
+			return;
+		}
+		int kk = recognize.find_elem_kusok(L"Кол-во");
+		if (kk < 0)
+		{
+			n = 1000;
+			return;
+		}
+		if (win8)
+			MouseMoveClick(recognize.elem[kk].area.x.min + 100 + recognize.offset.x, recognize.elem[kk].area.y.min + 3 + recognize.offset.y);
+		else
+			MouseMoveClick(recognize.elem[kk].area.x.min + 70 + recognize.offset.x, recognize.elem[kk].area.y.min + 30 + recognize.offset.y);
+		n = 16;
+		return;
+	}
+	// шаг 06: ввод количества
+	if (n == 16)
+	{
+		// выделение
+		keybd_event(0x11, 0, 0, 0);
+		keybd_event('A', 0, 0, 0);
+		keybd_event('A', 0, KEYEVENTF_KEYUP, 0);
+		keybd_event(0x11, 0, KEYEVENTF_KEYUP, 0);
+		// удаление
+		keybd_event(0x2E, 0, 0, 0);
+		keybd_event(0x2E, 0, KEYEVENTF_KEYUP, 0);
+		if (!win8)
+		{
+			// определение количества
+			int kmax = recognize.find_elem_kusok(L"mах:");
+			int klot = recognize.find_elem_kusok(L"Кол-во(лот");
+			if ((kmax < 0) || (klot < 0))
+			{
+				n = 1000;
+				return;
+			}
+			kmax = bad_string_to_int(recognize.elem[kmax].s);
+			klot = bad_string_to_int(recognize.elem[klot].s);
+			if (klot == 0)
+			{                                                                 // на всякий случай
+				n = 1000;
+				return;
+			}
+		}
+		//		KKK = KKK2 / klot;
+		KKK = kkk2;
+		if (KKK == 0) /*||(KKK > kmax)*/
+		{                                                                 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			n = 1000;
+			return;
+		}
+		// ввод количества
+		std::string s = std::to_string(KKK);
+		for (int i = 0; i < s.size(); i++)
+		{
+			keybd_event(s[i], 0, 0, 0);
+			keybd_event(s[i], 0, KEYEVENTF_KEYUP, 0);
+		}
+		n = 17;
+		return;
+	}
+	// шаг 07: проверка и нажатие на Да
+	if (n == 17)
+	{
+		int er = recognize.read_vvod_zaya();
+		if (er)
+		{
+			n = 1000;
+			return;
+		}
+		if ((recognize.find_elem(mmm1) < 0) || (recognize.find_elem(std::to_wstring(KKK)) < 0))
+		{
+			n = 1000;
+			return;
+		}
+		int kk = recognize.find_elem(L"Да");
+		if (kk < 0)
+		{
+			n = 1000;
+			return;
+		}
+		SetCursorPos((i4)(recognize.elem[kk].area.x.min + 20 + recognize.offset.x), (i4)(recognize.elem[kk].area.y.min + 5 + recognize.offset.y));
+
+
+		MouseClick();                                                     // НЕЛЬЗЯ
+		n = 18;
+		return;
+	}
+	if (n < 29)
+	{
+		int er = (buy) ? recognize.read_vnimanie_pokupka() : recognize.read_vnimanie_prodaza();
+		if (er)
+		{
+			n = n + 1;
+			if (n == 29)
+			{
+				n = 1000;
+				//        ra2.kar_->bitmap_->SaveToFile("xxx.bmp");
+				//				MessageBox(0, (L"не найдено окно внимание, ошибка " + to_wstring(er)).data(), L"упс..", MB_OK | MB_TASKMODAL);
+			}
+			return;
+		}
+		int kk = recognize.find_elem(L"ОК");
+		if (kk < 0)
+		{
+			n = 1000;
+			return;
+		}
+		SetCursorPos((i4)(recognize.elem[kk].area.x.min + 20 + recognize.offset.x), (i4)(recognize.elem[kk].area.y.min + 5 + recognize.offset.y));
+		MouseClick();                                                     // НЕЛЬЗЯ
+		n = 29;
+		return;
+	}
+	if (n < 40)
+	{
+		int er = recognize.read_okno_soobsenii();
+		if (er)
+		{
+			n = n + 1;
+			if (n == 40)
+			{
+				n = 1000;
+				//        ra2.kar_->bitmap_->SaveToFile("xxx.bmp");
+				//				MessageBox(0, (L"не найдено окно сообщений, ошибка " + to_wstring(er)).data(), L"упс..", MB_OK | MB_TASKMODAL);
+			}
+			return;
+		}
+		SetCursorPos((i4)(recognize.offset.x + recognize.image.size.x - 23), (i4)(recognize.offset.y - 15));
+		MouseClick();                                                     // НЕЛЬЗЯ
+		n = 40;
+		return;
+	}
+	delete tt;
+	n = 0;
+	zamok_pokupki = false;
+}
+
 void fun35(_tetron* tt0, _tetron* tt, uint64 flags)
 {
+	buy_stock(tt, true);
 }
 
 void fun36(_tetron* tt0, _tetron* tt, uint64 flags)
 {
+	buy_stock(tt, false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

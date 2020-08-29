@@ -370,7 +370,7 @@ void _t_trans::ris(_trans tr, bool final)
 	if (((tr(calc_area())) & master_obl_izm).empty()) return;
 	if (!final) final = final_fractal(tr);
 	master_chain_go.push(this, tr);
-	for (_frozen_link a(this, flag_parent); a; a++)
+	for (_frozen a(this, flag_parent); a; a++)
 	{
 		if (_t_go * b = *a)
 			b->ris(tr, final);
@@ -515,7 +515,7 @@ void _t_go::ris(_trans tr, bool final)
 	if (((tr(calc_area())) & master_obl_izm).empty()) return;
 	if (!final) final = final_fractal(tr);
 	master_chain_go.push(this, tr);
-	for (_frozen_link a(this, flag_parent); a; a++)
+	for (_frozen a(this, flag_parent); a; a++)
 	{
 		if (_t_go * b = *a)
 			b->ris(tr, final);
