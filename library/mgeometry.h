@@ -48,6 +48,8 @@ struct _coo2
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+struct _area2i;
+
 using _sizei = int64; // размер [0...x)
 
 struct _size2i // [0...x), [0...y)
@@ -102,7 +104,11 @@ struct _area2i
 
 	bool empty() const noexcept { return (x.min >= x.max) || (y.min >= y.max); }
 	_size2i size() const noexcept { if (empty()) return { 0,0 }; return { x.max - x.min, y.max - y.min }; }
+
+	_area2i move(_num2 d) const noexcept { return { {x.min + d.x, x.max + d.x}, {y.min + d.y, y.max + d.y} }; }
 };
+
+inline _area2i move(_size2i b, _num2 d) { return { {d.x, b.x + d.x}, {d.y, b.y + d.y} }; }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -158,16 +164,16 @@ struct _area2
 
 	_area2 expansion(double b) const noexcept; // расширенная область во все стороны
 
-	_coo2 center() const noexcept { return { (x.max + x.min) * 0.5, (y.max + y.min) * 0.5 }; }
-	_coo2 top_left() { return { x.min, y.min }; } // верхний левый угол
-	_coo2 top_right() { return { x.max, y.min }; } // верхний правый угол
-	_coo2 bottom_left() { return { x.min, y.max }; } // нижний левый угол
-	_coo2 bottom_right() { return { x.max, y.max }; } // нижний правый угол
+	_coo2 center()       const noexcept { return { (x.max + x.min) * 0.5, (y.max + y.min) * 0.5 }; }
+	_coo2 top_left()     const noexcept { return { x.min, y.min }; } // верхний левый угол
+	_coo2 top_right()    const noexcept { return { x.max, y.min }; } // верхний правый угол
+	_coo2 bottom_left()  const noexcept { return { x.min, y.max }; } // нижний левый угол
+	_coo2 bottom_right() const noexcept { return { x.max, y.max }; } // нижний правый угол
 
 	_size radius(); // радиус вписанной окружности
 	_size min_length() { if (empty()) return 0.0; return std::min(x.max - x.min, y.max - y.min); } // минимальный размер
 
-	_area2 move(_coo2 d) const noexcept;
+	_area2 move(_coo2 d) const noexcept { return { {x.min + d.x, x.max + d.x}, {y.min + d.y, y.max + d.y} }; }
 
 	bool test(_coo2 b); // принадлежит ли точка области
 };

@@ -1286,7 +1286,7 @@ void _g_graph::ris2(_trans tr, bool final)
 {
 	_area2i a = tr(local_area);
 	draw(a.size());
-	master_bm.draw(a.x.min, a.y.min, bm.size.x, bm.size.y, &bm);
+	master_bm.draw({ a.x.min, a.y.min }, bm);
 }
 
 // вынести в общий модуль?

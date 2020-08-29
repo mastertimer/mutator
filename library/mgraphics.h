@@ -20,7 +20,6 @@ struct _picture
 
 	_picture& operator=(_picture&& move) noexcept;
 
-	uint& px(int64 x, int64 y) { return data[y * size.x + x]; }
 	uint* sl(int64 y) const noexcept { return &data[y * size.x]; }
 
 	void set_area(const _area2i &q) { area = q & size; }
@@ -45,7 +44,7 @@ struct _picture
 
 	void rectangle(_area2i oo, uint c);
 
-	void draw(int64 nXDest, int64 nYDest, int64 nWidth, int64 nHeight, _picture* bm, int64 nXSrc = 0, int64 nYSrc = 0);
+	void draw(_num2 r, _picture &bm);
 	void stretch_draw(_picture* bm, int64 x, int64 y, double m); // правильное растягивание, но без прозрачности!!
 	void stretch_draw2(_picture* bm, int64 nXDest, int64 nYDest, double m); // тупое масштабирование, зато с прозрачностью!!
 	void stretch_draw3(_picture* bm, int64 x, int64 y, double m); // нарисовать с масштабированием
@@ -84,7 +83,7 @@ struct _bitmap: public _picture
 
 	bool resize(_size2i wh);
 
-	void text(int x, int y, s2 s, int h, uint c, uint bg);
+	void text(int x, int y, std::wstring_view s, int h, uint c, uint bg);
 	void text(int x, int y, std::string_view s, int h, uint c, uint bg);
 	_size2i size_text(std::wstring_view s, int h);
 	_size2i size_text(std::string_view s, int h);

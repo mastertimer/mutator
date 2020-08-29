@@ -54,11 +54,6 @@ _area2 _area2::expansion(double b) const noexcept
 	return { {x.min - b, x.max + b}, {y.min - b, y.max + b} };
 }
 
-_area2 _area2::move(_coo2 d) const noexcept
-{
-	return { {x.min + d.x, x.max + d.x}, {y.min + d.y, y.max + d.y} };
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 _trans _trans::operator*(_trans tr) const noexcept
