@@ -262,8 +262,8 @@ struct _recognize // распознавание с экрана
 	void find_text13(uint c, int err); // найти текст высотой 13 с нужным цветом с допустимой погрешностью !!! тест скорости, возможно удалить 2 другие !!!
 	void find_red_text13(uint err); // найти красный текст высотой 13
 	bool find_window_prices(RECT* rr); // координаты окна цен
-	int find_elem(std::wstring s); // найти текст среди элементов
-	int find_elem_kusok(std::wstring s); // найти кусок текста среди элементов
+	int find_elem(s2 s); // найти текст среди элементов
+	int find_elem_kusok(s2 s); // найти кусок текста среди элементов
 	int test_image(_prices* pr); // тестовый поиск на готовой картинке
 
 private:

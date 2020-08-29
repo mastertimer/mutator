@@ -53,11 +53,11 @@ _bitmap::~_bitmap()
 	data = 0; // чтобы ~Picture не выругался
 }
 
-void _bitmap::text(int x, int y, std::wstring_view s, int h, uint c, uint bg)
+void _bitmap::text(int x, int y, s2 s, int h, uint c, uint bg)
 { 
 	podg_font(h);
 	podg_cc(c, bg);
-	TextOutW(hdc, x, y, s.data(), (int)s.size());
+	TextOutW(hdc, x, y, s, (int)wcslen(s));
 }
 
 void _bitmap::text(int x, int y, std::string_view s, int h, uint c, uint bg)
@@ -222,17 +222,17 @@ void _picture::draw(int64 nXDest, int64 nYDest, int64 nWidth, int64 nHeight, _pi
 	// полупрозрачное отображение
 	for (int j = 0; j < nHeight; j++)
 	{
-		uchar* s1 = (uchar*)(data + (nYDest + j) * size.x + nXDest);
-		uchar* s2 = (uchar*)(bm->data + (nYSrc + j) * bm->size.x + nXSrc);
+		uchar* s1_ = (uchar*)(data + (nYDest + j) * size.x + nXDest);
+		uchar* s2_ = (uchar*)(bm->data + (nYSrc + j) * bm->size.x + nXSrc);
 		for (int i = 0; i < nWidth; i++)
 		{
-			uint pp2 = s2[3];
+			uint pp2 = s2_[3];
 			uint pp1 = 256 - pp2;
-			s1[0] = (s1[0] * pp1 + s2[0] * pp2) >> 8;
-			s1[1] = (s1[1] * pp1 + s2[1] * pp2) >> 8;
-			s1[2] = (s1[2] * pp1 + s2[2] * pp2) >> 8;
-			s1 += 4;
-			s2 += 4;
+			s1_[0] = (s1_[0] * pp1 + s2_[0] * pp2) >> 8;
+			s1_[1] = (s1_[1] * pp1 + s2_[1] * pp2) >> 8;
+			s1_[2] = (s1_[2] * pp1 + s2_[2] * pp2) >> 8;
+			s1_ += 4;
+			s2_ += 4;
 		}
 	}
 }
@@ -511,12 +511,12 @@ void _picture::stretch_draw2(_picture* bm, int64 nXDest, int64 nYDest, double m)
 		uint*  ss2 = (bm->data + (int64)(((nYSrc + j) * mm)) * bm->size.x);
 		for (int64 i = 0; i < nWidth; i++)
 		{
-			uchar* s2 = (uchar*)(ss2 + (int64)((nXSrc + i) * mm));
-			uint pp2 = s2[3];
+			uchar* s2_ = (uchar*)(ss2 + (int64)((nXSrc + i) * mm));
+			uint pp2 = s2_[3];
 			uint pp1 = 256 - pp2;
-			s1[0] = (s1[0] * pp1 + s2[0] * pp2) >> 8;
-			s1[1] = (s1[1] * pp1 + s2[1] * pp2) >> 8;
-			s1[2] = (s1[2] * pp1 + s2[2] * pp2) >> 8;
+			s1[0] = (s1[0] * pp1 + s2_[0] * pp2) >> 8;
+			s1[1] = (s1[1] * pp1 + s2_[1] * pp2) >> 8;
+			s1[2] = (s1[2] * pp1 + s2_[2] * pp2) >> 8;
 			s1 += 4;
 		}
 	}

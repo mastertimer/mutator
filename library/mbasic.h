@@ -21,10 +21,13 @@ using i1 = char;
 using i2 = short;
 using i4 = int;
 using i8 = long long;
+
 using u1 = unsigned char;
 using u2 = unsigned short;
 using u4 = unsigned int;
 using u8 = unsigned long long;
+
+using s2 = const wchar_t*;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

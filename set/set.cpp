@@ -194,9 +194,9 @@ void buy_stock(_tetron* tt, bool buy)
 		RECT rr;
 		if (!recognize.find_window_prices(&rr)) return;
 		if (buy)
-			MouseMoveClick(rr.left + 20, rr.top + 15 * (4 - otst_20) + 6);
+			MouseMoveClick(rr.left + 20ll, 6ll + rr.top + 15 * (4 - otst_20));
 		else
-			MouseMoveClick(rr.left + 20, rr.top + 15 * (37 + otst_20) + 6);
+			MouseMoveClick(rr.left + 20ll, 6ll + rr.top + 15 * (37 + otst_20));
 		MouseClick();
 		n = 2;
 		return;
@@ -377,7 +377,7 @@ void buy_stock(_tetron* tt, bool buy)
 			n = 1000;
 			return;
 		}
-		if ((recognize.find_elem(mmm1) < 0) || (recognize.find_elem(std::to_wstring(KKK)) < 0))
+		if ((recognize.find_elem(mmm1) < 0) || (recognize.find_elem(std::to_wstring(KKK).c_str()) < 0))
 		{
 			n = 1000;
 			return;
@@ -2680,7 +2680,7 @@ void _recognize::find_text13(uint c)
 std::wstring _recognize::rasp_text(ushort* aa, int64 vaa)
 {
 	std::wstring s;
-	wchar_t* s2 = new wchar_t[vaa + 1i64];
+	wchar_t* s2_ = new wchar_t[vaa + 1i64];
 	ushort b = 0;
 	for (int k = 0; k < vaa; k++) b |= aa[k];
 	int64 vb = bit16(b);
@@ -2729,27 +2729,27 @@ std::wstring _recognize::rasp_text(ushort* aa, int64 vaa)
 				// break;
 			}
 			i += rc;
-			s2[L++] = c;
+			s2_[L++] = c;
 			nbit += bbb;
 		}
 		//if (L > s.size())
 		//{
-		//	s2[L] = 0;
-		//	s = s2;
+		//	s2_[L] = 0;
+		//	s = s2_;
 		//}
 		if (nbit > bestbit)
 		{
-			s2[L] = 0;
-			s = s2;
+			s2_[L] = 0;
+			s = s2_;
 			bestbit = nbit;
 		}
 
 	}
-	delete[] s2;
+	delete[] s2_;
 	return s;
 }
 
-int _recognize::find_elem(std::wstring s)
+int _recognize::find_elem(s2 s)
 {
 	int l = (int)elem.size();
 	for (int i = 0; i < l; i++)
@@ -2757,7 +2757,7 @@ int _recognize::find_elem(std::wstring s)
 	return -1;
 }
 
-int _recognize::find_elem_kusok(std::wstring s)
+int _recognize::find_elem_kusok(s2 s)
 {
 	int l = (int)elem.size();
 	for (int i = 0; i < l; i++)

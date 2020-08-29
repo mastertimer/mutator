@@ -256,7 +256,7 @@ struct _g_text : public _t_go
 
 	void ris2(_trans tr, bool final) override;
 
-	void set_text(std::wstring_view s2);
+	void set_text(std::wstring_view s2_);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -902,11 +902,11 @@ void _g_rect::ris2(_trans tr, bool final)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_text::set_text(std::wstring_view s2)
+void _g_text::set_text(std::wstring_view s2_)
 {
 	del_area();
-	s = s2;
-	_size2i size = master_bm.size_text(s2, 13);
+	s = s2_;
+	_size2i size = master_bm.size_text(s2_, 13);
 	local_area = { {-1, (double)size.x}, {0, (double)size.y} };
 	area_definite = false;
 	add_area();
