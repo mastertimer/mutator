@@ -133,23 +133,39 @@ void fun16(_tetron* tt0, _tetron* tt, uint64 flags)
 }
 
 void fun19(_tetron* tt0, _tetron* tt, uint64 flags)
-{ // режим торговли
+{
+	_g_button* b = *tt0;
+	can_trade = b->checked;
 }
 
 void fun20(_tetron* tt0, _tetron* tt, uint64 flags)
-{ // купить акции
+{
+	if (zamok_pokupki) return;
+	zamok_pokupki = true;
+	_t_function* fu = new _t_function(35);
+	fu->run(0, fu, flag_run);
 }
 
 void fun21(_tetron* tt0, _tetron* tt, uint64 flags)
-{ // продать акции
+{
+	if (zamok_pokupki) return;
+	zamok_pokupki = true;
+	_t_function* fu = new _t_function(36);
+	fu->run(0, fu, flag_run);
 }
 
 void fun22(_tetron* tt0, _tetron* tt, uint64 flags)
-{ // size_el++
+{
+	graph->size_el++;
+	graph->obn = true;
+	graph->cha_area();
 }
 
 void fun30(_tetron* tt0, _tetron* tt, uint64 flags)
-{ // size_el--
+{
+	if (graph->size_el > 1) graph->size_el--;
+	graph->obn = true;
+	graph->cha_area();
 }
 
 void MouseMoveClick(i8 x, i8 y)

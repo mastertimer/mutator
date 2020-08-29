@@ -242,6 +242,7 @@ namespace mutator
 		master_chosen.push_back(&n_mouse_move);        // АБСТРАКТНЫЙ ПРЕДОК функция перемещения мышки над объектом
 		master_chosen.push_back(&n_finish_mouse_move); // АБСТРАКТНЫЙ ПРЕДОК функция конца перемещения мышки над объектом
 		master_chosen.push_back(&n_fun_up_middle);     // АБСТРАКТНЫЙ ПРЕДОК функция отжато колесо мышки
+		master_chosen.push_back(&n_timer250);          // АБСТРАКТНЫЙ ПРЕДОК функция отжато колесо мышки
 
 		return load_from_txt_file(fn);
 	}

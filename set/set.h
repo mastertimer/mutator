@@ -197,6 +197,7 @@ struct _g_graph : public _t_go
 {
 	std::vector<std::unique_ptr<_basic_curve>> curve; // кривая
 	bool obn = true; // обновить картинку
+	int64 size_el = 6; // размер элемента
 
 	_g_graph();
 
@@ -210,7 +211,6 @@ struct _g_graph : public _t_go
 
 private:
 	_bitmap bm;
-	int64 size_el = 6; // размер элемента
 	int64 x_tani = 0; // предыдущая координата x при перетаскивании
 	int v_vib = 0; // диапазон полосы прокрутки
 

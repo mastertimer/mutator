@@ -986,8 +986,8 @@ void _t_function::run(_tetron* tt0, _tetron* tt, uint64 flags)
 	case 17: fun17(tt0, tt, flags); return; // перетаскивание гвоздя активного объекта
 	case 18: fun18(tt0, tt, flags); return; // НОВОЕ изменение активного тетрона
 	case 19: fun19(tt0, tt, flags); return; // режим торговли
-	case 20: fun20(tt0, tt, flags); return; // купить акции
-	case 21: fun21(tt0, tt, flags); return; // продать акции
+	case 20: fun20(tt0, tt, flags); return; // кнопка купить акции
+	case 21: fun21(tt0, tt, flags); return; // кнопка продать акции
 	case 22: fun22(tt0, tt, flags); return; // size_el++
 	case 23: fun23(tt0, tt, flags); return; // открыть картинку
 	case 24: fun24(tt0, tt, flags); return; // центрирование графического объекта постоянно висячим
