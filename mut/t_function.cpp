@@ -520,21 +520,13 @@ void fun18(_tetron* tt0, _tetron* tt, uint64 flags)
 	a->cha_area();
 }
 
-void fun19(_tetron* tt0, _tetron* tt, uint64 flags)
-{
-}
+void fun19(_tetron* tt0, _tetron* tt, uint64 flags);
 
-void fun20(_tetron* tt0, _tetron* tt, uint64 flags)
-{
-}
+void fun20(_tetron* tt0, _tetron* tt, uint64 flags);
 
-void fun21(_tetron* tt0, _tetron* tt, uint64 flags)
-{
-}
+void fun21(_tetron* tt0, _tetron* tt, uint64 flags);
 
-void fun22(_tetron* tt0, _tetron* tt, uint64 flags)
-{
-}
+void fun22(_tetron* tt0, _tetron* tt, uint64 flags);
 
 void fun23(_tetron* tt0, _tetron* tt, uint64 flags)
 {
@@ -623,9 +615,7 @@ void fun29(_tetron* tt0, _tetron* tt, uint64 flags)
 	master_obl_izm = { {0.0, (double)master_bm.size.x}, {0.0, (double)master_bm.size.y} };
 }
 
-void fun30(_tetron* tt0, _tetron* tt, uint64 flags)
-{
-}
+void fun30(_tetron* tt0, _tetron* tt, uint64 flags);
 
 void fun31(_tetron* tt0, _tetron* tt, uint64 flags)
 {
@@ -995,10 +985,10 @@ void _t_function::run(_tetron* tt0, _tetron* tt, uint64 flags)
 	case 16: fun16(tt0, tt, flags); return; // сканирование цен
 	case 17: fun17(tt0, tt, flags); return; // перетаскивание гвоздя активного объекта
 	case 18: fun18(tt0, tt, flags); return; // НОВОЕ изменение активного тетрона
-	case 19: fun19(tt0, tt, flags); return;
-	case 20: fun20(tt0, tt, flags); return;
-	case 21: fun21(tt0, tt, flags); return;
-	case 22: fun22(tt0, tt, flags); return;
+	case 19: fun19(tt0, tt, flags); return; // режим торговли
+	case 20: fun20(tt0, tt, flags); return; // купить акции
+	case 21: fun21(tt0, tt, flags); return; // продать акции
+	case 22: fun22(tt0, tt, flags); return; // size_el++
 	case 23: fun23(tt0, tt, flags); return; // открыть картинку
 	case 24: fun24(tt0, tt, flags); return; // центрирование графического объекта постоянно висячим
 	case 25: fun25(tt0, tt, flags); return; // задать размер GPicture
@@ -1006,7 +996,7 @@ void _t_function::run(_tetron* tt0, _tetron* tt, uint64 flags)
 	case 27: fun27(tt0, tt, flags); return; // глобальный масштаб = 1
 	case 28: fun28(tt0, tt, flags); return; // смена режима переноса
 	case 29: fun29(tt0, tt, flags); return; // смена режима отображения времени
-	case 30: fun30(tt0, tt, flags); return;
+	case 30: fun30(tt0, tt, flags); return; // size_el--
 	case 31: fun31(tt0, tt, flags); return;
 	case 32: fun32(tt0, tt, flags); return;
 	case 33: fun33(tt0, tt, flags); return; // РАЗНОЕ

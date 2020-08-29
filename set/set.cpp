@@ -132,6 +132,26 @@ void fun16(_tetron* tt0, _tetron* tt, uint64 flags)
 	fu->run(0, fu, flag_run);
 }
 
+void fun19(_tetron* tt0, _tetron* tt, uint64 flags)
+{ // режим торговли
+}
+
+void fun20(_tetron* tt0, _tetron* tt, uint64 flags)
+{ // купить акции
+}
+
+void fun21(_tetron* tt0, _tetron* tt, uint64 flags)
+{ // продать акции
+}
+
+void fun22(_tetron* tt0, _tetron* tt, uint64 flags)
+{ // size_el++
+}
+
+void fun30(_tetron* tt0, _tetron* tt, uint64 flags)
+{ // size_el--
+}
+
 void MouseMoveClick(i8 x, i8 y)
 {
 	SetCursorPos((i4)x, (i4)y);
@@ -194,9 +214,9 @@ void buy_stock(_tetron* tt, bool buy)
 		RECT rr;
 		if (!recognize.find_window_prices(&rr)) return;
 		if (buy)
-			MouseMoveClick(rr.left + 20ll, 6ll + rr.top + 15 * (4 - otst_20));
+			MouseMoveClick(rr.left + 20ll, 6ll + rr.top + 15 * (4ll - otst_20));
 		else
-			MouseMoveClick(rr.left + 20ll, 6ll + rr.top + 15 * (37 + otst_20));
+			MouseMoveClick(rr.left + 20ll, 6ll + rr.top + 15 * (37ll + otst_20));
 		MouseClick();
 		n = 2;
 		return;
