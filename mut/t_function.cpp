@@ -749,7 +749,7 @@ void fun48(_tetron* tt0, _tetron* tt, uint64 flags)
 	if (g == nullptr) return;
 	_coo2 r1 = master_trans_go.inverse(mouse_xy_pr);
 	_coo2 r2 = master_trans_go.inverse(mouse_xy);
-	g->pic.line(r1, r2, (*n_s_shift->operator int64 * ()) ? 0xFF000000 : c_def, true);
+	g->pic.line(r1, r2, (*n_s_shift->operator int64 * ()) ? 0 : c_def, true);
 	g->cha_area();
 }
 
