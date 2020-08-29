@@ -1,8 +1,10 @@
 ﻿#include "t_function.h"
 #include "go.h"
+#include "mjson.h"
 #include "set.h"
 
 constexpr wchar_t ss_file[]  = L"..\\..\\set\\baza.cen";
+constexpr wchar_t mmm_file[] = L"..\\..\\set\\mmm.txt";
 constexpr _prices cena_zero_ = { {}, {}, { 1,1,1,1,1 } };
 
 _super_stat      ss;                  // сжатые цены
@@ -10,13 +12,21 @@ _g_graph*        graph     = nullptr; // график
 _nervous_oracle* oracle    = nullptr; // оракул
 _recognize       recognize;
 
-wstr             mmm1      = L"1";
-wstr             mmm2      = L"2";
-wstr             mmm3      = L"3";
+std::wstring mmm1 = L"1";
+std::wstring mmm2 = L"2";
+std::wstring mmm3 = L"3";
 
 int kkk2 = 88; // количество продаваемых акций
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void load_mmm(std::filesystem::path file_name)
+{
+	_rjson fs(file_name);
+	fs.read("mmm1", mmm1);
+	fs.read("mmm2", mmm2);
+	fs.read("mmm3", mmm3);
+}
 
 void fun13(_tetron* tt0, _tetron* tt, uint64 flags)
 {
@@ -41,6 +51,7 @@ void fun13(_tetron* tt0, _tetron* tt, uint64 flags)
 	if (ora3) o3->recovery();
 	graph->cha_area();
 	graph->obn = true;
+	load_mmm(exe_path.wstring() + mmm_file);
 }
 
 void fun15(_tetron* tt0, _tetron* tt, uint64 flags)
@@ -2350,7 +2361,7 @@ _recognize::_recognize()
 
 int _recognize::read_okno_soobsenii()
 {
-	HWND w = FindWindow(0, mmm2);
+	HWND w = FindWindow(0, mmm2.c_str());
 	if (!w) return 1;
 	offset = { 0, 0 };
 	ClientToScreen(w, &offset);
@@ -2453,7 +2464,7 @@ HWND FindSubWindow(HWND w, const wchar_t* classname, const wchar_t* windowname)
 int _recognize::read_tablica_zayavok(int a, int& b)
 {
 	b = 0;
-	HWND w = FindWindow(0, mmm3);
+	HWND w = FindWindow(0, mmm3.c_str());
 	if (!w) return 1;
 	HWND w2 = FindSubWindow(w, L"InfoMDITableCommon", L"Таблица заявок Основной рынок"); // InfoPriceTable HostWindow
 	if (!w2) return 2;
@@ -2473,7 +2484,7 @@ int _recognize::read_tablica_zayavok(int a, int& b)
 
 bool _recognize::find_window_prices(RECT* rr)
 {
-	HWND w = FindWindow(0, mmm3);
+	HWND w = FindWindow(0, mmm3.c_str());
 	if (!w) return false;
 	HWND w2 = FindSubWindow(w, L"InfoPriceTable", L"Сбербанк [МБ ФР: Т+ Акции и ДР] Котировки"); // InfoPriceTable HostWindow
 	if (!w2) return false;
@@ -2531,7 +2542,7 @@ int _recognize::test_image(_prices* pr)
 
 int _recognize::read_prices_from_screen(_prices* pr)
 {
-	HWND w = FindWindow(0, mmm3);
+	HWND w = FindWindow(0, mmm3.c_str());
 	if (!w) return 1;
 	HWND w2 = FindSubWindow(w, L"InfoPriceTable", L"Сбербанк [МБ ФР: Т+ Акции и ДР] Котировки"); // InfoPriceTable HostWindow
 	if (!w2) return 2;
@@ -2785,7 +2796,7 @@ std::wstring _recognize::rasp_text(ushort* aa, int64 vaa)
 	return s;
 }
 
-int _recognize::find_elem(s2 s)
+int _recognize::find_elem(std::wstring_view s)
 {
 	int l = (int)elem.size();
 	for (int i = 0; i < l; i++)
