@@ -233,6 +233,7 @@ struct _g_picture : public _t_go
 	void new_size(int rx3, int ry3);
 	bool load_from_file(std::filesystem::path fn);
 	bool save_to_file(std::filesystem::path fn) const;
+	void set_pic(const _picture& pic2);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

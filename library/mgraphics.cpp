@@ -108,9 +108,9 @@ void _bitmap::podg_cc(uint c, uint cf)
 	if (c != f_c) SetTextColor(hdc, f_c = c);
 	if (cf != f_cf)
 	{
-		if (cf >> 24 == 0) {
+		if (cf >> 24 == 0xff) {
 			SetBkColor(hdc, cf);
-			if (f_cf >> 24 != 0) SetBkMode(hdc, OPAQUE);
+			if (f_cf >> 24 != 0xff) SetBkMode(hdc, OPAQUE);
 		}
 		else SetBkMode(hdc, TRANSPARENT);
 		f_cf = cf;
@@ -132,6 +132,11 @@ void _bitmap::grab_ecran_oo2(HWND hwnd)
 	HDC X = GetDC(hwnd);
 	BitBlt(hdc, 0, 0, rr.right - rr.left, rr.bottom - rr.top, X, rr.left, rr.top, SRCCOPY);
 	ReleaseDC(hwnd, X);
+	// исправление альфа канала
+	unsigned long long* ee = (unsigned long long*)data;
+	unsigned long long* eemax = (unsigned long long*) & (data[size.x * size.y - 1]);
+	while (ee < eemax)* ee++ |= 0xff000000ff000000;
+	if (ee == eemax)* ((unsigned int*)ee) |= 0xff000000;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -146,6 +151,14 @@ _picture::_picture(_picture&& move) noexcept :
    data(move.data), size(move.size), transparent(move.transparent), area(move.area)
 {
 	move.data = nullptr;
+}
+
+void _picture::operator=(const _picture& move) noexcept
+{
+	resize(move.size);
+	transparent = move.transparent;
+	memcpy(data, move.data, size.square() * 4);
+	area = size;
 }
 
 _picture& _picture::operator=(_picture&& move) noexcept

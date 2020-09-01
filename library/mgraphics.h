@@ -19,6 +19,7 @@ struct _picture
 	virtual ~_picture() { delete[] data; }
 
 	_picture& operator=(_picture&& move) noexcept;
+	void operator=(const _picture& move) noexcept;
 
 	uint* sl(int64 y) const noexcept { return &data[y * size.x]; }
 

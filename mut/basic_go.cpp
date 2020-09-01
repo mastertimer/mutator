@@ -865,6 +865,15 @@ void _g_picture::new_size(int rx3, int ry3)
 	add_area();
 }
 
+void _g_picture::set_pic(const _picture& pic2)
+{
+	pic = pic2;
+	del_area();
+	local_area = { {0, (double)pic.size.x}, {0, (double)pic.size.y} };
+	area_definite = false;
+	add_area();
+}
+
 bool _g_picture::load_from_file(std::filesystem::path fn)
 {
 	/*	del_area();

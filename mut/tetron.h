@@ -51,7 +51,6 @@ struct _t_go;
 struct _g_scrollbar;
 struct _g_text;
 struct _g1list;
-struct _g_bitmap;
 struct _g_tetron;
 struct _g_rect;
 struct _g_picture;
@@ -139,7 +138,6 @@ struct _tetron
 	virtual operator _t_double     * () { return nullptr; }
 	virtual operator _g_scrollbar  * () { return nullptr; }
 	virtual operator _g_text       * () { return nullptr; }
-	virtual operator _g_bitmap     * () { return nullptr; }
 	virtual operator _g1list       * () { return nullptr; }
 	virtual operator _g_tetron     * () { return nullptr; }
 	virtual operator _g_circle     * () { return nullptr; }

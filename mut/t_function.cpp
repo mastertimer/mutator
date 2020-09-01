@@ -627,6 +627,7 @@ void fun32(_tetron* tt0, _tetron* tt, uint64 flags)
 
 void fun33(_tetron* tt0, _tetron* tt, uint64 flags)
 {
+	set_test();
 //	_g_tetron* g = new _g_tetron;
 //	g->add_flags(n_checkbox, flag_specialty);
 //	_t_trans* tr = n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);

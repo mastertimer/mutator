@@ -2341,8 +2341,8 @@ _recognize::_recognize()
 			if (size.x > 20) return;//что-то не то...
 			if ((size.x > bm_[nf].size.x) || (size.y > bm_[nf].size.y))
 				bm_[nf].resize({ std::max(size.x, bm_[nf].size.x), std::max(size.y, bm_[nf].size.y) });
-			bm_[nf].clear();
-			bm_[nf].text(0, 0, ss.data(), 8, 0xffffff, 0xff000000);
+			bm_[nf].clear(0);
+			bm_[nf].text(0, 0, ss.data(), 8, 0xffffff, 0);
 			ZeroMemory(aa, sizeof(ushort) * size.x);
 			for (int64 j = size.y - 1; j >= 0; j--)
 			{
@@ -2546,33 +2546,35 @@ int _recognize::read_prices_from_screen(_prices* pr)
 	if (!w) return 1;
 	HWND w2 = FindSubWindow(w, L"InfoPriceTable", L"Сбербанк [МБ ФР: Т+ Акции и ДР] Котировки"); // InfoPriceTable HostWindow
 	if (!w2) return 2;
-	image.clear(0xFFFFFF); // т.к. если окно свернуто, то не грабится
+	image.clear(0xFFFFFFFF); // т.к. если окно свернуто, то не грабится
 	pr->time.now();
 	image.grab_ecran_oo2(w2);
-	find_text13(0xFF); // синим цветом покупки
+	find_text13(0xFF0000FF); // синим цветом покупки
+	size_t ww = elem.size();
 	if (elem.size() != rceni * 2) return 3;
 	int64 pre = 0;
-	for (int i = 0; i < rceni; i++)
+	for (i8 i = 0; i < rceni; i++)
 	{
-		int64 a = to_int(elem[i * 2i64].s);
+		std::wstring swe = elem[i * 2].s;
+		int64 a = to_int(swe);
 		if (a <= pre) return 4;
 		pre = a;
 		if ((a < 1) || (a > 65000)) return 5;
 		pr->pok[rceni - 1 - i].c = static_cast<ushort>(a);
-		a = to_int(elem[i * 2i64 + 1i64].s);
+		a = to_int(elem[i * 2 + 1].s);
 		if ((a < 1) || (a > 2000000000)) return 6;
 		pr->pok[rceni - 1 - i].k = static_cast<int>(a);
 	}
 	find_red_text13(24); // красным цветом продажи
 	if (elem.size() != rceni * 2) return 7;
-	for (int i = 0; i < rceni; i++)
+	for (i8 i = 0; i < rceni; i++)
 	{
-		int64 a = to_int(elem[i * 2i64].s);
+		int64 a = to_int(elem[i * 2].s);
 		if (a <= pre) return 8;
 		pre = a;
 		if ((a < 1) || (a > 65000)) return 9;
 		pr->pro[i].c = static_cast<ushort>(a);
-		a = to_int(elem[i * 2i64 + 1i64].s);
+		a = to_int(elem[i * 2 + 1].s);
 		if ((a < 1) || (a > 2000000000)) return 10;
 		pr->pro[i].k = static_cast<int>(a);
 	}
@@ -2860,4 +2862,8 @@ void set_test()
 	_prices a;
 	int ok = recognize.read_prices_from_screen(&a);
 	MessageBox(0, std::to_wstring(ok).c_str(), L"упс", MB_OK | MB_TASKMODAL);
+//	_g_picture* g = new _g_picture;
+//	g->set_pic(recognize.image);
+//	for (int i = 0; i < recognize.elem.size(); i++)	g->pic.rectangle(recognize.elem[i].area, c_def - 0x80000000);
+//	_t_trans* tr = n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
 }
