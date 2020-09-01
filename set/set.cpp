@@ -2852,3 +2852,12 @@ void _kusok_bukva::cod(ushort* aa, int vaa, wchar_t cc, char nf, int64 nbitt)
 	dalee[n].cod(aa + 1, vaa - 1, cc, nf, nbitt);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void set_test()
+{
+	if (mmm1 == L"1") load_mmm(exe_path.wstring() + mmm_file);
+	_prices a;
+	int ok = recognize.read_prices_from_screen(&a);
+	MessageBox(0, std::to_wstring(ok).c_str(), L"упс", MB_OK | MB_TASKMODAL);
+}
