@@ -62,6 +62,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	static bool run_timer = true;
 	static bool tracking_mouse = false;
+	static bool polet = false;
 	switch (message)
 	{
 	case WM_SETCURSOR:
@@ -158,6 +159,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			run_timer = true;
 			return 0;
 		}
+		if (wParam == VK_F3)
+		{
+			polet = !polet;
+			return 0;
+		}
 		//		InitShift(Shift);
 		*n_down_key->operator int64* () = wParam;
 		n_down_key->run(0, n_down_key, flag_run);
@@ -183,9 +189,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			n_timer1000->run(0, n_timer1000, flag_run);
 			if (!master_obl_izm.empty()) paint(hWnd);
 		}
+		if (wParam == 2)
+		{
+			n_timer250->run(0, n_timer250, flag_run);
+		}
+		if (wParam == 3)
+		{
+			if (polet)
+			{
+				*n_wheel->operator int64* () = 16;
+				n_wheel->run(0, n_wheel, flag_run);
+				if (!master_obl_izm.empty()) paint(hWnd);
+			}
+		}
 		return 0;
 	case WM_CREATE:
 		SetTimer(hWnd, 1, 1000, 0);
+		SetTimer(hWnd, 2, 250, 0);
+		SetTimer(hWnd, 3, 20, 0);
 		return 0;
 	case WM_DESTROY:
 		KillTimer(hWnd, 1);
