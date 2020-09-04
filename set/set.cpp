@@ -9,14 +9,18 @@ constexpr _prices cena_zero_ = { {}, {}, { 1,1,1,1,1 } };
 
 _super_stat      ss;                  // сжатые цены
 _g_graph*        graph     = nullptr; // график
-_nervous_oracle* oracle    = nullptr; // оракул
+
+_nervous_oracle *oracle    = nullptr; // оракул
+_mctds_candle   *sv        = nullptr;
+_oracle3        *o3        = nullptr;
+
 _recognize       recognize;
 
 std::wstring mmm1 = L"1";
 std::wstring mmm2 = L"2";
 std::wstring mmm3 = L"3";
 
-int kkk2 = 88; // количество продаваемых акций
+int kkk2 = 13; // количество продаваемых акций
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -40,9 +44,9 @@ void fun13(_tetron* tt0, _tetron* tt, uint64 flags)
 		graph->add_flags(sb, flag_sub_go + flag_part + (flag_run << 32));
 	}
 	constexpr bool ora3 = false;
-	_mctds_candle* sv = new _mctds_candle;
+	sv = new _mctds_candle;
 	oracle = new _nervous_oracle;
-	_oracle3* o3 = (ora3) ? new _oracle3 : nullptr;
+	o3 = (ora3) ? new _oracle3 : nullptr;
 	graph->curve.push_back(std::unique_ptr<_basic_curve>(sv));
 	graph->curve.push_back(std::unique_ptr<_basic_curve>(oracle));
 	if (ora3) graph->curve.push_back(std::unique_ptr<_basic_curve>(o3));
@@ -92,6 +96,10 @@ void fun16(_tetron* tt0, _tetron* tt, uint64 flags)
 		return;
 	}
 	ss.add(a);
+	sv->recovery();
+	oracle->recovery();
+	if (o3) o3->recovery();
+
 	graph->run(nullptr, graph, flag_run);
 	// всякие проверки на начало покупки !!!!
 
@@ -152,6 +160,7 @@ void fun19(_tetron* tt0, _tetron* tt, uint64 flags)
 void fun20(_tetron* tt0, _tetron* tt, uint64 flags)
 {
 	if (zamok_pokupki) return;
+	if (mmm1 == L"1") load_mmm(exe_path.wstring() + mmm_file);
 	zamok_pokupki = true;
 	_t_function* fu = new _t_function(35);
 	fu->run(0, fu, flag_run);
@@ -160,6 +169,7 @@ void fun20(_tetron* tt0, _tetron* tt, uint64 flags)
 void fun21(_tetron* tt0, _tetron* tt, uint64 flags)
 {
 	if (zamok_pokupki) return;
+	if (mmm1 == L"1") load_mmm(exe_path.wstring() + mmm_file);
 	zamok_pokupki = true;
 	_t_function* fu = new _t_function(36);
 	fu->run(0, fu, flag_run);
@@ -271,8 +281,14 @@ void buy_stock(_tetron* tt, bool buy)
 			//			MessageBox(0, L"не найдена покупка/продажа", L"упс..", MB_OK | MB_TASKMODAL);
 			return;
 		}
-		bool cfpok = (recognize.image.sl(recognize.elem[n_pok].area.y.min)[recognize.elem[n_pok].area.x.min - 1] != recognize.image.data[0]);
-		bool cfpro = (recognize.image.sl(recognize.elem[n_pro].area.y.min)[recognize.elem[n_pro].area.x.min - 1] != recognize.image.data[0]);
+		u4 c = recognize.image.sl(recognize.elem[n_pok].area.y.min)[recognize.elem[n_pok].area.x.min - 1];
+		u1* cc = (u1*)& c;
+		bool cfpok = (cc[0] != cc[1]) || (cc[0] != cc[2]); // не серый цвет
+		c = recognize.image.sl(recognize.elem[n_pro].area.y.min)[recognize.elem[n_pro].area.x.min - 1];
+		cc = (u1*)& c;
+		bool cfpro = (cc[0] != cc[1]) || (cc[0] != cc[2]); // не серый цвет
+//		bool cfpok = (recognize.image.sl(recognize.elem[n_pok].area.y.min)[recognize.elem[n_pok].area.x.min - 1] != recognize.image.data[0]);
+//		bool cfpro = (recognize.image.sl(recognize.elem[n_pro].area.y.min)[recognize.elem[n_pro].area.x.min - 1] != recognize.image.data[0]);
 		if (cfpok == cfpro)
 		{
 			//			MessageBox(0, L"одинаковые цвета покупка/продажа", L"упс..", MB_OK | MB_TASKMODAL);
@@ -1592,6 +1608,8 @@ void _g_graph::draw(_size2i size)
 	}
 	// рисование даты
 	bm.text16n(dex + 10, 10, date_to_ansi_string(mintime).data(), 4, c_max - 0x80000000);
+	// рисование количества элементов
+	bm.text16n(dex + 10, 60, std::to_string(ss.size).data(), 2, 0x60ff0000);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2365,9 +2383,9 @@ int _recognize::read_okno_soobsenii()
 	if (!w) return 1;
 	offset = { 0, 0 };
 	ClientToScreen(w, &offset);
-	image.clear(0xFFFFFF); // т.к. если окно свернуто, то не грабится
+	image.clear(0xFFFFFFFF); // т.к. если окно свернуто, то не грабится
 	image.grab_ecran_oo2(w);
-	find_text13(0);
+	find_text13(0xFF000000);
 	return 0;
 }
 
@@ -2377,9 +2395,9 @@ int _recognize::read_vnimanie_pokupka()
 	if (!w) return 1;
 	offset = { 0, 0 };
 	ClientToScreen(w, &offset);
-	image.clear(0xFFFFFF); // т.к. если окно свернуто, то не грабится
+	image.clear(0xFFFFFFFF); // т.к. если окно свернуто, то не грабится
 	image.grab_ecran_oo2(w);
-	find_text13(0);
+	find_text13(0xFF000000);
 	if ((elem.size() < 17) || (elem.size() > 18)) return 2; // неправильное количество элементов
 	if (find_elem(L"Выдействителы-ожелаетевыполнитьтранзакцию") < 0) return 3;
 	if (find_elem(L"ЛимитированнаяПокупка") < 0) return 4;
@@ -2392,9 +2410,9 @@ int _recognize::read_vnimanie_prodaza()
 	if (!w) return 1;
 	offset = { 0, 0 };
 	ClientToScreen(w, &offset);
-	image.clear(0xFFFFFF); // т.к. если окно свернуто, то не грабится
+	image.clear(0xFFFFFFFF); // т.к. если окно свернуто, то не грабится
 	image.grab_ecran_oo2(w);
-	find_text13(0);
+	find_text13(0xFF000000);
 	if ((elem.size() < 17) || (elem.size() > 18)) return 2; // неправильное количество элементов
 	if (find_elem(L"Выдействителы-ожелаетевыполнитьтранзакцию") < 0) return 3;
 	if (find_elem(L"ЛимитированнаяПродажа") < 0) return 4;
@@ -2407,9 +2425,9 @@ int _recognize::read_vvod_zaya()
 	if (!w) return 1;
 	offset = { 0, 0 };
 	ClientToScreen(w, &offset);
-	image.clear(0xFFFFFF); // т.к. если окно свернуто, то не грабится
+	image.clear(0xFFFFFFFF); // т.к. если окно свернуто, то не грабится
 	image.grab_ecran_oo2(w);
-	find_text13(0);
+	find_text13(0xFF000000);
 	if ((elem.size() < 20) || (elem.size() > 28)) return 2; // неправильное количество элементов
 	return 0;
 }
@@ -2471,10 +2489,10 @@ int _recognize::read_tablica_zayavok(int a, int& b)
 	RECT rr;
 	GetWindowRect(w2, &rr);
 
-	image.clear(0xFFFFFF); // т.к. если окно свернуто, то не грабится
+	image.clear(0xFFFFFFFF); // т.к. если окно свернуто, то не грабится
 	image.grab_ecran_oo2(w2);
 	//	image_.SaveToFile(L"err.bmp");
-	find_text13(0x40FF, 10); // синим цветом 
+	find_text13(0xFF0040FF, 10); // синим цветом 
 
 	std::wstring ss = std::to_wstring(a);
 	for (uint i = 0; i < elem.size(); i++)
@@ -2510,7 +2528,7 @@ int64 to_int(const std::wstring& s) // преобразование в числ�
 
 int _recognize::test_image(_prices* pr)
 {
-	find_text13(0xFF); // синим цветом покупки
+	find_text13(0xFF0000FF); // синим цветом покупки
 	if (elem.size() != rceni * 2) return 3;
 	int64 pre = 0;
 	for (int i = 0; i < rceni; i++)
@@ -2810,7 +2828,7 @@ int _recognize::find_elem_kusok(s2 s)
 {
 	int l = (int)elem.size();
 	for (int i = 0; i < l; i++)
-		if (elem[i].s.find(s) >= 0) return i;
+		if (elem[i].s.find(s) != std::string::npos) return i;
 	return -1;
 }
 
