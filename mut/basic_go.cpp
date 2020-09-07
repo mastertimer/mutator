@@ -973,7 +973,7 @@ void _g_test_graph::ris2(_trans tr, bool final)
 		_picture te(120, 90);
 		te.clear();
 		for (int i = 0; i < 100; i++)
-			te.line({ rng.random(120), rng.random(90) }, { rng.random(120), rng.random(90) }, 0xFF2080FF);
+			te.line({ rnd(120), rnd(90) }, { rnd(120), rnd(90) }, 0xFF2080FF);
 		first = false;
 		a.clear(0xFF0000FF);
 		_area2i ogr({ 30, 225 }, { 25, 125 });

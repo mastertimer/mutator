@@ -161,6 +161,7 @@
     <ClCompile Include="library\mgeometry.cpp" />
     <ClCompile Include="library\mgraphics.cpp" />
     <ClCompile Include="library\mjson.cpp" />
+    <ClCompile Include="mult.cpp" />
     <ClCompile Include="mut\basic_go.cpp" />
     <ClCompile Include="mut\go.cpp" />
     <ClCompile Include="mut\mutator.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="library\mgeometry.h" />
     <ClInclude Include="library\mgraphics.h" />
     <ClInclude Include="library\mjson.h" />
+    <ClInclude Include="mult.h" />
     <ClInclude Include="mut\basic_go.h" />
     <ClInclude Include="mut\go.h" />
     <ClInclude Include="mut\mutator.h" />

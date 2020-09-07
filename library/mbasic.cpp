@@ -319,9 +319,9 @@ wstr uint64_to_wstr_hex(uint64 a)
 	return (s + k0);
 }
 
-void _rng::init(uint64 b)
+void _rnd::init(u8 b)
 {
-	static constexpr uint64 dd[521] = {
+	static constexpr u8 dd[521] = {
 		0xBE3B0D3E773B3EAC, 0xE35381E6D8B09960, 0x8BC79403A0FFBC4A, 0x590FF05C9DB44258, 0x8E149C5DF9924DA6,
 		0xFE3A12707102CD37, 0xB16E7870697C38E5, 0xC66633332C7BF81C, 0x8FD23C3ABD37E032,	0xEE81791910218697,
 		0x9894BA4F38A1ABD7, 0x4AE53B309D9ED971, 0xBD9AA006C3259BCF, 0x4FB3F6FB61B2165B, 0xBA0150484AAF6B30,
@@ -429,6 +429,6 @@ void _rng::init(uint64 b)
 		0x7044CAA7BE05B133 };
 	i = 520;
 	b *= 489133282872437279;
-	for (int j = 0; j < 521; j++) d[j] = dd[j] + b;
+	for (i8 j = 0; j < 521; j++) d[j] = dd[j] + b;
 }
 

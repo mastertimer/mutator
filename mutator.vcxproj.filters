@@ -57,6 +57,9 @@
     <ClCompile Include="set\set.cpp">
       <Filter>SET</Filter>
     </ClCompile>
+    <ClCompile Include="mult.cpp">
+      <Filter>Mutator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -91,6 +94,9 @@
     </ClInclude>
     <ClInclude Include="set\set.h">
       <Filter>SET</Filter>
+    </ClInclude>
+    <ClInclude Include="mult.h">
+      <Filter>Mutator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
