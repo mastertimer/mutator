@@ -3,11 +3,12 @@
 
 _picture mult(1920, 1080);
 
-constexpr double radius = 30; // радиус кружков
-constexpr i8 start_element = 10; // первоначально количество кружков
-constexpr i8 v_type = 16; // количество типов кружков
+constexpr double radius    = 30.0; // радиус кружков
+constexpr double dd        = 3.0;  // толщина ободка
+constexpr i8 start_element = 10;   // первоначально количество кружков
+constexpr i8 v_type        = 16;   // количество типов кружков
 
-constexpr uint color[32] =
+constexpr u4 color[32] =
 { 
 	0xFF0080FD, 0xFFEF0000, 0xFF9E3BFF, 0xFF938700, 0xFF12AA00, 0xFFD34E0D, 0xFF7470DC,	0xFF4D9682,
 	0xFFC80FCE, 0xFFB06381,	0xFFE22653, 0xFF009D93, 0xFFC4439D, 0xFF258ECB, 0xFF659B00, 0xFF3F77FF,
@@ -29,19 +30,26 @@ void init_mult()
 	{
 		_mult_tetron a;
 		a.type = rnd(v_type);
-		a.p = { (double)rnd(100), (double)rnd(100) };
+//	restart:
+		a.p = { rnd(mult.size.x - (i8)radius * 2) + radius, rnd(mult.size.y - (i8)radius * 2) + radius };
+//		for (i8 j = 0; j < i; j++)
+//			if ((a.p - element[j].p).len2() < radius * radius) goto restart;
 		element.push_back(a);
 	}
 }
 
-void draw()
+void move_mult(i8 dt)
+{
+
+}
+
+_picture& draw_mult()
 {
 	static i8 t_pr = 0;
 	i8 t = GetTickCount64();
-	if (t_pr == 0)
-	{
-		init_mult();
-		t_pr = t;
-		return;
-	}
+	if (t_pr == 0) init_mult(); else move_mult(t - t_pr);
+	t_pr = t;
+	mult.clear();
+	for (auto& i : element)	mult.ring(i.p, radius, dd, color[i.type]);
+	return mult;
 };
