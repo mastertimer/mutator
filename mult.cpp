@@ -8,7 +8,7 @@ constexpr double dd        = 2.5;  // толщина ободка
 constexpr double ddl       = 1.5;  // толщина линий св€зей
 constexpr i8 start_element = 400;  // первоначально количество кружков
 constexpr i8 v_type        = 16;   // количество типов кружков
-constexpr i8 start_link    = start_element * 1; // первоначально количество св€зей
+constexpr i8 start_link = start_element * 2; // первоначально количество св€зей
 
 constexpr u4 color[32] =
 { 
@@ -37,6 +37,7 @@ struct _mult_tetron
 	_coo2 p{}; // центр
 	i8 type{}; // тип
 	std::vector<_mult_link> link; // св€зи
+	i8 temp{};
 };
 
 std::vector<_mult_tetron*> element;
@@ -51,18 +52,65 @@ void init_mult()
 		a->p = { rnd(mult.size.x - (i8)radius * 2) + radius, rnd(mult.size.y - (i8)radius * 2) + radius };
 		for (i8 j = 0; j < i; j++)
 			if ((a->p - element[j]->p).len2() < radius * radius * 6) goto restart;
+		a->temp = 0;
 		element.push_back(a);
 	}
 	for (i8 i = 0; i < start_link; i++)
 	{
-	restart2:
-		i8 a = rnd(element.size());
-		i8 b = rnd(element.size());
-		if (a == b) goto restart2;
-		for (u8 j = 0; j < element[a]->link.size(); j++)
-			if (element[a]->link[j].a == element[b]) goto restart2;
-		_mult_link l = { element[b], rnd(16) };
-		element[a]->link.push_back(l);
+		_mult_tetron* a = element[rnd(element.size())];
+		double min_r2 = 1e8;
+		_mult_tetron* b = nullptr;
+		for (auto j : element)
+		{
+			if (j == a) continue;
+			bool ok = true;
+			for (auto jj: a->link)
+				if (jj.a == j)
+				{
+					ok = false;
+					break;
+				}
+			if (!ok) continue;
+			double r2 = (a->p - j->p).len2();
+			if (r2 < min_r2)
+			{
+				b = j;
+				min_r2 = r2;
+			}
+		}
+		if (!b) continue;
+		a->temp = 1;
+		b->temp = 1;
+		a->link.push_back({ b, rnd(16) });
+	}
+	// св€зывание одиночек
+	for (auto& a : element)
+	{
+		if (a->temp == 1) continue;
+		double min_r2 = 1e8;
+		_mult_tetron* b = nullptr;
+		for (auto j : element)
+		{
+			if (j == a) continue;
+			bool ok = true;
+			for (auto jj : a->link)
+				if (jj.a == j)
+				{
+					ok = false;
+					break;
+				}
+			if (!ok) continue;
+			double r2 = (a->p - j->p).len2();
+			if (r2 < min_r2)
+			{
+				b = j;
+				min_r2 = r2;
+			}
+		}
+		if (!b) continue;
+		a->temp = 1;
+		b->temp = 1;
+		a->link.push_back({ b, rnd(16) });
 	}
 }
 
@@ -79,13 +127,13 @@ _bitmap& draw_mult()
 	t_pr = t;
 	mult.clear();
 	double y = 0.7 * (radius - dd) * 2;
-	for (auto& i : element)
+	for (auto i : element)
 	{
 		mult.ring(i->p, radius, dd, color[i->type]);
 		mult.froglif(i->p - _coo2{ y / 2, y / 2 }, y, (uchar*)&fr[i->type], 2, color[i->type]);
 	}
-	for (auto& i : element)
-		for (auto& j : i->link)
+	for (auto i : element)
+		for (auto j : i->link)
 		{
 			_coo2 p1 = i->p;
 			_coo2 p2 = j.a->p;
