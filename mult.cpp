@@ -8,7 +8,9 @@ constexpr double dd        = 2.5;  // толщина ободка
 constexpr double ddl       = 1.5;  // толщина линий связей
 constexpr i8 start_element = 400;  // первоначально количество кружков
 constexpr i8 v_type        = 16;   // количество типов кружков
+
 constexpr i8 start_link = start_element * 2; // первоначально количество связей
+constexpr double best_dist = radius * 4; // оптимальная дистанция
 
 constexpr u4 color[32] =
 { 
@@ -85,9 +87,31 @@ void init_mult()
 	}
 }
 
+void distance()
+{
+	for (auto i : element)
+	{
+		_coo2 f = { 0, 0 };
+		for (auto j : element)
+		{
+			if (i == j) continue;
+			_coo2 r = j->p - i->p;
+			double rr = r.len();
+			double k = 0;
+			if (rr > best_dist)
+				k = (rr - best_dist) / (rr * rr * rr);
+			else
+				k = 100*(rr - best_dist) / (rr * rr * rr);
+			r *= k / r.len();
+			f += r;
+		}
+		i->p += f*100;
+	}
+}
+
 void move_mult(i8 dt)
 {
-
+	distance();
 }
 
 _bitmap& draw_mult()
