@@ -30,6 +30,8 @@ struct _coo2
 		return res;
 	}
 
+	_coo2 operator-()         const noexcept { return { -x,  -y }; }
+
 	_coo2 operator-(_coo2 b)  const noexcept { return { x - b.x, y - b.y }; }
 	_coo2 operator+(_coo2 b)  const noexcept { return { x + b.x, y + b.y }; }
 
@@ -44,6 +46,8 @@ struct _coo2
 	double len2()             const noexcept { return x * x + y * y; } // квадрат длины вектора
 
 	double scalar(_coo2 b)    const noexcept { return x * b.x + y * b.y; } // скалярное произведение
+
+	_coo2 rotation(double b) const noexcept; // поворот
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,11 +60,10 @@ struct _size2i // [0...x), [0...y)
 {
 	_sizei x = 0, y = 0;
 
-	bool   empty()  const noexcept { return ((x <= 0) || (y <= 0)); }
-	void   clear()        noexcept { x = y = 0; }
-	_sizei square() const noexcept { return ((x <= 0) || (y <= 0)) ? 0 : (x * y); }
-	_coo2  center() const noexcept { return { x * 0.5, y * 0.5 }; }
-	void   correct()      noexcept { if ((x <= 0) || (y <= 0)) x = y = 0; } // для удобства
+	bool    empty()   const noexcept { return ((x <= 0) || (y <= 0)); }
+	_sizei  square()  const noexcept { return ((x <= 0) || (y <= 0)) ? 0 : (x * y); }
+	_coo2   center()  const noexcept { return { x * 0.5, y * 0.5 }; }
+	_size2i correct() const noexcept { if ((x <= 0) || (y <= 0)) return { 0, 0 }; return { x, y }; } // для удобства
 
 	bool operator==(_size2i s) const noexcept { return (x == s.x) && (y == s.y); }
 };

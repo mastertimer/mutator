@@ -5,8 +5,10 @@ _bitmap mult(1920, 1080);
 
 constexpr double radius    = 20.0; // радиус кружков
 constexpr double dd        = 2.5;  // толщина ободка
+constexpr double ddl       = 1.5;  // толщина линий связей
 constexpr i8 start_element = 400;  // первоначально количество кружков
 constexpr i8 v_type        = 16;   // количество типов кружков
+constexpr i8 start_link    = start_element * 1; // первоначально количество связей
 
 constexpr u4 color[32] =
 { 
@@ -22,25 +24,45 @@ constexpr u4 fr[16] =
 	0x8FD23C3A,	0xEE817919,	0x9894BA4F, 0x4AE53B30, 0xBD9AA006, 0x4FB3F6FB, 0xBA015048,	0x320CDAD2
 };
 
-struct _mult_tetron
+struct _mult_tetron;
+
+struct _mult_link
 {
-	_coo2 p; // центр
-	i8 type; // тип
+	_mult_tetron* a; // связанный объект
+	i8 f; // тип связи
 };
 
-std::vector<_mult_tetron> element;
+struct _mult_tetron
+{
+	_coo2 p{}; // центр
+	i8 type{}; // тип
+	std::vector<_mult_link> link; // связи
+};
+
+std::vector<_mult_tetron*> element;
 
 void init_mult()
 {
 	for (i8 i = 0; i < start_element; i++)
 	{
-		_mult_tetron a;
-		a.type = rnd(v_type);
+		_mult_tetron *a = new _mult_tetron;
+		a->type = rnd(v_type);
 	restart:
-		a.p = { rnd(mult.size.x - (i8)radius * 2) + radius, rnd(mult.size.y - (i8)radius * 2) + radius };
+		a->p = { rnd(mult.size.x - (i8)radius * 2) + radius, rnd(mult.size.y - (i8)radius * 2) + radius };
 		for (i8 j = 0; j < i; j++)
-			if ((a.p - element[j].p).len2() < radius * radius * 6) goto restart;
+			if ((a->p - element[j]->p).len2() < radius * radius * 6) goto restart;
 		element.push_back(a);
+	}
+	for (i8 i = 0; i < start_link; i++)
+	{
+	restart2:
+		i8 a = rnd(element.size());
+		i8 b = rnd(element.size());
+		if (a == b) goto restart2;
+		for (u8 j = 0; j < element[a]->link.size(); j++)
+			if (element[a]->link[j].a == element[b]) goto restart2;
+		_mult_link l = { element[b], rnd(16) };
+		element[a]->link.push_back(l);
 	}
 }
 
@@ -59,9 +81,20 @@ _bitmap& draw_mult()
 	double y = 0.7 * (radius - dd) * 2;
 	for (auto& i : element)
 	{
-		mult.ring(i.p, radius, dd, color[i.type]);
-		mult.froglif(i.p - _coo2{ y / 2, y / 2 }, y, (uchar*)&fr[i.type], 2, color[i.type]);
-
+		mult.ring(i->p, radius, dd, color[i->type]);
+		mult.froglif(i->p - _coo2{ y / 2, y / 2 }, y, (uchar*)&fr[i->type], 2, color[i->type]);
 	}
+	for (auto& i : element)
+		for (auto& j : i->link)
+		{
+			_coo2 p1 = i->p;
+			_coo2 p2 = j.a->p;
+			_coo2 v1 = p2 - p1;
+			v1 *= radius / v1.len();
+			_coo2 v2 = -v1;
+			v1 = v1.rotation(0.5);
+			v2 = v2.rotation(-0.5);
+			mult.lines(p1 + v1, p2 + v2, ddl, color[16 + j.f]);
+		}
 	return mult;
 };

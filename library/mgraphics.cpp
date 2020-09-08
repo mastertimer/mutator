@@ -10,7 +10,7 @@ _bitmap temp_bmp(10, 10);
 
 bool _bitmap::resize(_size2i wh)
 {
-	wh.correct();
+	wh = wh.correct();
 	if (size == wh) return false;
 	size = wh;
 	area = size;
@@ -224,7 +224,7 @@ void _picture::draw(_num2 r, _picture &bm)
 
 bool _picture::resize(_size2i wh)
 {
-	wh.correct();
+	wh = wh.correct();
 	if (size == wh) return false;
 	size = wh;
 	delete[] data;
@@ -1860,7 +1860,7 @@ void _picture::froglif(_coo2 p, double r, uchar* f, int rf, uint c, uint c2)
 							ax++;
 						}
 					xxxyyy* xxax = 0;
-					int64 xx11, xx22;
+					int64 xx11, xx22 = 0; // для параноии компилятора
 					if (ax <= rr)
 					{
 						xxax = &(xx[ax]);
@@ -1922,6 +1922,7 @@ void _picture::froglif(_coo2 p, double r, uchar* f, int rf, uint c, uint c2)
 					}
 					uint sl1, sl2, k3, kkw2;
 					sl2 = 256 - kkw;
+					if (xxax == nullptr) break; // для параноии компилятора
 					if (nac)
 					{
 						nac   = false;
