@@ -83,35 +83,6 @@ void init_mult()
 		b->temp = 1;
 		a->link.push_back({ b, rnd(16) });
 	}
-	// связывание одиночек
-	for (auto& a : element)
-	{
-		if (a->temp == 1) continue;
-		double min_r2 = 1e8;
-		_mult_tetron* b = nullptr;
-		for (auto j : element)
-		{
-			if (j == a) continue;
-			bool ok = true;
-			for (auto jj : a->link)
-				if (jj.a == j)
-				{
-					ok = false;
-					break;
-				}
-			if (!ok) continue;
-			double r2 = (a->p - j->p).len2();
-			if (r2 < min_r2)
-			{
-				b = j;
-				min_r2 = r2;
-			}
-		}
-		if (!b) continue;
-		a->temp = 1;
-		b->temp = 1;
-		a->link.push_back({ b, rnd(16) });
-	}
 }
 
 void move_mult(i8 dt)
@@ -138,11 +109,16 @@ _bitmap& draw_mult()
 			_coo2 p1 = i->p;
 			_coo2 p2 = j.a->p;
 			_coo2 v1 = p2 - p1;
+			_coo2 e = -v1;
 			v1 *= radius / v1.len();
-			_coo2 v2 = -v1;
-			v1 = v1.rotation(0.5);
-			v2 = v2.rotation(-0.5);
-			mult.lines(p1 + v1, p2 + v2, ddl, color[16 + j.f]);
+			p1 += v1.rotation(-0.2);
+			p2 += (-v1).rotation(0.2);
+			mult.lines(p1, p2, ddl, color[16 + j.f]);
+			e *= 5.0 / e.len();
+			_coo2 e1 = e.rotation(0.3);
+			_coo2 e2 = e.rotation(-0.3);
+			mult.lines(p2, p2 + e1, ddl, color[16 + j.f]);
+			mult.lines(p2, p2 + e2, ddl, color[16 + j.f]);
 		}
 	return mult;
 };
