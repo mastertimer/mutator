@@ -1,5 +1,6 @@
 ﻿#include "mutator.h"
 #include "set.h"
+#include "mult.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -36,24 +37,32 @@ void change_window_text(HWND hwnd)
 	SetWindowText(hwnd, s);
 }
 
-void paint(HWND hwnd)
+void paint(HWND hwnd, i8 par = 0)
 {
 	change_window_text(hwnd);
 	HDC hdc = GetDC(hwnd);
 	RECT rect;
 	GetClientRect(hwnd, &rect);
-	mutator::draw({ rect.right, rect.bottom });
-	BitBlt(hdc, 0, 0, rect.right, rect.bottom, master_bm.hdc, 0, 0, SRCCOPY);
+	switch (par)
+	{
+	case 0:
+		mutator::draw({ rect.right, rect.bottom });
+		BitBlt(hdc, 0, 0, rect.right, rect.bottom, master_bm.hdc, 0, 0, SRCCOPY);
+		break;
+	case 1:
+		BitBlt(hdc, 0, 0, rect.right, rect.bottom, draw_mult().hdc, 0, 0, SRCCOPY);
+		break;
+	}
 	ReleaseDC(hwnd, hdc);
 }
 
 void init_shift(WPARAM wparam)
 {
-	*n_s_shift->operator int64* ()  = wparam & MK_SHIFT;
-	*n_s_alt->operator int64* ()    = false;
-	*n_s_ctrl->operator int64* ()   = wparam & MK_CONTROL;
-	*n_s_left->operator int64* ()   = wparam & MK_LBUTTON;
-	*n_s_right->operator int64* ()  = wparam & MK_RBUTTON;
+	*n_s_shift ->operator int64* () = wparam & MK_SHIFT;
+	*n_s_alt   ->operator int64* () = false;
+	*n_s_ctrl  ->operator int64* () = wparam & MK_CONTROL;
+	*n_s_left  ->operator int64* () = wparam & MK_LBUTTON;
+	*n_s_right ->operator int64* () = wparam & MK_RBUTTON;
 	*n_s_middle->operator int64* () = wparam & MK_MBUTTON;
 	*n_s_double->operator int64* () = false;
 }
@@ -156,6 +165,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			int r = MessageBox(hWnd, L"сохранить?", L"предупреждение", MB_YESNO);
 			if (r == IDYES) mutator::save_to_txt_file(exe_path.wstring() + tetfile);
 			run_timer = true;
+			return 0;
+		}
+		if (wParam == VK_F3)
+		{
+			paint(hWnd, 1);
 			return 0;
 		}
 		//		InitShift(Shift);

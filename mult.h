@@ -1,3 +1,3 @@
 #pragma once
 
-_picture& draw_mult();
+_bitmap& draw_mult();
