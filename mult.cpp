@@ -114,7 +114,7 @@ void move_mult(i8 dt)
 	distance();
 }
 
-_bitmap& draw_mult()
+_bitmap* draw_mult()
 {
 	static i8 t_pr = 0;
 	i8 t = GetTickCount64();
@@ -144,5 +144,5 @@ _bitmap& draw_mult()
 			mult.lines(p2, p2 + e1, ddl, color[16 + j.f]);
 			mult.lines(p2, p2 + e2, ddl, color[16 + j.f]);
 		}
-	return mult;
+	return &mult;
 };

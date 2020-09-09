@@ -6,6 +6,7 @@
 
 constexpr wchar_t tetfile[] = L"..\\..\\tetrons.txt";
 HCURSOR g_cu = LoadCursor(0, IDC_ARROW); // активный курсор
+bool view_mult = false; // режим анимации
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -37,23 +38,31 @@ void change_window_text(HWND hwnd)
 	SetWindowText(hwnd, s);
 }
 
-void paint(HWND hwnd, i8 par = 0)
+void paint(HWND hwnd)
 {
+	if (view_mult) return;
 	change_window_text(hwnd);
 	HDC hdc = GetDC(hwnd);
 	RECT rect;
 	GetClientRect(hwnd, &rect);
-	switch (par)
-	{
-	case 0:
-		mutator::draw({ rect.right, rect.bottom });
-		BitBlt(hdc, 0, 0, rect.right, rect.bottom, master_bm.hdc, 0, 0, SRCCOPY);
-		break;
-	case 1:
-		BitBlt(hdc, 0, 0, rect.right, rect.bottom, draw_mult().hdc, 0, 0, SRCCOPY);
-		break;
-	}
+	mutator::draw({ rect.right, rect.bottom });
+	BitBlt(hdc, 0, 0, rect.right, rect.bottom, master_bm.hdc, 0, 0, SRCCOPY);
 	ReleaseDC(hwnd, hdc);
+}
+
+void paint_mult(HWND hwnd)
+{
+	static auto t = (std::chrono::high_resolution_clock::now() - std::chrono::high_resolution_clock::now()) * 0;
+	if (!view_mult) return;
+	auto t0 = std::chrono::high_resolution_clock::now();
+	HDC hdc = GetDC(hwnd);
+	RECT rect;
+	GetClientRect(hwnd, &rect);
+	_bitmap* bm = draw_mult();
+	bm->text16(0, 0, std::to_string(t.count() / 1000000).c_str(), c_max);
+	BitBlt(hdc, 0, 0, rect.right, rect.bottom, bm->hdc, 0, 0, SRCCOPY);
+	ReleaseDC(hwnd, hdc);
+	t = std::chrono::high_resolution_clock::now() - t0;
 }
 
 void init_shift(WPARAM wparam)
@@ -169,7 +178,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		if (wParam == VK_F3)
 		{
-			paint(hWnd, 1);
+			view_mult = !view_mult;
 			return 0;
 		}
 		//		InitShift(Shift);
@@ -192,22 +201,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return 0;
 	case WM_TIMER:
 		if (!run_timer) return 0;
-		if (wParam == 1)
+		switch (wParam)
 		{
+		case 1:
 			n_timer1000->run(0, n_timer1000, flag_run);
 			if (!master_obl_izm.empty()) paint(hWnd);
-		}
-		if (wParam == 2)
-		{
+			break;
+		case 2:
 			n_timer250->run(0, n_timer250, flag_run);
+			break;
+		case 3:
+			paint_mult(hWnd);
+			break;
 		}
 		return 0;
 	case WM_CREATE:
-		SetTimer(hWnd, 1, 1000, 0);
-		SetTimer(hWnd, 2, 250, 0);
+		SetTimer(hWnd, 1, 1000, 0); // общий с отрисовкой
+		SetTimer(hWnd, 2, 250, 0); // более быстрый, без отрисовки
+		SetTimer(hWnd, 3, 50, 0); // для анимации
 		return 0;
 	case WM_DESTROY:
 		KillTimer(hWnd, 1);
+		KillTimer(hWnd, 2);
+		KillTimer(hWnd, 3);
 		PostQuitMessage(0);
 		return 0;
 	}
