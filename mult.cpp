@@ -26,6 +26,13 @@ constexpr u4 fr[16] =
 	0x8FD23C3A,	0xEE817919,	0x9894BA4F, 0x4AE53B30, 0xBD9AA006, 0x4FB3F6FB, 0xBA015048,	0x320CDAD2
 };
 
+double delta_signal1 = 0.125;
+double delta_signal2 = 0.125;
+
+double k_signal = 0.0; // положение сигнала внутри тетронов (0 ... 2]
+
+u4 color_signal = 0xffffffff;
+
 struct _mult_tetron;
 
 struct _mult_link
@@ -42,7 +49,14 @@ struct _mult_tetron
 	i8 temp{};
 };
 
-std::vector<_mult_tetron*> element;
+struct _signal
+{
+	_mult_tetron* a = nullptr; // активный объект
+	std::vector<i8> li; // номер активной связи
+};
+
+std::vector<_mult_tetron*> element; // тетроны
+std::vector<_signal> signal; // ползущий сигнал
 
 void init_mult()
 {
@@ -109,8 +123,51 @@ void distance()
 	}
 }
 
+void move_signal()
+{
+	if (signal.empty())
+	{
+		_signal a;
+		a.a = element[rnd(element.size())];
+		signal.push_back(a);
+		k_signal = 0.0;
+		color_signal = rnd() | 0xff808080;
+	}
+	if (k_signal < 1.0)
+		k_signal += delta_signal1;
+	else
+		k_signal += delta_signal2;
+	if (k_signal == 1.0)
+	{
+		for (auto& i : signal)
+			for (u8 j = 0; j < i.a->link.size(); j++)
+				if (rnd(2)) i.li.push_back(j);
+	}
+	if (k_signal > 2.0)
+	{
+		std::vector<_mult_tetron*> element2;
+		for (auto& i : signal)
+			for (auto j : i.li)
+			{
+				_mult_tetron* a = i.a->link[j].a;
+				bool est = false;
+				for (auto k : element2) if (k == a) { est = true; break; }
+				if (!est) element2.push_back(a);
+			}
+		signal.clear();
+		for (auto k : element2)
+		{
+			_signal a;
+			a.a = k;
+			signal.push_back(a);
+		}
+		k_signal = 0.0;
+	}
+}
+
 void move_mult(i8 dt)
 {
+	move_signal();
 	distance();
 }
 
@@ -144,5 +201,22 @@ _bitmap* draw_mult()
 			mult.lines(p2, p2 + e1, ddl, color[16 + j.f]);
 			mult.lines(p2, p2 + e2, ddl, color[16 + j.f]);
 		}
+	for (auto& i : signal)
+		if (k_signal <= 1.0)
+		{
+			mult.ring(i.a->p, radius * k_signal, dd, color_signal);
+		}
+		else
+			for (auto j : i.li)
+			{
+				_coo2 p1 = i.a->p;
+				_coo2 p2 = i.a->link[j].a->p;
+				_coo2 v1 = p2 - p1;
+				_coo2 e = -v1;
+				v1 *= radius / v1.len();
+				p1 += v1.rotation(-0.2);
+				p2 += (-v1).rotation(0.2);
+				mult.fill_circle(p1 + (p2 - p1) * (k_signal - 1.0), ddl*2, color_signal);
+			}
 	return &mult;
 };

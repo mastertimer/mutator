@@ -2298,7 +2298,7 @@ void _picture::fill_ring(_coo2 p, double r, double d, uint c, uint c2)
 	if (r < 0.5) return; // слишком маленький
 	if (c == c2)
 	{
-		fill_circle(p.x, p.y, r, c);
+		fill_circle(p, r, c);
 		return;
 	}
 	uint kk_ = 255 - (c2 >> 24);
@@ -2600,26 +2600,26 @@ void _picture::ring(_coo2 p, double r, double d, uint c)
 	}
 }
 
-void _picture::fill_circle(double x, double y, double r, uint c)
+void _picture::fill_circle(_coo2 p, double r, uint c)
 {
 	if (r < 0.5) return; // слишком маленький
-	int64 y1 = (int64)(y - r);
+	int64 y1 = (int64)(p.y - r);
 	y1     = std::max(area.y.min, y1);
-	_sizei y2 = (int64)(y + r);
+	_sizei y2 = (int64)(p.y + r);
 	y2     = std::min(area.y.max - 1, y2);
-	int64 x1 = (int64)(x - r);
+	int64 x1 = (int64)(p.x - r);
 	x1     = std::max(area.x.min, x1);
-	_sizei x2 = (int64)(x + r);
+	_sizei x2 = (int64)(p.x + r);
 	x2     = std::min(area.x.max - 1, x2);
 	if ((x2 < x1) || (y2 < y1)) return;
 
 	double rrmin = (r - 0.5) * (r - 0.5);
 	double rrmax = (r + 0.5) * (r + 0.5);
 	double drr   = rrmax - rrmin;
-	x -= 0.5;
-	y -= 0.5;
-	double dxdx0 = (x1 - x) * (x1 - x);
-	double ab0 = 2 * (x1 - x) + 1;
+	p.x -= 0.5;
+	p.y -= 0.5;
+	double dxdx0 = (x1 - p.x) * (x1 - p.x);
+	double ab0 = 2 * (x1 - p.x) + 1;
 	uint kk = 255 - (c >> 24);
 	uint k2 = 256 - kk;
 	uint c_0 = (c & 255);
@@ -2632,7 +2632,7 @@ void _picture::fill_circle(double x, double y, double r, uint c)
 	{
 		for (int64 i = y1; i <= y2; i++)
 		{
-			double dd = (i - y) * (i - y) + dxdx0;
+			double dd = (i - p.y) * (i - p.y) + dxdx0;
 			double ab = ab0;
 			uchar* cc = px(x1, i);
 			int64 d  = x1 - x2;
@@ -2660,7 +2660,7 @@ void _picture::fill_circle(double x, double y, double r, uint c)
 	}
 	for (int64 i = y1; i <= y2; i++)
 	{
-		double dd = (i - y) * (i - y) + dxdx0;
+		double dd = (i - p.y) * (i - p.y) + dxdx0;
 		double ab = ab0;
 		uchar* cc = px(x1, i);
 		int64 d  = x1 - x2;

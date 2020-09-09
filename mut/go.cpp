@@ -980,7 +980,7 @@ void _g_color_ring::ris2(_trans tr, bool final)
 	double r = a.radius();
 	_coo2 c = a.center();
 	master_bm.ring(a.center(), r, r * 0.04, c_def);
-	master_bm.fill_circle(c.x, c.y, r * 0.3, color);
+	master_bm.fill_circle(c, r * 0.3, color);
 	double r1 = 0.4 * r;
 	double r2 = 0.5 * r;
 	double r1_ = li_r_1 * r; // для ползунка
