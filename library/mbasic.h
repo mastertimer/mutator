@@ -71,9 +71,9 @@ std::string  double_to_astring(double a, int z);
 
 struct _rnd
 { // (a = 521, b = 353)
-	_rnd(i8 p = 0)      { init(p); }
-	u8 operator()()     { i = (i + 1) & 1023; return (d[i] = d[(i + 503) & 1023] ^ d[(i + 671) & 1023]); }
-	i8 operator()(i8 m)	{ i = (i + 1) & 1023; return (d[i] = d[(i + 503) & 1023] ^ d[(i + 671) & 1023]) % m; }
+	_rnd(i8 p = 0)      noexcept { init(p); }
+	u8 operator()()     noexcept { i = (i + 1) & 1023; return (d[i] = d[(i + 503) & 1023] ^ d[(i + 671) & 1023]); }
+	i8 operator()(i8 m)	noexcept { i = (i + 1) & 1023; return (d[i] = d[(i + 503) & 1023] ^ d[(i + 671) & 1023]) % m; }
 	void init(u8 p);
 
 private:
@@ -451,7 +451,6 @@ t_t _bank<_t>::~_bank()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// проверить выигрыш!! если не большой, то удалить до тёмных времен
 t_t struct _speed
 {
 	_t* a = nullptr;

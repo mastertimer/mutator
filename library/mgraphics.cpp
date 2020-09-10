@@ -175,8 +175,8 @@ _picture& _picture::operator=(_picture&& move) noexcept
 
 void _picture::invert_alpha()
 {
-	_sizei r = size.square();
-	for (_sizei i = 0; i < r; i++)
+	i8 r = size.square();
+	for (i8 i = 0; i < r; i++)
 	{
 		uint a = 255 - (data[i] >> 24);
 		data[i] = (data[i] & 0xffffff) + (a << 24);
@@ -195,7 +195,7 @@ void _picture::set_transparent()
 	transparent = false;
 }
 
-void _picture::draw(_num2 r, _picture &bm)
+void _picture::draw(_ixy r, _picture &bm)
 {
 	_area2i b = move(bm.size, r) & area;
 	if (b.empty()) return;
@@ -239,7 +239,7 @@ void _picture::clear(uint c)
 	fill_rectangle(size, c, true);
 }
 
-void _picture::line(_num2 p1, _num2 p2, uint c, bool rep)
+void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
 {
 	uint kk = 255 - (c >> 24);
 	if ((kk == 0xFF) && (!rep)) return; // полностью прозрачная
@@ -375,7 +375,7 @@ void _picture::line(_num2 p1, _num2 p2, uint c, bool rep)
 	}
 }
 
-void _picture::lines(_coo2 p1, _coo2 p2, double l, uint c)
+void _picture::lines(_xy p1, _xy p2, double l, uint c)
 {
 	uint kk = 255 - (c >> 24);
 	if (kk == 0xFF) return; // полностью прозрачная
@@ -705,7 +705,7 @@ void _picture::stretch_draw(_picture* bm, int64 x, int64 y, double m)
 	}
 }
 
-void _picture::line_vert_rep_speed(_num2 p, _num y2, uint c)
+void _picture::line_vert_rep_speed(_ixy p, i8 y2, uint c)
 {
 	uint* c2 = &data[p.y * size.x + p.x];
 	for (int64 y = p.y - y2; y <= 0; y++) { *c2 = c; c2 += size.x; }
@@ -869,8 +869,8 @@ constexpr ushort font16[256][lx2] = { {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
 
 _size2i  _picture::size_text16(std::string_view s, int64 n)
 {
-	_sizei l = 0;
-	_sizei probel = 0;
+	i8 l = 0;
+	i8 probel = 0;
 	for (auto c : s)
 	{
 		probel = (c == ' ') ? 4 : 1;
@@ -1108,7 +1108,7 @@ void _picture::text16(int64 x, int64 y, astr s, uint c)
 //  9 -  43691
 // 10 - 174763
 // 11 - 699051
-void _picture::froglif(_coo2 p, double r, uchar* f, int rf, uint c, uint c2)
+void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 {
 	if (r < 1) return; // нечего рисовать
 	if (((c | c2) >> 24) == 0x00) return; // полностью прозрачный
@@ -2293,7 +2293,7 @@ void _picture::fill_rect_d(double x1, double y1, double x2, double y2, uint c)
 	}
 }
 
-void _picture::fill_ring(_coo2 p, double r, double d, uint c, uint c2)
+void _picture::fill_ring(_xy p, double r, double d, uint c, uint c2)
 {
 	if (r < 0.5) return; // слишком маленький
 	if (c == c2)
@@ -2460,7 +2460,7 @@ void _picture::fill_ring(_coo2 p, double r, double d, uint c, uint c2)
 	}
 }
 
-void _picture::ring(_coo2 p, double r, double d, uint c)
+void _picture::ring(_xy p, double r, double d, uint c)
 {
 	if (r < 0.5) return; // слишком маленький
 	double r2 = r - d;
@@ -2600,16 +2600,16 @@ void _picture::ring(_coo2 p, double r, double d, uint c)
 	}
 }
 
-void _picture::fill_circle(_coo2 p, double r, uint c)
+void _picture::fill_circle(_xy p, double r, uint c)
 {
 	if (r < 0.5) return; // слишком маленький
 	int64 y1 = (int64)(p.y - r);
 	y1     = std::max(area.y.min, y1);
-	_sizei y2 = (int64)(p.y + r);
+	i8 y2 = (int64)(p.y + r);
 	y2     = std::min(area.y.max - 1, y2);
 	int64 x1 = (int64)(p.x - r);
 	x1     = std::max(area.x.min, x1);
-	_sizei x2 = (int64)(p.x + r);
+	i8 x2 = (int64)(p.x + r);
 	x2     = std::min(area.x.max - 1, x2);
 	if ((x2 < x1) || (y2 < y1)) return;
 

@@ -24,8 +24,8 @@ inline bool run_before_del_link = true; // вызывать ли спец фун
 inline _area2 master_obl_izm; // область изменений
 inline _bitmap master_bm; // кусочный рисунок
 
-inline _coo2 mouse_xy; // координаты мышки
-inline _coo2 mouse_xy_pr; // предыдущие координаты мышки
+inline _xy mouse_xy; // координаты мышки
+inline _xy mouse_xy_pr; // предыдущие координаты мышки
 
 inline uint64 inverted_flags(uint64 a) { return (a << 32) | (a >> 32); }
 
@@ -127,7 +127,7 @@ struct _tetron
 	        operator _tetron       * () { return this; }
 	virtual operator double        * () { return nullptr; }
 	virtual operator int64         * () { return nullptr; }
-	virtual operator _coo2         * () { return nullptr; }
+	virtual operator _xy         * () { return nullptr; }
 	virtual operator std::wstring  * () { return nullptr; }
 	virtual operator _t_string     * () { return nullptr; }
 	virtual operator _multi_string * () { return nullptr; }

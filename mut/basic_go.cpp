@@ -6,7 +6,7 @@ _trans    master_trans_go;     // трансформация тяни-толка
 _chain_go master_chain_go;      // активная цепочка графических объектов
 bool      time_ris = false;     // отображать время рисования
 _trans   master_trans_go_move; // трансформация n_go_move
-_coo2       par_koo1;             // .....вспомогательная переменная  !!!ИЗБАВИТЬСЯ!!!
+_xy       par_koo1;             // .....вспомогательная переменная  !!!ИЗБАВИТЬСЯ!!!
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -209,7 +209,7 @@ bool _t_basic_go::mouse_down_left(_trans tr)
 			if (aa->mouse_down_left(tr2)) return true;
 		}
 	}
-	_coo2 r = tr.inverse(mouse_xy);
+	_xy r = tr.inverse(mouse_xy);
 	if (_t_go* tgo = *this)
 		if (tgo->test_local_area(r))
 		{
@@ -244,7 +244,7 @@ bool _t_basic_go::mouse_down_left(_trans tr)
 	return false;
 }
 
-void _t_basic_go::find_pot_act(_coo2 r)
+void _t_basic_go::find_pot_act(_xy r)
 {
 	for (int i = (int)link.size() - 1; i >= 0; i--)
 	{
@@ -254,7 +254,7 @@ void _t_basic_go::find_pot_act(_coo2 r)
 		{
 			if (n_ramk == aa) continue;//?только здесь
 			if (n_ramk2 == aa) continue;
-			_coo2 r2;
+			_xy r2;
 			if (_t_go* tgo = *aa)
 				r2 = r;
 			else
@@ -287,7 +287,7 @@ bool _t_basic_go::mouse_wheel(_trans tr)
 			if (aa->mouse_wheel(tr2)) return true;
 		}
 	}
-	_coo2 r = tr.inverse(mouse_xy);
+	_xy r = tr.inverse(mouse_xy);
 	if (_t_go* tgo = *this)
 		if (tgo->test_local_area(r)) // ДЕЙСТВИЕ
 		{
@@ -412,7 +412,7 @@ bool _t_trans::mouse_move(_trans tr, bool final)
 			if (aa->mouse_move(tr2, final)) return true;
 		}
 	}
-	_coo2 r = tr.inverse(mouse_xy);
+	_xy r = tr.inverse(mouse_xy);
 	for (int i = (int)link.size() - 1; i >= 0; i--)
 	{
 		_tetron* a = (*link[i])(this);
@@ -441,7 +441,7 @@ void _t_go::mouse_finish_move()
 	}
 }
 
-bool _t_go::mouse_move2(_coo2 r)
+bool _t_go::mouse_move2(_xy r)
 {
 	static _vector_id var; // ??
 	if (test_flags(n_mouse_inactive, flag_information)) return false;
@@ -605,7 +605,7 @@ bool _t_go::mouse_move(_trans tr, bool final)
 				if (aa->mouse_move(tr2, final)) return true;
 			}
 		}
-	_coo2 r = tr.inverse(mouse_xy);
+	_xy r = tr.inverse(mouse_xy);
 	if (test_local_area(r)) // ДЕЙСТВИЕ
 	{
 		master_trans_go = tr;
@@ -641,7 +641,7 @@ bool _t_go::mouse_move(_trans tr, bool final)
 	return false;
 }
 
-bool _t_go::mouse_down_left2(_coo2 r)
+bool _t_go::mouse_down_left2(_xy r)
 {
 	_tetron* a = find_intermediate<_tetron>(n_fun_tani0, flag_information, flag_parent);
 	if (!a) return false;
@@ -650,14 +650,14 @@ bool _t_go::mouse_down_left2(_coo2 r)
 	return true;
 }
 
-void _t_go::mouse_move_left2(_coo2 r)
+void _t_go::mouse_move_left2(_xy r)
 {
 	_tetron* a = find_intermediate<_tetron>(n_fun_tani, flag_information, flag_parent);
 	par_koo1 = r;
 	if (a) a->run(this, a, flag_run);
 }
 
-void _t_go::mouse_up_left2(_coo2 r)
+void _t_go::mouse_up_left2(_xy r)
 {
 	_tetron* a = find_intermediate<_tetron>(n_fun_tani1, flag_information, flag_parent);
 	par_koo1 = r;
@@ -761,7 +761,7 @@ void _g_circle::ris2(_trans tr, bool final)
 	master_bm.fill_ring(tr(center), tr(radius), tr(width), get_c(), get_c2());
 }
 
-bool _g_circle::test_local_area(_coo2 b)
+bool _g_circle::test_local_area(_xy b)
 {
 	if (!local_area.test(b)) return false;
 	return ((b - center).len2() <= radius * radius);
@@ -802,15 +802,15 @@ void _g_line::ris2(_trans tr, bool final)
 	master_bm.lines(tr(p1), tr(p2), tr(width), get_c());
 }
 
-bool _g_line::test_local_area(_coo2 b)
+bool _g_line::test_local_area(_xy b)
 {
 	if (!local_area.test(b)) return false;
-	_coo2 n = { p1.y - p2.y,p2.x - p1.x };
+	_xy n = { p1.y - p2.y,p2.x - p1.x };
 	n *= 1.0 / n.len();
-	_coo2 p11 = p1 + n * (width * 0.75);
-	_coo2 p12 = p1 - n * (width * 0.75);
-	_coo2 p21 = p2 + n * (width * 0.75);
-	_coo2 p22 = p2 - n * (width * 0.75);
+	_xy p11 = p1 + n * (width * 0.75);
+	_xy p12 = p1 - n * (width * 0.75);
+	_xy p21 = p2 + n * (width * 0.75);
+	_xy p22 = p2 - n * (width * 0.75);
 	if (((test_line(p11, p12, b) + test_line(p21, p22, b) + test_line(p11, p21, b) + test_line(p12, p22, b)) & 1) == 0) return false;
 	return true;
 }
@@ -943,7 +943,7 @@ void add_hint(std::wstring_view hint, _t_go* g)
 	_t_trans* ko = *n_ko;
 	_trans tr = master_trans_go;
 	_size2i siz = master_bm.size_text(hint, 13);
-	tr.offset += _coo2{ -siz.x * 0.5, -15.0 } +_coo2{ g->local_area.x(0.5), g->local_area.y.min } *tr.scale;
+	tr.offset += _xy{ -siz.x * 0.5, -15.0 } +_xy{ g->local_area.x(0.5), g->local_area.y.min } *tr.scale;
 	tr.scale = 1;
 	_g_text* go = new _g_text;
 	go->set_c(c_maxx);
@@ -1048,7 +1048,7 @@ void _g_scrollbar::ris2(_trans tr, bool final)
 	}
 }
 
-void _g_scrollbar::mouse_move_left2(_coo2 r)
+void _g_scrollbar::mouse_move_left2(_xy r)
 {
 	double ii;
 	if ((vid & 1) == 0)

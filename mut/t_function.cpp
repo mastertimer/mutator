@@ -92,7 +92,7 @@ void smena_avt()
 			_cursor::hand_point : _cursor::normal));
 }
 
-void master_mouse_move(_coo2 r)
+void master_mouse_move(_xy r)
 {
 	_t_trans* a = *n_ko;
 	if (n_act)
@@ -150,7 +150,7 @@ void init_shuba()
 void find_pot_act()
 {
 	n_pot_act = 0ULL;
-	_coo2 r = mouse_xy;
+	_xy r = mouse_xy;
 	_t_trans* bb = *n_ko;
 	r = bb->trans.inverse(r);
 	bb->find_pot_act(r);
@@ -217,7 +217,7 @@ void fun02(_tetron* tt0, _tetron* tt, uint64 flags)
 
 void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 {
-	_coo2 to = mouse_xy;
+	_xy to = mouse_xy;
 	if (n_tani)
 	{
 		if (!*n_s_left->operator int64 * ())
@@ -336,7 +336,7 @@ void fun04(_tetron* tt0, _tetron* tt, uint64 flags)
 {
 	if (*n_perenos->operator int64 * ())
 	{
-		_coo2 tr = mouse_xy;
+		_xy tr = mouse_xy;
 		_t_trans* kor = *n_ko;
 		double kk     = *n_wheel->operator int64*() * 0.01;
 		if ((kk > 0) && (kor->trans.scale > 1E12)) return;
@@ -357,7 +357,7 @@ void fun04(_tetron* tt0, _tetron* tt, uint64 flags)
 		_t_trans* rat2 = (raa) ? raa->ttrans() : nullptr;
 		if (rat2)
 		{
-			_coo2 tr = mouse_xy;
+			_xy tr = mouse_xy;
 			_t_go* ra = *n_ramk2;
 			_t_trans* rat = ra->ttrans();
 			ra->del_area();
@@ -587,7 +587,7 @@ void fun26(_tetron* tt0, _tetron* tt, uint64 flags)
 
 void fun27(_tetron* tt0, _tetron* tt, uint64 flags)
 {
-	_coo2 tr = mouse_xy;
+	_xy tr = mouse_xy;
 	_t_trans* kor = *n_ko;
 	kor->cha_area(kor->calc_area());
 	kor->trans.MasToch(tr, 1 / kor->trans.scale);
@@ -738,8 +738,8 @@ void fun48(_tetron* tt0, _tetron* tt, uint64 flags)
 	if (tt0 == nullptr) return;
 	_g_picture* g = *tt0;
 	if (g == nullptr) return;
-	_coo2 r1 = master_trans_go.inverse(mouse_xy_pr);
-	_coo2 r2 = master_trans_go.inverse(mouse_xy);
+	_xy r1 = master_trans_go.inverse(mouse_xy_pr);
+	_xy r2 = master_trans_go.inverse(mouse_xy);
 	g->pic.line(r1, r2, (*n_s_shift->operator int64 * ()) ? 0 : c_def, true);
 	g->cha_area();
 }

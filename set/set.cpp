@@ -1310,13 +1310,13 @@ _super_stat::_super_stat()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool _g_graph::mouse_down_left2(_coo2 r)
+bool _g_graph::mouse_down_left2(_xy r)
 {
 	x_tani = (int64)r.x;
 	return true;
 }
 
-void _g_graph::mouse_move_left2(_coo2 r)
+void _g_graph::mouse_move_left2(_xy r)
 {
 	int64 dx = ((int64)r.x - x_tani) / size_el;
 	if (dx == 0) return;

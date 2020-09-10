@@ -43,7 +43,7 @@ struct _mult_link
 
 struct _mult_tetron
 {
-	_coo2 p{}; // центр
+	_xy p{}; // центр
 	i8 type{}; // тип
 	std::vector<_mult_link> link; // связи
 	i8 temp{};
@@ -105,11 +105,11 @@ void distance()
 {
 	for (auto i : element)
 	{
-		_coo2 f = { 0, 0 };
+		_xy f = { 0, 0 };
 		for (auto j : element)
 		{
 			if (i == j) continue;
-			_coo2 r = j->p - i->p;
+			_xy r = j->p - i->p;
 			double rr = r.len();
 			double k = 0;
 			if (rr > best_dist)
@@ -131,7 +131,7 @@ void move_signal()
 		a.a = element[rnd(element.size())];
 		signal.push_back(a);
 		k_signal = 0.0;
-		color_signal = rnd() | 0xff808080;
+		color_signal = (u4)(rnd() | 0xff808080);
 	}
 	if (k_signal < 1.0)
 		k_signal += delta_signal1;
@@ -182,22 +182,22 @@ _bitmap* draw_mult()
 	for (auto i : element)
 	{
 		mult.ring(i->p, radius, dd, color[i->type]);
-		mult.froglif(i->p - _coo2{ y / 2, y / 2 }, y, (uchar*)&fr[i->type], 2, color[i->type]);
+		mult.froglif(i->p - _xy{ y / 2, y / 2 }, y, (uchar*)&fr[i->type], 2, color[i->type]);
 	}
 	for (auto i : element)
 		for (auto j : i->link)
 		{
-			_coo2 p1 = i->p;
-			_coo2 p2 = j.a->p;
-			_coo2 v1 = p2 - p1;
-			_coo2 e = -v1;
+			_xy p1 = i->p;
+			_xy p2 = j.a->p;
+			_xy v1 = p2 - p1;
+			_xy e = -v1;
 			v1 *= radius / v1.len();
 			p1 += v1.rotation(-0.2);
 			p2 += (-v1).rotation(0.2);
 			mult.lines(p1, p2, ddl, color[16 + j.f]);
 			e *= 5.0 / e.len();
-			_coo2 e1 = e.rotation(0.3);
-			_coo2 e2 = e.rotation(-0.3);
+			_xy e1 = e.rotation(0.3);
+			_xy e2 = e.rotation(-0.3);
 			mult.lines(p2, p2 + e1, ddl, color[16 + j.f]);
 			mult.lines(p2, p2 + e2, ddl, color[16 + j.f]);
 		}
@@ -209,10 +209,10 @@ _bitmap* draw_mult()
 		else
 			for (auto j : i.li)
 			{
-				_coo2 p1 = i.a->p;
-				_coo2 p2 = i.a->link[j].a->p;
-				_coo2 v1 = p2 - p1;
-				_coo2 e = -v1;
+				_xy p1 = i.a->p;
+				_xy p2 = i.a->link[j].a->p;
+				_xy v1 = p2 - p1;
+				_xy e = -v1;
 				v1 *= radius / v1.len();
 				p1 += v1.rotation(-0.2);
 				p2 += (-v1).rotation(0.2);

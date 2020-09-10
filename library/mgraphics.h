@@ -29,23 +29,23 @@ struct _picture
 	void invert_alpha(); // инвертировать альфа канал
 
 	void clear(uint c = 0xFF000000);
-	void line(_num2 p1, _num2 p2, uint c, bool rep = false); // линия rep - полное замещение цвета
-	void lines(_coo2 p1, _coo2 p2, double l, uint c); // точная линия заданной толщины
+	void line(_ixy p1, _ixy p2, uint c, bool rep = false); // линия rep - полное замещение цвета
+	void lines(_xy p1, _xy p2, double l, uint c); // точная линия заданной толщины
 	void text16(int64 x, int64 y, astr s, uint c); // простой текст высотой 16
 	void text16n(int64 x, int64 y, astr s, int64 n, uint c); // простой текст высотой 16*n
 	static _size2i size_text16(std::string_view s, int64 n = 1); // размер текста *n
-	void froglif(_coo2 p, double r, uchar* f, int rf, uint c, uint c2 = 0);
+	void froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2 = 0);
 
-	void fill_circle(_coo2 p, double r, uint c);
-	void fill_ring(_coo2 p, double r, double d, uint c, uint c2);
-	void ring(_coo2 p, double r, double d, uint c);
+	void fill_circle(_xy p, double r, uint c);
+	void fill_ring(_xy p, double r, double d, uint c, uint c2);
+	void ring(_xy p, double r, double d, uint c);
 
 	void fill_rectangle(_area2i r, uint c, bool rep = false);
 	void fill_rect_d(double x1, double y1, double x2, double y2, uint c); // полупрозрачный пр-к на !!непр-й!! подложке
 
 	void rectangle(_area2i oo, uint c);
 
-	void draw(_num2 r, _picture &bm);
+	void draw(_ixy r, _picture &bm);
 	void stretch_draw(_picture* bm, int64 x, int64 y, double m);
 	void stretch_draw_speed(_picture* bm, int64 nXDest, int64 nYDest, double m);
 
@@ -54,7 +54,7 @@ struct _picture
 protected:
 	_area2i area; // разрешенная область для рисования
 
-	void line_vert_rep_speed(_num2 p, _num y2, uint c); // вертикальная линия замещения без проверок диапазона
+	void line_vert_rep_speed(_ixy p, i8 y2, uint c); // вертикальная линия замещения без проверок диапазона
 
 	void fill_rect_rep_speed(_area2i r, uint c); // прямоугольник - просто замена цвета без проверок диапазона
 	void fill_rect_transparent_speed(_area2i r, uint c);

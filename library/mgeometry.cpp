@@ -2,7 +2,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_coo2 _coo2::rotation(double b) const noexcept
+_xy _xy::rotation(double b) const noexcept
 {
 	double c = cos(b);
 	double s = sin(b);
@@ -43,13 +43,13 @@ bool _area2::operator<(const _area2& b) const noexcept
 	return ((x.min >= b.x.min) && (x.max <= b.x.max) && (y.min >= b.y.min) && (y.max <= b.y.max));
 }
 
-bool _area2::test(_coo2 b)
+bool _area2::test(_xy b)
 {
 	if (empty()) return false;
 	return ((b.x >= this->x.min) && (b.x <= this->x.max) && (b.y >= this->y.min) && (b.y <= this->y.max));
 }
 
-_size _area2::radius()
+double _area2::radius()
 {
 	if (empty()) return 0.0;
 	double dx = x.max - x.min;
@@ -73,7 +73,7 @@ _trans _trans::operator*(_trans tr) const noexcept
 	return tr;
 }
 
-_coo2 _trans::inverse(_coo2 b) const noexcept
+_xy _trans::inverse(_xy b) const noexcept
 {
 	return { (b.x - offset.x) / scale, (b.y - offset.y) / scale };
 }
@@ -97,9 +97,9 @@ bool _trans::operator!=(const _trans& b) const noexcept
 	return ((scale != b.scale) || (offset.x != b.offset.x) || (offset.y != b.offset.y));
 }
 
-_coo2 _trans::operator()(const _coo2& b) const noexcept
+_xy _trans::operator()(const _xy& b) const noexcept
 {
-	return _coo2{ b.x * scale + offset.x, b.y * scale + offset.y };
+	return _xy{ b.x * scale + offset.x, b.y * scale + offset.y };
 }
 
 _area2 _trans::inverse(const _area2& b) const noexcept
@@ -114,7 +114,7 @@ _area2 _trans::inverse(const _area2& b) const noexcept
 	return c;
 }
 
-void _trans::MasToch(_coo2 b, double m)
+void _trans::MasToch(_xy b, double m)
 {
 	offset.x = b.x + m * (offset.x - b.x);
 	offset.y = b.y + m * (offset.y - b.y);
@@ -137,7 +137,7 @@ _area2 _trans::operator()(const _area2& b) const noexcept
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-uint test_line(_coo2 p1, _coo2 p2, _coo2 b)
+uint test_line(_xy p1, _xy p2, _xy b)
 {
 	if (p2.x < p1.x) std::swap(p1, p2);
 	if ((p1.x > b.x) || (p2.x <= b.x)) return 0;

@@ -195,7 +195,7 @@ _wjson& _wjson::add(std::string_view name, _trans b)
 	return *this;
 }
 
-_wjson& _wjson::add(std::string_view name, _coo2 b)
+_wjson& _wjson::add(std::string_view name, _xy b)
 {
 	str(name, true);
 	add("x", b.x);
@@ -422,7 +422,7 @@ _area2 _rjson::read_area2(std::string_view name)
 	return res;
 }
 
-void _rjson::read(std::string_view name, _coo2& b)
+void _rjson::read(std::string_view name, _xy& b)
 {
 	if (!obj(name)) return;
 	read("x", b.x);

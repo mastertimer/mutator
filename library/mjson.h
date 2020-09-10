@@ -24,7 +24,7 @@ struct _wjson
 	_wjson& add(std::string_view name, std::wstring_view b); //!!!!!
 	_wjson& add(std::string_view name, const _multi_string &b);
 	_wjson& add(std::string_view name, _trans b);
-	_wjson& add(std::string_view name, _coo2 b);
+	_wjson& add(std::string_view name, _xy b);
 	_wjson& add(std::string_view name, _area2 b);
 	_wjson& add(std::string_view name, const _picture &b);
 	_wjson& add(std::string_view name, _area b);
@@ -64,7 +64,7 @@ struct _rjson
 
 	void read(std::string_view name, _picture& b);
 	void read(std::string_view name, _multi_string& b);
-	void read(std::string_view name, _coo2& b);
+	void read(std::string_view name, _xy& b);
 	void read(std::string_view name, double& b);
 	void read(std::string_view name, int64& b);
 	void read(std::string_view name, uint64& b);

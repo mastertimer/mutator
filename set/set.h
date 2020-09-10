@@ -210,8 +210,8 @@ struct _g_graph : public _t_go
 
 	void ris2(_trans tr, bool final) override;
 	void run(_tetron* tt0, _tetron* tt, uint64 flags) override;
-	bool mouse_down_left2(_coo2 r) override; // начало перетаскивания
-	void mouse_move_left2(_coo2 r) override; // процесс перетаскивания
+	bool mouse_down_left2(_xy r) override; // начало перетаскивания
+	void mouse_move_left2(_xy r) override; // процесс перетаскивания
 
 private:
 	_bitmap bm;

@@ -199,7 +199,7 @@ void _g_edit_int::key_down(ushort key)
 	}
 }
 
-bool _g_edit_int::mouse_wheel2(_coo2 r)
+bool _g_edit_int::mouse_wheel2(_xy r)
 {
 	int64* a = find1_plus_gtetron<int64>(this, flag_specialty);
 	if (!a) return true;
@@ -563,7 +563,7 @@ void _g_edit_multi_string::run(_tetron* tt0, _tetron* tt, uint64 flags)
 	cha_area();
 }
 
-bool _g_edit_multi_string::mouse_down_left2(_coo2 r)
+bool _g_edit_multi_string::mouse_down_left2(_xy r)
 {
 	if (!find1<_g_scrollbar>(flag_information))
 	{
@@ -576,7 +576,7 @@ bool _g_edit_multi_string::mouse_down_left2(_coo2 r)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool _g_edit64bit::mouse_down_left2(_coo2 r)
+bool _g_edit64bit::mouse_down_left2(_xy r)
 {
 	if (act < 0) return true;
 	a ^= (1LL << act);
@@ -592,7 +592,7 @@ void _g_edit64bit::mouse_finish_move()
 	del_hint();
 }
 
-bool _g_edit64bit::mouse_move2(_coo2 r)
+bool _g_edit64bit::mouse_move2(_xy r)
 {
 	double d1 = local_area.x.length();
 	double d2 = local_area.y.length();
@@ -666,7 +666,7 @@ void _g_edit64bit::run(_tetron* tt0, _tetron* tt, uint64 flags) { cha_area(); }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool _g_edit_one::mouse_down_left2(_coo2 r)
+bool _g_edit_one::mouse_down_left2(_xy r)
 {
 	_area2 aa = local_area;
 	aa.x.max = aa.x(0.12);
@@ -903,7 +903,7 @@ void _g_button::ris2(_trans tr, bool final)
 	{
 		int64 rx2 = (int64)(picture.size.x * tr.scale + 0.5);
 		int64 ry2 = (int64)(picture.size.y * tr.scale + 0.5);
-		_num2 ce = oo.center();
+		_ixy ce = oo.center();
 		master_bm.stretch_draw(&picture, ce.x - rx2 / 2, ce.y - ry2 / 2, tr.scale);
 	}
 	else
@@ -947,7 +947,7 @@ _g_button::_g_button() : checked(0)
 	local_area = { {0, 26}, {0, 26} };
 }
 
-bool _g_button::mouse_move2(_coo2 r)
+bool _g_button::mouse_move2(_xy r)
 {
 	if (n_go_move != this) // первое перемещение
 	{
@@ -963,7 +963,7 @@ void _g_button::mouse_finish_move()
 	del_hint();
 }
 
-bool _g_button::mouse_down_left2(_coo2 r)
+bool _g_button::mouse_down_left2(_xy r)
 {
 	if (test_flags(n_checkbox, flag_parent)) checked = !checked;
 	run(this, this, flag_run);
@@ -978,7 +978,7 @@ void _g_color_ring::ris2(_trans tr, bool final)
 	const double toll = 2.0;
 	_area2 a = tr(local_area);
 	double r = a.radius();
-	_coo2 c = a.center();
+	_xy c = a.center();
 	master_bm.ring(a.center(), r, r * 0.04, c_def);
 	master_bm.fill_circle(c, r * 0.3, color);
 	double r1 = 0.4 * r;
@@ -991,48 +991,48 @@ void _g_color_ring::ris2(_trans tr, bool final)
 		double alpha = zazor * 0.5 + (pi * 0.5) * 0 + (pi * 0.5 - zazor) * k;
 		_hsva cv = color;
 		cv.h = k * 360;
-		master_bm.lines(c + _coo2{ r1 * cos(alpha), -r1 * sin(alpha) }, c + _coo2{ r2 * cos(alpha), -r2 * sin(alpha) }, toll, cv);
+		master_bm.lines(c + _xy{ r1 * cos(alpha), -r1 * sin(alpha) }, c + _xy{ r2 * cos(alpha), -r2 * sin(alpha) }, toll, cv);
 	}
 	for (double k = 0; k <= 1; k += dk)
 	{
 		double alpha = zazor * 0.5 + (pi * 0.5) * 1 + (pi * 0.5 - zazor) * k;
 		_hsva cv = color;
 		cv.s = k;
-		master_bm.lines(c + _coo2{ r1 * cos(alpha), -r1 * sin(alpha) }, c + _coo2{ r2 * cos(alpha), -r2 * sin(alpha) }, toll, cv);
+		master_bm.lines(c + _xy{ r1 * cos(alpha), -r1 * sin(alpha) }, c + _xy{ r2 * cos(alpha), -r2 * sin(alpha) }, toll, cv);
 	}
 	for (double k = 0; k <= 1; k += dk)
 	{
 		double alpha = zazor * 0.5 + (pi * 0.5) * 2 + (pi * 0.5 - zazor) * k;
 		_hsva cv = color;
 		cv.v = k;
-		master_bm.lines(c + _coo2{ r1 * cos(alpha), -r1 * sin(alpha) }, c + _coo2{ r2 * cos(alpha), -r2 * sin(alpha) }, toll, cv);
+		master_bm.lines(c + _xy{ r1 * cos(alpha), -r1 * sin(alpha) }, c + _xy{ r2 * cos(alpha), -r2 * sin(alpha) }, toll, cv);
 	}
 	for (double k = 0; k <= 1; k += dk)
 	{
 		double alpha = zazor * 0.5 + (pi * 0.5) * 3 + (pi * 0.5 - zazor) * k;
 		_hsva cv = color;
 		cv.a = k;
-		master_bm.lines(c + _coo2{ r1 * cos(alpha), -r1 * sin(alpha) }, c + _coo2{ r2 * cos(alpha), -r2 * sin(alpha) }, toll, cv);
+		master_bm.lines(c + _xy{ r1 * cos(alpha), -r1 * sin(alpha) }, c + _xy{ r2 * cos(alpha), -r2 * sin(alpha) }, toll, cv);
 	}
 	double k = color.h / 360.0;
 	double alpha = zazor * 0.5 + (pi * 0.5) * 0 + (pi * 0.5 - zazor) * k;
-	master_bm.lines(c + _coo2{ r1_ * cos(alpha), -r1_ * sin(alpha) }, c + _coo2{ r2_ * cos(alpha), -r2_ * sin(alpha) }, 1.2, 0xFFFFFFFF);
+	master_bm.lines(c + _xy{ r1_ * cos(alpha), -r1_ * sin(alpha) }, c + _xy{ r2_ * cos(alpha), -r2_ * sin(alpha) }, 1.2, 0xFFFFFFFF);
 	k = color.s;
 	alpha = zazor * 0.5 + (pi * 0.5) * 1 + (pi * 0.5 - zazor) * k;
-	master_bm.lines(c + _coo2{ r1_ * cos(alpha), -r1_ * sin(alpha) }, c + _coo2{ r2_ * cos(alpha), -r2_ * sin(alpha) }, 1.2, 0xFFFFFFFF);
+	master_bm.lines(c + _xy{ r1_ * cos(alpha), -r1_ * sin(alpha) }, c + _xy{ r2_ * cos(alpha), -r2_ * sin(alpha) }, 1.2, 0xFFFFFFFF);
 	k = color.v;
 	alpha = zazor * 0.5 + (pi * 0.5) * 2 + (pi * 0.5 - zazor) * k;
-	master_bm.lines(c + _coo2{ r1_ * cos(alpha), -r1_ * sin(alpha) }, c + _coo2{ r2_ * cos(alpha), -r2_ * sin(alpha) }, 1.2, 0xFFFFFFFF);
+	master_bm.lines(c + _xy{ r1_ * cos(alpha), -r1_ * sin(alpha) }, c + _xy{ r2_ * cos(alpha), -r2_ * sin(alpha) }, 1.2, 0xFFFFFFFF);
 	k = color.a;
 	alpha = zazor * 0.5 + (pi * 0.5) * 3 + (pi * 0.5 - zazor) * k;
-	master_bm.lines(c + _coo2{ r1_ * cos(alpha), -r1_ * sin(alpha) }, c + _coo2{ r2_ * cos(alpha), -r2_ * sin(alpha) }, 1.2, 0xFFFFFFFF);
+	master_bm.lines(c + _xy{ r1_ * cos(alpha), -r1_ * sin(alpha) }, c + _xy{ r2_ * cos(alpha), -r2_ * sin(alpha) }, 1.2, 0xFFFFFFFF);
 }
 
-void _g_color_ring::change(_coo2 p, bool start)
+void _g_color_ring::change(_xy p, bool start)
 {
 	double r = local_area.radius();
-	_coo2 c = local_area.center();
-	_coo2 v = p - c;
+	_xy c = local_area.center();
+	_xy v = p - c;
 	double rr = v.len() / r;
 	if ((rr > li_r_1) && (rr < li_r_2))
 	{
@@ -1068,7 +1068,7 @@ void _g_color_ring::change(_coo2 p, bool start)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool _g_list_link::mouse_down_left2(_coo2 r)
+bool _g_list_link::mouse_down_left2(_xy r)
 {
 	if (!find1<_g_scrollbar>(flag_part))
 	{
@@ -1269,7 +1269,7 @@ void _g1list::mouse_finish_move()
 	}
 }
 
-bool _g1list::mouse_move2(_coo2 r)
+bool _g1list::mouse_move2(_xy r)
 {
 	if (!rez1)
 	{
@@ -1281,7 +1281,7 @@ bool _g1list::mouse_move2(_coo2 r)
 	return true;
 }
 
-bool _g1list::mouse_wheel2(_coo2 r)
+bool _g1list::mouse_wheel2(_xy r)
 {
 	_t_string* bb = find1<_t_string>(flag_specialty);
 	if (bb == nullptr)
@@ -1336,7 +1336,7 @@ bool _g1list::mouse_wheel2(_coo2 r)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool _g_tetron::mouse_move2(_coo2 r)
+bool _g_tetron::mouse_move2(_xy r)
 {
 	if (n_hint) return true; // есть подсказка
 	_tetron* a = find1<_tetron>(flag_specialty);
@@ -1365,10 +1365,10 @@ bool _g_tetron::cmp_drawn()
 	return true;
 }
 
-bool _g_tetron::test_local_area(_coo2 b)
+bool _g_tetron::test_local_area(_xy b)
 {
 	if (!local_area.test(b)) return false;
-	_coo2 pp = local_area.center();
+	_xy pp = local_area.center();
 	double r = std::min(pp.x - local_area.x.min, pp.y - local_area.y.min);
 	return ((b - pp).len2() <= r * r);
 }
@@ -1376,7 +1376,7 @@ bool _g_tetron::test_local_area(_coo2 b)
 void _g_tetron::ris2(_trans tr, bool final)
 {
 	_area2 a = tr(local_area);
-	_coo2 p = a.center();
+	_xy p = a.center();
 	double r = a.radius();
 	double d = log(1.001 + r) * 0.5;
 	double y = 0.7 * (r - d) * 2;
@@ -1408,7 +1408,7 @@ void _g_tetron::ris2(_trans tr, bool final)
 			if (cmp_drawn())
 				delete_hvost(star, true, false);
 		int fr = t2->get_froglif();
-		master_bm.froglif(p - _coo2{ y / 2, y / 2 }, y, (uchar*)& fr, 2, c_max);
+		master_bm.froglif(p - _xy{ y / 2, y / 2 }, y, (uchar*)& fr, 2, c_max);
 		return;
 	}
 
@@ -1545,7 +1545,7 @@ void _g_tetron::add_unique_flags(_tetron* t, uint64 flags, bool after)
 void _g_tetron2::ris2(_trans tr, bool final)
 {
 	_area2 a = tr(local_area);
-	_coo2 p = a.center();
+	_xy p = a.center();
 	double r = a.radius();
 	double d = log(1.001 + r) * 0.5;
 	double y = 0.7 * (r - d) * 2;
@@ -1590,7 +1590,7 @@ void _g_tetron2::ris2(_trans tr, bool final)
 		{
 			_t_trans* ttr = new _t_trans;
 			i.tr_t = ttr;
-			ttr->trans.offset = local_area.center() + _coo2{ 10 * cos(ki * pi * 2 / k), 10 * sin(ki * pi * 2 / k) };
+			ttr->trans.offset = local_area.center() + _xy{ 10 * cos(ki * pi * 2 / k), 10 * sin(ki * pi * 2 / k) };
 			ttr->trans.scale = 0.2;
 			_g_tetron* g = new _g_tetron;
 			g->add_flags(i.tetron, flag_specialty);
@@ -1605,10 +1605,10 @@ void _g_tetron2::ris2(_trans tr, bool final)
 
 void _g_link::ris2(_trans tr, bool final)
 {
-	_coo2 pp11 = tr(p11);
-	_coo2 pp12 = tr(p12);
-	_coo2 pp21 = tr(p21);
-	_coo2 pp22 = tr(p22);
+	_xy pp11 = tr(p11);
+	_xy pp12 = tr(p12);
+	_xy pp21 = tr(p21);
+	_xy pp22 = tr(p22);
 
 	_g_tetron* g1 = find1<_g_tetron>(flag_specialty);
 	_g_tetron* g2 = find1<_g_tetron>(flag_specialty2);
@@ -1624,7 +1624,7 @@ void _g_link::ris2(_trans tr, bool final)
 		0xFFB400FC,	0xFFE23700, 0xFFCB29B2, 0xFFA3755A, 0xFFC45D37, 0xFFEB171B, 0xFF966DA8, 0xFFAC4ACF
 	};
 
-	_coo2 v = p21 - p11;
+	_xy v = p21 - p11;
 	v /= v.len();
 	double b = (pp12 - pp11).len() * 0.5;
 	double r = b / sin(dalpha);
@@ -1658,17 +1658,17 @@ void _g_link::ris2(_trans tr, bool final)
 	}
 }
 
-bool _g_link::test_local_area(_coo2 b)
+bool _g_link::test_local_area(_xy b)
 {
 	if (!local_area.test(b)) return false;
 	if (((test_line(p11, p12, b) + test_line(p21, p22, b) + test_line(p11, p21, b) + test_line(p12, p22, b)) & 1) == 0) return false;
-	_coo2 v = p21 - p11;
+	_xy v = p21 - p11;
 	v /= v.len();
-	_coo2 c1 = (p11 + p12) * 0.5;
+	_xy c1 = (p11 + p12) * 0.5;
 	double d = (p12 - p11).len() * 0.5;
 	double ot = d / tan(dalpha);
 	double r = d / sin(dalpha);
-	_coo2 p1 = c1 - v * ot;
+	_xy p1 = c1 - v * ot;
 	if ((b - p1).len2() < r * r) return false;
 	if (k > 0.9)
 	{
@@ -1695,11 +1695,11 @@ void _g_link::calc_local_area()
 	_area2 a1 = tr1->trans(g1->local_area);
 	_area2 a2 = tr2->trans(g2->local_area);
 	par->trans = _trans();
-	_coo2 p1 = a1.center();
+	_xy p1 = a1.center();
 	double r1 = a1.radius();
-	_coo2 p2 = a2.center();
+	_xy p2 = a2.center();
 	double r2 = a2.radius();
-	_coo2 d = p2 - p1;
+	_xy d = p2 - p1;
 	if ((d.y == 0) && (d.x == 0)) return;
 	double alpha = atan2(d.y, d.x);
 	double dv0 = d.len();
@@ -1707,15 +1707,15 @@ void _g_link::calc_local_area()
 	if (k < 0.9)
 		dv = (dv0 - (r1 + r2)) * k + r1 * (1 - cos(dalpha));
 	double kk = dv / dv0;
-	local_area += p11 = _coo2{ p1.x + r1 * cos(alpha - dalpha), p1.y + r1 * sin(alpha - dalpha) };
-	local_area += p12 = _coo2{ p1.x + r1 * cos(alpha + dalpha), p1.y + r1 * sin(alpha + dalpha) };
+	local_area += p11 = _xy{ p1.x + r1 * cos(alpha - dalpha), p1.y + r1 * sin(alpha - dalpha) };
+	local_area += p12 = _xy{ p1.x + r1 * cos(alpha + dalpha), p1.y + r1 * sin(alpha + dalpha) };
 	p21 = { p11.x + d.x * kk, p11.y + d.y * kk };
 	p22 = { p12.x + d.x * kk, p12.y + d.y * kk };
 	local_area += p21;
 	local_area += p22;
 }
 
-bool _g_link::mouse_down_left2(_coo2 r)
+bool _g_link::mouse_down_left2(_xy r)
 {
 	if (act_li < 0) return true;
 
@@ -1733,11 +1733,11 @@ bool _g_link::mouse_down_left2(_coo2 r)
 	return true;
 }
 
-bool _g_link::mouse_move2(_coo2 r)
+bool _g_link::mouse_move2(_xy r)
 {
 	static constexpr std::wstring_view nh[v_link] = { L"parent", L"part", L"run", L"???", L"sub_go", L"information",
 		L"information2", L"specialty", L"specialty2" };
-	_coo2 v = p12 - p11;
+	_xy v = p12 - p11;
 	double b = v.len();
 	double a = (r - p11).scalar(v) / b;
 	double k = a / b; // 0..1
