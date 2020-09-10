@@ -59,7 +59,7 @@ struct _super_stat // супер статистика цен
 	void add(_prices& c); // добавить цены (сжать)
 	void read(i64 n, _prices& c, _info_pak* inf = 0); // прочитать цены (расжать)
 	void save_to_file(wstr fn);
-	void load_from_file(std::wstring_view fn);
+	void load_from_file(wstr fn);
 	void clear(); // удалить все данные
 
 private:

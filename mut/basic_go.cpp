@@ -1,4 +1,6 @@
-﻿#include "basic_go.h"
+﻿#include <chrono>
+
+#include "basic_go.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -874,7 +876,7 @@ void _g_picture::set_pic(const _picture& pic2)
 	add_area();
 }
 
-bool _g_picture::load_from_file(std::filesystem::path fn)
+bool _g_picture::load_from_file(wstr fn)
 {
 	/*	del_area();
 		_stack fs;
@@ -890,7 +892,7 @@ bool _g_picture::load_from_file(std::filesystem::path fn)
 	return true;
 }
 
-bool _g_picture::save_to_file(std::filesystem::path fn) const
+bool _g_picture::save_to_file(wstr fn) const
 {
 	/*	_stack fs((size_t)pic.size.x * pic.size.y * sizeof(_color));
 		fs << _bitmap_file(pic);

@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-bool save_file(std::filesystem::path fn, const void* data, uint n)
+bool save_file(wstr fn, const char* data, i64 n)
 {
 	std::ofstream f(fn, std::ofstream::binary);
 	if (!f) return false;
@@ -10,7 +10,7 @@ bool save_file(std::filesystem::path fn, const void* data, uint n)
 	return f.good();
 }
 
-bool load_file(std::filesystem::path fn, char** data, uint* n)
+bool load_file(wstr fn, char** data, i64* n)
 {
 	*data = 0;
 	*n    = 0;
@@ -27,7 +27,7 @@ bool load_file(std::filesystem::path fn, char** data, uint* n)
 		*data = 0;
 		return false;
 	}
-	*n = (uint)siz;
+	*n = siz;
 	return true;
 }
 
@@ -69,29 +69,29 @@ _stack::_stack(void* data2, int vdata)
 	memcpy(data, data2, size);
 }
 
-void _stack::erase(u64 N, u64 K)
+void _stack::erase(i64 n, i64 k)
 {
-	if ((N < 0) || (N >= size)) return;
-	if ((K <= 0) || (N + K > size)) return;
-	size -= K;
+	if ((n < 0) || (n >= (i64)size)) return;
+	if ((k <= 0) || (n + k > (i64)size)) return;
+	size -= k;
 	adata = 0;
-	if (N == size) return;
-	memmove(&data[N], &data[N + K], size - N);
+	if (n == size) return;
+	memmove(&data[n], &data[n + k], size - n);
 }
 
-bool _stack::save_to_file(std::filesystem::path fn)
+bool _stack::save_to_file(wstr fn)
 { 
-	return save_file(fn, data, (uint)size);
+	return save_file(fn, data, size);
 }
 
-bool _stack::load_from_file(std::filesystem::path fn)
+bool _stack::load_from_file(wstr fn)
 {
 	if (data) delete[] data;
 	data     = 0;
 	capacity = 0;
 	size     = 0;
 	adata    = 0;
-	uint ll  = 0;
+	i64 ll   = 0;
 	if (!load_file(fn, &data, &ll)) return false;
 	size = capacity = ll;
 	return true;

@@ -1,5 +1,6 @@
 ﻿#include <map>
 #include <sstream>
+#include <iomanip>
 
 #include "mjson.h"
 
@@ -63,7 +64,7 @@ _wjson& _wjson::end()
 	return *this;
 }
 
-_wjson::_wjson(std::filesystem::path fn)
+_wjson::_wjson(wstr fn)
 {
 	file.open(fn);
 	file << std::setprecision(18);
@@ -246,7 +247,7 @@ _wjson& _wjson::add_mem(std::string_view name, void* b, u64 size)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_rjson::_rjson(std::filesystem::path fn)
+_rjson::_rjson(wstr fn)
 {
 	file.open(fn);
 	if (!file.good()) { error = 55; return; }

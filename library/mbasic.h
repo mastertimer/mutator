@@ -1,10 +1,7 @@
 ﻿#pragma once
 
-#include <cstring>
-#include <filesystem>
 #include <string>
 #include <vector>
-#include <sstream>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -48,8 +45,8 @@ enum class _cursor { normal, size_all, hand_point, size_we, size_ns, drag }; // 
 
 void set_cursorx(_cursor x); // !!! разобраться, где разместить
 
-bool save_file(std::filesystem::path fn, const void* data, uint n);
-bool load_file(std::filesystem::path fn, char** data, uint* n);
+bool save_file(wstr fn, const char* data, i64 n);
+bool load_file(wstr fn, char** data, i64* n);
 
 std::wstring string_to_wstring(std::string_view s);
 wstr         uint64_to_wstr_hex(u64 a);
@@ -87,9 +84,9 @@ struct _stack
 	~_stack() { delete[] data; }
 
 	void clear() { size  = 0; adata = 0; }
-	void erase(u64 N, u64 K);
-	bool save_to_file(std::filesystem::path fn);
-	bool load_from_file(std::filesystem::path fn);
+	void erase(i64 n, i64 k);
+	bool save_to_file(wstr fn);
+	bool load_from_file(wstr fn);
 
 	t_b _stack& operator<<(const std::vector<_b>& b) noexcept;
 	t_b _stack& operator<<(_b a) noexcept;

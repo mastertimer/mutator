@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include <vector>
 #include <map>
 
 #include "mgraphics.h"
@@ -15,7 +14,7 @@ constexpr uint c_minn       = 0xFF082010;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-inline std::filesystem::path exe_path; // путь к запущенному exe файлу
+inline std::wstring exe_path; // путь к запущенному exe файлу
 
 inline _cursor g_cursor = _cursor::normal; // установленный курсор
 

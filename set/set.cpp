@@ -24,7 +24,7 @@ int kkk2 = 13; // количество продаваемых акций
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void load_mmm(std::filesystem::path file_name)
+void load_mmm(wstr file_name)
 {
 	_rjson fs(file_name);
 	fs.read("mmm1", mmm1);
@@ -35,7 +35,7 @@ void load_mmm(std::filesystem::path file_name)
 void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	static bool first = true; if (!first) return; first = false;
-	ss.load_from_file(exe_path.wstring() + ss_file);
+	ss.load_from_file((exe_path + ss_file).c_str());
 	if (!graph) return;
 	if (!graph->find1<_g_scrollbar>(flag_part))
 	{
@@ -55,7 +55,7 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 	if (ora3) o3->recovery();
 	graph->cha_area();
 	graph->obn = true;
-	load_mmm(exe_path.wstring() + mmm_file);
+	load_mmm((exe_path + mmm_file).c_str());
 }
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)
@@ -160,7 +160,7 @@ void fun19(_tetron* tt0, _tetron* tt, u64 flags)
 void fun20(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (zamok_pokupki) return;
-	if (mmm1 == L"1") load_mmm(exe_path.wstring() + mmm_file);
+	if (mmm1 == L"1") load_mmm((exe_path + mmm_file).c_str());
 	zamok_pokupki = true;
 	_t_function* fu = new _t_function(35);
 	fu->run(0, fu, flag_run);
@@ -169,7 +169,7 @@ void fun20(_tetron* tt0, _tetron* tt, u64 flags)
 void fun21(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (zamok_pokupki) return;
-	if (mmm1 == L"1") load_mmm(exe_path.wstring() + mmm_file);
+	if (mmm1 == L"1") load_mmm((exe_path + mmm_file).c_str());
 	zamok_pokupki = true;
 	_t_function* fu = new _t_function(36);
 	fu->run(0, fu, flag_run);
@@ -561,7 +561,7 @@ void _super_stat::save_to_file(wstr fn)
 	mem.save_to_file(fn);
 }
 
-void _super_stat::load_from_file(std::wstring_view fn)
+void _super_stat::load_from_file(wstr fn)
 {
 	_stack mem;
 	if (!mem.load_from_file(fn)) return;
@@ -2848,7 +2848,7 @@ void _kusok_bukva::cod(ushort* aa, int vaa, wchar_t cc, char nf, i64 nbitt)
 		return;
 	}
 	auto fi = std::lower_bound(dalee.begin(), dalee.end(), *aa);
-	u64 n = fi - dalee.begin();
+	i64 n = fi - dalee.begin();
 	bool nena = false;
 	if (fi == dalee.end())
 		nena = true;
@@ -2876,7 +2876,7 @@ void _kusok_bukva::cod(ushort* aa, int vaa, wchar_t cc, char nf, i64 nbitt)
 
 void set_test()
 {
-	if (mmm1 == L"1") load_mmm(exe_path.wstring() + mmm_file);
+	if (mmm1 == L"1") load_mmm((exe_path + mmm_file).c_str());
 	_prices a;
 	int ok = recognize.read_prices_from_screen(&a);
 	MessageBox(0, std::to_wstring(ok).c_str(), L"упс", MB_OK | MB_TASKMODAL);

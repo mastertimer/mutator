@@ -5,8 +5,8 @@
 namespace mutator
 {
 	double get_main_scale(); // главный масштаб
-	void save_to_txt_file(std::filesystem::path fn);
-	bool start(std::filesystem::path fn);
+	void save_to_txt_file(wstr fn);
+	bool start(wstr fn);
 	void draw(_isize r);
 
 	void mouse_button_left(bool pressed);
