@@ -53,11 +53,11 @@ struct _super_stat // супер статистика цен
 		int r_pro; // размер продаж
 		int r_pok; // размер покупок
 	};
-	int64 size; // количество записей
+	i64 size; // количество записей
 
 	_super_stat();
 	void add(_prices& c); // добавить цены (сжать)
-	void read(int64 n, _prices& c, _info_pak* inf = 0); // прочитать цены (расжать)
+	void read(i64 n, _prices& c, _info_pak* inf = 0); // прочитать цены (расжать)
 	void save_to_file(wstr fn);
 	void load_from_file(std::wstring_view fn);
 	void clear(); // удалить все данные
@@ -69,7 +69,7 @@ private:
 
 	static const int step_pak_cc = 100;
 	_prices read_cc; // последние прочитанные цены
-	int64 read_n; // номер последних прочитанных цен
+	i64 read_n; // номер последних прочитанных цен
 	_info_pak ip_last, ip_n; // дополнительная информация
 
 	void otgruzka(int rez, int Vrez, int* deko); // вспомогательная Pak()
@@ -165,7 +165,7 @@ struct _nervous_oracle : public _basic_curve // нервозный предск�
 	void recovery(); // выполнить
 	void push(_stack* mem);
 	void pop(_stack* mem);
-	_latest_events get_latest_events(int64 nn); // получить последние события
+	_latest_events get_latest_events(i64 nn); // получить последние события
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -184,7 +184,7 @@ struct _oracle3 : public _basic_curve // оракул 3-я версия
 	static const int max_part = 22000; // максимально количество элементов ss
 
 	std::deque<_prices> part_ss; // часть супер-статистики
-	int64 begin_ss = 0; // начало куска супер-статистики
+	i64 begin_ss = 0; // начало куска супер-статистики
 	std::vector<_element_oracle> zn; // данные
 	double c_unpak = 0.01; // распаковка цен
 
@@ -201,7 +201,7 @@ struct _g_graph : public _t_go
 {
 	std::vector<std::unique_ptr<_basic_curve>> curve; // кривая
 	bool obn = true; // обновить картинку
-	int64 size_el = 6; // размер элемента
+	i64 size_el = 6; // размер элемента
 
 	_g_graph();
 
@@ -209,13 +209,13 @@ struct _g_graph : public _t_go
 	int get_froglif()                override { return 0xF6; } // !!!!!
 
 	void ris2(_trans tr, bool final) override;
-	void run(_tetron* tt0, _tetron* tt, uint64 flags) override;
+	void run(_tetron* tt0, _tetron* tt, u64 flags) override;
 	bool mouse_down_left2(_xy r) override; // начало перетаскивания
 	void mouse_move_left2(_xy r) override; // процесс перетаскивания
 
 private:
 	_bitmap bm;
-	int64 x_tani = 0; // предыдущая координата x при перетаскивании
+	i64 x_tani = 0; // предыдущая координата x при перетаскивании
 	int v_vib = 0; // диапазон полосы прокрутки
 
 	void draw(_isize size);
@@ -238,10 +238,10 @@ struct _kusok_bukva // узел дерева кодирования символ
 	std::vector<_kusok_bukva> dalee; // следующий столбец !!!! СЛОЖНО заменить, т.т. использует сортировку
 	wchar_t c[rc]{}; // возможные символы
 	char f[rc]{}; // соответствующие шрифты
-	int64 nbit[rc]{}; // количество бит в символе
+	i64 nbit[rc]{}; // количество бит в символе
 	int vc = 0; // количество соответствий
 
-	void cod(ushort* aa, int vaa, wchar_t cc, char nf, int64 nbitt); // кодирование
+	void cod(ushort* aa, int vaa, wchar_t cc, char nf, i64 nbitt); // кодирование
 	bool operator!=(ushort a) const noexcept { return (mask != a); } // сравнить
 	bool operator==(ushort a) const noexcept { return (mask == a); } // сравнить
 	bool operator< (ushort a) const noexcept { return (mask <  a); } // сравнить
@@ -267,11 +267,11 @@ struct _recognize // распознавание с экрана
 	void find_red_text13(uint err); // найти красный текст высотой 13
 	bool find_window_prices(RECT* rr); // координаты окна цен
 	int find_elem(std::wstring_view s); // найти текст среди элементов
-	int find_elem_kusok(s2 s); // найти кусок текста среди элементов
+	int find_elem_kusok(wstr s); // найти кусок текста среди элементов
 	int test_image(_prices* pr); // тестовый поиск на готовой картинке
 
 private:
 	_kusok_bukva bu; // дерево алфавита для распознавания
 
-	std::wstring rasp_text(ushort* aa, int64 vaa); // распознать текст
+	std::wstring rasp_text(ushort* aa, i64 vaa); // распознать текст
 };

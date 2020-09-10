@@ -52,7 +52,7 @@ void _stack::pop_int24(int& a)
 	a -= 0x800000;
 }
 
-_stack::_stack(int64 r)
+_stack::_stack(i64 r)
 {
 	data     = (r) ? new char[r] : 0;
 	capacity = r;
@@ -69,7 +69,7 @@ _stack::_stack(void* data2, int vdata)
 	memcpy(data, data2, size);
 }
 
-void _stack::erase(uint64 N, uint64 K)
+void _stack::erase(u64 N, u64 K)
 {
 	if ((N < 0) || (N >= size)) return;
 	if ((K <= 0) || (N + K > size)) return;
@@ -112,7 +112,7 @@ _stack& _stack::operator<<(const std::wstring& a) noexcept
 	return *this;
 }
 
-void _stack::push_data(const void* data2, uint64 vdata)
+void _stack::push_data(const void* data2, u64 vdata)
 {
 	if (size + vdata > capacity) set_capacity((size + vdata) * 2);
 	memcpy(data + size, data2, vdata);
@@ -128,7 +128,7 @@ void _stack::push_fill(int vdata, char c)
 
 _stack& _stack::operator>>(_stack& a) noexcept
 {
-	uint64 v = 0;
+	u64 v = 0;
 	*this >> v;
 	a.size  = 0;
 	a.adata = 0;
@@ -148,7 +148,7 @@ _stack& _stack::operator>>(std::wstring& s) noexcept
 	return *this;
 }
 
-void _stack::pop_data(void* data2, uint64 vdata)
+void _stack::pop_data(void* data2, u64 vdata)
 {
 	if (adata + vdata > size) return;
 	memcpy(data2, data + adata, vdata);
@@ -170,7 +170,7 @@ void _stack::skip(size_t bytes)
 		adata += bytes;
 }
 
-void _stack::set_capacity(uint64 rdata)
+void _stack::set_capacity(u64 rdata)
 {
 	if (rdata <= capacity) return;
 	capacity    = rdata;
@@ -182,7 +182,7 @@ void _stack::set_capacity(uint64 rdata)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _multi_string::div2line(int64 y, int64 x)
+void _multi_string::div2line(i64 y, i64 x)
 {
 	if ((y < 0) || (y >= (int)line.size())) return;
 	int l = (int)line[y].size();
@@ -193,7 +193,7 @@ void _multi_string::div2line(int64 y, int64 x)
 	line[y + 1LL].erase(0, x);
 }
 
-void _multi_string::insert_char(int64 y, int64 x, wchar_t c)
+void _multi_string::insert_char(i64 y, i64 x, wchar_t c)
 {
 	if ((y < 0) || (y >= (int)line.size())) return;
 	if (x < 0) x = 0;
@@ -202,7 +202,7 @@ void _multi_string::insert_char(int64 y, int64 x, wchar_t c)
 	line[y].insert(x, 1, c);
 }
 
-bool _multi_string::delete_char(int64 y, int64 x)
+bool _multi_string::delete_char(i64 y, i64 x)
 {
 	if ((y < 0) || (y >= (int)line.size())) return false;
 	if (x < 0)
@@ -257,7 +257,7 @@ std::wstring double_to_string(double a, int z)
 		s = L"-";
 	}
 	if (z < 16) a += delta[z];
-	int64 b = static_cast<int64>(a);
+	i64 b = static_cast<i64>(a);
 	s += std::to_wstring(b);
 	if (z < 1) return s;
 	int l = (int)s.size();
@@ -267,8 +267,8 @@ std::wstring double_to_string(double a, int z)
 	{
 		a -= b;
 		a *= 10;
-		b               = static_cast<int64>(a);
-		s[(int64)l + i] = L'0' + (short)b;
+		b               = static_cast<i64>(a);
+		s[(i64)l + i] = L'0' + (short)b;
 	}
 	return s;
 }
@@ -284,7 +284,7 @@ std::string double_to_astring(double a, int z)
 		s = "-";
 	}
 	if (z < 16)	a += delta[z];
-	int64 b = static_cast<int64>(a);
+	i64 b = static_cast<i64>(a);
 	s += std::to_string(b);
 	if (z < 1) return s;
 	int l = (int)s.size();
@@ -294,13 +294,13 @@ std::string double_to_astring(double a, int z)
 	{
 		a -= b;
 		a *= 10;
-		b = static_cast<int64>(a);
-		s[(int64)l + i] = '0' + (char)b;
+		b = static_cast<i64>(a);
+		s[(i64)l + i] = '0' + (char)b;
 	}
 	return s;
 }
 
-wstr uint64_to_wstr_hex(uint64 a)
+wstr uint64_to_wstr_hex(u64 a)
 {
 	static const wchar_t zz[] = L"0123456789abcdef";
 	static wchar_t       s[]  = L"1234567890123456";
@@ -319,9 +319,9 @@ wstr uint64_to_wstr_hex(uint64 a)
 	return (s + k0);
 }
 
-void _rnd::init(u8 b)
+void _rnd::init(u64 b)
 {
-	static constexpr u8 dd[521] = {
+	static constexpr u64 dd[521] = {
 		0xBE3B0D3E773B3EAC, 0xE35381E6D8B09960, 0x8BC79403A0FFBC4A, 0x590FF05C9DB44258, 0x8E149C5DF9924DA6,
 		0xFE3A12707102CD37, 0xB16E7870697C38E5, 0xC66633332C7BF81C, 0x8FD23C3ABD37E032,	0xEE81791910218697,
 		0x9894BA4F38A1ABD7, 0x4AE53B309D9ED971, 0xBD9AA006C3259BCF, 0x4FB3F6FB61B2165B, 0xBA0150484AAF6B30,
@@ -429,6 +429,6 @@ void _rnd::init(u8 b)
 		0x7044CAA7BE05B133 };
 	i = 520;
 	b *= 489133282872437279;
-	for (i8 j = 0; j < 521; j++) d[j] = dd[j] + b;
+	for (i64 j = 0; j < 521; j++) d[j] = dd[j] + b;
 }
 

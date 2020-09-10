@@ -4,12 +4,12 @@
 
 struct _t_function : public _tetron
 {
-	int64 a = 0;
+	i64 a = 0;
 
 	_t_function() = default;
-	_t_function(int64 b) : a(b) {}
+	_t_function(i64 b) : a(b) {}
 
-	operator int64* ()       override { return &a; }
+	operator i64* ()       override { return &a; }
 	operator _t_function* () override { return this; }
 
 	uchar type()             override { return 32; }
@@ -19,7 +19,7 @@ struct _t_function : public _tetron
 	void  push(_wjson& b)    override { _tetron::push(b);   b.add("a", a); }
 	void  pop(_rjson& b)     override { _tetron::pop(b);    b.read("a", a); }
 
-	void run(_tetron* tt0, _tetron* tt, uint64 flags) override;
+	void run(_tetron* tt0, _tetron* tt, u64 flags) override;
 };
 
 void smena_avt();

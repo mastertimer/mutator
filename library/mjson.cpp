@@ -149,7 +149,7 @@ wstr string_to_wstring2(std::string_view s)
 	static std::vector<wchar_t> temp;
 	temp.clear();
 
-	for (uint64 i = 0; i < s.size(); i++)
+	for (u64 i = 0; i < s.size(); i++)
 	{
 		char c = s[i];
 		if (c != '#')
@@ -166,7 +166,7 @@ wstr string_to_wstring2(std::string_view s)
 	return temp.data();
 }
 
-_wjson& _wjson::add_hex(std::string_view name, uint64 b)
+_wjson& _wjson::add_hex(std::string_view name, u64 b)
 {
 	add_start(name) << "0x" << std::hex << b << std::dec;
 	return *this;
@@ -230,12 +230,12 @@ _wjson& _wjson::add(std::string_view name, const _picture& b)
 	return *this;
 }
 
-_wjson& _wjson::add_mem(std::string_view name, void* b, uint64 size)
+_wjson& _wjson::add_mem(std::string_view name, void* b, u64 size)
 {
 	static const char zz[] = "0123456789abcdef";
 	uchar*            c    = (uchar*)b;
 	std::string       s(size * 2, ' ');
-	for (uint64 i = 0; i < size; i++)
+	for (u64 i = 0; i < size; i++)
 	{
 		s[i * 2]     = zz[(c[i] >> 4) & 15];
 		s[i * 2 + 1] = zz[c[i] & 15];
@@ -353,7 +353,7 @@ astr _rjson::read_string(std::string_view name)
 
 void _rjson::read(std::string_view name, char& b)
 {
-	int64 a;
+	i64 a;
 	read(name, a);
 	if (error || null) return;
 	b = (char)a;
@@ -361,13 +361,13 @@ void _rjson::read(std::string_view name, char& b)
 
 void _rjson::read(std::string_view name, uint& b)
 {
-	uint64 a;
+	u64 a;
 	read(name, a);
 	if (error || null) return;
 	b = (uint)a;
 }
 
-void _rjson::read(std::string_view name, uint64& b)
+void _rjson::read(std::string_view name, u64& b)
 {
 	if (!read_start(name)) return;
 	char c = 0;
@@ -388,7 +388,7 @@ void _rjson::read(std::string_view name, uint64& b)
 	if (!file.good()) error = 10;
 }
 
-void _rjson::read(std::string_view name, int64& b)
+void _rjson::read(std::string_view name, i64& b)
 {
 	if (!read_start(name)) return;
 	file >> b;
@@ -440,11 +440,11 @@ _trans _rjson::read_trans(std::string_view name)
 	return res;
 }
 
-bool string_to_mem(std::string_view s, void * d, int64 size)
+bool string_to_mem(std::string_view s, void * d, i64 size)
 {
 	if (s.size() != size * 2ULL) return false;
 	unsigned char* dd = (unsigned char*)d;
-	for (uint64 i = 0; i < s.size(); i += 2)
+	for (u64 i = 0; i < s.size(); i += 2)
 		*dd++ = (hex_to_byte[(uchar)s[i]] << 4) + hex_to_byte[(uchar)s[i+1]];
 	return true;
 }
@@ -475,7 +475,7 @@ void _rjson::read(std::string_view name, _picture& b)
 	end();
 	if (temp.size() == 0) { b.resize({ 0, 0 });	return; }
 	int rx = (int)(temp[0].size() / 8);
-	b.resize({ rx, (int64)temp.size() });
+	b.resize({ rx, (i64)temp.size() });
 	for (int j = 0; j < temp.size(); j++)
 		if (!string_to_mem(temp[j], &b.data[j * b.size.x], b.size.x * 4))
 		{
@@ -485,7 +485,7 @@ void _rjson::read(std::string_view name, _picture& b)
 	b.set_transparent();
 }
 
-void _rjson::read_mem(std::string_view name, void* b, uint64 size)
+void _rjson::read_mem(std::string_view name, void* b, u64 size)
 {
 	if (!read_start(name)) return;
 	if (!string_to_mem(read_just_string(), b, (int)size)) error = 13;

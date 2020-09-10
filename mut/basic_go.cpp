@@ -328,7 +328,7 @@ void _t_basic_go::priem_gv()
 	trr->add_area();
 }
 
-_t_trans* _t_basic_go::set_t_trans(_tetron* go, uint64 flags)
+_t_trans* _t_basic_go::set_t_trans(_tetron* go, u64 flags)
 {
 	_t_trans* ttr = nullptr;
 	if (link.size() <= go->link.size())
@@ -464,7 +464,7 @@ uint _t_go::get_c()
 {
 	_tetron* a = find_intermediate<_tetron>(n_color_line, flag_information, flag_parent);
 	if (a == nullptr) return c_def;
-	if (int64 * c = *a) return (uint)* c;
+	if (i64 * c = *a) return (uint)* c;
 	return c_def;
 }
 
@@ -472,7 +472,7 @@ uint _t_go::get_c2()
 {
 	_tetron* a = find_intermediate<_tetron>(n_color_bg, flag_information, flag_parent);
 	if (a == nullptr) return c2_default;
-	if (int64 * c = *a) return (uint)* c;
+	if (i64 * c = *a) return (uint)* c;
 	return c2_default;
 }
 
@@ -481,7 +481,7 @@ void _t_go::set_c(uint c)
 	_tetron* a = find_intermediate<_tetron>(n_color_line, flag_information, flag_parent);
 	if (a != nullptr)
 	{
-		if (int64 * cc = *a)* cc = c;
+		if (i64 * cc = *a)* cc = c;
 		return;
 	}
 	if (c == c_def) return;
@@ -496,7 +496,7 @@ void _t_go::set_c2(uint c)
 	_tetron* a = find_intermediate<_tetron>(n_color_bg, flag_information, flag_parent);
 	if (a != nullptr)
 	{
-		if (int64 * cc = *a)* cc = c;
+		if (i64 * cc = *a)* cc = c;
 		return;
 	}
 	if (c == c2_default) return;
@@ -736,7 +736,7 @@ void _g_circle::pop(_rjson& b)
 	b.read("width", width);
 }
 
-void _g_circle::run(_tetron* tt0, _tetron* tt, uint64 flags)
+void _g_circle::run(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_one_tetron* a = find_intermediate<_one_tetron>(n_center, flag_information, flag_parent);
 	if (a) center = { a->d[0], a->d[1] };
@@ -777,7 +777,7 @@ void _g_froglif::ris2(_trans tr, bool final)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_line::run(_tetron* tt0, _tetron* tt, uint64 flags)
+void _g_line::run(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_one_tetron* a = find_intermediate<_one_tetron>(n_begin, flag_information, flag_parent);
 	if (a) p1 = { a->d[0], a->d[1] };
@@ -904,7 +904,7 @@ void _g_rect::ris2(_trans tr, bool final)
 {
 	_area oo = tr(local_area);
 	uint c2 = get_c2();
-	master_bm.fill_rectangle({ {(int64)oo.x.min, (int64)oo.x.max + 1}, {(int64)oo.y.min, (int64)oo.y.max + 1} }, c2);
+	master_bm.fill_rectangle({ {(i64)oo.x.min, (i64)oo.x.max + 1}, {(i64)oo.y.min, (i64)oo.y.max + 1} }, c2);
 	uint c0 = get_c();
 	if (((c0 >> 24) != 0x00) && (c0 != c2)) master_bm.rectangle(oo, c0);
 }

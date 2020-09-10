@@ -36,8 +36,8 @@ void _g_edit_double::key_down(ushort key)
 	{
 		if ((cursor > 0) && (cursor < (int)s.size() - 2))
 		{
-			int64 b = (int64)a;
-			int64 c = 1;
+			i64 b = (i64)a;
+			i64 c = 1;
 			for (int j = int(s.size() - 3); j > cursor; j--) c *= 10;
 			a = (b / (c * 10)) * c + (b % c) + 0.1 * (s[s.size() - 2] - L'0') + 0.01 * (s[s.size() - 1] - L'0');
 			cursor--;
@@ -58,8 +58,8 @@ void _g_edit_double::key_down(ushort key)
 	{
 		if (cursor < (int)s.size() - 3)
 		{
-			int64 b = (int64)a;
-			int64 c = 1;
+			i64 b = (i64)a;
+			i64 c = 1;
 			for (int j = int(s.size() - 4); j > cursor; j--) c *= 10;
 			a = (b / (c * 10)) * c + (b % c) + 0.1 * (s[s.size() - 2] - L'0') + 0.01 * (s[s.size() - 1] - L'0');
 			cha_area();
@@ -74,7 +74,7 @@ void _g_edit_double::key_press(ushort key)
 	cha_area();
 	std::wstring s = double_to_string(a, 2);
 	if (cursor == s.size()) return;
-	int64 b = (int64)a;
+	i64 b = (i64)a;
 	if (cursor == s.size() - 1)
 		a = b + 0.1 * (s[s.size() - 2] - L'0') + 0.01 * (key - L'0');
 	else
@@ -89,7 +89,7 @@ void _g_edit_double::key_press(ushort key)
 			}
 			else
 			{
-				int64 c = 1;
+				i64 c = 1;
 				for (int j = int(s.size() - 3); j > cursor; j--) c *= 10;
 				a = (b / c) * (c * 10) + (b % c) + (key - L'0') * c + 0.1 * (s[s.size() - 2] - L'0') + 0.01 *
 					(s[s.size() - 1] - L'0');
@@ -113,7 +113,7 @@ void _g_edit_int::ris2(_trans tr, bool final)
 	master_bm.rectangle(oo, c0);
 	int sf2 = (int)(13 * tr.scale + 0.5);
 	if (sf2 < 5) return;
-	int64* a = find1_plus_gtetron<int64>(this, flag_specialty);
+	i64* a = find1_plus_gtetron<i64>(this, flag_specialty);
 	if (!a)
 	{
 		master_bm.line(oo.top_left(), oo.bottom_right(), c0);
@@ -133,7 +133,7 @@ void _g_edit_int::ris2(_trans tr, bool final)
 
 void _g_edit_int::key_down(ushort key)
 {
-	int64* a = find1_plus_gtetron<int64>(this, flag_specialty);
+	i64* a = find1_plus_gtetron<i64>(this, flag_specialty);
 	if (!a) return;
 	bool hex = test_flags(n_hex, flag_information);
 
@@ -149,7 +149,7 @@ void _g_edit_int::key_down(ushort key)
 			{
 				int l = (int)std::to_wstring(*a).size();
 				if (cursor > l) cursor = l;
-				int64 mn = 1;
+				i64 mn = 1;
 				for (int i = cursor; i < l; i++) mn *= 10;
 				*a = (*a / (mn * 10)) * mn + (*a % mn);
 			}
@@ -189,7 +189,7 @@ void _g_edit_int::key_down(ushort key)
 			{
 				int l = (int)std::to_wstring(*a).size();
 				if (cursor > l) cursor = l;
-				int64 mn = 1;
+				i64 mn = 1;
 				for (int i = cursor; i < l; i++) mn *= 10;
 				*a = (*a / mn) * (mn / 10) + (*a % (mn / 10));
 			}
@@ -201,16 +201,16 @@ void _g_edit_int::key_down(ushort key)
 
 bool _g_edit_int::mouse_wheel2(_xy r)
 {
-	int64* a = find1_plus_gtetron<int64>(this, flag_specialty);
+	i64* a = find1_plus_gtetron<i64>(this, flag_specialty);
 	if (!a) return true;
-	*a += *n_wheel->operator int64 * ();
+	*a += *n_wheel->operator i64 * ();
 	cha_area();
 	return true;
 }
 
 void _g_edit_int::key_press(ushort key)
 {
-	int64* a = find1_plus_gtetron<int64>(this, flag_specialty);
+	i64* a = find1_plus_gtetron<i64>(this, flag_specialty);
 	if (!a) return;
 	if (test_flags(n_hex, flag_information))
 	{
@@ -224,7 +224,7 @@ void _g_edit_int::key_press(ushort key)
 			if (*a == 0) cursor = 1; // особый случай
 			int l = (int)std::to_wstring(*a).size();
 			if (cursor > l) cursor = l;
-			int64 mn = 1;
+			i64 mn = 1;
 			for (int i = cursor; i < l; i++) mn *= 10;
 			*a = (*a / mn) * (mn * 10) + (key - L'0') * mn + (*a % mn);
 			l = (int)std::to_wstring(*a).size();
@@ -304,7 +304,7 @@ void _g_edit_string::ris2(_trans tr, bool final)
 	}
 	if (n_act_key == this)
 	{
-		_isize size = master_bm.size_text(s->substr(first, (int64)cursor - first).c_str(), sf);
+		_isize size = master_bm.size_text(s->substr(first, (i64)cursor - first).c_str(), sf);
 		master_bm.line({ (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + 1) }, { (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + sf) }, c0);
 	}
 }
@@ -403,13 +403,13 @@ void _g_edit_multi_string::ris2(_trans tr, bool final)
 	if (cursor.y >= (int)str->line.size()) cursor.y = (int)str->line.size() - 1;
 	if (cursor.y < 0) cursor.y = 0;
 	if (first > cursor.y) first = cursor.y;
-	if (first + len2 > (int)str->line.size()) first = (int64)str->line.size() - len2;
+	if (first + len2 > (int)str->line.size()) first = (i64)str->line.size() - len2;
 	if (first < 0) first = 0;
-	int64 k = len2;
-	if ((int)str->line.size() < first + k) k = (int64)str->line.size() - first;
-	for (int64 i = 0; i < k; i++)
+	i64 k = len2;
+	if ((int)str->line.size() < first + k) k = (i64)str->line.size() - first;
+	for (i64 i = 0; i < k; i++)
 	{
-		int64 ii = first + i;
+		i64 ii = first + i;
 		master_bm.text((int)(oo.x.min + 4 * tr.scale), (int)(oo.y.min + (i * 16LL + 4) * tr.scale),
 			str->line[ii].c_str(), sf, c_def, 0xff000000);
 	}
@@ -422,7 +422,7 @@ void _g_edit_multi_string::ris2(_trans tr, bool final)
 	{
 		_isize size = master_bm.size_text(str->line[cursor.y].substr(0, cursor.x).c_str(), sf);
 		master_bm.line({ (int)(oo.x.min + 4 * tr.scale + size.x - 1),
-			(int)(oo.y.min + (((int64)cursor.y - first) * 16 + 4) * tr.scale) },
+			(int)(oo.y.min + (((i64)cursor.y - first) * 16 + 4) * tr.scale) },
 			{ (int)(oo.x.min + 4 * tr.scale + size.x - 1),
 			(int)(oo.y.min + ((cursor.y + 1LL - first) * 16 + 4) * tr.scale) }, c_def);
 	}
@@ -523,7 +523,7 @@ void _g_edit_multi_string::key_down(ushort key)
 			if (cursor.x > l) cursor.x = l;
 			if (_g_scrollbar * polz = find1<_g_scrollbar>(flag_part))
 			{
-				int64 first = (int64)(polz->position * max_i + 0.5);
+				i64 first = (i64)(polz->position * max_i + 0.5);
 				if (cursor.y >= first + len2)
 				{
 					polz->position = (double)(1LL + cursor.y - len2) / max_i;
@@ -558,7 +558,7 @@ _g_edit_multi_string::_g_edit_multi_string() : cursor{ 0,0 }
 	key_fokus = true;
 }
 
-void _g_edit_multi_string::run(_tetron* tt0, _tetron* tt, uint64 flags)
+void _g_edit_multi_string::run(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	cha_area();
 }
@@ -624,14 +624,14 @@ void _g_edit64bit::ris2(_trans tr, bool final)
 	double d = oo.x.length();
 	double d2 = oo.y.length();
 	if ((d < 5) || (d2 < 5)) return;
-	uint64* c = (uint64*)& a;
+	u64* c = (u64*)& a;
 	for (int j = 0; j < 8; j++)
 		for (int i = 0; i < 8; i++)
 			if (*c & (1ULL << (j * 8 + i)))
-				master_bm.fill_rectangle({ {(int64)(oo.x.min + 1 + (d - 1) * 0.125 * i),
-					(int64)(oo.x.min + (d - 1) * 0.125 * (i + 1.0))+1},
-					{(int64)(oo.y.min + 1 + (d2 - 1) * 0.125 * j),
-					(int64)(oo.y.min + (d2 - 1) * 0.125 * (j + 1.0))+1} }, c_max);
+				master_bm.fill_rectangle({ {(i64)(oo.x.min + 1 + (d - 1) * 0.125 * i),
+					(i64)(oo.x.min + (d - 1) * 0.125 * (i + 1.0))+1},
+					{(i64)(oo.y.min + 1 + (d2 - 1) * 0.125 * j),
+					(i64)(oo.y.min + (d2 - 1) * 0.125 * (j + 1.0))+1} }, c_max);
 	if ((d < 25) || (d2 < 25)) { master_bm.rectangle((_area)oo, c_def); }
 	else
 	{
@@ -649,8 +649,8 @@ void _g_edit64bit::ris2(_trans tr, bool final)
 //			master_bm.rectangle((int)(oo.x.min + d * 0.125 * i), (int)(oo.y.min + d2 * 0.125 * j),
 //				(int)(oo.x.min + d * 0.125 * (i + 1.0)), (int)(oo.y.min + d2 * 0.125 * (j + 1.0)),
 //				0xFF0000);
-			master_bm.rectangle({ {(int64)(oo.x.min + d * 0.125 * i), (int64)(oo.x.min + d * 0.125 * (i + 1.0))+1},
-				{(int64)(oo.y.min + d2 * 0.125 * j), (int64)(oo.y.min + d2 * 0.125 * (j + 1.0))+1} }, 0xFFFF0000);
+			master_bm.rectangle({ {(i64)(oo.x.min + d * 0.125 * i), (i64)(oo.x.min + d * 0.125 * (i + 1.0))+1},
+				{(i64)(oo.y.min + d2 * 0.125 * j), (i64)(oo.y.min + d2 * 0.125 * (j + 1.0))+1} }, 0xFFFF0000);
 		}
 	}
 }
@@ -662,7 +662,7 @@ _g_edit64bit::_g_edit64bit()
 	act = -1;
 }
 
-void _g_edit64bit::run(_tetron* tt0, _tetron* tt, uint64 flags) { cha_area(); }
+void _g_edit64bit::run(_tetron* tt0, _tetron* tt, u64 flags) { cha_area(); }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -716,13 +716,13 @@ void _g_edit_one::ris2(_trans tr, bool final)
 	int  sf2 = (int)(13 * tr.scale + 0.5);
 	if (sf2 < 5) return;
 	if (mode == 0)
-		master_bm.fill_rectangle({ {(int64)(bb.x(0.03)), (int64)(bb.x(0.12))+1}, {(int64)(bb.y(0.1)), (int64)(bb.y(0.45))+1} }, c_def);
+		master_bm.fill_rectangle({ {(i64)(bb.x(0.03)), (i64)(bb.x(0.12))+1}, {(i64)(bb.y(0.1)), (i64)(bb.y(0.45))+1} }, c_def);
 	else
-		master_bm.rectangle({ {(int64)(bb.x(0.03)), (int64)(bb.x(0.12)) + 1}, {(int64)(bb.y(0.1)), (int64)(bb.y(0.45)) + 1} }, c_def);
+		master_bm.rectangle({ {(i64)(bb.x(0.03)), (i64)(bb.x(0.12)) + 1}, {(i64)(bb.y(0.1)), (i64)(bb.y(0.45)) + 1} }, c_def);
 	if (mode == 1)
-		master_bm.fill_rectangle({ {(int64)(bb.x(0.03)), (int64)(bb.x(0.12))+1}, {(int64)(bb.y(0.55)), (int64)(bb.y(0.9))+1} }, c_def);
+		master_bm.fill_rectangle({ {(i64)(bb.x(0.03)), (i64)(bb.x(0.12))+1}, {(i64)(bb.y(0.55)), (i64)(bb.y(0.9))+1} }, c_def);
 	else
-		master_bm.rectangle({ {(int64)(bb.x(0.03)), (int64)(bb.x(0.12)) + 1}, {(int64)(bb.y(0.55)), (int64)(bb.y(0.9)) + 1} }, c_def);
+		master_bm.rectangle({ {(i64)(bb.x(0.03)), (i64)(bb.x(0.12)) + 1}, {(i64)(bb.y(0.55)), (i64)(bb.y(0.9)) + 1} }, c_def);
 	master_bm.text((int)(bb.x(0.15)), (int)(bb.y.min + 5), std::to_wstring(n).c_str(), sf2, c0, 0xff000000);
 	_one_tetron* ot = find1_plus_gtetron<_one_tetron>(this, flag_specialty);
 	if (!ot) return;
@@ -901,8 +901,8 @@ void _g_button::ris2(_trans tr, bool final)
 	uint c = 0;
 	if (picture.size.x * picture.size.y > 0)
 	{
-		int64 rx2 = (int64)(picture.size.x * tr.scale + 0.5);
-		int64 ry2 = (int64)(picture.size.y * tr.scale + 0.5);
+		i64 rx2 = (i64)(picture.size.x * tr.scale + 0.5);
+		i64 ry2 = (i64)(picture.size.y * tr.scale + 0.5);
 		_ixy ce = oo.center();
 		master_bm.stretch_draw(&picture, ce.x - rx2 / 2, ce.y - ry2 / 2, tr.scale);
 	}
@@ -911,7 +911,7 @@ void _g_button::ris2(_trans tr, bool final)
 	if (checked) c = c_def - 0x40000000;
 	if (n_go_move == this) c = c_def - 0x80000000;
 	if (n_tani == this) c = c_max - 0x80000000;
-	master_bm.fill_rectangle({ {(int64)oo.x.min, (int64)oo.x.max + 1}, {(int64)oo.y.min, (int64)oo.y.max + 1} }, c);
+	master_bm.fill_rectangle({ {(i64)oo.x.min, (i64)oo.x.max + 1}, {(i64)oo.y.min, (i64)oo.y.max + 1} }, c);
 }
 
 void _g_button::push(_stack* mem)
@@ -1077,7 +1077,7 @@ bool _g_list_link::mouse_down_left2(_xy r)
 		add_flags(sb, flag_sub_go + flag_part + (flag_run << 32));
 	}
 	cursor = (int)(first + (r.y - 4) / 16);
-	if (*n_s_double->operator int64 * ())
+	if (*n_s_double->operator i64 * ())
 	{
 		_g_tetron* g = find1<_g_tetron>(flag_specialty);
 		if (g == nullptr) return true;
@@ -1143,14 +1143,14 @@ void _g_list_link::ris2(_trans tr, bool final)
 		{ (int)(oo.x.max - 2 * tr.scale), (int)(oo.y.min + 2 * tr.scale) }, 0x30C0F0);
 	if (first + k < (int)a->link.size()) master_bm.line({ (int)(oo.x.min + 2 * tr.scale), (int)(oo.y.max - 2 * tr.scale) },
 		{ (int)(oo.x.max - 2 * tr.scale),	(int)(oo.y.max - 2 * tr.scale) }, 0x30C0F0);
-	master_bm.rectangle({ {(int64)(oo.x.min + 2 * tr.scale), (int64)(oo.x.max - 2 * tr.scale) + 1},
-		{(int64)(oo.y.min + (4 + ((int64)cursor - first) * 16) * tr.scale),
-		(int64)(oo.y.min + (19 + ((int64)cursor - first) * 16) * tr.scale) + 1} }, c_def);
+	master_bm.rectangle({ {(i64)(oo.x.min + 2 * tr.scale), (i64)(oo.x.max - 2 * tr.scale) + 1},
+		{(i64)(oo.y.min + (4 + ((i64)cursor - first) * 16) * tr.scale),
+		(i64)(oo.y.min + (19 + ((i64)cursor - first) * 16) * tr.scale) + 1} }, c_def);
 	if ((tf != a) || (cursor != curf))
 	{
 		tf = a;
 		curf = cursor;
-		int64 a1 = 0;
+		i64 a1 = 0;
 		if ((cursor >= 0) || (cursor < (int)a->link.size()))
 			if ((*a->link[cursor])(a))
 				a1 = a->link[cursor]->get_flags(a);
@@ -1163,7 +1163,7 @@ void _g_list_link::ris2(_trans tr, bool final)
 	}
 }
 
-void _g_list_link::run(_tetron* tt0, _tetron* tt, uint64 flags)
+void _g_list_link::run(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	cha_area();
 	_g_edit64bit* ee = find1<_g_edit64bit>(flag_information);
@@ -1246,7 +1246,7 @@ void _g1list::calc_local_area()
 		n++;
 		if (i->test_flags(this, flag_specialty)) na = n;
 	}
-	local_area.y.max += ((int64)n - na) * 16;
+	local_area.y.max += ((i64)n - na) * 16;
 	local_area.y.min -= (na - 1LL) * 16;
 	area_definite = false;
 }
@@ -1289,7 +1289,7 @@ bool _g1list::mouse_wheel2(_xy r)
 		init_sel();
 		return true;
 	}
-	int dx = -(int)(*n_wheel->operator int64 * ());
+	int dx = -(int)(*n_wheel->operator i64 * ());
 	if (dx == 0) return true;
 	del_area();
 	bool start = false;
@@ -1533,7 +1533,7 @@ void _g_tetron::ris2(_trans tr, bool final)
 	return;
 }
 
-void _g_tetron::add_unique_flags(_tetron* t, uint64 flags, bool after)
+void _g_tetron::add_unique_flags(_tetron* t, u64 flags, bool after)
 {
 	if (star) delete_hvost(star, true, false);
 	_tetron::add_unique_flags(t, flags, after);
@@ -1614,7 +1614,7 @@ void _g_link::ris2(_trans tr, bool final)
 	_g_tetron* g2 = find1<_g_tetron>(flag_specialty2);
 	_tetron* t1 = g1->find1<_tetron>(flag_specialty);
 	_tetron* t2 = g2->find1<_tetron>(flag_specialty);
-	uint64 f = t1->get_flags(t2);
+	u64 f = t1->get_flags(t2);
 
 	constexpr uint cc[32] =
 	{
@@ -1723,7 +1723,7 @@ bool _g_link::mouse_down_left2(_xy r)
 	_g_tetron* g2 = find1<_g_tetron>(flag_specialty2);
 	_tetron* t1 = g1->find1<_tetron>(flag_specialty);
 	_tetron* t2 = g2->find1<_tetron>(flag_specialty);
-	uint64 f;
+	u64 f;
 	if (act_li < v_link)
 		f = (1ULL << act_li);
 	else

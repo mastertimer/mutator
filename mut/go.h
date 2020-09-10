@@ -64,7 +64,7 @@ struct _g_edit_multi_string : public _t_go
 {
 	_multi_string strings;
 	_ixy cursor;
-	int64 first = 0; // номер первого элемента в списке
+	i64 first = 0; // номер первого элемента в списке
 
 	_g_edit_multi_string();
 
@@ -79,7 +79,7 @@ struct _g_edit_multi_string : public _t_go
 	void key_press(ushort key)                        override;
 	void key_down(ushort key)                         override;
 	bool mouse_down_left2(_xy r)                    override;
-	void run(_tetron* tt0, _tetron* tt, uint64 flags) override;
+	void run(_tetron* tt0, _tetron* tt, u64 flags) override;
 
 private:
 	int max_i = 0, len2 = 0; // вспомогательные
@@ -89,7 +89,7 @@ private:
 
 struct _g_edit64bit : public _t_go
 {
-	int64 a;
+	i64 a;
 
 	_g_edit64bit();
 	uchar type() { return 1; }
@@ -99,7 +99,7 @@ struct _g_edit64bit : public _t_go
 	void mouse_finish_move();
 	bool mouse_down_left2(_xy r) override;
 	operator _g_edit64bit* () { return this; }
-	void run(_tetron* tt0, _tetron* tt, uint64 flags);
+	void run(_tetron* tt0, _tetron* tt, u64 flags);
 
 private:
 	int act;
@@ -113,7 +113,7 @@ struct _g_edit_one : public _g_rect
 	size_t cursor = 0;
 	int zn = 5;
 	double a = 0.0;
-	int64 a_i = 0;
+	i64 a_i = 0;
 	std::wstring s = L"0";
 	int mode = 0; // 0 - int64, 1 - double
 
@@ -130,7 +130,7 @@ struct _g_edit_one : public _g_rect
 
 struct _g_button : public _t_go
 {
-	int64 checked;
+	i64 checked;
 	std::wstring hint;
 	_picture picture;
 
@@ -138,7 +138,7 @@ struct _g_button : public _t_go
 
 	operator std::wstring* ()        override { return &hint; }
 	operator _picture* ()            override { return &picture; }
-	operator int64* ()               override { return &checked; }
+	operator i64* ()               override { return &checked; }
 	operator _g_button* ()           override { return this; }
 
 	uchar type()                     override { return 34; }
@@ -191,7 +191,7 @@ struct _g_list_link : public _g_rect // графический объект - с
 	int get_froglif() { return 0xF5; }
 	void ris2(_trans tr, bool final) override;
 	bool mouse_down_left2(_xy r) override;
-	void run(_tetron* tt0, _tetron* tt, uint64 flags) override;
+	void run(_tetron* tt0, _tetron* tt, u64 flags) override;
 	operator _g_list_link* () { return this; }
 
 private:
@@ -251,7 +251,7 @@ struct _g_tetron : public _t_go
 	bool mouse_move2(_xy r)        override;
 	void mouse_finish_move()         override;
 	bool test_local_area(_xy b)    override; // лежит ли точка внутри
-	void add_unique_flags(_tetron* t, uint64 flags, bool after = true) override; // создать уникальную связь
+	void add_unique_flags(_tetron* t, u64 flags, bool after = true) override; // создать уникальную связь
 
 private:
 	std::vector<_t_basic_go*> drawn_create_star; // стек отрисованных в момент создания звезды
@@ -282,7 +282,7 @@ struct _g_tetron2 : public _t_go
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename _t>
-_t* find1_plus_gtetron(_tetron* tet, uint64 flags)
+_t* find1_plus_gtetron(_tetron* tet, u64 flags)
 {
 	for (auto i : tet->link)
 	{
@@ -303,7 +303,7 @@ _t* find1_plus_gtetron(_tetron* tet, uint64 flags)
 struct _g_link : public _t_go
 {
 	static constexpr double dalpha = 0.4;
-	static constexpr int64 v_link = 9;
+	static constexpr i64 v_link = 9;
 
 	_xy p11 = { 0, 0 };
 	_xy p12 = { 0, 0 };

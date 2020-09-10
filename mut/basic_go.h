@@ -29,7 +29,7 @@ struct _t_basic_go : public _tetron
 	virtual _t_trans* ttrans() { return nullptr; } // ищет первый тетрон с трансофрмацией, указывающий на этот _t_go
 	virtual double final_radius() { return 8.0; } // минимальный полуразмер, после которого не рисуется структура
 	void set_layer(double n); // задать слой
-	_t_trans* set_t_trans(_tetron* go, uint64 flags); // именяет прокладочный тетрон ??
+	_t_trans* set_t_trans(_tetron* go, u64 flags); // именяет прокладочный тетрон ??
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -148,7 +148,7 @@ struct _g_circle : public _t_go
 	void push(_wjson& b)                              override;
 	void pop(_rjson& b)                               override;
 	void ris2(_trans tr, bool final)                 override;
-	void run(_tetron* tt0, _tetron* tt, uint64 flags) override;
+	void run(_tetron* tt0, _tetron* tt, u64 flags) override;
 	bool test_local_area(_xy b)                     override; // лежит ли точка внутри
 
 	void calc_local_area();
@@ -169,7 +169,7 @@ struct _g_froglif : public _t_go
 	{
 		uchar f[size_f]{};
 		int f_int;
-		int64 f_int64;
+		i64 f_int64;
 	};
 
 	_g_froglif() { local_area = { {0, 24}, {0, 24} }; }
@@ -181,7 +181,7 @@ struct _g_froglif : public _t_go
 	void  push(_wjson& b)      override { _t_go::push(b); b.add_mem("f", f, size_f); }
 	void  pop(_rjson& b)       override { _t_go::pop(b); b.read_mem("f", f, size_f); }
 
-	operator int64* ()         override { return &f_int64; }
+	operator i64* ()         override { return &f_int64; }
 
 	void ris2(_trans tr, bool final) override;
 };
@@ -200,7 +200,7 @@ struct _g_line : public _t_go
 	void push(_wjson& b)                              override;
 	void pop(_rjson& b)                               override;
 	void ris2(_trans tr, bool final)                 override;
-	void run(_tetron* tt0, _tetron* tt, uint64 flags) override;
+	void run(_tetron* tt0, _tetron* tt, u64 flags) override;
 	bool test_local_area(_xy b)                     override; // лежит ли точка внутри
 
 	void calc_local_area();

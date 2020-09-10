@@ -14,9 +14,9 @@ struct _wjson
 	_wjson& end(); // конец структуры или массива
 
 	_wjson& add(std::string_view name, bool b)             { add_start(name) << ((b) ? "true" : "false"); return *this; }
-	_wjson& add(std::string_view name, char b)             { add_start(name) << (int64)b; return *this; }
-	_wjson& add(std::string_view name, uint64 b)           { add_start(name) << b; return *this; }
-	_wjson& add(std::string_view name, int64 b)            { add_start(name) << b; return *this; }
+	_wjson& add(std::string_view name, char b)             { add_start(name) << (i64)b; return *this; }
+	_wjson& add(std::string_view name, u64 b)           { add_start(name) << b; return *this; }
+	_wjson& add(std::string_view name, i64 b)            { add_start(name) << b; return *this; }
 	_wjson& add(std::string_view name, double b)           { add_start(name) << b; return *this; }
 	_wjson& add(std::string_view name, std::string_view b) { add_start(name) << "\"" << b << "\""; return *this; }
 	_wjson& add(std::string_view name, astr b)      { add_start(name) << "\"" << b << "\""; return *this; }
@@ -31,10 +31,10 @@ struct _wjson
 
 	template <typename _t> _wjson& add(_t &b) { return add("", b); }
 
-	_wjson& add_hex(std::string_view name, uint64 b);
-	_wjson& add_hex(uint64 b) { return add_hex("", b); }
-	_wjson& add_mem(std::string_view name, void* b, uint64 size); // блок памяти в виде строки
-	_wjson& add_mem(void* b, uint64 size) { return add_mem("", b, size); }
+	_wjson& add_hex(std::string_view name, u64 b);
+	_wjson& add_hex(u64 b) { return add_hex("", b); }
+	_wjson& add_mem(std::string_view name, void* b, u64 size); // блок памяти в виде строки
+	_wjson& add_mem(void* b, u64 size) { return add_mem("", b, size); }
 
 private:
 	std::ofstream file;
@@ -66,13 +66,13 @@ struct _rjson
 	void read(std::string_view name, _multi_string& b);
 	void read(std::string_view name, _xy& b);
 	void read(std::string_view name, double& b);
-	void read(std::string_view name, int64& b);
-	void read(std::string_view name, uint64& b);
+	void read(std::string_view name, i64& b);
+	void read(std::string_view name, u64& b);
 	void read(std::string_view name, uint& b);
 	void read(std::string_view name, char& b);
 	void read(std::string_view name, std::wstring& b);
 
-	void read_mem(std::string_view name, void* b, uint64 size); // блок памяти в виде строки
+	void read_mem(std::string_view name, void* b, u64 size); // блок памяти в виде строки
 
 private:
 	std::ifstream file;

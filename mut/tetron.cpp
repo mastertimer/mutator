@@ -4,18 +4,18 @@ __hash_table<_link> link;
 
 uint hash_func(const _he_intermediate& a)
 {
-	return (uint)((((uint64)a.tetron_before) >> 4) * 27644437 + (((uint64)a.tetron_after) >> 4) * 33391 +
+	return (uint)((((u64)a.tetron_before) >> 4) * 27644437 + (((u64)a.tetron_after) >> 4) * 33391 +
 	              a.flags_before * 16769023 + a.flags_after * 17971);
 }
 
 uint hash_func(const _pair_tetron& a)
 {
-	return (uint)((((uint64)a.low_tetron) >> 4) * 27644437 + (((uint64)a.high_tetron) >> 4) * 33391);
+	return (uint)((((u64)a.low_tetron) >> 4) * 27644437 + (((u64)a.high_tetron) >> 4) * 33391);
 }
 
 _tetron::_tetron() { all_tetron.insert(id = id_tetron++, this); }
 
-void _tetron::find_all_intermediate(_tetron* t, uint64 flags_before, uint64 flags_after, _vector_id& res)
+void _tetron::find_all_intermediate(_tetron* t, u64 flags_before, u64 flags_after, _vector_id& res)
 { // !! может дублироватьс¤
 	for (auto i : link)
 	{
@@ -156,18 +156,18 @@ _tetron* _tetron::copy_plus()
 	return rr;
 }
 
-uint64 _tetron::get_flags(_tetron* t)
+u64 _tetron::get_flags(_tetron* t)
 {
 	_link& li = *::link.find(_pair_tetron(this, t));
 	return (li.low_tetron) ? li.get_flags(this) : 0;
 }
 
-void _tetron::set2_flags(_tetron* t, uint64 flags, func_fl trans, bool after)
+void _tetron::set2_flags(_tetron* t, u64 flags, func_fl trans, bool after)
 {
 	if (!t) return;
 	auto   err = ::link.find(_pair_tetron(this, t));
 	_link& li  = *err;
-	uint64 fl  = (li.low_tetron) ? li.get_flags(this) : 0;
+	u64 fl  = (li.low_tetron) ? li.get_flags(this) : 0;
 	trans(fl, flags);
 	if (li.low_tetron)
 	{
@@ -177,7 +177,7 @@ void _tetron::set2_flags(_tetron* t, uint64 flags, func_fl trans, bool after)
 	if (fl == 0) return;
 	err.life();
 
-	if ((uint64)this <= (uint64)t)
+	if ((u64)this <= (u64)t)
 	{
 		li.low_tetron  = this;
 		li.high_tetron = t;
@@ -201,13 +201,13 @@ void _tetron::set2_flags(_tetron* t, uint64 flags, func_fl trans, bool after)
 	}
 }
 
-void _tetron::run(_tetron* tt0, _tetron* tt, uint64 flags)
+void _tetron::run(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	for (_frozen i(this, flag_parent); i; i++) i->run(tt0, tt, flags);
 	for (_frozen i(this, flags); i; i++) i->run(tt, i, flags);
 }
 
-void _tetron::traversal(_hash_table_tetron* ht, uint64 flags, _vector_tetron* lt)
+void _tetron::traversal(_hash_table_tetron* ht, u64 flags, _vector_tetron* lt)
 {
 	if (ht->insert(this) == false) return;
 	if (lt) lt->push_back(this);
@@ -233,7 +233,7 @@ void _tetron::copy(_tetron* a)
 	pop(&stack);
 }
 
-void _tetron::add_unique_flags(_tetron* t, uint64 flags, bool after)
+void _tetron::add_unique_flags(_tetron* t, u64 flags, bool after)
 {
 	for (int i = (int)link.size() - 1; i >= 0; i--) // должна быть только одна!
 	{
@@ -247,9 +247,9 @@ void optimize_hash_intermediate()
 { // проверить подбор k, чтобы удалялось ~ 50%
 	if (hash_intermediate.size < 100000) return; // примерно 10МБ
 	uint          size_old   = hash_intermediate.size;
-	static uint64 old_number = 0;
+	static u64 old_number = 0;
 	static double k          = 0.5;
-	uint64        n_gr       = (uint64)(old_number + (number_intermediate - old_number) * k);
+	u64        n_gr       = (u64)(old_number + (number_intermediate - old_number) * k);
 	for (auto& i : hash_intermediate)
 	{
 		if ((i.tetron_before->get_flags(i.tetron_intermediate) == 0) ||
@@ -325,7 +325,7 @@ void _frozen::operator++(int)
 	tetron2 = nullptr;
 }
 
-_frozen::_frozen(_tetron* t, uint64 flags_) : tetron(t), i(0), tetron2(nullptr), flags(flags_)
+_frozen::_frozen(_tetron* t, u64 flags_) : tetron(t), i(0), tetron2(nullptr), flags(flags_)
 {
 	for (auto j : t->link)
 	{

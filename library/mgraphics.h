@@ -21,7 +21,7 @@ struct _picture
 	_picture& operator=(_picture&& move) noexcept;
 	void operator=(const _picture& move) noexcept;
 
-	uint* sl(int64 y) const noexcept { return &data[y * size.x]; }
+	uint* sl(i64 y) const noexcept { return &data[y * size.x]; }
 
 	void set_area(const _iarea &q) { area = q & size; }
 	bool resize(_isize wh);
@@ -31,9 +31,9 @@ struct _picture
 	void clear(uint c = 0xFF000000);
 	void line(_ixy p1, _ixy p2, uint c, bool rep = false); // линия rep - полное замещение цвета
 	void lines(_xy p1, _xy p2, double l, uint c); // точная линия заданной толщины
-	void text16(int64 x, int64 y, astr s, uint c); // простой текст высотой 16
-	void text16n(int64 x, int64 y, astr s, int64 n, uint c); // простой текст высотой 16*n
-	static _isize size_text16(std::string_view s, int64 n = 1); // размер текста *n
+	void text16(i64 x, i64 y, astr s, uint c); // простой текст высотой 16
+	void text16n(i64 x, i64 y, astr s, i64 n, uint c); // простой текст высотой 16*n
+	static _isize size_text16(std::string_view s, i64 n = 1); // размер текста *n
 	void froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2 = 0);
 
 	void fill_circle(_xy p, double r, uint c);
@@ -46,15 +46,15 @@ struct _picture
 	void rectangle(_iarea oo, uint c);
 
 	void draw(_ixy r, _picture &bm);
-	void stretch_draw(_picture* bm, int64 x, int64 y, double m);
-	void stretch_draw_speed(_picture* bm, int64 nXDest, int64 nYDest, double m);
+	void stretch_draw(_picture* bm, i64 x, i64 y, double m);
+	void stretch_draw_speed(_picture* bm, i64 nXDest, i64 nYDest, double m);
 
 //	void text0(int x, int y, std::string_view s, int h, uint c, uint bg);
 
 protected:
 	_iarea area; // разрешенная область для рисования
 
-	void line_vert_rep_speed(_ixy p, i8 y2, uint c); // вертикальная линия замещения без проверок диапазона
+	void line_vert_rep_speed(_ixy p, i64 y2, uint c); // вертикальная линия замещения без проверок диапазона
 
 	void fill_rect_rep_speed(_iarea r, uint c); // прямоугольник - просто замена цвета без проверок диапазона
 	void fill_rect_transparent_speed(_iarea r, uint c);

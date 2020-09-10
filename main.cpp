@@ -67,13 +67,13 @@ void paint_mult(HWND hwnd)
 
 void init_shift(WPARAM wparam)
 {
-	*n_s_shift ->operator int64* () = wparam & MK_SHIFT;
-	*n_s_alt   ->operator int64* () = false;
-	*n_s_ctrl  ->operator int64* () = wparam & MK_CONTROL;
-	*n_s_left  ->operator int64* () = wparam & MK_LBUTTON;
-	*n_s_right ->operator int64* () = wparam & MK_RBUTTON;
-	*n_s_middle->operator int64* () = wparam & MK_MBUTTON;
-	*n_s_double->operator int64* () = false;
+	*n_s_shift ->operator i64* () = wparam & MK_SHIFT;
+	*n_s_alt   ->operator i64* () = false;
+	*n_s_ctrl  ->operator i64* () = wparam & MK_CONTROL;
+	*n_s_left  ->operator i64* () = wparam & MK_LBUTTON;
+	*n_s_right ->operator i64* () = wparam & MK_RBUTTON;
+	*n_s_middle->operator i64* () = wparam & MK_MBUTTON;
+	*n_s_double->operator i64* () = false;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -107,25 +107,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_MOUSELEAVE:
 		tracking_mouse = false;
-		if (*n_s_left->operator int64 * ())
+		if (*n_s_left->operator i64 * ())
 		{
-			*n_s_left->operator int64* () = 0;
+			*n_s_left->operator i64* () = 0;
 			n_up_left->run(0, n_up_left, flag_run);
 		}
-		if (*n_s_right->operator int64 * ())
+		if (*n_s_right->operator i64 * ())
 		{
-			*n_s_right->operator int64* () = 0;
+			*n_s_right->operator i64* () = 0;
 			n_up_right->run(0, n_up_right, flag_run);
 		}
-		if (*n_s_middle->operator int64 * ())
+		if (*n_s_middle->operator i64 * ())
 		{
-			*n_s_middle->operator int64* () = 0;
+			*n_s_middle->operator i64* () = 0;
 			n_up_middle->run(0, n_up_middle, flag_run);
 		}
 		return 0;
 	case WM_MOUSEWHEEL:
 		init_shift(GET_KEYSTATE_WPARAM(wParam));
-		*n_wheel->operator int64* () = GET_WHEEL_DELTA_WPARAM(wParam);
+		*n_wheel->operator i64* () = GET_WHEEL_DELTA_WPARAM(wParam);
 		n_wheel->run(0, n_wheel, flag_run);
 		if (!master_obl_izm.empty()) paint(hWnd);
 		return 0;
@@ -145,7 +145,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_LBUTTONDBLCLK: case WM_RBUTTONDBLCLK: case WM_MBUTTONDBLCLK:
 		init_shift(wParam);
-		*n_s_double->operator int64* () = true;
+		*n_s_double->operator i64* () = true;
 		if (message == WM_LBUTTONDBLCLK) n_down_left->run(0, n_down_left, flag_run);
 		if (message == WM_RBUTTONDBLCLK) n_down_right->run(0, n_down_right, flag_run);
 		if (message == WM_MBUTTONDBLCLK) n_down_middle->run(0, n_down_middle, flag_run);
@@ -182,12 +182,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			return 0;
 		}
 		//		InitShift(Shift);
-		*n_down_key->operator int64* () = wParam;
+		*n_down_key->operator i64* () = wParam;
 		n_down_key->run(0, n_down_key, flag_run);
 		if (!master_obl_izm.empty()) paint(hWnd);
 		return 0;
 	case WM_CHAR:
-		*n_press_key->operator int64* () = wParam;
+		*n_press_key->operator i64* () = wParam;
 		n_press_key->run(0, n_press_key, flag_run);
 		if (!master_obl_izm.empty()) paint(hWnd);
 		return 0;
@@ -260,7 +260,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	if (!hWnd) return 3;
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
-	set_cursorx((*n_perenos->operator int64 * ()) ? _cursor::size_all : _cursor::normal);
+	set_cursorx((*n_perenos->operator i64 * ()) ? _cursor::size_all : _cursor::normal);
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0))
 	{

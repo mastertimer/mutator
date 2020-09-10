@@ -107,7 +107,7 @@ namespace mutator
 	void save_to_txt_file(std::filesystem::path fn)
 	{
 		_wjson                     tet(fn);
-		std::map<uint64, _tetron*> tt; // чтобы упорядочить тетроны
+		std::map<u64, _tetron*> tt; // чтобы упорядочить тетроны
 		for (auto i : all_tetron) tt[i->id] = i;
 		tet.arr("tetrons");
 		for (auto i : tt)
@@ -116,7 +116,7 @@ namespace mutator
 			tet.str().add("name", t->name()).add("id", i.first);
 			t->push(tet);
 			tet.arr("links");
-			std::map<uint64, _link*> li;
+			std::map<u64, _link*> li;
 			for (auto j : t->link) li[(*j)(t)->id] = j;
 			for (auto j : li) tet.str("", true).add("id", (*j.second)(t)->id).add_hex("flags", j.second->get_flags(t)).end();
 			tet.end().end();
@@ -150,7 +150,7 @@ namespace mutator
 			tet.obj();
 			if (tet.null) break;
 			std::string name = tet.read_string("name");
-			uint64 my_id;
+			u64 my_id;
 			tet.read("id", my_id);
 			id_tetron = my_id;
 			_tetron* tt = create_tetron(name);
@@ -160,9 +160,9 @@ namespace mutator
 			{
 				tet.obj();
 				if (tet.null) break;
-				uint64 id;
+				u64 id;
 				tet.read("id", id);
-				uint64 flags;
+				u64 flags;
 				tet.read("flags", flags);
 				if (id <= my_id) _id(my_id)->add_flags(_id(id), flags, false);
 				tet.end();
@@ -255,19 +255,19 @@ namespace mutator
 
 	void mouse_button_left(bool pressed)
 	{
-		*n_s_left->operator int64* () = pressed;
+		*n_s_left->operator i64* () = pressed;
 		if (pressed) n_down_left->run(0, n_down_left, flag_run); else n_up_left->run(0, n_up_left, flag_run);
 	}
 
 	void mouse_button_right(bool pressed)
 	{
-		*n_s_right->operator int64* () = pressed;
+		*n_s_right->operator i64* () = pressed;
 		if (pressed) n_down_right->run(0, n_down_right, flag_run); else n_up_right->run(0, n_up_right, flag_run);
 	}
 
 	void mouse_button_middle(bool pressed)
 	{
-		*n_s_middle->operator int64* () = pressed;
+		*n_s_middle->operator i64* () = pressed;
 		if (pressed) n_down_middle->run(0, n_down_middle, flag_run); else n_up_middle->run(0, n_up_middle, flag_run);
 	}
 

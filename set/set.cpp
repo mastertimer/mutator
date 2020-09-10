@@ -32,7 +32,7 @@ void load_mmm(std::filesystem::path file_name)
 	fs.read("mmm3", mmm3);
 }
 
-void fun13(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	static bool first = true; if (!first) return; first = false;
 	ss.load_from_file(exe_path.wstring() + ss_file);
@@ -58,7 +58,7 @@ void fun13(_tetron* tt0, _tetron* tt, uint64 flags)
 	load_mmm(exe_path.wstring() + mmm_file);
 }
 
-void fun15(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun15(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	for (_frozen i(n_timer1000, flag_run); i; i++)
 	{
@@ -76,7 +76,7 @@ int popitok_prodaz = 2;     // сколько раз можно купить/п�
 int gotovo_prodaz  = 0;     // сколько сделок
 int vrema_prodat   = 0;     // время когда нужно продать
 
-void fun16(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (zamok_pokupki) return;
 	_prices a;
@@ -151,13 +151,13 @@ void fun16(_tetron* tt0, _tetron* tt, uint64 flags)
 	fu->run(0, fu, flag_run);
 }
 
-void fun19(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun19(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_g_button* b = *tt0;
 	can_trade = b->checked;
 }
 
-void fun20(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun20(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (zamok_pokupki) return;
 	if (mmm1 == L"1") load_mmm(exe_path.wstring() + mmm_file);
@@ -166,7 +166,7 @@ void fun20(_tetron* tt0, _tetron* tt, uint64 flags)
 	fu->run(0, fu, flag_run);
 }
 
-void fun21(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun21(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (zamok_pokupki) return;
 	if (mmm1 == L"1") load_mmm(exe_path.wstring() + mmm_file);
@@ -175,23 +175,23 @@ void fun21(_tetron* tt0, _tetron* tt, uint64 flags)
 	fu->run(0, fu, flag_run);
 }
 
-void fun22(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun22(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	graph->size_el++;
 	graph->obn = true;
 	graph->cha_area();
 }
 
-void fun30(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun30(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (graph->size_el > 1) graph->size_el--;
 	graph->obn = true;
 	graph->cha_area();
 }
 
-void MouseMoveClick(i8 x, i8 y)
+void MouseMoveClick(i64 x, i64 y)
 {
-	SetCursorPos((i4)x, (i4)y);
+	SetCursorPos((int)x, (int)y);
 	//	Mouse->CursorPos = a;
 	//	mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0,GetMessageExtraInfo());
 	//	mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0,GetMessageExtraInfo());
@@ -281,11 +281,11 @@ void buy_stock(_tetron* tt, bool buy)
 			//			MessageBox(0, L"не найдена покупка/продажа", L"упс..", MB_OK | MB_TASKMODAL);
 			return;
 		}
-		u4 c = recognize.image.sl(recognize.elem[n_pok].area.y.min)[recognize.elem[n_pok].area.x.min - 1];
-		u1* cc = (u1*)& c;
+		uint c = recognize.image.sl(recognize.elem[n_pok].area.y.min)[recognize.elem[n_pok].area.x.min - 1];
+		uchar* cc = (uchar*)& c;
 		bool cfpok = (cc[0] != cc[1]) || (cc[0] != cc[2]); // не серый цвет
 		c = recognize.image.sl(recognize.elem[n_pro].area.y.min)[recognize.elem[n_pro].area.x.min - 1];
-		cc = (u1*)& c;
+		cc = (uchar*)& c;
 		bool cfpro = (cc[0] != cc[1]) || (cc[0] != cc[2]); // не серый цвет
 //		bool cfpok = (recognize.image.sl(recognize.elem[n_pok].area.y.min)[recognize.elem[n_pok].area.x.min - 1] != recognize.image.data[0]);
 //		bool cfpro = (recognize.image.sl(recognize.elem[n_pro].area.y.min)[recognize.elem[n_pro].area.x.min - 1] != recognize.image.data[0]);
@@ -451,7 +451,7 @@ void buy_stock(_tetron* tt, bool buy)
 			n = 1000;
 			return;
 		}
-		SetCursorPos((i4)(recognize.elem[kk].area.x.min + 20 + recognize.offset.x), (i4)(recognize.elem[kk].area.y.min + 5 + recognize.offset.y));
+		SetCursorPos((int)(recognize.elem[kk].area.x.min + 20 + recognize.offset.x), (int)(recognize.elem[kk].area.y.min + 5 + recognize.offset.y));
 
 
 		MouseClick();                                                     // НЕЛЬЗЯ
@@ -478,7 +478,7 @@ void buy_stock(_tetron* tt, bool buy)
 			n = 1000;
 			return;
 		}
-		SetCursorPos((i4)(recognize.elem[kk].area.x.min + 20 + recognize.offset.x), (i4)(recognize.elem[kk].area.y.min + 5 + recognize.offset.y));
+		SetCursorPos((int)(recognize.elem[kk].area.x.min + 20 + recognize.offset.x), (int)(recognize.elem[kk].area.y.min + 5 + recognize.offset.y));
 		MouseClick();                                                     // НЕЛЬЗЯ
 		n = 29;
 		return;
@@ -497,7 +497,7 @@ void buy_stock(_tetron* tt, bool buy)
 			}
 			return;
 		}
-		SetCursorPos((i4)(recognize.offset.x + recognize.image.size.x - 23), (i4)(recognize.offset.y - 15));
+		SetCursorPos((int)(recognize.offset.x + recognize.image.size.x - 23), (int)(recognize.offset.y - 15));
 		MouseClick();                                                     // НЕЛЬЗЯ
 		n = 40;
 		return;
@@ -507,12 +507,12 @@ void buy_stock(_tetron* tt, bool buy)
 	zamok_pokupki = false;
 }
 
-void fun35(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun35(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	buy_stock(tt, true);
 }
 
-void fun36(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun36(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	buy_stock(tt, false);
 }
@@ -611,7 +611,7 @@ void _super_stat::otgruzka(int rez, int Vrez, int* deko)
 			data.push_int24(deko[i]);
 }
 
-void _super_stat::read(int64 n, _prices& c, _info_pak* inf)
+void _super_stat::read(i64 n, _prices& c, _info_pak* inf)
 {
 	if (inf) inf->ok = false;
 	if ((n < 0) || (n >= size)) return;
@@ -629,7 +629,7 @@ void _super_stat::read(int64 n, _prices& c, _info_pak* inf)
 	}
 	if (read_n + 1 != n)
 	{
-		int64 k = n / step_pak_cc;
+		i64 k = n / step_pak_cc;
 		if ((read_n > n) || (read_n <= k * step_pak_cc - 1))
 		{
 			data.adata = u_dd2[k];
@@ -1312,13 +1312,13 @@ _super_stat::_super_stat()
 
 bool _g_graph::mouse_down_left2(_xy r)
 {
-	x_tani = (int64)r.x;
+	x_tani = (i64)r.x;
 	return true;
 }
 
 void _g_graph::mouse_move_left2(_xy r)
 {
-	int64 dx = ((int64)r.x - x_tani) / size_el;
+	i64 dx = ((i64)r.x - x_tani) / size_el;
 	if (dx == 0) return;
 	x_tani += dx * size_el;
 
@@ -1333,7 +1333,7 @@ void _g_graph::mouse_move_left2(_xy r)
 	polz->run(0, polz, flag_run);
 }
 
-void _g_graph::run(_tetron* tt0, _tetron* tt, uint64 flags)
+void _g_graph::run(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	obn = true;
 	cha_area();
@@ -1353,18 +1353,18 @@ void _g_graph::ris2(_trans tr, bool final)
 }
 
 // вынести в общий модуль?
-void OSpordis(double min, double max, int64 maxN, double& mi, double& step)
+void OSpordis(double min, double max, i64 maxN, double& mi, double& step)
 {
-	int64 n;
+	i64 n;
 	double step2;
 	if (maxN < 2) maxN = 2;
 	step = exp(round(log((max - min) / maxN) / log(10)) * log(10));
 	do
 	{
 		{
-			mi = (int64(min / step)) * step;
+			mi = (i64(min / step)) * step;
 			if (mi < min) mi += step;
-			n = (int64((max - mi) / step)) + 1;
+			n = (i64((max - mi) / step)) + 1;
 		}
 		if (n < maxN) step = step * 0.1; else break;
 	} while (true);
@@ -1372,31 +1372,31 @@ void OSpordis(double min, double max, int64 maxN, double& mi, double& step)
 	{
 		step = step * 10;
 		{
-			mi = (int64(min / step)) * step;
+			mi = (i64(min / step)) * step;
 			if (mi < min) mi += step;
-			n = (int64((max - mi) / step)) + 1;
+			n = (i64((max - mi) / step)) + 1;
 		}
 	}
 	step2 = step;
 	step = step2 * 0.2;
 	{
-		mi = (int64(min / step)) * step;
+		mi = (i64(min / step)) * step;
 		if (mi < min) mi += step;
-		n = (int64((max - mi) / step)) + 1;
+		n = (i64((max - mi) / step)) + 1;
 	}
 	if (n <= maxN) return;
 	step = step2 * 0.5;
 	{
-		mi = (int64(min / step)) * step;
+		mi = (i64(min / step)) * step;
 		if (mi < min) mi += step;
-		n = (int64((max - mi) / step)) + 1;
+		n = (i64((max - mi) / step)) + 1;
 	}
 	if (n <= maxN) return;
 	step = step2;
 	{
-		mi = (int64(min / step)) * step;
+		mi = (i64(min / step)) * step;
 		if (mi < min) mi += step;
-		n = (int64((max - mi) / step)) + 1;
+		n = (i64((max - mi) / step)) + 1;
 	}
 }
 
@@ -1436,7 +1436,7 @@ void _g_graph::draw(_isize size)
 	int ll = (int)curve.size();
 	if (ll == 0) return;
 
-	int64 k_el = bm.size.x / size_el;
+	i64 k_el = bm.size.x / size_el;
 	if (k_el < 1) return;
 	double r_el = (double)bm.size.x / k_el;
 
@@ -1533,8 +1533,8 @@ void _g_graph::draw(_isize size)
 		return;
 	}
 	// рисование горизонтальных линий сетки с подписями
-	int64 dex = 35; // длина подписи
-	int64 maxN = bm.size.y / 15;
+	i64 dex = 35; // длина подписи
+	i64 maxN = bm.size.y / 15;
 	if (maxN > 1)
 	{
 		double mi, step;
@@ -1585,10 +1585,10 @@ void _g_graph::draw(_isize size)
 		if (time_[i] % stept == 0)
 		{ // вертикальная линия с подписью
 			double x = rel * i;
-			if ((x <= dex) || (x >= (int64)bm.size.x - dex)) continue;
+			if ((x <= dex) || (x >= (i64)bm.size.x - dex)) continue;
 			uint cl = (sca) ? (0x80FF0000) : col_setka;
 			bm.line({ (int)x, 0 }, { (int)x, bm.size.y - 1 }, cl);
-			if ((x - 13 <= dex) || (x + 13 >= (int64)bm.size.x - dex)) continue;
+			if ((x - 13 <= dex) || (x + 13 >= (i64)bm.size.x - dex)) continue;
 			int ii = (time_[i] / dele[ido]) % ost[ido];
 			s[4] = '0' + (ii % 10);
 			s[3] = '0' + (ii / 10);
@@ -1602,7 +1602,7 @@ void _g_graph::draw(_isize size)
 		if (sca)
 		{
 			double x = rel * i;
-			if ((x <= dex) || (x >= (int64)bm.size.x - dex)) continue;
+			if ((x <= dex) || (x >= (i64)bm.size.x - dex)) continue;
 			bm.line({ (int)x, 0 }, { (int)x, bm.size.y - 1 }, 0x80FF0000);
 		}
 	}
@@ -1687,9 +1687,9 @@ void _mctds_candle::draw(int n, _area area, _bitmap* bm)
 
 void _mctds_candle::recovery()
 {
-	int64 vcc = 0;
+	i64 vcc = 0;
 	if (cen1m.size()) vcc = cen1m.back().ncc.max;
-	int64 ssvcc = ss.size;
+	i64 ssvcc = ss.size;
 	if (ssvcc == vcc) return; // ничего не изменилось
 	if (vcc < ssvcc) // добавились несколько цен
 	{
@@ -1702,7 +1702,7 @@ void _mctds_candle::recovery()
 			cp->cc *= ((double)cp->ncc.max - cp->ncc.min);
 			t = cp->time;
 		}
-		for (int64 i = vcc; i < ssvcc; i++)
+		for (i64 i = vcc; i < ssvcc; i++)
 		{
 			if (i > 572737) // i > 572738
 			{
@@ -1744,7 +1744,7 @@ void _mctds_candle::recovery()
 	cen1m.clear();
 	int t = 0;
 	_cen_pak* cp = 0;
-	for (int64 i = 0; i < ssvcc; i++)
+	for (i64 i = 0; i < ssvcc; i++)
 	{
 		ss.read(i, cc);
 		int t2 = cc.time.to_minute();
@@ -1861,24 +1861,24 @@ void _nervous_oracle::get_t_info(int t, _element_chart* e)
 	e->max = e->middle;
 }
 
-_latest_events _nervous_oracle::get_latest_events(int64 nn)
+_latest_events _nervous_oracle::get_latest_events(i64 nn)
 {
-	const int64 k = 4;
+	const i64 k = 4;
 	_latest_events e;
 	e.event[0] = e.event[1] = e.event[2] = e.event[3] = 0;
 	e.minute[0] = e.minute[1] = e.minute[2] = e.minute[3] = 0;
 	e.x[0] = e.x[1] = e.x[2] = e.x[3] = 0.0;
 	if (nn < 10) return e;
-	int64 ii = std::max(k, nn - 40);
+	i64 ii = std::max(k, nn - 40);
 	int ee = 0;
-	for (int64 n = nn; n >= ii; n--)
+	for (i64 n = nn; n >= ii; n--)
 	{
-		if ((int64)zn[n].time - zn[n - k].time != k * 60) continue;
+		if ((i64)zn[n].time - zn[n - k].time != k * 60) continue;
 		bool rost_pro = true;
 		bool rost_pok = true;
 		bool pade_pro = true;
 		bool pade_pok = true;
-		for (int64 i = n - k; i < n; i++)
+		for (i64 i = n - k; i < n; i++)
 		{
 			if (zn[i].r_pro >= zn[i + 1].r_pro) rost_pro = false;
 			if (zn[i].r_pok >= zn[i + 1].r_pok) rost_pok = false;
@@ -1908,14 +1908,14 @@ _latest_events _nervous_oracle::get_latest_events(int64 nn)
 
 void _nervous_oracle::draw(int n, _area area, _bitmap* bm)
 {
-	const int64 k = 4;
+	const i64 k = 4;
 	if (n < k) return;
-	if ((int64)zn[n].time - zn[n - k].time != k * 60) return;
+	if ((i64)zn[n].time - zn[n - k].time != k * 60) return;
 	bool rost_pro = true;
 	bool rost_pok = true;
 	bool pade_pro = true;
 	bool pade_pok = true;
-	for (int64 i = n - k; i < n; i++)
+	for (i64 i = n - k; i < n; i++)
 	{
 		if (zn[i].r_pro >= zn[i + 1].r_pro) rost_pro = false;
 		if (zn[i].r_pok >= zn[i + 1].r_pok) rost_pok = false;
@@ -1944,9 +1944,9 @@ void _nervous_oracle::draw(int n, _area area, _bitmap* bm)
 
 void _nervous_oracle::recovery()
 {
-	int64 vcc = 0;
+	i64 vcc = 0;
 	if (zn.size()) vcc = zn.back().ncc.max;
-	int64 ssvcc = ss.size;
+	i64 ssvcc = ss.size;
 	if (ssvcc == vcc) return; // ничего не изменилось
 	if (vcc < ssvcc) // добавились несколько цен
 	{
@@ -1965,7 +1965,7 @@ void _nervous_oracle::recovery()
 			}
 			t = cp->time;
 		}
-		for (int64 i = vcc; i < ssvcc; i++)
+		for (i64 i = vcc; i < ssvcc; i++)
 		{
 			ss.read(i, cc, &inf);
 			int t2 = cc.time.to_minute();
@@ -2042,7 +2042,7 @@ void _nervous_oracle::recovery()
 	zn.clear();
 	int t = 0;
 	_element_nervous* cp = 0;
-	for (int64 i = 0; i < ssvcc; i++)
+	for (i64 i = 0; i < ssvcc; i++)
 	{
 		ss.read(i, cc, &inf);
 		int t2 = cc.time.to_minute();
@@ -2153,9 +2153,9 @@ int _oracle3::get_n()
 
 void _oracle3::recovery()
 {
-	int64 vcc = 0;
+	i64 vcc = 0;
 	if (zn.size()) vcc = zn.back().ncc.max;
-	int64 ssvcc = ss.size;
+	i64 ssvcc = ss.size;
 	if (ssvcc == vcc) return; // ничего не изменилось
 	if (vcc < ssvcc) // добавились несколько цен
 	{
@@ -2167,7 +2167,7 @@ void _oracle3::recovery()
 			cp = &zn.back();
 			t = cp->time;
 		}
-		for (int64 i = vcc; i < ssvcc; i++)
+		for (i64 i = vcc; i < ssvcc; i++)
 		{
 			ss.read(i, cc);
 			int t2 = cc.time.to_minute();
@@ -2197,7 +2197,7 @@ void _oracle3::recovery()
 	zn.clear();
 	int t = 0;
 	_element_oracle* cp = 0;
-	for (int64 i = 0; i < ssvcc; i++)
+	for (i64 i = 0; i < ssvcc; i++)
 	{
 		ss.read(i, cc);
 		int t2 = cc.time.to_minute();
@@ -2231,11 +2231,11 @@ void _oracle3::draw(int n, _area area, _bitmap* bm)
 	max = 1;
 	for (auto& i : pri) i.clear();
 
-	for (int64 i = zn[n].ncc.min; i < zn[n].ncc.max; i++)
+	for (i64 i = zn[n].ncc.min; i < zn[n].ncc.max; i++)
 	{
 		if (i < begin_ss)
 		{
-			int64 delta = begin_ss - i;
+			i64 delta = begin_ss - i;
 			if (delta >= max_part)
 				part_ss.clear();
 			else
@@ -2250,11 +2250,11 @@ void _oracle3::draw(int n, _area area, _bitmap* bm)
 			}
 			begin_ss = i;
 		}
-		if (i >= begin_ss + (int64)part_ss.size())
+		if (i >= begin_ss + (i64)part_ss.size())
 		{
 			_prices w;
 			w.clear();
-			int64 delta = i - (begin_ss + (int)part_ss.size()) + 1;
+			i64 delta = i - (begin_ss + (int)part_ss.size()) + 1;
 			if (delta >= max_part)
 			{
 				part_ss.clear();
@@ -2272,7 +2272,7 @@ void _oracle3::draw(int n, _area area, _bitmap* bm)
 					}
 				}
 		}
-		int64 ii = i - begin_ss;
+		i64 ii = i - begin_ss;
 		if (part_ss[ii].empty()) ss.read(i, part_ss[ii]);
 		pri[part_ss[ii].time.second] = part_ss[ii];
 		min = zn[n].min - 1;
@@ -2312,7 +2312,7 @@ void _oracle3::draw(int n, _area area, _bitmap* bm)
 		int xx2 = x1 + (x2 - x1) * (i + 1) / kol - 1;
 		for (int j = rceni - 1; j >= 0; j--)
 		{
-			int64 ce = pri[ss].pro[j].c;
+			i64 ce = pri[ss].pro[j].c;
 			int yy1 = (int)(oo.y.min + (max - ce) * ddy / dd);
 			int yy2 = (int)(oo.y.min + (max - ce + 1) * ddy / dd) - 1;
 			if (yy2 < yy1) continue;
@@ -2323,7 +2323,7 @@ void _oracle3::draw(int n, _area area, _bitmap* bm)
 		}
 		for (int j = 0; j < rceni; j++)
 		{
-			int64 ce = pri[ss].pok[j].c;
+			i64 ce = pri[ss].pok[j].c;
 			int yy1 = (int)(oo.y.min + (max - ce) * ddy / dd);
 			int yy2 = (int)(oo.y.min + (max - ce + 1) * ddy / dd) - 1;
 			if (yy2 < yy1) continue;
@@ -2362,7 +2362,7 @@ _recognize::_recognize()
 			bm_[nf].clear(0);
 			bm_[nf].text(0, 0, ss.data(), 8, 0xffffff, 0);
 			ZeroMemory(aa, sizeof(ushort) * size.x);
-			for (int64 j = size.y - 1; j >= 0; j--)
+			for (i64 j = size.y - 1; j >= 0; j--)
 			{
 				uint* sl = bm_[nf].sl(j);
 				for (int i = 0; i < size.x; i++) aa[i] = (aa[i] << 1) + (sl[i] > 0);
@@ -2371,7 +2371,7 @@ _recognize::_recognize()
 			int ko = (int)size.x - 1;
 			while ((aa[na] == 0) && (na < ko)) na++;
 			while ((aa[ko] == 0) && (ko > na)) ko--;
-			int64 nbit = 0;
+			i64 nbit = 0;
 			for (int j = na; j <= ko; j++) nbit += bit16(aa[j]);
 			bu.cod(aa + na, ko - na + 1, c, nf, nbit);
 		}
@@ -2510,9 +2510,9 @@ bool _recognize::find_window_prices(RECT* rr)
 	return true;
 }
 
-int64 to_int(const std::wstring& s) // преобразование в число с игнорированием нечисловых символов
+i64 to_int(const std::wstring& s) // преобразование в число с игнорированием нечисловых символов
 {
-	int64 r = 0;
+	i64 r = 0;
 	bool znak = false;
 	int l = (int)s.size();
 	const wchar_t* data = s.data();
@@ -2530,10 +2530,10 @@ int _recognize::test_image(_prices* pr)
 {
 	find_text13(0xFF0000FF); // синим цветом покупки
 	if (elem.size() != rceni * 2) return 3;
-	int64 pre = 0;
+	i64 pre = 0;
 	for (int i = 0; i < rceni; i++)
 	{
-		int64 a = to_int(elem[i * 2i64].s);
+		i64 a = to_int(elem[i * 2i64].s);
 		if (a <= pre) return 4;
 		pre = a;
 		if ((a < 1) || (a > 65000)) return 5;
@@ -2546,7 +2546,7 @@ int _recognize::test_image(_prices* pr)
 	if (elem.size() != rceni * 2) return 7;
 	for (int i = 0; i < rceni; i++)
 	{
-		int64 a = to_int(elem[i * 2i64].s);
+		i64 a = to_int(elem[i * 2i64].s);
 		if (a <= pre) return 8;
 		pre = a;
 		if ((a < 1) || (a > 65000)) return 9;
@@ -2570,11 +2570,11 @@ int _recognize::read_prices_from_screen(_prices* pr)
 	find_text13(0xFF0000FF); // синим цветом покупки
 	size_t ww = elem.size();
 	if (elem.size() != rceni * 2) return 3;
-	int64 pre = 0;
-	for (i8 i = 0; i < rceni; i++)
+	i64 pre = 0;
+	for (i64 i = 0; i < rceni; i++)
 	{
 		std::wstring swe = elem[i * 2].s;
-		int64 a = to_int(swe);
+		i64 a = to_int(swe);
 		if (a <= pre) return 4;
 		pre = a;
 		if ((a < 1) || (a > 65000)) return 5;
@@ -2585,9 +2585,9 @@ int _recognize::read_prices_from_screen(_prices* pr)
 	}
 	find_red_text13(24); // красным цветом продажи
 	if (elem.size() != rceni * 2) return 7;
-	for (i8 i = 0; i < rceni; i++)
+	for (i64 i = 0; i < rceni; i++)
 	{
-		int64 a = to_int(elem[i * 2].s);
+		i64 a = to_int(elem[i * 2].s);
 		if (a <= pre) return 8;
 		pre = a;
 		if ((a < 1) || (a > 65000)) return 9;
@@ -2602,14 +2602,14 @@ int _recognize::read_prices_from_screen(_prices* pr)
 void _recognize::find_red_text13(uint err)
 {
 	elem.clear();
-	int64 rx = image.size.x;
+	i64 rx = image.size.x;
 	ushort* lin = new ushort[rx];
 	ZeroMemory(lin, sizeof(ushort) * rx);
-	for (int64 j = image.size.y - 1; j >= 0; j--)
+	for (i64 j = image.size.y - 1; j >= 0; j--)
 	{
 		uint* sl = image.sl(j);
-		int64 first = -1;
-		int64 last = -100;
+		i64 first = -1;
+		i64 last = -100;
 		bool norm;
 		for (int i = 0; i < rx; i++) {
 			uint cc = sl[i];
@@ -2632,7 +2632,7 @@ void _recognize::find_red_text13(uint err)
 				{
 					_area_string aa;
 					ushort s = 0;
-					for (int64 k = first; k <= last; k++) s |= lin[k];
+					for (i64 k = first; k <= last; k++) s |= lin[k];
 					aa.area = { {first, last + 1}, {j + 1, j + bit16(s) + 1} };
 					aa.s = rasp_text(lin + first, last - first + 1);
 					elem.push_back(aa);
@@ -2652,14 +2652,14 @@ void _recognize::find_text13(uint c, int err)
 	int c2 = (c >> 16) & 255;
 
 	elem.clear();
-	int64 rx = image.size.x;
+	i64 rx = image.size.x;
 	ushort* lin = new ushort[rx];
 	ZeroMemory(lin, sizeof(ushort) * rx);
-	for (int64 j = image.size.y - 1; j >= 0; j--)
+	for (i64 j = image.size.y - 1; j >= 0; j--)
 	{
 		uint* sl = image.sl(j);
-		int64 first = -1;
-		int64 last = -100;
+		i64 first = -1;
+		i64 last = -100;
 		bool norm;
 		for (int i = 0; i < rx; i++) {
 			uint cc = sl[i];
@@ -2687,7 +2687,7 @@ void _recognize::find_text13(uint c, int err)
 				{
 					_area_string aa;
 					ushort s = 0;
-					for (int64 k = first; k <= last; k++) s |= lin[k];
+					for (i64 k = first; k <= last; k++) s |= lin[k];
 					aa.area = { {first, last + 1}, {j + 1, j + bit16(s) + 1} };
 					aa.s = rasp_text(lin + first, last - first + 1);
 					elem.push_back(aa);
@@ -2703,14 +2703,14 @@ void _recognize::find_text13(uint c, int err)
 void _recognize::find_text13(uint c)
 {
 	elem.clear();
-	int64 rx = image.size.x;
+	i64 rx = image.size.x;
 	ushort* lin = new ushort[rx];
 	ZeroMemory(lin, sizeof(ushort) * rx);
-	for (int64 j = image.size.y - 1; j >= 0; j--)
+	for (i64 j = image.size.y - 1; j >= 0; j--)
 	{
 		uint* sl = image.sl(j);
-		int64 first = -1;
-		int64 last = -100;
+		i64 first = -1;
+		i64 last = -100;
 		bool norm;
 		for (int i = 0; i < rx; i++) {
 			lin[i] = (lin[i] << 1) + (sl[i] == c);
@@ -2731,7 +2731,7 @@ void _recognize::find_text13(uint c)
 				{
 					_area_string aa;
 					ushort s = 0;
-					for (int64 k = first; k <= last; k++) s |= lin[k];
+					for (i64 k = first; k <= last; k++) s |= lin[k];
 					aa.area = { {first, last + 1}, {j + 1, j + bit16(s) + 1} };
 					aa.s = rasp_text(lin + first, last - first + 1);
 					elem.push_back(aa);
@@ -2744,21 +2744,21 @@ void _recognize::find_text13(uint c)
 	delete[] lin;
 }
 
-std::wstring _recognize::rasp_text(ushort* aa, int64 vaa)
+std::wstring _recognize::rasp_text(ushort* aa, i64 vaa)
 {
 	std::wstring s;
 	wchar_t* s2_ = new wchar_t[vaa + 1i64];
 	ushort b = 0;
 	for (int k = 0; k < vaa; k++) b |= aa[k];
-	int64 vb = bit16(b);
-	int64 bestbit = 0;
-	for (int64 ii = 0; ii < 3; ii++)
+	i64 vb = bit16(b);
+	i64 bestbit = 0;
+	for (i64 ii = 0; ii < 3; ii++)
 	{
-		int64 sm = 12 - vb - ii;
+		i64 sm = 12 - vb - ii;
 		if (sm < -1) break;
 		int L = 0;
 		int i = 0;
-		int64 nbit = 0;
+		i64 nbit = 0;
 		while (i < vaa)
 		{
 			if (aa[i] == 0)
@@ -2768,7 +2768,7 @@ std::wstring _recognize::rasp_text(ushort* aa, int64 vaa)
 			}
 			wchar_t c = 0;
 			int rc = 0;
-			int64 bbb = 0;
+			i64 bbb = 0;
 			_kusok_bukva* bb = &bu;
 			for (int j = i; j < vaa; j++)
 			{
@@ -2824,7 +2824,7 @@ int _recognize::find_elem(std::wstring_view s)
 	return -1;
 }
 
-int _recognize::find_elem_kusok(s2 s)
+int _recognize::find_elem_kusok(wstr s)
 {
 	int l = (int)elem.size();
 	for (int i = 0; i < l; i++)
@@ -2834,7 +2834,7 @@ int _recognize::find_elem_kusok(s2 s)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _kusok_bukva::cod(ushort* aa, int vaa, wchar_t cc, char nf, int64 nbitt)
+void _kusok_bukva::cod(ushort* aa, int vaa, wchar_t cc, char nf, i64 nbitt)
 {
 	if (vaa == 0)
 	{
@@ -2848,7 +2848,7 @@ void _kusok_bukva::cod(ushort* aa, int vaa, wchar_t cc, char nf, int64 nbitt)
 		return;
 	}
 	auto fi = std::lower_bound(dalee.begin(), dalee.end(), *aa);
-	uint64 n = fi - dalee.begin();
+	u64 n = fi - dalee.begin();
 	bool nena = false;
 	if (fi == dalee.end())
 		nena = true;

@@ -4,7 +4,7 @@
 
 _stack clipboard; // буффер обмена
 
-void fun03(_tetron* tt0, _tetron* tt, uint64 flags);
+void fun03(_tetron* tt0, _tetron* tt, u64 flags);
 
 void init_shuba2()
 {
@@ -88,7 +88,7 @@ void smena_avt()
 	if (n_act)
 		fun03(0, 0, 0);
 	else
-		set_cursorx((*n_perenos->operator int64 * ()) ? (_cursor::size_all) : ((*n_s_right->operator int64 * ()) ?
+		set_cursorx((*n_perenos->operator i64 * ()) ? (_cursor::size_all) : ((*n_s_right->operator i64 * ()) ?
 			_cursor::hand_point : _cursor::normal));
 }
 
@@ -185,10 +185,10 @@ void find_ris_pot_act()
 		n_ko->operator _t_basic_go* ()->set_t_trans(n_ramk, 0);
 }
 
-void fun01(_tetron* tt0, _tetron* tt, uint64 flags) // нажата правая кнопка мышки
+void fun01(_tetron* tt0, _tetron* tt, u64 flags) // нажата правая кнопка мышки
 {
-	if (*n_perenos->operator int64 * ()) return;
-	if (*n_s_left->operator int64 * ())
+	if (*n_perenos->operator i64 * ()) return;
+	if (*n_s_left->operator i64 * ())
 	{ // правая при зажатой левой
 //		oko->MouseDownLeftRight(oko->mouse_xy_);
 		return;
@@ -199,7 +199,7 @@ void fun01(_tetron* tt0, _tetron* tt, uint64 flags) // нажата правая
 	n_move->run(0, n_move, flags);
 }
 
-void fun02(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun02(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_t_go* a = tt->find1<_t_go>(flag_part);
 	if (!a) return;
@@ -215,12 +215,12 @@ void fun02(_tetron* tt0, _tetron* tt, uint64 flags)
 	fun03(0, 0, flags);
 }
 
-void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun03(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_xy to = mouse_xy;
 	if (n_tani)
 	{
-		if (!*n_s_left->operator int64 * ())
+		if (!*n_s_left->operator i64 * ())
 		{
 			n_up_left->run(0, n_up_left, flag_run); // или fun06()??
 			return;
@@ -229,9 +229,9 @@ void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 		mouse_xy_pr = mouse_xy;
 		return;
 	}
-	if (*n_perenos->operator int64 * ())
+	if (*n_perenos->operator i64 * ())
 	{
-		if (*n_s_left->operator int64 * ())
+		if (*n_s_left->operator i64 * ())
 		{
 			_t_trans* kor = *n_ko;
 			kor->cha_area(kor->calc_area());
@@ -243,14 +243,14 @@ void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 		}
 		return; // закомментировать - колесо будет работать, но курсор будет сбрасываться при выделении
 	}
-	if (*n_s_right->operator int64 * ())
+	if (*n_s_right->operator i64 * ())
 	{ // зажато правая - выделение
 		find_ris_pot_act();
 		return;
 	}
 	if (n_go_move == n_ramk2)
 	{
-		if (*n_s_left->operator int64 * ())
+		if (*n_s_left->operator i64 * ())
 		{
 			_t_go* ra = *n_ramk2;
 			_t_trans* rat = ra->ttrans();
@@ -332,13 +332,13 @@ void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 	master_mouse_move(to);
 }
 
-void fun04(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun04(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	if (*n_perenos->operator int64 * ())
+	if (*n_perenos->operator i64 * ())
 	{
 		_xy tr = mouse_xy;
 		_t_trans* kor = *n_ko;
-		double kk     = *n_wheel->operator int64*() * 0.01;
+		double kk     = *n_wheel->operator i64*() * 0.01;
 		if ((kk > 0) && (kor->trans.scale > 1E12)) return;
 		kor->cha_area(kor->calc_area());
 		kor->trans.MasToch(tr, pow(1.1, kk));
@@ -346,9 +346,9 @@ void fun04(_tetron* tt0, _tetron* tt, uint64 flags)
 		n_move_all->run(0, n_move_all, flag_run);
 		return;
 	}
-	if (*n_s_right->operator int64 * ())
+	if (*n_s_right->operator i64 * ())
 	{
-		if (!(*n_perenos->operator int64 * ())) {};
+		if (!(*n_perenos->operator i64 * ())) {};
 		return;
 	}
 	if (n_go_move == n_ramk2)
@@ -361,12 +361,12 @@ void fun04(_tetron* tt0, _tetron* tt, uint64 flags)
 			_t_go* ra = *n_ramk2;
 			_t_trans* rat = ra->ttrans();
 			ra->del_area();
-			rat->trans.MasToch((ra->oko_trans() / rat->trans).inverse(tr), pow(1.1, *n_wheel->operator int64 * () *
+			rat->trans.MasToch((ra->oko_trans() / rat->trans).inverse(tr), pow(1.1, *n_wheel->operator i64 * () *
 				0.01));
 			ra->add_area();
 			raa->del_area();
 			rat2->trans.MasToch((raa->oko_trans() / rat2->trans).inverse(tr), pow(1.1, *n_wheel->
-				operator int64 * () * 0.01));
+				operator i64 * () * 0.01));
 			raa->add_area();
 		}
 		return;
@@ -375,25 +375,25 @@ void fun04(_tetron* tt0, _tetron* tt, uint64 flags)
 	aa->mouse_wheel(aa->trans);
 }
 
-void fun05(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun05(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	mouse_xy_pr = mouse_xy;
-	if ((*n_perenos->operator int64 * ()) || (n_go_move == n_ramk2))
+	if ((*n_perenos->operator i64 * ()) || (n_go_move == n_ramk2))
 		return;
 	_t_trans* a = *n_ko;
 	a->mouse_down_left(a->trans);
 }
 
-void fun06(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun06(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (!n_tani) return;
 	n_tani->operator _t_go* ()->mouse_up_left2(master_trans_go.inverse(mouse_xy));
 	n_tani = 0ULL;
 }
 
-void fun07(_tetron* tt0, _tetron* tt, uint64 flags) // отжата правая кнопка мышки
+void fun07(_tetron* tt0, _tetron* tt, u64 flags) // отжата правая кнопка мышки
 {
-	if (*n_perenos->operator int64 * ()) return;
+	if (*n_perenos->operator i64 * ()) return;
 	if (n_go_move == n_ramk2) n_go_move = 0ULL;
 	if (n_act == n_pot_act)
 		n_act = 0ULL;
@@ -405,23 +405,23 @@ void fun07(_tetron* tt0, _tetron* tt, uint64 flags) // отжата правая
 	tt->_tetron::run(0, n_act, flags);
 }
 
-void fun08(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun08(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (!n_act_key) return;
 	_t_go* a = *n_act_key;
 	if (!a) return;
-	a->key_down((ushort)(*n_down_key->operator int64 * ()));
+	a->key_down((ushort)(*n_down_key->operator i64 * ()));
 }
 
-void fun09(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun09(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (!n_act_key) return;
 	_t_go* a = *n_act_key;
 	if (!a) return;
-	a->key_press((ushort)(*n_press_key->operator int64 * ()));
+	a->key_press((ushort)(*n_press_key->operator i64 * ()));
 }
 
-void fun10(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun10(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_one_tetron* a = tt->find1<_one_tetron>(flag_information2);
 	if (a)
@@ -429,7 +429,7 @@ void fun10(_tetron* tt0, _tetron* tt, uint64 flags)
 	tt->_tetron::run(0, tt, flags); // продолжить выполнение
 }
 
-void fun11(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun11(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_one_tetron* a = tt->find1<_one_tetron>(flag_information2);
 	if (a)
@@ -437,7 +437,7 @@ void fun11(_tetron* tt0, _tetron* tt, uint64 flags)
 	tt->_tetron::run(0, tt, flags); // продолжить выполнение
 }
 
-void fun12(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun12(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (n_go_move)
 	{
@@ -449,11 +449,11 @@ void fun12(_tetron* tt0, _tetron* tt, uint64 flags)
 	delete a;
 }
 
-void fun13(_tetron* tt0, _tetron* tt, uint64 flags);
+void fun13(_tetron* tt0, _tetron* tt, u64 flags);
 
-void fun14(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun14(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	int64* nn = tt->find1<int64>(flag_part);
+	i64* nn = tt->find1<i64>(flag_part);
 	if (!nn) return;
 	_t_go* a = (create_tetron((uchar)(*nn)))->operator _t_go * ();
 	if (!a) return;
@@ -468,11 +468,11 @@ void fun14(_tetron* tt0, _tetron* tt, uint64 flags)
 	tt->_tetron::run(0, n_act, flags);
 }
 
-void fun15(_tetron* tt0, _tetron* tt, uint64 flags);
+void fun15(_tetron* tt0, _tetron* tt, u64 flags);
 
-void fun16(_tetron* tt0, _tetron* tt, uint64 flags);
+void fun16(_tetron* tt0, _tetron* tt, u64 flags);
 
-void fun17(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun17(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (!tt0) return;
 	_t_go* a = *tt0;
@@ -487,7 +487,7 @@ void fun17(_tetron* tt0, _tetron* tt, uint64 flags)
 	find_ris_pot_act();
 }
 
-void fun18(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun18(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (!tt0) return;
 	_g_tetron* g = *tt0; // можно только оттуда вызывать 
@@ -520,15 +520,15 @@ void fun18(_tetron* tt0, _tetron* tt, uint64 flags)
 	a->cha_area();
 }
 
-void fun19(_tetron* tt0, _tetron* tt, uint64 flags);
+void fun19(_tetron* tt0, _tetron* tt, u64 flags);
 
-void fun20(_tetron* tt0, _tetron* tt, uint64 flags);
+void fun20(_tetron* tt0, _tetron* tt, u64 flags);
 
-void fun21(_tetron* tt0, _tetron* tt, uint64 flags);
+void fun21(_tetron* tt0, _tetron* tt, u64 flags);
 
-void fun22(_tetron* tt0, _tetron* tt, uint64 flags);
+void fun22(_tetron* tt0, _tetron* tt, u64 flags);
 
-void fun23(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun23(_tetron* tt0, _tetron* tt, u64 flags)
 {
 /*	_tetron* t = tt->find1<_tetron>(flag_part);
 	_g_picture* tp = *t;
@@ -540,7 +540,7 @@ void fun23(_tetron* tt0, _tetron* tt, uint64 flags)
 	}*/
 }
 
-void fun24(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun24(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (!tt0) return;
 	_t_trans* g = *tt0;
@@ -553,15 +553,15 @@ void fun24(_tetron* tt0, _tetron* tt, uint64 flags)
 	g->add_area();
 }
 
-void fun25(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun25(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_g_picture* p = tt->find1<_g_picture>(flag_information);
-	int64* r = tt->find1<int64>(flag_information);
+	i64* r = tt->find1<i64>(flag_information);
 	if ((!p) || (!r)) return;
 	p->new_size((int)*r, (int)*r);
 }
 
-void fun26(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun26(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (!tt0) return;
 	_t_go* a = *tt0;
@@ -585,7 +585,7 @@ void fun26(_tetron* tt0, _tetron* tt, uint64 flags)
 	}
 }
 
-void fun27(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun27(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_xy tr = mouse_xy;
 	_t_trans* kor = *n_ko;
@@ -596,36 +596,36 @@ void fun27(_tetron* tt0, _tetron* tt, uint64 flags)
 	n_move_all->run(0, n_move_all, flag_run);
 }
 
-void fun28(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun28(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	*n_perenos->operator int64* () = !(*n_perenos->operator int64 * ());
-	set_cursorx((*n_perenos->operator int64 * ()) ? (_cursor::size_all) : ((*n_s_right->operator int64 * ()) ?
+	*n_perenos->operator i64* () = !(*n_perenos->operator i64 * ());
+	set_cursorx((*n_perenos->operator i64 * ()) ? (_cursor::size_all) : ((*n_s_right->operator i64 * ()) ?
 		_cursor::hand_point : _cursor::normal));
 
-	if ((!*n_perenos->operator int64 * ()) && (n_act))
+	if ((!*n_perenos->operator i64 * ()) && (n_act))
 	{
 		if (n_go_move == n_ramk2) n_go_move = 0ULL;
 		fun03(0, 0, flags);
 	}
 }
 
-void fun29(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun29(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	time_ris = !time_ris;
 	master_obl_izm = { {0.0, (double)master_bm.size.x}, {0.0, (double)master_bm.size.y} };
 }
 
-void fun30(_tetron* tt0, _tetron* tt, uint64 flags);
+void fun30(_tetron* tt0, _tetron* tt, u64 flags);
 
-void fun31(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun31(_tetron* tt0, _tetron* tt, u64 flags)
 {
 }
 
-void fun32(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 {
 }
 
-void fun33(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	set_test();
 //	_g_tetron* g = new _g_tetron;
@@ -646,35 +646,35 @@ void fun33(_tetron* tt0, _tetron* tt, uint64 flags)
 		g->run(0, g, flag_run);*/
 }
 
-void fun34(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun34(_tetron* tt0, _tetron* tt, u64 flags)
 {
 }
 
-void fun35(_tetron* tt0, _tetron* tt, uint64 flags);
+void fun35(_tetron* tt0, _tetron* tt, u64 flags);
 
-void fun36(_tetron* tt0, _tetron* tt, uint64 flags);
+void fun36(_tetron* tt0, _tetron* tt, u64 flags);
 
-void fun37(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun37(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	int64* nn = tt->find1<int64>(flag_information);
+	i64* nn = tt->find1<i64>(flag_information);
 	if (!nn) return;
 	_tetron* a = create_tetron((uchar)(*nn));
 	if (!a) return;
 	tt->_tetron::run(0, a, flags);
 }
 
-void fun38(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun38(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	int64* a = *tt0;
+	i64* a = *tt0;
 	if (a)
 	{
-		int64* nn = tt->find1<int64>(flag_information);
+		i64* nn = tt->find1<i64>(flag_information);
 		if (nn) *a = *nn;
 	}
 	tt->_tetron::run(0, tt0, flags);
 }
 
-void fun39(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun39(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_g_tetron* g = tt->find1<_g_tetron>(flag_information);
 	double* m = tt->find1<double>(flag_information);
@@ -689,7 +689,7 @@ void fun39(_tetron* tt0, _tetron* tt, uint64 flags)
 	gg->add_area();
 }
 
-void fun40(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun40(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	for (auto i : tt->link)
 	{
@@ -699,56 +699,56 @@ void fun40(_tetron* tt0, _tetron* tt, uint64 flags)
 	}
 }
 
-void fun41(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun41(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (tt0) tt0->run(0, tt0, flags);
 }
 
-void fun42(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun42(_tetron* tt0, _tetron* tt, u64 flags)
 {
 }
 
-void fun43(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun43(_tetron* tt0, _tetron* tt, u64 flags)
 {
 }
 
-void fun44(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun44(_tetron* tt0, _tetron* tt, u64 flags)
 {
 }
 
-void fun45(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun45(_tetron* tt0, _tetron* tt, u64 flags)
 {
 }
 
-void fun46(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun46(_tetron* tt0, _tetron* tt, u64 flags)
 {
 }
 
-void fun47(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun47(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_g_picture* g = tt->find1<_g_picture>(flag_information);
-	int64* c = tt->find1<int64>(flag_information);
+	i64* c = tt->find1<i64>(flag_information);
 	if ((c == nullptr) || (g == nullptr)) return;
 	g->pic.clear((uint)(*c));
 	g->cha_area();
 }
 
-void fun48(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun48(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (tt0 == nullptr) return;
 	_g_picture* g = *tt0;
 	if (g == nullptr) return;
 	_xy r1 = master_trans_go.inverse(mouse_xy_pr);
 	_xy r2 = master_trans_go.inverse(mouse_xy);
-	g->pic.line(r1, r2, (*n_s_shift->operator int64 * ()) ? 0 : c_def, true);
+	g->pic.line(r1, r2, (*n_s_shift->operator i64 * ()) ? 0 : c_def, true);
 	g->cha_area();
 }
 
-void fun49(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun49(_tetron* tt0, _tetron* tt, u64 flags)
 {
 }
 
-void fun50(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun50(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	clipboard.clear();
 	_g_tetron* g = tt->find1<_g_tetron>(flag_information);
@@ -761,11 +761,11 @@ void fun50(_tetron* tt0, _tetron* tt, uint64 flags)
 	clipboard << s << *p;
 }
 
-void fun51(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun51(_tetron* tt0, _tetron* tt, u64 flags)
 {
 }
 
-void fun52(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun52(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_g_tetron* g = tt->find1<_g_tetron>(flag_information);
 	if (g == nullptr) return;
@@ -784,15 +784,15 @@ void fun52(_tetron* tt0, _tetron* tt, uint64 flags)
 	}
 }
 
-void fun53(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun53(_tetron* tt0, _tetron* tt, u64 flags)
 { // !! флаги читать из параметра
 	for (_frozen i(tt, flag_information); i; i++) i->add_unique_flags(tt0, flag_specialty);
 	tt->_tetron::run(0, tt, flags); // продолжить выполнение
 }
 
-void fun54(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun54(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	int64* n = tt->find1<int64>(flag_part);
+	i64* n = tt->find1<i64>(flag_part);
 	if (!n) return;
 	_speed<_hash_table_tetron> ht;
 	for (uint i = 0; i < master_chosen.size(); i++)
@@ -804,7 +804,7 @@ void fun54(_tetron* tt0, _tetron* tt, uint64 flags)
 	{
 		_tetron* a = i.tetron;
 		if (a->type() != 32) continue;
-		if (*a->operator int64 * () != *n) continue;
+		if (*a->operator i64 * () != *n) continue;
 		v++;
 		b = a;
 	}
@@ -820,7 +820,7 @@ void fun54(_tetron* tt0, _tetron* tt, uint64 flags)
 	}
 }
 
-void fun55(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun55(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_tetron* a = n_act;
 	if (!a) return;
@@ -829,7 +829,7 @@ void fun55(_tetron* tt0, _tetron* tt, uint64 flags)
 	mem.save_to_file(L"tetron.act");
 }
 
-void fun56(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun56(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_tetron* a = n_act;
 	if (!a) return;
@@ -839,7 +839,7 @@ void fun56(_tetron* tt0, _tetron* tt, uint64 flags)
 	a->run(0, a, flag_run); // чтоб восстановился
 }
 
-void fun57(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun57(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_g_tetron* g1 = tt->find1<_g_tetron>(flag_information);
 	_g_tetron* g2 = tt->find1<_g_tetron>(flag_information2);
@@ -849,7 +849,7 @@ void fun57(_tetron* tt0, _tetron* tt, uint64 flags)
 	tt->_tetron::run(0, tt, flags); // продолжить выполнение
 }
 
-void fun58(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun58(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_g_edit64bit* b1 = tt->find1<_g_edit64bit>(flag_information);
 	_g_list_link* ll = tt->find1<_g_list_link>(flag_information);
@@ -865,7 +865,7 @@ void fun58(_tetron* tt0, _tetron* tt, uint64 flags)
 	ll->cha_area();
 }
 
-void fun59(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun59(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_g_tetron* g = tt->find1<_g_tetron>(flag_information);
 	if (g == nullptr) return;
@@ -875,7 +875,7 @@ void fun59(_tetron* tt0, _tetron* tt, uint64 flags)
 	g->run(0, g, flag_run);
 }
 
-void fun60(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun60(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_g_tetron* g = tt->find1<_g_tetron>(flag_information);
 	if (g == nullptr) return;
@@ -886,7 +886,7 @@ void fun60(_tetron* tt0, _tetron* tt, uint64 flags)
 	g->run(0, g, flag_run);
 }
 
-void fun61(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun61(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_g_tetron* g = tt->find1<_g_tetron>(flag_information);
 	if (g == nullptr) return;
@@ -895,7 +895,7 @@ void fun61(_tetron* tt0, _tetron* tt, uint64 flags)
 	a->run(0, a, flag_run);
 }
 
-void fun62(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun62(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_g_tetron* g = tt->find1<_g_tetron>(flag_information);
 	if (g == nullptr) return;
@@ -918,7 +918,7 @@ void fun62(_tetron* tt0, _tetron* tt, uint64 flags)
 	g->run(0, g, flag_run);
 }
 
-void fun63(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun63(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_g_list_link* ll = tt->find1<_g_list_link>(flag_information);
 	if (ll == nullptr) return;
@@ -931,7 +931,7 @@ void fun63(_tetron* tt0, _tetron* tt, uint64 flags)
 	ll->cha_area();
 }
 
-void fun64(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun64(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_g_edit64bit* b1 = tt->find1<_g_edit64bit>(flag_information);
 	_g_list_link* ll = tt->find1<_g_list_link>(flag_information);
@@ -946,7 +946,7 @@ void fun64(_tetron* tt0, _tetron* tt, uint64 flags)
 	ll->cha_area();
 }
 
-void fun65(_tetron* tt0, _tetron* tt, uint64 flags)
+void fun65(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_g_edit64bit* b1 = tt->find1<_g_edit64bit>(flag_information);
 	_g_list_link* ll = tt->find1<_g_list_link>(flag_information);
@@ -956,7 +956,7 @@ void fun65(_tetron* tt0, _tetron* tt, uint64 flags)
 	if (g0 == nullptr) return;
 	_tetron* a = g0->find1<_tetron>(flag_specialty);
 	if (a == nullptr) return;
-	int64* n = tip->find1<_t_string>(flag_specialty)->find1<int64>(flag_part);
+	i64* n = tip->find1<_t_string>(flag_specialty)->find1<i64>(flag_part);
 	if (n == nullptr) return;
 	uchar nn = 255;
 	a->add_flags(create_tetron((uchar)(*n)), b1->a, nn);
@@ -964,7 +964,7 @@ void fun65(_tetron* tt0, _tetron* tt, uint64 flags)
 }
 
 
-void _t_function::run(_tetron* tt0, _tetron* tt, uint64 flags)
+void _t_function::run(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	switch (a)
 	{

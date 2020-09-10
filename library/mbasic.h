@@ -8,32 +8,21 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-using int64  = long long;
 using uchar  = unsigned char;
 using ushort = unsigned short;
 using uint   = unsigned int;
-using uint64 = unsigned long long;
+using u64    = unsigned long long;
+using i64    = long long;
 
-using astr = const char*;
-using wstr = const wchar_t*;
-
-using i1 = char;
-using i2 = short;
-using i4 = int;
-using i8 = long long;
-
-using u1 = unsigned char;
-using u2 = unsigned short;
-using u4 = unsigned int;
-using u8 = unsigned long long;
-
-using s2 = const wchar_t*;
+using astr   = const char*;
+using wstr   = const wchar_t*;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 constexpr double pi = 3.1415926535897932384626;
 
-constexpr int64 bit8[256] = {
+constexpr i64 bit8[256] =
+{
 	0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
 	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
 	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
@@ -41,7 +30,8 @@ constexpr int64 bit8[256] = {
 	1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
 	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,	3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
 	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,	3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
-	3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,	4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8 };
+	3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,	4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -62,7 +52,7 @@ bool save_file(std::filesystem::path fn, const void* data, uint n);
 bool load_file(std::filesystem::path fn, char** data, uint* n);
 
 std::wstring string_to_wstring(std::string_view s);
-wstr         uint64_to_wstr_hex(uint64 a);
+wstr         uint64_to_wstr_hex(u64 a);
 
 std::wstring double_to_string(double a, int z);
 std::string  double_to_astring(double a, int z);
@@ -71,14 +61,14 @@ std::string  double_to_astring(double a, int z);
 
 struct _rnd
 { // (a = 521, b = 353)
-	_rnd(i8 p = 0)      noexcept { init(p); }
-	u8 operator()()     noexcept { i = (i + 1) & 1023; return (d[i] = d[(i + 503) & 1023] ^ d[(i + 671) & 1023]); }
-	i8 operator()(i8 m)	noexcept { i = (i + 1) & 1023; return (d[i] = d[(i + 503) & 1023] ^ d[(i + 671) & 1023]) % m; }
-	void init(u8 p);
+	_rnd(i64 p = 0)       noexcept { init(p); }
+	u64 operator()()      noexcept { i = (i + 1) & 1023; return (d[i] = d[(i + 503) & 1023] ^ d[(i + 671) & 1023]); }
+	i64 operator()(i64 m) noexcept { i = (i + 1) & 1023; return (d[i] = d[(i + 503) & 1023] ^ d[(i + 671) & 1023]) % m; }
+	void init(u64 p);
 
 private:
-	u8 d[1024]; // предыдущие числа
-	u8 i; // последняя позиция
+	u64 d[1024]; // предыдущие числа
+	u64 i; // последняя позиция
 };
 
 inline _rnd rnd;
@@ -88,16 +78,16 @@ inline _rnd rnd;
 struct _stack
 {
 	char*  data;
-	uint64 capacity;
-	uint64 size;
-	uint64 adata; // активный указатель
+	u64 capacity;
+	u64 size;
+	u64 adata; // активный указатель
 
-	_stack(int64 r = 0);              // конструктор, r - зарезервировать размер
+	_stack(i64 r = 0);              // конструктор, r - зарезервировать размер
 	_stack(void* data2, int vdata); // конструктор, инициализация куском памяти
 	~_stack() { delete[] data; }
 
 	void clear() { size  = 0; adata = 0; }
-	void erase(uint64 N, uint64 K);
+	void erase(u64 N, u64 K);
 	bool save_to_file(std::filesystem::path fn);
 	bool load_from_file(std::filesystem::path fn);
 
@@ -105,7 +95,7 @@ struct _stack
 	t_b _stack& operator<<(_b a) noexcept;
 	    _stack& operator<<(const _stack& a) noexcept;
 	    _stack& operator<<(const std::wstring& a) noexcept;
-	    void    push_data(const void* data2, uint64 vdata);
+	    void    push_data(const void* data2, u64 vdata);
 	    void    push_fill(int vdata, char c); // занести кучу одинаковых символов
 	    void    push_int24(int a);            // записать 3 байта
 
@@ -113,7 +103,7 @@ struct _stack
 	    _stack& operator>>(std::wstring& s) noexcept;
 	t_b _stack& operator>>(std::vector<_b>& b) noexcept;
 	t_b _stack& operator>>(_b& a) noexcept;
-	    void    pop_data(void* data2, uint64 vdata);
+	    void    pop_data(void* data2, u64 vdata);
 	t_b void    pop_end(_b& a); // извлечь переменную из стека С КОНЦА
 	    void    pop_int24(int& a);
 
@@ -121,7 +111,7 @@ struct _stack
 	void skip(size_t bytes);   // пропустить данные
 
   private:
-	void set_capacity(uint64 rdata); // изменить размер массива в большую сторону
+	void set_capacity(u64 rdata); // изменить размер массива в большую сторону
 };
 
 t_b _stack& _stack::operator<<(const std::vector<_b>& b) noexcept
@@ -172,15 +162,15 @@ struct _multi_string
 	_multi_string() : line(1) {}
 	void push(_stack* mem) { *mem << line; }
 	void pop(_stack* mem) { *mem >> line; }
-	bool delete_char(int64 y, int64 x);
-	void insert_char(int64 y, int64 x, wchar_t c);
-	void div2line(int64 y, int64 x);
+	bool delete_char(i64 y, i64 x);
+	void insert_char(i64 y, i64 x, wchar_t c);
+	void div2line(i64 y, i64 x);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-inline uint hash_func(void* const& a) { return (uint)((((uint64)a) >> 4) * 27644437); }
-inline uint hash_func(const uint64& a) { return (uint)(a * 27644437); }
+inline uint hash_func(void* const& a) { return (uint)((((u64)a) >> 4) * 27644437); }
+inline uint hash_func(const u64& a) { return (uint)(a * 27644437); }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -189,7 +179,7 @@ t_t struct __hash_table
 {
 	struct _hash_info
 	{
-		uint64 id = 0; // код занятости
+		u64 id = 0; // код занятости
 		_t a = {}; // данные
 	};
 
@@ -223,7 +213,7 @@ t_t struct __hash_table
 	_iterator end() noexcept { return { (data + capacity), this }; }
 
 private:
-	uint64 id = 1; // рабочий код занятости
+	u64 id = 1; // рабочий код занятости
 
 	void reserve() noexcept;
 };
@@ -246,7 +236,7 @@ t_t void __hash_table<_t>::erase(const _iterator& x)
 
 t_t void __hash_table<_t>::erase(_t* x)
 {
-	uint n = (uint)(((uint64)x - (uint64)data) / sizeof(_hash_info));
+	uint n = (uint)(((u64)x - (u64)data) / sizeof(_hash_info));
 	if (n < capacity)
 		erase(_iterator{ &data[n], this });
 	else

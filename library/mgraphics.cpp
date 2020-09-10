@@ -4,7 +4,7 @@
 
 _bitmap temp_bmp(10, 10);
 
-#define px(xx,yy) ((u1*)&data[(yy) * size.x + (xx)])
+#define px(xx,yy) ((uchar*)&data[(yy) * size.x + (xx)])
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -128,7 +128,7 @@ void _bitmap::grab_ecran_oo2(HWND hwnd)
 {
 	RECT rr;
 	GetClientRect(hwnd, &rr);
-	resize({ (int64)rr.right - rr.left, (int64)rr.bottom - rr.top });
+	resize({ (i64)rr.right - rr.left, (i64)rr.bottom - rr.top });
 	HDC X = GetDC(hwnd);
 	BitBlt(hdc, 0, 0, rr.right - rr.left, rr.bottom - rr.top, X, rr.left, rr.top, SRCCOPY);
 	ReleaseDC(hwnd, X);
@@ -175,8 +175,8 @@ _picture& _picture::operator=(_picture&& move) noexcept
 
 void _picture::invert_alpha()
 {
-	i8 r = size.square();
-	for (i8 i = 0; i < r; i++)
+	i64 r = size.square();
+	for (i64 i = 0; i < r; i++)
 	{
 		uint a = 255 - (data[i] >> 24);
 		data[i] = (data[i] & 0xffffff) + (a << 24);
@@ -185,8 +185,8 @@ void _picture::invert_alpha()
 
 void _picture::set_transparent()
 {
-	int64 r = size.square();
-	for (int64 i = 0; i < r; i++)
+	i64 r = size.square();
+	for (i64 i = 0; i < r; i++)
 		if ((data[i] & 0xff000000) != 0xff000000)
 		{
 			transparent = true;
@@ -201,15 +201,15 @@ void _picture::draw(_ixy r, _picture &bm)
 	if (b.empty()) return;
 	if (!bm.transparent)
 	{
-		for (i8 j = b.y.min; j < b.y.max; j++)
+		for (i64 j = b.y.min; j < b.y.max; j++)
 			memcpy(px(b.x.min, j), (bm.data + ((j - r.y) * bm.size.x + (b.x.min - r.x))), (b.x.max - b.x.min) * 4);
 		return;
 	}
-	for (i8 j = b.y.min; j < b.y.max; j++)
+	for (i64 j = b.y.min; j < b.y.max; j++)
 	{
 		uchar* s1_ = px(b.x.min, j);
 		uchar* s2_ = (uchar*)(bm.data + ((j - r.y) * bm.size.x + (b.x.min - r.x)));
-		for (i8 i = b.x.min; i < b.x.max; i++)
+		for (i64 i = b.x.min; i < b.x.max; i++)
 		{
 			uint pp2 = s2_[3];
 			uint pp1 = 256 - pp2;
@@ -252,9 +252,9 @@ void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
 		if ((p1.x > p2.x) || (p1.y < area.y.min) || (p1.y >= area.y.max)) return; // за пределы
 		if (rep)
 		{
-			uint64  cc    = (((uint64)c) << 32) + c;
-			uint64* ee    = (uint64*)&(data[p1.y * size.x + p1.x]);
-			uint64* eemax = (uint64*)&(data[p1.y * size.x + p2.x]);
+			u64  cc    = (((u64)c) << 32) + c;
+			u64* ee    = (u64*)&(data[p1.y * size.x + p1.x]);
+			u64* eemax = (u64*)&(data[p1.y * size.x + p2.x]);
 			while (ee < eemax) *ee++ = cc;
 			if (ee == eemax) *((uint*)ee) = c;
 			return;
@@ -264,7 +264,7 @@ void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
 		uint   d2 = ((c >> 8) & 255) * k2;
 		uint   d3 = ((c >> 16) & 255) * k2;
 		uchar* c2 = (uchar*)&(data[p1.y * size.x + p1.x]);
-		for (int64 d = p1.x - p2.x; d <= 0; d++)
+		for (i64 d = p1.x - p2.x; d <= 0; d++)
 		{
 			c2[0] = (c2[0] * kk + d1) >> 8;
 			c2[1] = (c2[1] * kk + d2) >> 8;
@@ -282,7 +282,7 @@ void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
 		if (rep)
 		{
 			uint* c2 = &data[p1.y * size.x + p1.x];
-			for (int64 y = p1.y - p2.y; y <= 0; y++)
+			for (i64 y = p1.y - p2.y; y <= 0; y++)
 			{
 				*c2 = c;
 				c2 += size.x;
@@ -293,9 +293,9 @@ void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
 		uint   d1  = (c & 255) * k2;
 		uint   d2  = ((c >> 8) & 255) * k2;
 		uint   d3  = ((c >> 16) & 255) * k2;
-		int64    dc2 = size.x * 4;
+		i64    dc2 = size.x * 4;
 		uchar* c2  = (uchar*)&(data[p1.y * size.x + p1.x]);
-		for (int64 y = p1.y - p2.y; y <= 0; y++)
+		for (i64 y = p1.y - p2.y; y <= 0; y++)
 		{
 			c2[0] = (c2[0] * kk + d1) >> 8;
 			c2[1] = (c2[1] * kk + d2) >> 8;
@@ -304,17 +304,17 @@ void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
 		}
 		return;
 	}
-	int64 d = (abs(p1.x - p2.x) >= abs(p1.y - p2.y)) ? abs(p1.x - p2.x) : abs(p1.y - p2.y);
-	int64 dx = ((p2.x - p1.x) << 32) / d;
-	int64 dy = ((p2.y - p1.y) << 32) / d;
-	int64 x  = ((p1.x * 2 + 1) << 31) - dx; // ?? +1 для отрицательных p1.x, p1.y ??
-	int64 y  = ((p1.y * 2 + 1) << 31) - dy;
-	int64 n  = 0;
-	int64 k  = d;
+	i64 d = (abs(p1.x - p2.x) >= abs(p1.y - p2.y)) ? abs(p1.x - p2.x) : abs(p1.y - p2.y);
+	i64 dx = ((p2.x - p1.x) << 32) / d;
+	i64 dy = ((p2.y - p1.y) << 32) / d;
+	i64 x  = ((p1.x * 2 + 1) << 31) - dx; // ?? +1 для отрицательных p1.x, p1.y ??
+	i64 y  = ((p1.y * 2 + 1) << 31) - dy;
+	i64 n  = 0;
+	i64 k  = d;
 	if (p1.x < area.x.min)
 	{
 		if (dx <= 0) return;
-		n = (int64)((((area.x.min - 0) << 32) - x) / dx);
+		n = (i64)((((area.x.min - 0) << 32) - x) / dx);
 	}
 	else if (p1.x >= area.x.max)
 	{
@@ -359,14 +359,14 @@ void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
 	y += dy * n;
 	if (rep)
 	{
-		for (int64 i = k - n; i >= 0; i--) data[((y += dy) >> 32) * size.x + ((x += dx) >> 32)] = c;
+		for (i64 i = k - n; i >= 0; i--) data[((y += dy) >> 32) * size.x + ((x += dx) >> 32)] = c;
 		return;
 	}
 	uint k2 = 256 - kk;
 	uint d1 = (c & 255) * k2;
 	uint d2 = ((c >> 8) & 255) * k2;
 	uint d3 = ((c >> 16) & 255) * k2;
-	for (int64 i = k - n; i >= 0; i--)
+	for (i64 i = k - n; i >= 0; i--)
 	{
 		uchar* c2 = (uchar*)&data[((y += dy) >> 32) * size.x + ((x += dx) >> 32)];
 		c2[0]     = (c2[0] * kk + d1) >> 8;
@@ -381,10 +381,10 @@ void _picture::lines(_xy p1, _xy p2, double l, uint c)
 	if (kk == 0xFF) return; // полностью прозрачная
 	if (p1.y > p2.y) std::swap(p1, p2);
 	l *= 0.5; // половина толщины
-	int64 xmin = int(std::min(p1.x, p2.x) - l);
-	int64 xmax = int(std::max(p1.x, p2.x) + l);
-	int64 ymin = int(p1.y - l);
-	int64 ymax = int(p2.y + l);
+	i64 xmin = int(std::min(p1.x, p2.x) - l);
+	i64 xmax = int(std::max(p1.x, p2.x) + l);
+	i64 ymin = int(p1.y - l);
+	i64 ymax = int(p2.y + l);
 	if (xmin < area.x.min) xmin = area.x.min;
 	if (ymin < area.y.min) ymin = area.y.min;
 	if (xmax >= area.x.max) xmax = area.x.max - 1;
@@ -415,16 +415,16 @@ void _picture::lines(_xy p1, _xy p2, double l, uint c)
 	uint   d1    = red * k2;
 	uint   d2    = green * k2;
 	uint   d3    = blue * k2;
-	for (int64 j = ymin; j <= ymax; j++, xx1 += dxdy, xx2 += dxdy) // цикл по линиям
+	for (i64 j = ymin; j <= ymax; j++, xx1 += dxdy, xx2 += dxdy) // цикл по линиям
 	{
-		int64 xx1i = (int)xx1;
-		int64 xx2i = (int)xx2;
+		i64 xx1i = (int)xx1;
+		i64 xx2i = (int)xx2;
 		if (xx1i < xmin) xx1i = xmin;
 		if (xx2i > xmax) xx2i = xmax;
 		if (xx2i < xx1i) continue;
 		double rr = (dy * xx1i - dx * j + temp1) * ll_1;
 		uchar* c2 = (uchar*)&(data[j * size.x + xx1i]);
-		for (int64 i = xx1i; i <= xx2i; i++, rr += drr, c2 += 4)
+		for (i64 i = xx1i; i <= xx2i; i++, rr += drr, c2 += 4)
 		{
 			double rra = ((rr < 0) ? -rr : rr) - 0.5;
 			if (rra >= l) continue; // пиксель за границей точки
@@ -444,20 +444,20 @@ void _picture::lines(_xy p1, _xy p2, double l, uint c)
 	}
 }
 
-void _picture::stretch_draw_speed(_picture* bm, int64 nXDest, int64 nYDest, double m)
+void _picture::stretch_draw_speed(_picture* bm, i64 nXDest, i64 nYDest, double m)
 {
 	if (bm->size.x * bm->size.y == 0) return;
-	int64 nWidth  = (int)(bm->size.x * m + 0.5);
-	int64 nHeight = (int)(bm->size.y * m + 0.5);
+	i64 nWidth  = (int)(bm->size.x * m + 0.5);
+	i64 nHeight = (int)(bm->size.y * m + 0.5);
 	if ((nWidth == bm->size.x) && (nHeight == bm->size.y))
 	{
 		draw({ nXDest, nYDest }, *bm);
 		return;
 	}
-	int64 nXSrc = 0;
-	int64 nYSrc = 0;
-	int64 bmrx  = nWidth;
-	int64 bmry  = nHeight;
+	i64 nXSrc = 0;
+	i64 nYSrc = 0;
+	i64 bmrx  = nWidth;
+	i64 bmry  = nHeight;
 	if (nXDest < area.x.min)
 	{
 		nWidth += nXDest - area.x.min;
@@ -490,13 +490,13 @@ void _picture::stretch_draw_speed(_picture* bm, int64 nXDest, int64 nYDest, doub
 	if (nYSrc + nHeight > bmry) nHeight = bmry - nYSrc;
 	if ((nWidth <= 0) || (nHeight <= 0)) return;
 	double mm = 1.0 / m;
-	for (int64 j = 0; j < nHeight; j++)
+	for (i64 j = 0; j < nHeight; j++)
 	{
 		uchar* s1  = (uchar*)(data + ((nYDest + j) * size.x + nXDest));
-		uint*  ss2 = (bm->data + (int64)(((nYSrc + j) * mm)) * bm->size.x);
-		for (int64 i = 0; i < nWidth; i++)
+		uint*  ss2 = (bm->data + (i64)(((nYSrc + j) * mm)) * bm->size.x);
+		for (i64 i = 0; i < nWidth; i++)
 		{
-			uchar* s2_ = (uchar*)(ss2 + (int64)((nXSrc + i) * mm));
+			uchar* s2_ = (uchar*)(ss2 + (i64)((nXSrc + i) * mm));
 			uint pp2 = s2_[3];
 			uint pp1 = 256 - pp2;
 			s1[0] = (s1[0] * pp1 + s2_[0] * pp2) >> 8;
@@ -507,7 +507,7 @@ void _picture::stretch_draw_speed(_picture* bm, int64 nXDest, int64 nYDest, doub
 	}
 }
 
-void _picture::stretch_draw(_picture* bm, int64 x, int64 y, double m)
+void _picture::stretch_draw(_picture* bm, i64 x, i64 y, double m)
 {
 	if (bm->size.x * bm->size.y == 0) return;
 	int rx2 = (int)(bm->size.x * m + 0.5);
@@ -517,35 +517,35 @@ void _picture::stretch_draw(_picture* bm, int64 x, int64 y, double m)
 		draw({ x, y }, *bm);
 		return;
 	}
-	int64 x1 = (x >= area.x.min) ? x : area.x.min;
-	int64 y1 = (y >= area.y.min) ? y : area.y.min;
-	int64 x2 = x + rx2 - 1;
-	int64 y2 = y + ry2 - 1;
+	i64 x1 = (x >= area.x.min) ? x : area.x.min;
+	i64 y1 = (y >= area.y.min) ? y : area.y.min;
+	i64 x2 = x + rx2 - 1;
+	i64 y2 = y + ry2 - 1;
 	if (x2 >= area.x.max) x2 = area.x.max - 1;
 	if (y2 >= area.y.max) y2 = area.y.max - 1;
 	if ((x2 < x1) || (y2 < y1)) return;
-	int64 nox1 = (int64)x1 - x;
-	int64 noy1 = (int64)y1 - y;
-	int64 nox2 = (int64)x2 - x;
-	int64 noy2 = (int64)y2 - y;
-	int64 f1x  = bm->size.x;
-	int64 f1y  = bm->size.y;
-	int64 f1xx = rx2;
-	int64 f1yy = ry2;
-	for (int64 j = noy1; j <= noy2; j++)
+	i64 nox1 = (i64)x1 - x;
+	i64 noy1 = (i64)y1 - y;
+	i64 nox2 = (i64)x2 - x;
+	i64 noy2 = (i64)y2 - y;
+	i64 f1x  = bm->size.x;
+	i64 f1y  = bm->size.y;
+	i64 f1xx = rx2;
+	i64 f1yy = ry2;
+	for (i64 j = noy1; j <= noy2; j++)
 	{
-		int64  pyn  = j * f1y;
-		int64  pyk  = (j + 1) * f1y - 1;
-		int64  pyn2 = pyn / f1yy;
-		int64  pyk2 = pyk / f1yy;
+		i64  pyn  = j * f1y;
+		i64  pyk  = (j + 1) * f1y - 1;
+		i64  pyn2 = pyn / f1yy;
+		i64  pyk2 = pyk / f1yy;
 		uchar* p1   = (uchar*)&data[(j + y) * size.x + x1 - 1];
-		for (int64 i = nox1; i <= nox2; i++)
+		for (i64 i = nox1; i <= nox2; i++)
 		{
 			p1 += 4;
-			int64 pxn  = i * f1x;
-			int64 pxk  = (i + 1) * f1x - 1;
-			int64 pxn2 = pxn / f1xx;
-			int64 pxk2 = pxk / f1xx;
+			i64 pxn  = i * f1x;
+			i64 pxk  = (i + 1) * f1x - 1;
+			i64 pxn2 = pxn / f1xx;
+			i64 pxk2 = pxk / f1xx;
 			if ((pyn2 == pyk2) && (pxn2 == pxk2))
 			{
 				uchar* p2 = (uchar*)& bm->data[pyn2 * f1x + pxn2];
@@ -559,16 +559,16 @@ void _picture::stretch_draw(_picture* bm, int64 x, int64 y, double m)
 			if (pyn2 == pyk2)
 			{
 				uchar* p2 = (uchar*)& bm->data[pyn2 * f1x + pxn2];
-				int64 k1 = (pxn2 + 1) * f1xx - pxn;
-				int64 k2 = pxk - pxk2 * f1xx + 1;
-				int64 S = f1x * 256;
-				int64 pp2 = p2[3] * k1;
-				int64 R = p2[0] * pp2;
-				int64 G = p2[1] * pp2;
-				int64 B = p2[2] * pp2;
-				int64 A = (255 - p2[3]) * k1;
+				i64 k1 = (pxn2 + 1) * f1xx - pxn;
+				i64 k2 = pxk - pxk2 * f1xx + 1;
+				i64 S = f1x * 256;
+				i64 pp2 = p2[3] * k1;
+				i64 R = p2[0] * pp2;
+				i64 G = p2[1] * pp2;
+				i64 B = p2[2] * pp2;
+				i64 A = (255 - p2[3]) * k1;
 				p2 += 4;
-				for (int64 x = pxn2 + 1; x < pxk2; x++)
+				for (i64 x = pxn2 + 1; x < pxk2; x++)
 				{
 					pp2 = p2[3] * f1xx;
 					R += p2[0] * pp2;
@@ -590,16 +590,16 @@ void _picture::stretch_draw(_picture* bm, int64 x, int64 y, double m)
 			if (pxn2 == pxk2)
 			{
 				uchar* p2 = (uchar*)& bm->data[pyn2 * f1x + pxn2];
-				int64 k1 = (pyn2 + 1) * f1yy - pyn;
-				int64 k2 = pyk - pyk2 * f1yy + 1;
-				int64 S = f1y * 256;
-				int64 pp2 = p2[3] * k1;
-				int64 R = p2[0] * pp2;
-				int64 G = p2[1] * pp2;
-				int64 B = p2[2] * pp2;
-				int64 A = (255 - p2[3]) * k1;
+				i64 k1 = (pyn2 + 1) * f1yy - pyn;
+				i64 k2 = pyk - pyk2 * f1yy + 1;
+				i64 S = f1y * 256;
+				i64 pp2 = p2[3] * k1;
+				i64 R = p2[0] * pp2;
+				i64 G = p2[1] * pp2;
+				i64 B = p2[2] * pp2;
+				i64 A = (255 - p2[3]) * k1;
 				p2 += (4 * f1x);
-				for (int64 y = pyn2 + 1; y < pyk2; y++)
+				for (i64 y = pyn2 + 1; y < pyk2; y++)
 				{
 					pp2 = p2[3] * f1yy;
 					R += p2[0] * pp2;
@@ -618,19 +618,19 @@ void _picture::stretch_draw(_picture* bm, int64 x, int64 y, double m)
 				p1[2] = (uchar)((p1[2] * A + B) / S);
 				continue;
 			}
-			int64 kx1 = (pxn2 + 1) * f1xx - pxn;
-			int64 kx2 = pxk - pxk2 * f1xx + 1;
-			int64 ky1 = (pyn2 + 1) * f1yy - pyn;
-			int64 ky2 = pyk - pyk2 * f1yy + 1;
-			int64 S = f1x * f1y * 256;
+			i64 kx1 = (pxn2 + 1) * f1xx - pxn;
+			i64 kx2 = pxk - pxk2 * f1xx + 1;
+			i64 ky1 = (pyn2 + 1) * f1yy - pyn;
+			i64 ky2 = pyk - pyk2 * f1yy + 1;
+			i64 S = f1x * f1y * 256;
 			uchar* p2 = (uchar*)& bm->data[pyn2 * f1x + pxn2];
-			int64 pp2 = p2[3] * kx1 * ky1;
-			int64 R = p2[0] * pp2;
-			int64 G = p2[1] * pp2;
-			int64 B = p2[2] * pp2;
-			int64 A = (255 - p2[3]) * kx1 * ky1;
+			i64 pp2 = p2[3] * kx1 * ky1;
+			i64 R = p2[0] * pp2;
+			i64 G = p2[1] * pp2;
+			i64 B = p2[2] * pp2;
+			i64 A = (255 - p2[3]) * kx1 * ky1;
 			p2 += 4;
-			for (int64 x = pxn2 + 1; x < pxk2; x++)
+			for (i64 x = pxn2 + 1; x < pxk2; x++)
 			{
 				pp2 = p2[3] * f1xx * ky1;
 				R += p2[0] * pp2;
@@ -651,7 +651,7 @@ void _picture::stretch_draw(_picture* bm, int64 x, int64 y, double m)
 			B += p2[2] * pp2;
 			A += (255 - p2[3]) * kx1 * ky2;
 			p2 += 4;
-			for (int64 x = pxn2 + 1; x < pxk2; x++)
+			for (i64 x = pxn2 + 1; x < pxk2; x++)
 			{
 				pp2 = p2[3] * f1xx * ky2;
 				R += p2[0] * pp2;
@@ -666,7 +666,7 @@ void _picture::stretch_draw(_picture* bm, int64 x, int64 y, double m)
 			B += p2[2] * pp2;
 			A += (255 - p2[3]) * kx2 * ky2;
 			p2 = (uchar*)& bm->data[(pyn2 + 1) * f1x + pxn2];
-			for (int64 y = pyn2 + 1; y < pyk2; y++)
+			for (i64 y = pyn2 + 1; y < pyk2; y++)
 			{
 				pp2 = p2[3] * f1yy * kx1;
 				R += p2[0] * pp2;
@@ -676,7 +676,7 @@ void _picture::stretch_draw(_picture* bm, int64 x, int64 y, double m)
 				p2 += (4 * f1x);
 			}
 			p2 = (uchar*)&bm->data[(pyn2 + 1) * f1x + pxk2];
-			for (int64 y = pyn2 + 1; y < pyk2; y++)
+			for (i64 y = pyn2 + 1; y < pyk2; y++)
 			{
 				pp2 = p2[3] * f1yy * kx2;
 				R += p2[0] * pp2;
@@ -685,10 +685,10 @@ void _picture::stretch_draw(_picture* bm, int64 x, int64 y, double m)
 				A += (255 - p2[3]) * f1yy * kx2;
 				p2 += (4 * f1x);
 			}
-			for (int64 y = pyn2 + 1; y < pyk2; y++)
+			for (i64 y = pyn2 + 1; y < pyk2; y++)
 			{
 				p2 = (uchar*)&bm->data[y * f1x + pxn2 + 1];
-				for (int64 x = pxn2 + 1; x < pxk2; x++)
+				for (i64 x = pxn2 + 1; x < pxk2; x++)
 				{
 					pp2 = p2[3] * f1xx * f1yy;
 					R += p2[0] * pp2;
@@ -705,10 +705,10 @@ void _picture::stretch_draw(_picture* bm, int64 x, int64 y, double m)
 	}
 }
 
-void _picture::line_vert_rep_speed(_ixy p, i8 y2, uint c)
+void _picture::line_vert_rep_speed(_ixy p, i64 y2, uint c)
 {
 	uint* c2 = &data[p.y * size.x + p.x];
-	for (int64 y = p.y - y2; y <= 0; y++) { *c2 = c; c2 += size.x; }
+	for (i64 y = p.y - y2; y <= 0; y++) { *c2 = c; c2 += size.x; }
 }
 
 void _picture::fill_rect_rep_speed(_iarea r, uint c)
@@ -718,11 +718,11 @@ void _picture::fill_rect_rep_speed(_iarea r, uint c)
 		line_vert_rep_speed({ r.x.min, r.y.min }, r.y.max-1, c);
 		return;
 	}
-	uint64 cc = (((uint64)c) << 32) + c;
-	for (int64 i = r.y.min; i < r.y.max; i++)
+	u64 cc = (((u64)c) << 32) + c;
+	for (i64 i = r.y.min; i < r.y.max; i++)
 	{
-		uint64* ee = (uint64*)(&(data[i * size.x + r.x.min]));
-		uint64* eemax = (uint64*)(&(data[i * size.x + r.x.max-1]));
+		u64* ee = (u64*)(&(data[i * size.x + r.x.min]));
+		u64* eemax = (u64*)(&(data[i * size.x + r.x.max-1]));
 		while (ee < eemax) *ee++ = cc;
 		if (ee == eemax) *((uint*)ee) = c;
 	}
@@ -743,7 +743,7 @@ void _picture::fill_rectangle(_iarea r, uint c, bool rep)
 
 void _picture::fill_rect_transparent_speed(_iarea r, uint c)
 {
-	int64 dx = r.x.size();
+	i64 dx = r.x.size();
 	if (dx == 1) // вертикальная линия
 	{
 		line({ r.x.min, r.y.min }, { r.x.min, r.y.max - 1 }, c); // !!!!!!!!!!!!!!!! вызвать нужную
@@ -757,10 +757,10 @@ void _picture::fill_rect_transparent_speed(_iarea r, uint c)
 	uint d11 = d1 * 255;
 	uint d22 = d2 * 255;
 	uint d33 = d3 * 255;
-	for (int64 i = r.y.min; i < r.y.max; i++)
+	for (i64 i = r.y.min; i < r.y.max; i++)
 	{
 		uchar* c2 = (uchar*) & (data[i * size.x + r.x.min]);
-		for (int64 d = -dx; d < 0; d++)
+		for (i64 d = -dx; d < 0; d++)
 		{
 			uint kk_ = 255 - c2[3];
 			uint k2_ = (256 - kk_) * kk;
@@ -776,7 +776,7 @@ void _picture::fill_rect_transparent_speed(_iarea r, uint c)
 
 void _picture::fill_rect_speed(_iarea r, uint c)
 {
-	int64 dx = r.x.size();
+	i64 dx = r.x.size();
 	if (dx == 1) // вертикальная линия
 	{
 		line({ r.x.min, r.y.min }, { r.x.min, r.y.max - 1 }, c); // !!!!!!!!!!!!!!!! вызвать нужную
@@ -787,10 +787,10 @@ void _picture::fill_rect_speed(_iarea r, uint c)
 	uint d1 = (c & 255) * k2;
 	uint d2 = ((c >> 8) & 255) * k2;
 	uint d3 = ((c >> 16) & 255) * k2;
-	for (int64 i = r.y.min; i < r.y.max; i++)
+	for (i64 i = r.y.min; i < r.y.max; i++)
 	{
 		uchar* c2 = (uchar*) & (data[i * size.x + r.x.min]);
-		for (int64 d = -dx; d < 0; d++)
+		for (i64 d = -dx; d < 0; d++)
 		{
 			c2[0] = (c2[0] * kk + d1) >> 8;
 			c2[1] = (c2[1] * kk + d2) >> 8;
@@ -867,10 +867,10 @@ constexpr ushort font16[256][lx2] = { {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
    {2016, 1152, 1152, 1152, 768, 0, 2016}, {2016, 1152, 1152, 1152, 768}, {576, 1056, 1184, 1184, 960},
    {2016, 128, 960, 1056, 1056, 1056, 960}, {1216, 800, 288, 288, 2016} };
 
-_isize  _picture::size_text16(std::string_view s, int64 n)
+_isize  _picture::size_text16(std::string_view s, i64 n)
 {
-	i8 l = 0;
-	i8 probel = 0;
+	i64 l = 0;
+	i64 probel = 0;
 	for (auto c : s)
 	{
 		probel = (c == ' ') ? 4 : 1;
@@ -888,7 +888,7 @@ _isize  _picture::size_text16(std::string_view s, int64 n)
 	return {l*n, 13*n};
 }
 
-void _picture::text16n(int64 x, int64 y, astr s, int64 n, uint c)
+void _picture::text16n(i64 x, i64 y, astr s, i64 n, uint c)
 {
 	if (n <= 1)
 	{
@@ -907,17 +907,17 @@ void _picture::text16n(int64 x, int64 y, astr s, int64 n, uint c)
 	uint d22 = d2 * 255;
 	uint d33 = d3 * 255;
 
-	int64 j0 = 0;
-	int64 j1 = ly;
+	i64 j0 = 0;
+	i64 j1 = ly;
 	if (y < area.y.min) j0 = (area.y.min + n - 1 - y) / n;
 	if (y + ly * n > area.y.max) j1 = (area.y.max - y) / n;
 	while ((*s) && (*s != '\n') && (x < area.x.max))
 	{
-		int64         probel = (*s == 32) ? 4 : 1;
+		i64         probel = (*s == 32) ? 4 : 1;
 		const ushort* ss     = font16[(uchar)(*s++)];
-		int64         lx     = lx2;
+		i64         lx     = lx2;
 		uchar         r      = 0;
-		for (int64 j = lx - 1; j >= 0; j--)
+		for (i64 j = lx - 1; j >= 0; j--)
 		{
 			if (ss[j]) break;
 			lx--;
@@ -927,20 +927,20 @@ void _picture::text16n(int64 x, int64 y, astr s, int64 n, uint c)
 			x += (lx + probel) * n;
 			continue;
 		}
-		int64 i0 = 0;
-		int64 i1_ = lx;
+		i64 i0 = 0;
+		i64 i1_ = lx;
 		if (x < area.x.min) i0 = (area.x.min + n - 1 - x) / n;
 		if (x + lx * n > area.x.max) i1_ = (area.x.max - x) / n;
-		for (int64 j = j0; j < j1; j++)
+		for (i64 j = j0; j < j1; j++)
 		{
 			ushort mask = (ushort(1) << j);
-			for (int64 jj = 0; jj < n; jj++)
+			for (i64 jj = 0; jj < n; jj++)
 			{
 				const ushort* sss = ss;
 				if (kk == 0)
 				{
 					uint* c2 = &data[(y + j * n + jj) * size.x + x + i0 * n];
-					for (int64 i = i0; i < i1_; i++)
+					for (i64 i = i0; i < i1_; i++)
 					{
 						if (*sss & mask)
 						{
@@ -960,7 +960,7 @@ void _picture::text16n(int64 x, int64 y, astr s, int64 n, uint c)
 					uchar* c2 = (uchar*)&data[(y + j * n + jj) * size.x + x + i0 * n];
 					if (!transparent)
 					{
-						for (int64 i = i0; i < i1_; i++)
+						for (i64 i = i0; i < i1_; i++)
 						{
 							if (*sss & mask)
 							{
@@ -979,7 +979,7 @@ void _picture::text16n(int64 x, int64 y, astr s, int64 n, uint c)
 					}
 					else
 					{
-						for (int64 i = i0; i < i1_; i++)
+						for (i64 i = i0; i < i1_; i++)
 						{
 							if (*sss & mask)
 							{
@@ -1007,7 +1007,7 @@ void _picture::text16n(int64 x, int64 y, astr s, int64 n, uint c)
 	}
 }
 
-void _picture::text16(int64 x, int64 y, astr s, uint c)
+void _picture::text16(i64 x, i64 y, astr s, uint c)
 {
 	constexpr int ly = 13;
 	if ((y >= area.y.max) || (y + ly <= area.y.min)) return;
@@ -1021,17 +1021,17 @@ void _picture::text16(int64 x, int64 y, astr s, uint c)
 	uint d22 = d2 * 255;
 	uint d33 = d3 * 255;
 
-	int64 j0 = 0;
-	int64 j1 = ly;
+	i64 j0 = 0;
+	i64 j1 = ly;
 	if (y < area.y.min) j0 = area.y.min - y;
 	if (y + ly > area.y.max) j1 = area.y.max - y;
 	while ((*s) && (*s != '\n') && (x < area.x.max))
 	{
-		int64         probel = (*s == 32) ? 4 : 1;
+		i64         probel = (*s == 32) ? 4 : 1;
 		const ushort* ss     = font16[(uchar)(*s++)];
-		int64         lx     = lx2;
+		i64         lx     = lx2;
 		uchar         r      = 0;
-		for (int64 j = lx - 1; j >= 0; j--)
+		for (i64 j = lx - 1; j >= 0; j--)
 		{
 			if (ss[j]) break;
 			lx--;
@@ -1041,18 +1041,18 @@ void _picture::text16(int64 x, int64 y, astr s, uint c)
 			x += lx + probel;
 			continue;
 		}
-		int64 i0 = 0;
-		int64 i1_ = lx;
+		i64 i0 = 0;
+		i64 i1_ = lx;
 		if (x < area.x.min) i0 = area.x.min - x;
 		if (x + lx > area.x.max) i1_ = area.x.max - x;
-		for (int64 j = j0; j < j1; j++)
+		for (i64 j = j0; j < j1; j++)
 		{
 			ushort        mask = (ushort(1) << j);
 			const ushort* sss  = ss;
 			if (kk == 0)
 			{
 				uint* c2 = &data[(y + j) * size.x + x + i0];
-				for (int64 i = i0; i < i1_; i++)
+				for (i64 i = i0; i < i1_; i++)
 				{
 					if (*sss++ & mask) *c2 = c;
 					c2++;
@@ -1063,7 +1063,7 @@ void _picture::text16(int64 x, int64 y, astr s, uint c)
 				uchar* c2 = (uchar*)&data[(y + j) * size.x + x + i0];
 				if (!transparent)
 				{
-					for (int64 i = i0; i < i1_; i++)
+					for (i64 i = i0; i < i1_; i++)
 					{
 						if (*sss++ & mask)
 						{
@@ -1076,7 +1076,7 @@ void _picture::text16(int64 x, int64 y, astr s, uint c)
 				}
 				else
 				{
-					for (int64 i = i0; i < i1_; i++)
+					for (i64 i = i0; i < i1_; i++)
 					{
 						if (*sss++ & mask)
 						{
@@ -1123,10 +1123,10 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 
 	double k_a = 0.75; // коэффициент уменьшения толщины линий х.з какой лучше
 
-	int64 x1 = (int64)p.x;
-	int64 x2 = (int64)(p.x + r);
-	int64 y1 = (int64)p.y;
-	int64 y2 = (int64)(p.y + r);
+	i64 x1 = (i64)p.x;
+	i64 x2 = (i64)(p.x + r);
+	i64 y1 = (i64)p.y;
+	i64 y2 = (i64)(p.y + r);
 
 	if (x1 < area.x.min) x1 = area.x.min;
 	if (y1 < area.y.min) y1 = area.y.min;
@@ -1157,7 +1157,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 		int    sm1;    // смещение ii до 1 на конце
 		double l1, l2; // границы столбика
 		uchar* f;      // начало нужного куска
-		int64 x1, x2;    // реальные координаты начала-конца не выходящие за рамки
+		i64 x1, x2;    // реальные координаты начала-конца не выходящие за рамки
 		uint kk_1, kk_2;                         // коэффициенты границ
 		uint d1_1, d2_1, d3_1, d1_2, d2_2, d3_2; // коэффициенты границ
 	};
@@ -1353,7 +1353,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 
 	xxxyyy* yyay_1 = &(yy[ay]);
 	xxxyyy* yyay   = &(yy[ay]);
-	for (int64 y = y1; y <= y2; y++)
+	for (i64 y = y1; y <= y2; y++)
 	{
 		if (y >= yyay->l2)
 		{
@@ -1380,15 +1380,15 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 				}
 				if (ax > rr) break;
 				xxxyyy* xxax = &(xx[ax]);
-				int64 x11  = xxax->x1;
+				i64 x11  = xxax->x1;
 				if (x11 > x2) break;
-				int64 x22 = xxax->x2;
+				i64 x22 = xxax->x2;
 				uchar* cc  = (uchar*)&(data[y * size.x + x11]);
 				cc[0]      = (cc[0] * xxax->kk_1 + xxax->d1_1) >> 8;
 				cc[1]      = (cc[1] * xxax->kk_1 + xxax->d2_1) >> 8;
 				cc[2]      = (cc[2] * xxax->kk_1 + xxax->d3_1) >> 8;
 				cc += 4;
-				int64 d = x11 - x22 + 2;
+				i64 d = x11 - x22 + 2;
 				if (d <= 1)
 				{
 					while (d++ <= 0)
@@ -1443,7 +1443,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 				}
 				bool nac = true;
 				bool kon = true;
-				int64 x11, x22;
+				i64 x11, x22;
 				if (ayx >= rr)
 				{
 					x11 = x2 + 1;
@@ -1505,9 +1505,9 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 						}
 						if (ax > rr) break;
 						xxxyyy* xxax = &(xx[ax]);
-						int64 xx11 = xxax->x1;
+						i64 xx11 = xxax->x1;
 						if ((xx11 >= x11) || (xx11 > x2)) break;
-						int64 xx22 = xxax->x2;
+						i64 xx22 = xxax->x2;
 						uchar* cc   = (uchar*)&(data[y * size.x + xx11]);
 						if (vepa)
 						{
@@ -1515,7 +1515,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 							cc[1] = (cc[1] * xxax->kk_1 + xxax->d2_1) >> 8;
 							cc[2] = (cc[2] * xxax->kk_1 + xxax->d3_1) >> 8;
 							cc += 4;
-							int64 d = xx11 - xx22 + 2;
+							i64 d = xx11 - xx22 + 2;
 							if (d <= 1)
 							{
 								while (d++ <= 0)
@@ -1538,7 +1538,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 							cc[1]     = (cc[1] * kkw2 + c_2 * k3) >> 8;
 							cc[2]     = (cc[2] * kkw2 + c_3 * k3) >> 8;
 							cc += 4;
-							int64 d = xx11 - xx22 + 2;
+							i64 d = xx11 - xx22 + 2;
 							if (d <= 1)
 							{
 								while (d++ <= 0)
@@ -1578,7 +1578,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 							ax++;
 						}
 					xxxyyy* xxax = 0;
-					int64 xx11, xx22;
+					i64 xx11, xx22;
 					if (ax <= rr)
 					{
 						xxax = &(xx[ax]);
@@ -1592,7 +1592,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 					}
 					if (xx11 > x11)
 					{
-						int64 d = x11 - xx11 + 1;
+						i64 d = x11 - xx11 + 1;
 						if (nac)
 						{
 							nac = false;
@@ -1657,7 +1657,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 						cc[2] = (cc[2] * kkw2 + c_3 * k3) >> 8;
 					}
 					cc += 4;
-					int64 d = xx11 - xx22 + 2;
+					i64 d = xx11 - xx22 + 2;
 					if (d <= 1)
 					{
 						while (d++ <= 0)
@@ -1725,7 +1725,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 				}
 				bool nac = true;
 				bool kon = true;
-				int64 x11, x22;
+				i64 x11, x22;
 				if (ayx >= rr)
 				{
 					x11 = x2 + 1;
@@ -1787,9 +1787,9 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 						}
 						if (ax > rr) break;
 						xxxyyy* xxax = &(xx[ax]);
-						int64 xx11 = xxax->x1;
+						i64 xx11 = xxax->x1;
 						if ((xx11 >= x11) || (xx11 > x2)) break;
-						int64 xx22 = xxax->x2;
+						i64 xx22 = xxax->x2;
 						uchar* cc   = (uchar*)&(data[y * size.x + xx11]);
 						if (nipa)
 						{
@@ -1797,7 +1797,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 							cc[1] = (cc[1] * xxax->kk_1 + xxax->d2_1) >> 8;
 							cc[2] = (cc[2] * xxax->kk_1 + xxax->d3_1) >> 8;
 							cc += 4;
-							int64 d = xx11 - xx22 + 2;
+							i64 d = xx11 - xx22 + 2;
 							if (d <= 1)
 							{
 								while (d++ <= 0)
@@ -1820,7 +1820,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 							cc[1]     = (cc[1] * kkw2 + c_2 * k3) >> 8;
 							cc[2]     = (cc[2] * kkw2 + c_3 * k3) >> 8;
 							cc += 4;
-							int64 d = xx11 - xx22 + 2;
+							i64 d = xx11 - xx22 + 2;
 							if (d <= 1)
 							{
 								while (d++ <= 0)
@@ -1860,7 +1860,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 							ax++;
 						}
 					xxxyyy* xxax = 0;
-					int64 xx11, xx22 = 0; // для параноии компилятора
+					i64 xx11, xx22 = 0; // для параноии компилятора
 					if (ax <= rr)
 					{
 						xxax = &(xx[ax]);
@@ -1874,7 +1874,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 					}
 					if (xx11 > x11)
 					{
-						int64 d = x11 - xx11 + 1;
+						i64 d = x11 - xx11 + 1;
 						if (nac)
 						{
 							nac = false;
@@ -1940,7 +1940,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 						cc[2] = (cc[2] * kkw2 + c_3 * k3) >> 8;
 					}
 					cc += 4;
-					int64 d = xx11 - xx22 + 2;
+					i64 d = xx11 - xx22 + 2;
 					if (d <= 1)
 					{
 						while (d++ <= 0)
@@ -2001,7 +2001,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 			}
 			bool nac = true;
 			bool kon = true;
-			int64 x11, x22;
+			i64 x11, x22;
 			if (ayx >= rr)
 			{
 				x11 = x2 + 1;
@@ -2058,15 +2058,15 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 					}
 					if (ax > rr) break;
 					xxxyyy* xxax = &(xx[ax]);
-					int64 xx11 = xxax->x1;
+					i64 xx11 = xxax->x1;
 					if ((xx11 >= x11) || (xx11 > x2)) break;
-					int64 xx22 = xxax->x2;
+					i64 xx22 = xxax->x2;
 					uchar* cc   = (uchar*)&(data[y * size.x + xx11]);
 					cc[0]       = (cc[0] * xxax->kk_1 + xxax->d1_1) >> 8;
 					cc[1]       = (cc[1] * xxax->kk_1 + xxax->d2_1) >> 8;
 					cc[2]       = (cc[2] * xxax->kk_1 + xxax->d3_1) >> 8;
 					cc += 4;
-					int64 d = xx11 - xx22 + 2;
+					i64 d = xx11 - xx22 + 2;
 					if (d <= 1)
 					{
 						while (d++ <= 0)
@@ -2085,7 +2085,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 			}
 			if (x11 > x2) break;
 			uchar*  cc   = (uchar*)&(data[y * size.x + x11]);
-			int64 d = x11 - x22 + 1;
+			i64 d = x11 - x22 + 1;
 			xxxyyy* xxax = &(xx[ayx]);
 			if (nac)
 			{
@@ -2161,10 +2161,10 @@ void _picture::fill_rect_d(double x1, double y1, double x2, double y2, uint c)
 	if (y2 >= area.y.max) y2 = area.y.max - 0.0001;
 	if ((x2 - x1 < 0.004) || (y2 - y1 < 0.004)) return; // слишком тонкий или за пределами
 
-	int64 xx1 = (int64)x1;
-	int64 xx2 = (int64)x2;
-	int64 yy1 = (int64)y1;
-	int64 yy2 = (int64)y2;
+	i64 xx1 = (i64)x1;
+	i64 xx2 = (i64)x2;
+	i64 yy1 = (i64)y1;
+	i64 yy2 = (i64)y2;
 	uint r1  = (c & 255);
 	uint r2  = ((c >> 8) & 255);
 	uint r3  = ((c >> 16) & 255);
@@ -2194,7 +2194,7 @@ void _picture::fill_rect_d(double x1, double y1, double x2, double y2, uint c)
 		uint d1 = r1 * k2;
 		uint d2 = r2 * k2;
 		uint d3 = r3 * k2;
-		int64 d  = xx1 - xx2 + 2;
+		i64 d  = xx1 - xx2 + 2;
 		while (d <= 0)
 		{
 			c2[0] = (c2[0] * kk + d1) >> 8;
@@ -2227,7 +2227,7 @@ void _picture::fill_rect_d(double x1, double y1, double x2, double y2, uint c)
 		uint d1 = r1 * k2;
 		uint d2 = r2 * k2;
 		uint d3 = r3 * k2;
-		for (int64 y = yy1 + 1; y < yy2; y++)
+		for (i64 y = yy1 + 1; y < yy2; y++)
 		{
 			c2    = px(xx1, y);
 			c2[0] = (c2[0] * kk + d1) >> 8;
@@ -2244,8 +2244,8 @@ void _picture::fill_rect_d(double x1, double y1, double x2, double y2, uint c)
 
 		return;
 	}
-	uint64 cc = (((uint64)c) << 32) + c;
-	for (int64 y = yy1; y <= yy2; y++)
+	u64 cc = (((u64)c) << 32) + c;
+	for (i64 y = yy1; y <= yy2; y++)
 	{
 		uchar* c2 = px(xx1, y);
 
@@ -2262,8 +2262,8 @@ void _picture::fill_rect_d(double x1, double y1, double x2, double y2, uint c)
 
 		if (k2 >= 255)
 		{
-			uint64* ee    = (uint64*)c2;
-			uint64* eemax = (uint64*)px(xx2 - 1, y);
+			u64* ee    = (u64*)c2;
+			u64* eemax = (u64*)px(xx2 - 1, y);
 			while (ee < eemax) *ee++ = cc;
 			if (ee == eemax) *((uint*)ee) = c;
 		}
@@ -2273,7 +2273,7 @@ void _picture::fill_rect_d(double x1, double y1, double x2, double y2, uint c)
 			uint d1 = r1 * k2;
 			uint d2 = r2 * k2;
 			uint d3 = r3 * k2;
-			int64  d  = xx1 - xx2 + 2;
+			i64  d  = xx1 - xx2 + 2;
 			while (d <= 0)
 			{
 				c2[0] = (c2[0] * kkk + d1) >> 8;
@@ -2309,13 +2309,13 @@ void _picture::fill_ring(_xy p, double r, double d, uint c, uint c2)
 	}
 	double r2 = r - d;
 	if (r2 < 0) r2 = 0;
-	int64 y1 = (int64)(p.y - r);
+	i64 y1 = (i64)(p.y - r);
 	y1     = std::max(area.y.min, y1);
-	int64 y2 = (int64)(p.y + r);
+	i64 y2 = (i64)(p.y + r);
 	y2     = std::min(area.y.max - 1, y2);
-	int64 x1 = (int64)(p.x - r);
+	i64 x1 = (i64)(p.x - r);
 	x1     = std::max(area.x.min, x1);
-	int64 x2 = (int64)(p.x + r);
+	i64 x2 = (i64)(p.x + r);
 	x2     = std::min(area.x.max - 1, x2);
 	if ((x2 < x1) || (y2 < y1)) return;
 	double rrmin = (r - 0.5) * (r - 0.5);
@@ -2345,12 +2345,12 @@ void _picture::fill_ring(_xy p, double r, double d, uint c, uint c2)
 	uint dd3 = c2_2 * k2_;
 	if ((kk == 0) && (kk_ == 0))
 	{
-		for (int64 i = y1; i <= y2; i++)
+		for (i64 i = y1; i <= y2; i++)
 		{
 			double dd = (i - p.y) * (i - p.y) + dxdx0;
 			double ab = ab0;
 			uchar* cc = px(x1, i);
-			int64    d  = x1 - x2;
+			i64    d  = x1 - x2;
 			while (d++ <= 0)
 			{
 				if (dd < rrmax)
@@ -2399,12 +2399,12 @@ void _picture::fill_ring(_xy p, double r, double d, uint c, uint c2)
 		}
 		return;
 	}
-	for (int64 i = y1; i <= y2; i++)
+	for (i64 i = y1; i <= y2; i++)
 	{
 		double dd = (i - p.y) * (i - p.y) + dxdx0;
 		double ab = ab0;
 		uchar* cc = px(x1, i);
-		int64 d  = x1 - x2;
+		i64 d  = x1 - x2;
 		while (d++ <= 0)
 		{
 			if (dd < rrmax)
@@ -2465,13 +2465,13 @@ void _picture::ring(_xy p, double r, double d, uint c)
 	if (r < 0.5) return; // слишком маленький
 	double r2 = r - d;
 	if (r2 < 0) r2 = 0;
-	int64 y1 = (int)(p.y - r);
+	i64 y1 = (int)(p.y - r);
 	y1     = std::max(area.y.min, y1);
-	int64 y2 = (int)(p.y + r);
+	i64 y2 = (int)(p.y + r);
 	y2     = std::min(area.y.max - 1, y2);
-	int64 x1 = (int)(p.x - r);
+	i64 x1 = (int)(p.x - r);
 	x1     = std::max(area.x.min, x1);
-	int64 x2 = (int)(p.x + r);
+	i64 x2 = (int)(p.x + r);
 	x2     = std::min(area.x.max - 1, x2);
 	if ((x2 < x1) || (y2 < y1)) return;
 
@@ -2500,12 +2500,12 @@ void _picture::ring(_xy p, double r, double d, uint c)
 	uint d3 = c_2 * k2;
 	if (kk == 0)
 	{
-		for (int64 i = y1; i <= y2; i++)
+		for (i64 i = y1; i <= y2; i++)
 		{
 			double dd = (i - p.y) * (i - p.y) + dxdx0;
 			double ab = ab0;
 			uchar* cc = px(x1, i);
-			int64 d  = x1 - x2;
+			i64 d  = x1 - x2;
 			while (d++ <= 0)
 			{
 				if ((dd < rrmax) && (dd > ddmin))
@@ -2549,12 +2549,12 @@ void _picture::ring(_xy p, double r, double d, uint c)
 		}
 		return;
 	}
-	for (int64 i = y1; i <= y2; i++)
+	for (i64 i = y1; i <= y2; i++)
 	{
 		double dd = (i - p.y) * (i - p.y) + dxdx0;
 		double ab = ab0;
 		uchar* cc = px(x1, i);
-		int64 d  = x1 - x2;
+		i64 d  = x1 - x2;
 		while (d++ <= 0)
 		{
 			if ((dd < rrmax) && (dd > ddmin))
@@ -2603,13 +2603,13 @@ void _picture::ring(_xy p, double r, double d, uint c)
 void _picture::fill_circle(_xy p, double r, uint c)
 {
 	if (r < 0.5) return; // слишком маленький
-	int64 y1 = (int64)(p.y - r);
+	i64 y1 = (i64)(p.y - r);
 	y1     = std::max(area.y.min, y1);
-	i8 y2 = (int64)(p.y + r);
+	i64 y2 = (i64)(p.y + r);
 	y2     = std::min(area.y.max - 1, y2);
-	int64 x1 = (int64)(p.x - r);
+	i64 x1 = (i64)(p.x - r);
 	x1     = std::max(area.x.min, x1);
-	i8 x2 = (int64)(p.x + r);
+	i64 x2 = (i64)(p.x + r);
 	x2     = std::min(area.x.max - 1, x2);
 	if ((x2 < x1) || (y2 < y1)) return;
 
@@ -2630,12 +2630,12 @@ void _picture::fill_circle(_xy p, double r, uint c)
 	uint d3 = c_2 * k2;
 	if (kk == 0)
 	{
-		for (int64 i = y1; i <= y2; i++)
+		for (i64 i = y1; i <= y2; i++)
 		{
 			double dd = (i - p.y) * (i - p.y) + dxdx0;
 			double ab = ab0;
 			uchar* cc = px(x1, i);
-			int64 d  = x1 - x2;
+			i64 d  = x1 - x2;
 			while (d++ <= 0)
 			{
 				if (dd < rrmax)
@@ -2658,12 +2658,12 @@ void _picture::fill_circle(_xy p, double r, uint c)
 		}
 		return;
 	}
-	for (int64 i = y1; i <= y2; i++)
+	for (i64 i = y1; i <= y2; i++)
 	{
 		double dd = (i - p.y) * (i - p.y) + dxdx0;
 		double ab = ab0;
 		uchar* cc = px(x1, i);
-		int64 d  = x1 - x2;
+		i64 d  = x1 - x2;
 		while (d++ <= 0)
 		{
 			if (dd < rrmax)

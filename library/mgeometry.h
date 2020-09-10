@@ -9,7 +9,7 @@
 
 struct _ixy // индекс, номер
 {
-	i8 x, y;
+	i64 x, y;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,7 @@ struct _xy
 
 	operator _ixy() const noexcept
 	{
-		_ixy res{ (i8)x, (i8)y };
+		_ixy res{ (i64)x, (i64)y };
 		if (x < 0.0) if (x != res.x) res.x--;
 		if (y < 0.0) if (y != res.y) res.y--;
 		return res;
@@ -52,11 +52,11 @@ struct _iarea;
 
 struct _isize // [0...x), [0...y)
 {
-	i8 x = 0, y = 0;
+	i64 x = 0, y = 0;
 
-	bool    empty()   const noexcept { return ((x <= 0) || (y <= 0)); }
-	i8      square()  const noexcept { return ((x <= 0) || (y <= 0)) ? 0 : (x * y); }
-	_xy     center()  const noexcept { return { x * 0.5, y * 0.5 }; }
+	bool   empty()   const noexcept { return ((x <= 0) || (y <= 0)); }
+	i64     square()  const noexcept { return ((x <= 0) || (y <= 0)) ? 0 : (x * y); }
+	_xy    center()  const noexcept { return { x * 0.5, y * 0.5 }; }
 	_isize correct() const noexcept { if ((x <= 0) || (y <= 0)) return { 0, 0 }; return { x, y }; } // для удобства
 
 	bool operator==(_isize s) const noexcept { return (x == s.x) && (y == s.y); }
@@ -76,12 +76,12 @@ struct _isize // [0...x), [0...y)
 
 struct _iinterval // [...)
 {
-	i8 min = 0;
-	i8 max = 0;
+	i64 min = 0;
+	i64 max = 0;
 
 	void operator&=(const _iinterval& b) noexcept { if (b.min > min) min = b.min; if (b.max < max) max = b.max; }
 
-	i8 size()    const noexcept { return (min < max) ? (max - min) : 0; }
+	i64 size()    const noexcept { return (min < max) ? (max - min) : 0; }
 	bool empty() const noexcept { return (max <= min); }
 };
 
@@ -114,7 +114,7 @@ struct _interval // [...]
 
 	operator _iinterval() const noexcept
 	{
-		_iinterval res{ (i8)min, (i8)max };
+		_iinterval res{ (i64)min, (i64)max };
 		if (min < 0.0) if (min != res.min) res.min--;
 		if ((max >= 0.0)||(max == res.max)) res.max++;
 		return res;
