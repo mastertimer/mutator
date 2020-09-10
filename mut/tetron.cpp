@@ -335,7 +335,7 @@ _frozen::_frozen(_tetron* t, uint64 flags_) : tetron(t), i(0), tetron2(nullptr),
 	}
 }
 
-void add_obl_izm(_area2 a)
+void add_obl_izm(_area a)
 {
 	if (a.empty()) return;
 	if ((a.x.max < 0) || (a.x.min > master_bm.size.x) || (a.y.max < 0) || (a.y.min > master_bm.size.y)) return;

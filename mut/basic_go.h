@@ -6,17 +6,17 @@
 
 struct _t_basic_go : public _tetron
 {
-	_area2 area; // визуальная область полная
+	_area area; // визуальная область полная
 	bool area_definite = false; // area задана
 
 	operator _t_basic_go* () { return this; }
 	void after_create_link(_link* li);          // вызывается после создания связи
 	void before_delete_link(_link* li);         // вызывается перед удалением связи
-	_area2 calc_area();                          // вычислить область
-	void cha_area(_area2 a = {}, bool first = true); // эта область изменена внутри
+	_area calc_area();                          // вычислить область
+	void cha_area(_area a = {}, bool first = true); // эта область изменена внутри
 	void cha_area(_trans tr); // эта область изменена внутри c известной трансформацией
-	void add_area(_area2 a = {}, bool first = true);         // эта область добавлена
-	void del_area(_area2 a = {}, bool first = true);         // эта область удалена
+	void add_area(_area a = {}, bool first = true);         // эта область добавлена
+	void del_area(_area a = {}, bool first = true);         // эта область удалена
 	void find_pot_act(_xy r);                           // найти потенциально активный
 	virtual bool mouse_move(_trans tr, bool final) = 0; // перемещение мышки
 	virtual void ris(_trans tr, bool final) = 0; // нарисовать
@@ -62,7 +62,7 @@ struct _t_go : public _t_basic_go
 	//	static constexpr uint c1_default = c_def; // цвет рисования по умолчанию
 	static constexpr uint c2_default = 0; // цвет фона по умолчанию
 
-	_area2 local_area; // область только этого объекта
+	_area local_area; // область только этого объекта
 	bool key_fokus; // делать активным для управления клавиатурой
 
 	uint get_c();

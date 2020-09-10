@@ -10,7 +10,7 @@
 struct _picture
 {
 	uint* data;
-	_size2i size;
+	_isize size;
 	bool transparent = false; // как бы от него избавиться???
 
 	explicit _picture(int rx3 = 0, int ry3 = 0);
@@ -23,8 +23,8 @@ struct _picture
 
 	uint* sl(int64 y) const noexcept { return &data[y * size.x]; }
 
-	void set_area(const _area2i &q) { area = q & size; }
-	bool resize(_size2i wh);
+	void set_area(const _iarea &q) { area = q & size; }
+	bool resize(_isize wh);
 	void set_transparent(); // узнать, есть ли прозрачные пиксели
 	void invert_alpha(); // инвертировать альфа канал
 
@@ -33,17 +33,17 @@ struct _picture
 	void lines(_xy p1, _xy p2, double l, uint c); // точная линия заданной толщины
 	void text16(int64 x, int64 y, astr s, uint c); // простой текст высотой 16
 	void text16n(int64 x, int64 y, astr s, int64 n, uint c); // простой текст высотой 16*n
-	static _size2i size_text16(std::string_view s, int64 n = 1); // размер текста *n
+	static _isize size_text16(std::string_view s, int64 n = 1); // размер текста *n
 	void froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2 = 0);
 
 	void fill_circle(_xy p, double r, uint c);
 	void fill_ring(_xy p, double r, double d, uint c, uint c2);
 	void ring(_xy p, double r, double d, uint c);
 
-	void fill_rectangle(_area2i r, uint c, bool rep = false);
+	void fill_rectangle(_iarea r, uint c, bool rep = false);
 	void fill_rect_d(double x1, double y1, double x2, double y2, uint c); // полупрозрачный пр-к на !!непр-й!! подложке
 
-	void rectangle(_area2i oo, uint c);
+	void rectangle(_iarea oo, uint c);
 
 	void draw(_ixy r, _picture &bm);
 	void stretch_draw(_picture* bm, int64 x, int64 y, double m);
@@ -52,13 +52,13 @@ struct _picture
 //	void text0(int x, int y, std::string_view s, int h, uint c, uint bg);
 
 protected:
-	_area2i area; // разрешенная область для рисования
+	_iarea area; // разрешенная область для рисования
 
 	void line_vert_rep_speed(_ixy p, i8 y2, uint c); // вертикальная линия замещения без проверок диапазона
 
-	void fill_rect_rep_speed(_area2i r, uint c); // прямоугольник - просто замена цвета без проверок диапазона
-	void fill_rect_transparent_speed(_area2i r, uint c);
-	void fill_rect_speed(_area2i r, uint c);
+	void fill_rect_rep_speed(_iarea r, uint c); // прямоугольник - просто замена цвета без проверок диапазона
+	void fill_rect_transparent_speed(_iarea r, uint c);
+	void fill_rect_speed(_iarea r, uint c);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,12 +81,12 @@ struct _bitmap: public _picture
 	explicit _bitmap(int rx3 = 0, int ry3 = 0);
 	~_bitmap();
 
-	bool resize(_size2i wh);
+	bool resize(_isize wh);
 
 	void text(int x, int y, std::wstring_view s, int h, uint c, uint bg);
 	void text(int x, int y, std::string_view s, int h, uint c, uint bg);
-	_size2i size_text(std::wstring_view s, int h);
-	_size2i size_text(std::string_view s, int h);
+	_isize size_text(std::wstring_view s, int h);
+	_isize size_text(std::string_view s, int h);
 
 	void grab_ecran_oo2(HWND hwnd); // украсть часть экрана
 };

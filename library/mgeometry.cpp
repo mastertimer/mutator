@@ -11,7 +11,7 @@ _xy _xy::rotation(double b) const noexcept
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _area2::operator+=(const _area2& b) noexcept
+void _area::operator+=(const _area& b) noexcept
 {
 	if (b.empty()) return;
 	if (empty()) { *this = b; return; }
@@ -21,21 +21,21 @@ void _area2::operator+=(const _area2& b) noexcept
 	if (b.y.max > this->y.max) this->y.max = b.y.max;
 }
 
-bool _area2::operator<=(const _area2& b) const noexcept
+bool _area::operator<=(const _area& b) const noexcept
 {
 	if (empty()) return true;
 	if (b.empty()) return false;
 	return ((x.min >= b.x.min) && (x.max <= b.x.max) && (y.min >= b.y.min) && (y.max <= b.y.max));
 }
 
-bool _area2::inside(const _area2& b) const noexcept
+bool _area::inside(const _area& b) const noexcept
 {
 	if (b.empty()) return false;
 	if (empty()) return true;
 	return ((x.min > b.x.min) && (x.max < b.x.max) && (y.min > b.y.min) && (y.max < b.y.max));
 }
 
-bool _area2::operator<(const _area2& b) const noexcept
+bool _area::operator<(const _area& b) const noexcept
 {
 	if (b.empty()) return false;
 	if (empty()) return true;
@@ -43,13 +43,13 @@ bool _area2::operator<(const _area2& b) const noexcept
 	return ((x.min >= b.x.min) && (x.max <= b.x.max) && (y.min >= b.y.min) && (y.max <= b.y.max));
 }
 
-bool _area2::test(_xy b)
+bool _area::test(_xy b)
 {
 	if (empty()) return false;
 	return ((b.x >= this->x.min) && (b.x <= this->x.max) && (b.y >= this->y.min) && (b.y <= this->y.max));
 }
 
-double _area2::radius()
+double _area::radius()
 {
 	if (empty()) return 0.0;
 	double dx = x.max - x.min;
@@ -57,7 +57,7 @@ double _area2::radius()
 	return ((dx < dy) ? dx : dy) / 2;
 }
 
-_area2 _area2::expansion(double b) const noexcept
+_area _area::expansion(double b) const noexcept
 {
 	if (empty()) return *this;
 	return { {x.min - b, x.max + b}, {y.min - b, y.max + b} };
@@ -102,10 +102,10 @@ _xy _trans::operator()(const _xy& b) const noexcept
 	return _xy{ b.x * scale + offset.x, b.y * scale + offset.y };
 }
 
-_area2 _trans::inverse(const _area2& b) const noexcept
+_area _trans::inverse(const _area& b) const noexcept
 {
 	if (b.empty()) return b;
-	_area2 c;
+	_area c;
 	double mm = 1.0 / scale;
 	c.x.min = (b.x.min - offset.x) * mm;
 	c.x.max = (b.x.max - offset.x) * mm;
@@ -128,7 +128,7 @@ void _trans::operator/=(_trans tr)
 	offset.y -= tr.offset.y * scale;
 }
 
-_area2 _trans::operator()(const _area2& b) const noexcept
+_area _trans::operator()(const _area& b) const noexcept
 {
 //	if (b.empty()) return b;
 	return { {b.x.min * scale + offset.x, b.x.max * scale + offset.x},

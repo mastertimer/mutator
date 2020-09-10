@@ -203,7 +203,7 @@ private:
 
 struct _g1list : public _t_go
 {
-	_area2 oo; // область
+	_area oo; // область
 	bool rez1; // вывод только 1 элемента
 
 	_g1list();

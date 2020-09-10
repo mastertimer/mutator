@@ -53,7 +53,7 @@ void smena_avt()
 			{
 				_t_go* ra = *n_ramk2;
 
-				_area2 a2 = g->local_area;
+				_area a2 = g->local_area;
 				if (a2.empty()) a2 = g->calc_area();
 				a2 = n_ko->operator _t_trans * ()->trans.inverse(g->oko_trans()(a2).expansion(3.0));
 
@@ -166,7 +166,7 @@ void find_ris_pot_act()
 		_t_go* ra = *n_ramk;
 		if (pred) ra->del_area();
 		_t_go* g = *n_pot_act;
-		_area2 a2 = g->local_area;
+		_area a2 = g->local_area;
 		if (a2.empty()) a2 = g->calc_area();
 		a2 = n_ko->operator _t_trans * ()->trans.inverse(g->oko_trans()(a2).expansion(3.0));
 		_t_trans* rat = n_ko->operator _t_basic_go * ()->set_t_trans(ra, flag_sub_go);
@@ -318,9 +318,9 @@ void fun03(_tetron* tt0, _tetron* tt, uint64 flags)
 			return;
 		}
 		_t_go* r2 = *n_ramk2;
-		_area2 a = r2->oko_trans()(r2->local_area);
-		_area2 pr = { {a.x.max - 5, a.x.max}, {a.y(0.1), a.y(0.9)} };
-		_area2 ni = { {a.x(0.1), a.x(0.9)}, {a.y.max - 5, a.y.max} };
+		_area a = r2->oko_trans()(r2->local_area);
+		_area pr = { {a.x.max - 5, a.x.max}, {a.y(0.1), a.y(0.9)} };
+		_area ni = { {a.x(0.1), a.x(0.9)}, {a.y.max - 5, a.y.max} };
 		if (pr.test(to))
 			set_cursorx(_cursor::size_we);
 		else

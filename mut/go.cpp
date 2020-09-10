@@ -6,7 +6,7 @@
 void _g_edit_double::ris2(_trans tr, bool final)
 {
 	_g_rect::ris2(tr, final);
-	_area2 oo = tr(local_area);
+	_area oo = tr(local_area);
 	uint c0 = get_c();
 	int sf2 = (int)(13 * tr.scale + 0.5);
 	if (sf2 < 5) return;
@@ -15,7 +15,7 @@ void _g_edit_double::ris2(_trans tr, bool final)
 	master_bm.text((int)(oo.x.min + 5), (int)(oo.y.min + 1), s.c_str(), sf2, c0, 0xff000000);
 	if (n_act_key == this)
 	{
-		_size2i size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
+		_isize size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
 		master_bm.line({ (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + 1) }, { (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + sf2) }, c0);
 	}
 }
@@ -108,7 +108,7 @@ _g_edit_double::_g_edit_double() : cursor(0), a(0.0)
 
 void _g_edit_int::ris2(_trans tr, bool final)
 {
-	_area2 oo = tr(local_area);
+	_area oo = tr(local_area);
 	uint c0 = get_c();
 	master_bm.rectangle(oo, c0);
 	int sf2 = (int)(13 * tr.scale + 0.5);
@@ -125,7 +125,7 @@ void _g_edit_int::ris2(_trans tr, bool final)
 	master_bm.text((int)(oo.x.min + 5), (int)(oo.y.min + 1), s.c_str(), sf2, c0, 0xff000000);
 	if (n_act_key == this)
 	{
-		_size2i size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
+		_isize size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
 		master_bm.line({ (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + 1) }, { (int)(oo.x.min + 4 + size.x),
 			(int)(oo.y.min + sf2) }, c0);
 	}
@@ -237,7 +237,7 @@ void _g_edit_int::key_press(ushort key)
 
 void _g_edit_string::ris2(_trans tr, bool final)
 {
-	_area2 oo = tr(local_area);
+	_area oo = tr(local_area);
 	uint c0 = get_c();
 	master_bm.rectangle(oo, c0);
 	std::wstring* s = find1_plus_gtetron<std::wstring>(this, flag_specialty);
@@ -260,7 +260,7 @@ void _g_edit_string::ris2(_trans tr, bool final)
 	{
 		int l2_min = 1;
 		int l2_max = l - first;
-		_size2i size = master_bm.size_text(s->substr(first, len2).c_str(), sf);
+		_isize size = master_bm.size_text(s->substr(first, len2).c_str(), sf);
 		if (size.x > rx_text)
 		{
 			while (first + len2 > cursor)
@@ -304,7 +304,7 @@ void _g_edit_string::ris2(_trans tr, bool final)
 	}
 	if (n_act_key == this)
 	{
-		_size2i size = master_bm.size_text(s->substr(first, (int64)cursor - first).c_str(), sf);
+		_isize size = master_bm.size_text(s->substr(first, (int64)cursor - first).c_str(), sf);
 		master_bm.line({ (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + 1) }, { (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + sf) }, c0);
 	}
 }
@@ -373,16 +373,16 @@ _g_edit_string::_g_edit_string()
 
 void _g_edit_multi_string::ris2(_trans tr, bool final)
 {
-	_area2 oo = tr(local_area);
+	_area oo = tr(local_area);
 	if ((oo.x.length() <= 3) || (oo.y.length() <= 3)) return;
 	_multi_string* str = find1_plus_gtetron<_multi_string>(this, flag_specialty);
 	if (!str) str = &strings;
-	master_bm.rectangle((_area2)oo, c_def);
+	master_bm.rectangle((_area)oo, c_def);
 	if (str != &strings)
 	{
-		_area2 ooo = oo;
+		_area ooo = oo;
 		ooo = ooo.expansion(-1.0);
-		master_bm.rectangle((_area2)ooo, c_def);
+		master_bm.rectangle((_area)ooo, c_def);
 	}
 	len2 = (int)((local_area.y.length() - 8) / 16);
 	if (len2 == 0) return;
@@ -420,7 +420,7 @@ void _g_edit_multi_string::ris2(_trans tr, bool final)
 
 	if (n_act_key == this)
 	{
-		_size2i size = master_bm.size_text(str->line[cursor.y].substr(0, cursor.x).c_str(), sf);
+		_isize size = master_bm.size_text(str->line[cursor.y].substr(0, cursor.x).c_str(), sf);
 		master_bm.line({ (int)(oo.x.min + 4 * tr.scale + size.x - 1),
 			(int)(oo.y.min + (((int64)cursor.y - first) * 16 + 4) * tr.scale) },
 			{ (int)(oo.x.min + 4 * tr.scale + size.x - 1),
@@ -620,7 +620,7 @@ bool _g_edit64bit::mouse_move2(_xy r)
 
 void _g_edit64bit::ris2(_trans tr, bool final)
 {
-	_area2  oo = tr(local_area);
+	_area  oo = tr(local_area);
 	double d = oo.x.length();
 	double d2 = oo.y.length();
 	if ((d < 5) || (d2 < 5)) return;
@@ -632,7 +632,7 @@ void _g_edit64bit::ris2(_trans tr, bool final)
 					(int64)(oo.x.min + (d - 1) * 0.125 * (i + 1.0))+1},
 					{(int64)(oo.y.min + 1 + (d2 - 1) * 0.125 * j),
 					(int64)(oo.y.min + (d2 - 1) * 0.125 * (j + 1.0))+1} }, c_max);
-	if ((d < 25) || (d2 < 25)) { master_bm.rectangle((_area2)oo, c_def); }
+	if ((d < 25) || (d2 < 25)) { master_bm.rectangle((_area)oo, c_def); }
 	else
 	{
 		for (int i = 0; i <= 8; i++)
@@ -668,7 +668,7 @@ void _g_edit64bit::run(_tetron* tt0, _tetron* tt, uint64 flags) { cha_area(); }
 
 bool _g_edit_one::mouse_down_left2(_xy r)
 {
-	_area2 aa = local_area;
+	_area aa = local_area;
 	aa.x.max = aa.x(0.12);
 	if (aa.test(r))
 	{
@@ -705,13 +705,13 @@ bool _g_edit_one::mouse_down_left2(_xy r)
 void _g_edit_one::ris2(_trans tr, bool final)
 {
 	_g_rect::ris2(tr, final);
-	_area2 bb = tr(local_area);
-	_area2 oo = bb;
+	_area bb = tr(local_area);
+	_area oo = bb;
 	oo.x.min = bb.x(0.3);
 	oo.x.max = bb.x(0.99);
 	oo.y.min = bb.y(0.01);
 	oo.y.max = bb.y(0.99);
-	master_bm.rectangle((_area2)oo, c_def);
+	master_bm.rectangle((_area)oo, c_def);
 	uint c0 = get_c();
 	int  sf2 = (int)(13 * tr.scale + 0.5);
 	if (sf2 < 5) return;
@@ -736,7 +736,7 @@ void _g_edit_one::ris2(_trans tr, bool final)
 		master_bm.text((int)(oo.x.min + 5), (int)(oo.y.min + 1), s.c_str(), sf2, c0, 0xff000000);
 		if (n_act_key == this)
 		{
-			_size2i size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
+			_isize size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
 			master_bm.line({ (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + 1) },
 				{ (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + sf2) }, c0);
 		}
@@ -752,7 +752,7 @@ void _g_edit_one::ris2(_trans tr, bool final)
 		master_bm.text((int)(oo.x.min + 5), (int)(oo.y.min + 1), s.c_str(), sf2, c0, 0xff000000);
 		if (n_act_key == this)
 		{
-			_size2i size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
+			_isize size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
 			master_bm.line({ (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + 1) },
 				{ (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + sf2) }, c0);
 		}
@@ -897,7 +897,7 @@ void _g_button::RisIco(astr kod, const char* s)
 
 void _g_button::ris2(_trans tr, bool final)
 {
-	_area2 oo = tr(local_area);
+	_area oo = tr(local_area);
 	uint c = 0;
 	if (picture.size.x * picture.size.y > 0)
 	{
@@ -976,7 +976,7 @@ bool _g_button::mouse_down_left2(_xy r)
 void _g_color_ring::ris2(_trans tr, bool final)
 {
 	const double toll = 2.0;
-	_area2 a = tr(local_area);
+	_area a = tr(local_area);
 	double r = a.radius();
 	_xy c = a.center();
 	master_bm.ring(a.center(), r, r * 0.04, c_def);
@@ -1105,7 +1105,7 @@ void _g_list_link::ris2(_trans tr, bool final)
 	_tetron* a = g->find1<_tetron>(flag_specialty);
 	if (a == nullptr) return;
 	if (a->link.size() == 0) return;
-	_area2 oo = tr(local_area);
+	_area oo = tr(local_area);
 	int len2 = (int)((local_area.y.length() - 8) / 16);
 	if (len2 < 1) return;
 	_g_scrollbar* polz = find1<_g_scrollbar>(flag_part);
@@ -1186,9 +1186,9 @@ void _g1list::init_sel() //вызывается только при отсутс
 
 void _g1list::ris2(_trans tr, bool final)
 {
-	_area2 oo2 = tr(oo);
+	_area oo2 = tr(oo);
 	uint c = get_c();
-	master_bm.rectangle((_area2)oo2, c);
+	master_bm.rectangle((_area)oo2, c);
 	_t_string* s = find1<_t_string>(flag_specialty);
 	if (s == nullptr)
 	{
@@ -1375,7 +1375,7 @@ bool _g_tetron::test_local_area(_xy b)
 
 void _g_tetron::ris2(_trans tr, bool final)
 {
-	_area2 a = tr(local_area);
+	_area a = tr(local_area);
 	_xy p = a.center();
 	double r = a.radius();
 	double d = log(1.001 + r) * 0.5;
@@ -1544,7 +1544,7 @@ void _g_tetron::add_unique_flags(_tetron* t, uint64 flags, bool after)
 
 void _g_tetron2::ris2(_trans tr, bool final)
 {
-	_area2 a = tr(local_area);
+	_area a = tr(local_area);
 	_xy p = a.center();
 	double r = a.radius();
 	double d = log(1.001 + r) * 0.5;
@@ -1692,8 +1692,8 @@ void _g_link::calc_local_area()
 	_t_trans* tr1 = parpar->find_intermediate<_t_trans>(g1, flag_sub_go, flag_sub_go);
 	_t_trans* tr2 = parpar->find_intermediate<_t_trans>(g2, flag_sub_go, flag_sub_go);
 	if ((tr1 == nullptr) || (tr2 == nullptr)) return;
-	_area2 a1 = tr1->trans(g1->local_area);
-	_area2 a2 = tr2->trans(g2->local_area);
+	_area a1 = tr1->trans(g1->local_area);
+	_area a2 = tr2->trans(g2->local_area);
 	par->trans = _trans();
 	_xy p1 = a1.center();
 	double r1 = a1.radius();

@@ -179,7 +179,7 @@ namespace mutator
 		return (tet.error == 0);
 	}
 
-	void draw(_size2i r)
+	void draw(_isize r)
 	{
 		if (master_bm.resize(r)) master_obl_izm = r;
 		if (master_obl_izm.empty()) return;

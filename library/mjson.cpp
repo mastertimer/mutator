@@ -204,7 +204,7 @@ _wjson& _wjson::add(std::string_view name, _xy b)
 	return *this;
 }
 
-_wjson& _wjson::add(std::string_view name, _area2 b)
+_wjson& _wjson::add(std::string_view name, _area b)
 {
 	str(name, true);
 	add("x", b.x);
@@ -213,7 +213,7 @@ _wjson& _wjson::add(std::string_view name, _area2 b)
 	return *this;
 }
 
-_wjson& _wjson::add(std::string_view name, _area b)
+_wjson& _wjson::add(std::string_view name, _interval b)
 {
 	str(name, true);
 	add("min", b.min);
@@ -402,9 +402,9 @@ void _rjson::read(std::string_view name, double& b)
 	if (!file.good()) error = 15;
 }
 
-_area _rjson::read_area(std::string_view name)
+_interval _rjson::read_area(std::string_view name)
 {
-	_area res;
+	_interval res;
 	if (!obj(name)) return res;
 	read("min", res.min);
 	read("max", res.max);
@@ -412,9 +412,9 @@ _area _rjson::read_area(std::string_view name)
 	return res;
 }
 
-_area2 _rjson::read_area2(std::string_view name)
+_area _rjson::read_area2(std::string_view name)
 {
-	_area2 res;
+	_area res;
 	if (!obj(name)) return res;
 	res.x = read_area("x");
 	res.y = read_area("y");

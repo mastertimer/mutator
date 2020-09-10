@@ -25,9 +25,9 @@ struct _wjson
 	_wjson& add(std::string_view name, const _multi_string &b);
 	_wjson& add(std::string_view name, _trans b);
 	_wjson& add(std::string_view name, _xy b);
-	_wjson& add(std::string_view name, _area2 b);
-	_wjson& add(std::string_view name, const _picture &b);
 	_wjson& add(std::string_view name, _area b);
+	_wjson& add(std::string_view name, const _picture &b);
+	_wjson& add(std::string_view name, _interval b);
 
 	template <typename _t> _wjson& add(_t &b) { return add("", b); }
 
@@ -58,9 +58,9 @@ struct _rjson
 	void end(); // конец структуры или массива
 
 	astr read_string(std::string_view name = "");
-	_area2 read_area2(std::string_view name = "");
+	_area read_area2(std::string_view name = "");
 	_trans read_trans(std::string_view name = "");
-	_area read_area(std::string_view name = "");
+	_interval read_area(std::string_view name = "");
 
 	void read(std::string_view name, _picture& b);
 	void read(std::string_view name, _multi_string& b);

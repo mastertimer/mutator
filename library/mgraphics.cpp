@@ -8,7 +8,7 @@ _bitmap temp_bmp(10, 10);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool _bitmap::resize(_size2i wh)
+bool _bitmap::resize(_isize wh)
 {
 	wh = wh.correct();
 	if (size == wh) return false;
@@ -69,7 +69,7 @@ void _bitmap::text(int x, int y, std::string_view s, int h, uint c, uint bg)
 	TextOutA(hdc, x, y, s.data(), (int)s.size());
 }
 
-_size2i _bitmap::size_text(std::wstring_view s, int h)
+_isize _bitmap::size_text(std::wstring_view s, int h)
 {
 	podg_font(h);
 	SIZE a;
@@ -77,7 +77,7 @@ _size2i _bitmap::size_text(std::wstring_view s, int h)
 	return { a.cx, a.cy };
 }
 
-_size2i _bitmap::size_text(std::string_view s, int h)
+_isize _bitmap::size_text(std::string_view s, int h)
 {
 	podg_font(h);
 	SIZE a;
@@ -197,7 +197,7 @@ void _picture::set_transparent()
 
 void _picture::draw(_ixy r, _picture &bm)
 {
-	_area2i b = move(bm.size, r) & area;
+	_iarea b = move(bm.size, r) & area;
 	if (b.empty()) return;
 	if (!bm.transparent)
 	{
@@ -222,7 +222,7 @@ void _picture::draw(_ixy r, _picture &bm)
 	}
 }
 
-bool _picture::resize(_size2i wh)
+bool _picture::resize(_isize wh)
 {
 	wh = wh.correct();
 	if (size == wh) return false;
@@ -711,7 +711,7 @@ void _picture::line_vert_rep_speed(_ixy p, i8 y2, uint c)
 	for (int64 y = p.y - y2; y <= 0; y++) { *c2 = c; c2 += size.x; }
 }
 
-void _picture::fill_rect_rep_speed(_area2i r, uint c)
+void _picture::fill_rect_rep_speed(_iarea r, uint c)
 {
 	if (r.x.size() == 1)
 	{
@@ -728,7 +728,7 @@ void _picture::fill_rect_rep_speed(_area2i r, uint c)
 	}
 }
 
-void _picture::fill_rectangle(_area2i r, uint c, bool rep)
+void _picture::fill_rectangle(_iarea r, uint c, bool rep)
 {
 	r &= area;
 	if (r.empty()) return;
@@ -741,7 +741,7 @@ void _picture::fill_rectangle(_area2i r, uint c, bool rep)
 		fill_rect_speed(r, c);
 }
 
-void _picture::fill_rect_transparent_speed(_area2i r, uint c)
+void _picture::fill_rect_transparent_speed(_iarea r, uint c)
 {
 	int64 dx = r.x.size();
 	if (dx == 1) // вертикальная линия
@@ -774,7 +774,7 @@ void _picture::fill_rect_transparent_speed(_area2i r, uint c)
 	}
 }
 
-void _picture::fill_rect_speed(_area2i r, uint c)
+void _picture::fill_rect_speed(_iarea r, uint c)
 {
 	int64 dx = r.x.size();
 	if (dx == 1) // вертикальная линия
@@ -867,7 +867,7 @@ constexpr ushort font16[256][lx2] = { {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
    {2016, 1152, 1152, 1152, 768, 0, 2016}, {2016, 1152, 1152, 1152, 768}, {576, 1056, 1184, 1184, 960},
    {2016, 128, 960, 1056, 1056, 1056, 960}, {1216, 800, 288, 288, 2016} };
 
-_size2i  _picture::size_text16(std::string_view s, int64 n)
+_isize  _picture::size_text16(std::string_view s, int64 n)
 {
 	i8 l = 0;
 	i8 probel = 0;
@@ -2120,7 +2120,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 	}
 }
 
-void _picture::rectangle(_area2i oo, uint c)
+void _picture::rectangle(_iarea oo, uint c)
 {
 	if (oo.empty()) return;
 	line({ oo.x.min, oo.y.min }, { oo.x.max - 1, oo.y.min }, c);
@@ -2142,7 +2142,7 @@ _stack& operator<<(_stack& o, _picture const& p)
 
 _stack& operator>>(_stack& o, _picture& p)
 {
-	_size2i r;
+	_isize r;
 	o >> r >> p.transparent;
 	p.resize(r);
 	o.pop_data(p.data, 4 * p.size.square());

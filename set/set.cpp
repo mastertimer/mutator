@@ -1347,7 +1347,7 @@ _g_graph::_g_graph()
 
 void _g_graph::ris2(_trans tr, bool final)
 {
-	_area2i a = tr(local_area);
+	_iarea a = tr(local_area);
 	draw(a.size());
 	master_bm.draw({ a.x.min, a.y.min }, bm);
 }
@@ -1416,7 +1416,7 @@ std::string date_to_ansi_string(int time)
 	return res;
 }
 
-void _g_graph::draw(_size2i size)
+void _g_graph::draw(_isize size)
 {
 	if (size.x > 8000) size.x = 8000;
 	if (size.y > 4000) size.y = 4000;
@@ -1425,7 +1425,7 @@ void _g_graph::draw(_size2i size)
 	obn = false;
 	bm.clear(c_background);
 
-	_area y_; // диапазон у (grid)
+	_interval y_; // диапазон у (grid)
 	static std::vector<int> time_; // отсчеты времени (grid)
 
 	double polzi_ = 0; // !! ползунок
@@ -1648,14 +1648,14 @@ void _mctds_candle::pop(_stack* mem)
 	*mem >> cen1m;
 }
 
-void _mctds_candle::draw(int n, _area2 area, _bitmap* bm)
+void _mctds_candle::draw(int n, _area area, _bitmap* bm)
 {
 	double min_ = cen1m[n].min * c_unpak;
 	double max_ = cen1m[n].max * c_unpak;
 	double first_ = cen1m[n].first * c_unpak;
 	double last_ = cen1m[n].last * c_unpak;
 
-	_area2 oo = area;
+	_area oo = area;
 	int x1 = (int)(oo.x.min + 1);
 	int x2 = (int)(oo.x.max - 1);
 	if (x2 < x1) return;
@@ -1906,7 +1906,7 @@ _latest_events _nervous_oracle::get_latest_events(int64 nn)
 	return e;
 }
 
-void _nervous_oracle::draw(int n, _area2 area, _bitmap* bm)
+void _nervous_oracle::draw(int n, _area area, _bitmap* bm)
 {
 	const int64 k = 4;
 	if (n < k) return;
@@ -2223,7 +2223,7 @@ void _oracle3::recovery()
 	}
 }
 
-void _oracle3::draw(int n, _area2 area, _bitmap* bm)
+void _oracle3::draw(int n, _area area, _bitmap* bm)
 {
 	static _prices pri[61]; // цены
 	static int min, max; // разброс по y
@@ -2279,7 +2279,7 @@ void _oracle3::draw(int n, _area2 area, _bitmap* bm)
 		max = zn[n].max;
 	}
 
-	_area2 oo = area;
+	_area oo = area;
 	int x1 = (int)oo.x.min;
 	int x2 = (int)oo.x.max;
 	int dx = x2 - x1;
@@ -2353,7 +2353,7 @@ _recognize::_recognize()
 		{
 			wchar_t c = nabor[i];
 			ss[0] = c;
-			_size2i size = bm_[nf].size_text(ss.data(), 8);
+			_isize size = bm_[nf].size_text(ss.data(), 8);
 			//			if (c == ' ') ShowMessage(IntToStr((int)size.cx));
 			//			if (size.cy != 13) ShowMessage(ss+" "+IntToStr((int)size.cy));
 			if (size.x > 20) return;//что-то не то...

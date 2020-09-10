@@ -10,7 +10,7 @@ _xy       par_koo1;             // .....вспомогательная пере�
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_area2 _t_basic_go::calc_area()
+_area _t_basic_go::calc_area()
 { // рекурсия невозможна
 	if (area_definite) return area;
 	area_definite = true;
@@ -37,7 +37,7 @@ _area2 _t_basic_go::calc_area()
 	return area;
 }
 
-void _t_basic_go::add_area(_area2 a, bool first)
+void _t_basic_go::add_area(_area a, bool first)
 {
 	static _speed<_hash_table_tetron> hash(false);
 	bool start = (hash.a == nullptr);
@@ -76,7 +76,7 @@ void _t_basic_go::cha_area(_trans tr)
 	add_obl_izm(tr(tgo->local_area));
 }
 
-void _t_basic_go::cha_area(_area2 a, bool first)
+void _t_basic_go::cha_area(_area a, bool first)
 {
 	static _speed<_hash_table_tetron> hash(false);
 	bool start = (hash.a == nullptr);
@@ -104,7 +104,7 @@ void _t_basic_go::cha_area(_area2 a, bool first)
 	if (start) hash.stop();
 }
 
-void _t_basic_go::del_area(_area2 a, bool first)
+void _t_basic_go::del_area(_area a, bool first)
 {
 	static _speed<_hash_table_tetron> hash(false);
 	bool start = (hash.a == nullptr);
@@ -540,7 +540,7 @@ void _t_go::ris(_trans tr, bool final)
 		ris_all();
 		auto t = std::chrono::high_resolution_clock::now() - t0;
 		master_chain_go.pop();
-		_area2 oo = tr(local_area);
+		_area oo = tr(local_area);
 		if (oo.x.min < 0) oo.x.min = 0;
 		if (oo.y.min < 0) oo.y.min = 0;
 		std::wstring s = double_to_string(t.count() / 1000000.0, 2);
@@ -771,7 +771,7 @@ bool _g_circle::test_local_area(_xy b)
 
 void _g_froglif::ris2(_trans tr, bool final)
 {
-	_area2 a = tr(local_area);
+	_area a = tr(local_area);
 	master_bm.froglif(a.top_left(), a.min_length(), f, r_f, get_c(), get_c2());
 }
 
@@ -794,7 +794,7 @@ void _g_line::run(_tetron* tt0, _tetron* tt, uint64 flags)
 
 void _g_line::calc_local_area()
 {
-	local_area = (_area2(p1) + p2).expansion(width * 0.5);
+	local_area = (_area(p1) + p2).expansion(width * 0.5);
 }
 
 void _g_line::ris2(_trans tr, bool final)
@@ -852,7 +852,7 @@ void _g_picture::ris2(_trans tr, bool final)
 			{ (int)tr.offset.x, (int)(tr.offset.y + rr * tr.scale) }, c_def);
 		return;
 	}
-	_area2 oo = tr(local_area);
+	_area oo = tr(local_area);
 	master_bm.stretch_draw(&pic, (int)oo.x.min, (int)oo.y.min, tr.scale);
 }
 
@@ -902,7 +902,7 @@ bool _g_picture::save_to_file(std::filesystem::path fn) const
 
 void _g_rect::ris2(_trans tr, bool final)
 {
-	_area2 oo = tr(local_area);
+	_area oo = tr(local_area);
 	uint c2 = get_c2();
 	master_bm.fill_rectangle({ {(int64)oo.x.min, (int64)oo.x.max + 1}, {(int64)oo.y.min, (int64)oo.y.max + 1} }, c2);
 	uint c0 = get_c();
@@ -915,7 +915,7 @@ void _g_text::set_text(std::wstring_view s2_)
 {
 	del_area();
 	s = s2_;
-	_size2i size = master_bm.size_text(s2_, 13);
+	_isize size = master_bm.size_text(s2_, 13);
 	local_area = { {-1, (double)size.x}, {0, (double)size.y} };
 	area_definite = false;
 	add_area();
@@ -942,7 +942,7 @@ void add_hint(std::wstring_view hint, _t_go* g)
 	if (hint.empty()) return;
 	_t_trans* ko = *n_ko;
 	_trans tr = master_trans_go;
-	_size2i siz = master_bm.size_text(hint, 13);
+	_isize siz = master_bm.size_text(hint, 13);
 	tr.offset += _xy{ -siz.x * 0.5, -15.0 } +_xy{ g->local_area.x(0.5), g->local_area.y.min } *tr.scale;
 	tr.scale = 1;
 	_g_text* go = new _g_text;
@@ -976,12 +976,12 @@ void _g_test_graph::ris2(_trans tr, bool final)
 			te.line({ rnd(120), rnd(90) }, { rnd(120), rnd(90) }, 0xFF2080FF);
 		first = false;
 		a.clear(0xFF0000FF);
-		_area2i ogr({ 30, 225 }, { 25, 125 });
+		_iarea ogr({ 30, 225 }, { 25, 125 });
 		a.set_area(ogr);
 		a.stretch_draw(&te, 0, 0, 3.3);
 		a.rectangle(ogr, 0x80FF0000);
 	}
-	_area2 oo = tr(local_area);
+	_area oo = tr(local_area);
 	master_bm.stretch_draw(&a, (int)(oo.x.min + 20), (int)(oo.y.min + 20), 1);
 }
 
@@ -1011,7 +1011,7 @@ void _g_scrollbar::prilip(_t_go* r)
 	if (!r) return;
 	del_area();
 	double l = ((vid & 1) == 1) ? local_area.x.length() : local_area.y.length();
-	_area2& o = r->local_area;
+	_area& o = r->local_area;
 	if (vid == 2) local_area = { {o.x.min, o.x.max}, {o.y.max, o.y.max + l} };
 	if (vid == 3) local_area = { {o.x.max, o.x.max + l}, {o.y.min, o.y.max} };
 	if (vid == 4) local_area = { {o.x.min, o.x.max}, {o.y.min - l, o.y.min} };
@@ -1034,7 +1034,7 @@ void _g_scrollbar::after_create_link(_link* li)
 
 void _g_scrollbar::ris2(_trans tr, bool final)
 {
-	_area2 a = tr(local_area);
+	_area a = tr(local_area);
 	uint c = c_def;
 	if ((vid & 1) == 0)
 	{
