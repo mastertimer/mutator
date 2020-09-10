@@ -31,6 +31,7 @@ struct _xy
 	_xy operator*(double b) const noexcept { return { x * b, y * b }; }
 
 	void operator+=(_xy b)        noexcept { x += b.x; y += b.y; }
+	void operator-=(_xy b)        noexcept { x -= b.x; y -= b.y; }
 
 	void operator*=(double b)     noexcept { x *= b; y *= b; }
 	void operator/=(double b)     noexcept { x /= b; y /= b; }
