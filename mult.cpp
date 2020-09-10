@@ -3,14 +3,17 @@
 
 _bitmap mult(1920, 1080);
 
-constexpr double radius    = 20.0; // радиус кружков
-constexpr double dd        = 2.5;  // толщина ободка
-constexpr double ddl       = 1.5;  // толщина линий связей
-constexpr i64 v_type        = 16;   // количество типов кружков
+constexpr double radius   = 20.0; // радиус кружков
+constexpr double dd       = 2.5;  // толщина ободка
+constexpr double ddl      = 1.5;  // толщина линий связей
+constexpr i64    v_type   = 16;   // количество типов кружков
 
-constexpr i64 start_element = 400;  // первоначально количество кружков
-constexpr i64 start_link = start_element * 2; // первоначально количество связей
-constexpr double best_dist = radius * 4; // оптимальная дистанция
+constexpr i64 min_element = 380;  // минимальное количество кружков
+constexpr i64 max_element = 420;  // максимальное количество кружков
+
+constexpr i64 start_element = (max_element + min_element) / 2;  // первоначально количество кружков
+constexpr i64 start_link    = start_element * 2; // первоначально количество связей
+constexpr double best_dist  = radius * 4; // оптимальная дистанция
 
 constexpr uint color[32] =
 { 
@@ -123,6 +126,35 @@ void distance()
 	}
 }
 
+void del_element(_mult_tetron* a)
+{
+	auto n = element.begin();
+	for (auto i = element.begin(); i != element.end(); ++i)
+	{
+		if (*i == a) { n = i; continue; }
+		for (auto j = (*i)->link.begin(); j != (*i)->link.end(); ++j)
+			if (j->a == a)
+			{
+				(*i)->link.erase(j);
+				break;
+			}
+	}
+	delete* n;
+	element.erase(n);
+}
+
+void create_element(_mult_tetron* a)
+{
+	_mult_tetron* b = new _mult_tetron;
+	b->p = a->p + _xy{ best_dist * 0.5, 0 }.rotation(rnd(628) * 0.01);
+	b->type = rnd(v_type);
+	if (rnd(2))
+		a->link.push_back({ b, rnd(16) });
+	else
+		b->link.push_back({ a, rnd(16) });
+	element.push_back(b);
+}
+
 void move_signal()
 {
 	if (signal.empty())
@@ -139,6 +171,25 @@ void move_signal()
 		k_signal += delta_signal2;
 	if (k_signal == 1.0)
 	{
+		decltype(signal) signal2 = signal;
+		signal.clear();
+		for (auto& i : signal2)
+			switch (rnd(3))
+			{
+			case 0:
+				if (element.size() <= min_element)
+					signal.push_back(i);
+				else
+					del_element(i.a);
+				break;
+			case 1:
+				signal.push_back(i);
+				if (element.size() < max_element) create_element(i.a);
+				break;
+			default:
+				signal.push_back(i);
+			}
+
 		for (auto& i : signal)
 			for (u64 j = 0; j < i.a->link.size(); j++)
 				if (rnd(2)) i.li.push_back(j);
