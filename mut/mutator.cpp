@@ -38,7 +38,6 @@ _tetron* create_tetron(const std::string& name)
 		make(_g_rect),
 		make(_one_tetron),
 		make(_g_froglif),
-		make(_g_edit_one),
 		make(_g_scrollbar),
 		make(_g_color_ring),
 		make(_g_tetron2),
@@ -74,13 +73,13 @@ _tetron* create_tetron(uchar tipt)
 	case  6: return new _g_test_graph;			// 0xF2 242
 	case  7: return new _t_double;				// 0x50  80
 	case  8: return new _g_link;				// 0x7A 122
-	case  9: return new _g_graph;				// ???? ???
+	case  9: return new _g_graph;				// 0x71 113
 	case 10: return new _g_circle;				// 0x74 116
 	case 11: return new _g_line;				// 0x70 112
 	case 12: return new _g_rect;				// 0xF4 244
 	case 13: return new _one_tetron;			// 0xAF 175
 	case 14: return new _g_froglif;				// 0x7F 127
-	case 15: return new _g_edit_one;			// 0x71 113
+
 	case 16: return new _g_scrollbar;			// 0xF8 248
 	case 17: return new _g_color_ring;          // 0x72 114
 	case 18: return new _g_tetron2;				// 0xFF 255

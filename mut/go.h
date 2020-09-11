@@ -107,27 +107,6 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _g_edit_one : public _g_rect
-{
-	int n = 0; // идекс массива 
-	size_t cursor = 0;
-	int zn = 5;
-	double a = 0.0;
-	i64 a_i = 0;
-	std::wstring s = L"0";
-	int mode = 0; // 0 - int64, 1 - double
-
-	_g_edit_one();
-	uchar type() { return 15; }
-	int get_froglif() { return 0x79; }
-	void ris2(_trans tr, bool final) override;
-	bool mouse_down_left2(_xy r) override;
-	void key_down(ushort key);
-	void key_press(ushort key);
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 struct _g_button : public _t_go
 {
 	i64 checked;

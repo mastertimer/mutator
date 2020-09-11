@@ -206,7 +206,7 @@ struct _g_graph : public _t_go
 	_g_graph();
 
 	uchar type()                     override { return 9; }
-	int get_froglif()                override { return 0xF6; } // !!!!!
+	int get_froglif()                override { return 0x71; }
 
 	void ris2(_trans tr, bool final) override;
 	void run(_tetron* tt0, _tetron* tt, u64 flags) override;
