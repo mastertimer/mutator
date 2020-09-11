@@ -12,7 +12,7 @@ constexpr i64 min_element = 380;  // минимальное количество кружков
 constexpr i64 max_element = 420;  // максимальное количество кружков
 
 constexpr i64 start_element = (max_element + min_element) / 2;  // первоначально количество кружков
-constexpr i64 start_link    = start_element / 2; // первоначально количество св€зей
+constexpr i64 start_link    = start_element * 3; // первоначально количество св€зей
 constexpr double best_dist  = radius * 4; // оптимальна€ дистанци€
 
 constexpr uint color[32] =
@@ -75,14 +75,7 @@ void init_mult()
 	}
 	for (i64 i = 0; i < start_link; i++)
 	{
-	restart2:
-		_mult_tetron* a = element[rnd(element.size())];
-		_mult_tetron* b = element[rnd(element.size())];
-		if (a == b) goto restart2;
-		for (auto i : a->link) if (i.a == b) goto restart2;
-		a->link.push_back({ b, rnd(16) });
-
-/*		_mult_tetron* a = element[rnd(element.size())];
+		_mult_tetron* a = element[rnd(element.size())]; 
 		double min_r2 = 1e8;
 		_mult_tetron* b = nullptr;
 		for (auto j : element)
@@ -104,7 +97,7 @@ void init_mult()
 			}
 		}
 		if (!b) continue;
-		a->link.push_back({ b, rnd(16) });*/
+		a->link.push_back({ b, rnd(16) });
 	}
 }
 
@@ -113,15 +106,25 @@ void distance()
 	for (auto i : element) i->f = { 0, 0 };
 	for (auto i : element)
 	{
+		auto fot = [i](_xy v)
+		{
+			_xy r = v - i->p;
+			double rr = r.len();
+			if (rr < best_dist)
+			{
+				double k = 1000 * (rr - best_dist) / (rr * rr * rr);
+				r *= k / r.len();
+				i->f += r;
+			}
+		};
+		fot({ 0.0, i->p.y });
+		fot({ (double)mult.size.x, i->p.y });
+		fot({ i->p.x, 0.0 });
+		fot({ i->p.x, (double)mult.size.y });
 		for (auto j : element) // отталкивание
 		{
 			if (i == j) continue;
-			_xy r = j->p - i->p;
-			double rr = r.len();
-			if (rr >= best_dist) continue;
-			double k = 1000 * (rr - best_dist) / (rr * rr * rr);
-			r *= k / r.len();
-			i->f += r;
+			fot(j->p);
 		}
 		for (auto j : i->link) // прит€жение
 		{
@@ -134,7 +137,12 @@ void distance()
 			j.a->f -= r;
 		}
 	}
-	for (auto i : element) i->p += i->f;
+	for (auto i : element)
+	{
+		double ll = i->f.len2();
+		if (ll > 10.0) i->f *= 10.0 / ll;
+		i->p += i->f;
+	}
 }
 
 void del_element(_mult_tetron* a)
@@ -157,7 +165,7 @@ void del_element(_mult_tetron* a)
 void create_element(_mult_tetron* a)
 {
 	_mult_tetron* b = new _mult_tetron;
-	b->p = a->p + _xy{ best_dist * 0.5, 0 }.rotation(rnd(628) * 0.01);
+	b->p = a->p + _xy{ radius, 0 }.rotation(rnd(628) * 0.01);
 	b->type = rnd(v_type);
 	if (rnd(2))
 		a->link.push_back({ b, rnd(16) });
@@ -182,7 +190,7 @@ void move_signal()
 		k_signal += delta_signal2;
 	if (k_signal == 1.0)
 	{
-/*		decltype(signal) signal2 = signal;
+		decltype(signal) signal2 = signal;
 		signal.clear();
 		for (auto& i : signal2)
 			switch (rnd(3))
@@ -199,7 +207,7 @@ void move_signal()
 				break;
 			default:
 				signal.push_back(i);
-			}*/
+			}
 
 		for (auto& i : signal)
 			for (u64 j = 0; j < i.a->link.size(); j++)
