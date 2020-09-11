@@ -182,6 +182,13 @@ void move_signal()
 		_signal a;
 		a.a = element[rnd(element.size())];
 		signal.push_back(a);
+		a.a = element[rnd(element.size())];
+		if (a.a != signal[0].a)
+		{
+			signal.push_back(a);
+			a.a = element[rnd(element.size())];
+			if ((a.a != signal[0].a) && (a.a != signal[1].a)) signal.push_back(a);
+		}
 		k_signal = 0.0;
 		color_signal = (uint)(rnd() | 0xff808080);
 	}
@@ -194,7 +201,7 @@ void move_signal()
 		decltype(signal) signal2 = signal;
 		signal.clear();
 		for (auto& i : signal2)
-			switch (rnd(6))
+			switch (rnd(8))
 			{
 			case 0:
 				if (element.size() <= min_element)
@@ -210,7 +217,7 @@ void move_signal()
 				if (i.a->link.size()) i.a->link.erase(i.a->link.begin() + rnd(i.a->link.size()));
 				signal.push_back(i);
 				break;
-			case 3:
+			case 3: case 4: case 5:
 				if (i.a->link.size() < max_link1) create_link(i.a);
 				signal.push_back(i);
 				break;
@@ -220,7 +227,7 @@ void move_signal()
 
 		for (auto& i : signal)
 			for (u64 j = 0; j < i.a->link.size(); j++)
-				if (rnd(2)) i.li.push_back(j);
+				if (rnd(3) == 0) i.li.push_back(j);
 	}
 	if (k_signal > 2.0)
 	{
@@ -283,7 +290,7 @@ _bitmap* draw_mult()
 	for (auto& i : signal)
 		if (k_signal <= 1.0)
 		{
-			mult.ring(i.a->p, radius * k_signal, dd, color_signal);
+			mult.ring(i.a->p, radius * k_signal, dd*1.5, color_signal);
 		}
 		else
 			for (auto j : i.li)
@@ -295,7 +302,7 @@ _bitmap* draw_mult()
 				v1 *= radius / v1.len();
 				p1 += v1.rotation(-0.2);
 				p2 += (-v1).rotation(0.2);
-				mult.fill_circle(p1 + (p2 - p1) * (k_signal - 1.0), ddl*2, color_signal);
+				mult.fill_circle(p1 + (p2 - p1) * (k_signal - 1.0), ddl*3, color_signal);
 			}
 	return &mult;
 };
