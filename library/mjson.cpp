@@ -6,6 +6,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+constexpr uint c_pak0 = 0;          // для сжатия картинок
+constexpr uint c_pak1 = 0xFF208040; // для сжатия картинок
+
 _wjson& _wjson::str(std::string_view name, bool lin)
 {
 	add_start(name) << '{';
@@ -226,7 +229,29 @@ _wjson& _wjson::add(std::string_view name, _interval b)
 _wjson& _wjson::add(std::string_view name, const _picture& b)
 {
 	arr(name);
-	for (int j = 0; j < b.size.y; j++) add_mem(&b.data[j * b.size.x], b.size.x * 4ULL);
+	bool pak = false;
+	if (b.size == _isize{ 24, 24 })
+	{
+		pak = true;
+		for (i64 i = 0; i < 576; i++)
+			if ((b.data[i] != c_pak0) && (b.data[i] != c_pak1))
+			{
+				pak = false;
+				break;
+			}
+	}
+	if (!pak)
+	{
+		for (int j = 0; j < b.size.y; j++) add_mem(&b.data[j * b.size.x], b.size.x * 4ULL);
+	}
+	else
+	{
+		uchar a[72] = {};
+		for (i64 i = 0; i < 576; i++)
+			if (b.data[i] == c_pak1)
+				a[i >> 3] |= (1 << (i & 7));
+		add_mem(a, 72);
+	}
 	end();
 	return *this;
 }
@@ -475,6 +500,22 @@ void _rjson::read(std::string_view name, _picture& b)
 	}
 	end();
 	if (temp.size() == 0) { b.resize({ 0, 0 });	return; }
+	if (temp.size() == 1)
+		if (temp[0].size() == 144) // сжатие кнопок 24x24 (c_def, 0) в будущем сдалать универсальное сжатие картинок
+		{
+			b.resize({ 24, 24 });
+			b.clear(c_pak0);
+			uchar a[72];
+			if (!string_to_mem(temp[0], a, 72))
+			{
+				error = 12;
+				return;
+			}
+			for (i64 i = 0; i < 576; i++)
+				if (a[i >> 3] & (1 << (i & 7)))
+					b.data[i] = c_pak1;
+			return;
+		}
 	int rx = (int)(temp[0].size() / 8);
 	b.resize({ rx, (i64)temp.size() });
 	for (int j = 0; j < temp.size(); j++)

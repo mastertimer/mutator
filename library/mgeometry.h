@@ -58,6 +58,7 @@ struct _isize // [0...x), [0...y)
 	_isize correct() const noexcept { if ((x <= 0) || (y <= 0)) return { 0, 0 }; return { x, y }; } // для удобства
 
 	bool operator==(_isize s) const noexcept { return (x == s.x) && (y == s.y); }
+	bool operator!=(_isize s) const noexcept { return (x != s.x) || (y != s.y); }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
