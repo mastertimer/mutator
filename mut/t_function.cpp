@@ -423,17 +423,17 @@ void fun09(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun10(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	_one_tetron* a = tt->find1<_one_tetron>(flag_information2);
+	_t_int* a = tt->find1<_t_int>(flag_information2);
 	if (a)
-		for (_frozen i(tt, flag_information); i; i++) tt0->del_flags(i, a->i[0]);
+		for (_frozen i(tt, flag_information); i; i++) tt0->del_flags(i, a->a);
 	tt->_tetron::run(0, tt, flags); // продолжить выполнение
 }
 
 void fun11(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	_one_tetron* a = tt->find1<_one_tetron>(flag_information2);
+	_t_int* a = tt->find1<_t_int>(flag_information2);
 	if (a)
-		for (_frozen i(tt, flag_information); i; i++) tt0->add_flags(i, a->i[0]);
+		for (_frozen i(tt, flag_information); i; i++) tt0->add_flags(i, a->a);
 	tt->_tetron::run(0, tt, flags); // продолжить выполнение
 }
 
@@ -627,7 +627,6 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	set_test();
 //	_g_tetron* g = new _g_tetron;
 //	g->add_flags(n_checkbox, flag_specialty);
 //	_t_trans* tr = n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
@@ -808,7 +807,7 @@ void fun54(_tetron* tt0, _tetron* tt, u64 flags)
 		v++;
 		b = a;
 	}
-//	dialog::message(L"найдено функций: " + std::to_wstring(v));
+	MessageBox(0, (L"найдено функций: " + std::to_wstring(v)).c_str(), L"упс", MB_OK | MB_TASKMODAL);
 	if (b)
 	{
 		n_act = b;

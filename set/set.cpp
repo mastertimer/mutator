@@ -2874,14 +2874,3 @@ void _kusok_bukva::cod(ushort* aa, int vaa, wchar_t cc, char nf, i64 nbitt)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void set_test()
-{
-	if (mmm1 == L"1") load_mmm((exe_path + mmm_file).c_str());
-	_prices a;
-	int ok = recognize.read_prices_from_screen(&a);
-	MessageBox(0, std::to_wstring(ok).c_str(), L"упс", MB_OK | MB_TASKMODAL);
-//	_g_picture* g = new _g_picture;
-//	g->set_pic(recognize.image);
-//	for (int i = 0; i < recognize.elem.size(); i++)	g->pic.rectangle(recognize.elem[i].area, c_def - 0x80000000);
-//	_t_trans* tr = n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
-}
