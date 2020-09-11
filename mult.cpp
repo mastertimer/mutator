@@ -10,6 +10,7 @@ constexpr i64    v_type   = 16;   // количество типов кружков
 
 constexpr i64 min_element = 380;  // минимальное количество кружков
 constexpr i64 max_element = 420;  // максимальное количество кружков
+constexpr i64 max_link1   = 6;    // максимальное количество связей для 1
 
 constexpr i64 start_element = (max_element + min_element) / 2;  // первоначально количество кружков
 constexpr i64 start_link    = start_element * 3; // первоначально количество связей
@@ -61,6 +62,31 @@ struct _signal
 std::vector<_mult_tetron*> element; // тетроны
 std::vector<_signal> signal; // ползущий сигнал
 
+void create_link(_mult_tetron* a)
+{
+	double min_r2 = 1e8;
+	_mult_tetron* b = nullptr;
+	for (auto j : element)
+	{
+		if (j == a) continue;
+		bool ok = true;
+		for (auto jj : a->link)
+			if (jj.a == j)
+			{
+				ok = false;
+				break;
+			}
+		if (!ok) continue;
+		double r2 = (a->p - j->p).len2();
+		if (r2 < min_r2)
+		{
+			b = j;
+			min_r2 = r2;
+		}
+	}
+	if (b) a->link.push_back({ b, rnd(16) });
+}
+
 void init_mult()
 {
 	for (i64 i = 0; i < start_element; i++)
@@ -73,32 +99,7 @@ void init_mult()
 			if ((a->p - element[j]->p).len2() < radius * radius * 4) goto restart;
 		element.push_back(a);
 	}
-	for (i64 i = 0; i < start_link; i++)
-	{
-		_mult_tetron* a = element[rnd(element.size())]; 
-		double min_r2 = 1e8;
-		_mult_tetron* b = nullptr;
-		for (auto j : element)
-		{
-			if (j == a) continue;
-			bool ok = true;
-			for (auto jj: a->link)
-				if (jj.a == j)
-				{
-					ok = false;
-					break;
-				}
-			if (!ok) continue;
-			double r2 = (a->p - j->p).len2();
-			if (r2 < min_r2)
-			{
-				b = j;
-				min_r2 = r2;
-			}
-		}
-		if (!b) continue;
-		a->link.push_back({ b, rnd(16) });
-	}
+	for (i64 i = 0; i < start_link; i++) create_link(element[rnd(element.size())]);
 }
 
 void distance()
@@ -193,7 +194,7 @@ void move_signal()
 		decltype(signal) signal2 = signal;
 		signal.clear();
 		for (auto& i : signal2)
-			switch (rnd(3))
+			switch (rnd(6))
 			{
 			case 0:
 				if (element.size() <= min_element)
@@ -204,6 +205,14 @@ void move_signal()
 			case 1:
 				signal.push_back(i);
 				if (element.size() < max_element) create_element(i.a);
+				break;
+			case 2:
+				if (i.a->link.size()) i.a->link.erase(i.a->link.begin() + rnd(i.a->link.size()));
+				signal.push_back(i);
+				break;
+			case 3:
+				if (i.a->link.size() < max_link1) create_link(i.a);
+				signal.push_back(i);
 				break;
 			default:
 				signal.push_back(i);
