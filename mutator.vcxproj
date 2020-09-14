@@ -181,7 +181,6 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="set.h" />
     <ClInclude Include="tetron.h" />
-    <ClInclude Include="t_function.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mutator.rc" />

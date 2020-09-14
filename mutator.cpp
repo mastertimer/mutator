@@ -10,9 +10,6 @@
 
 #include <functional>
 
-#include "go.h"
-#include "mjson.h"
-#include "t_function.h"
 #include "mjson.h"
 #include "set.h"
 #include "mutator.h"

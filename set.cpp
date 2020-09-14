@@ -1,6 +1,4 @@
-﻿#include "t_function.h"
-#include "go.h"
-#include "mjson.h"
+﻿#include "mjson.h"
 #include "set.h"
 
 constexpr wchar_t ss_file[]  = L"..\\..\\set\\baza.cen";

@@ -71,9 +71,6 @@
     <ClInclude Include="mutator.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="t_function.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="tetron.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
