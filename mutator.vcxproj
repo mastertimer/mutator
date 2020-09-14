@@ -160,7 +160,7 @@
   <ItemGroup>
     <ClCompile Include="basic_go.cpp" />
     <ClCompile Include="go.cpp" />
-    <ClCompile Include="mbasic.cpp" />
+    <ClCompile Include="basic.cpp" />
     <ClCompile Include="mgeometry.cpp" />
     <ClCompile Include="mgraphics.cpp" />
     <ClCompile Include="mjson.cpp" />
@@ -174,7 +174,7 @@
   <ItemGroup>
     <ClInclude Include="basic_go.h" />
     <ClInclude Include="go.h" />
-    <ClInclude Include="mbasic.h" />
+    <ClInclude Include="basic.h" />
     <ClInclude Include="mgeometry.h" />
     <ClInclude Include="mgraphics.h" />
     <ClInclude Include="mjson.h" />

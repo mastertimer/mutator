@@ -568,7 +568,7 @@ void _picture::stretch_draw(_picture* bm, i64 x, i64 y, double m)
 				i64 B = p2[2] * pp2;
 				i64 A = (255 - p2[3]) * k1;
 				p2 += 4;
-				for (i64 x = pxn2 + 1; x < pxk2; x++)
+				for (i64 x_ = pxn2 + 1; x_ < pxk2; x_++)
 				{
 					pp2 = p2[3] * f1xx;
 					R += p2[0] * pp2;
@@ -599,7 +599,7 @@ void _picture::stretch_draw(_picture* bm, i64 x, i64 y, double m)
 				i64 B = p2[2] * pp2;
 				i64 A = (255 - p2[3]) * k1;
 				p2 += (4 * f1x);
-				for (i64 y = pyn2 + 1; y < pyk2; y++)
+				for (i64 y_ = pyn2 + 1; y_ < pyk2; y_++)
 				{
 					pp2 = p2[3] * f1yy;
 					R += p2[0] * pp2;
@@ -630,7 +630,7 @@ void _picture::stretch_draw(_picture* bm, i64 x, i64 y, double m)
 			i64 B = p2[2] * pp2;
 			i64 A = (255 - p2[3]) * kx1 * ky1;
 			p2 += 4;
-			for (i64 x = pxn2 + 1; x < pxk2; x++)
+			for (i64 x_ = pxn2 + 1; x_ < pxk2; x_++)
 			{
 				pp2 = p2[3] * f1xx * ky1;
 				R += p2[0] * pp2;
@@ -651,7 +651,7 @@ void _picture::stretch_draw(_picture* bm, i64 x, i64 y, double m)
 			B += p2[2] * pp2;
 			A += (255 - p2[3]) * kx1 * ky2;
 			p2 += 4;
-			for (i64 x = pxn2 + 1; x < pxk2; x++)
+			for (i64 x_ = pxn2 + 1; x_ < pxk2; x_++)
 			{
 				pp2 = p2[3] * f1xx * ky2;
 				R += p2[0] * pp2;
@@ -666,7 +666,7 @@ void _picture::stretch_draw(_picture* bm, i64 x, i64 y, double m)
 			B += p2[2] * pp2;
 			A += (255 - p2[3]) * kx2 * ky2;
 			p2 = (uchar*)& bm->data[(pyn2 + 1) * f1x + pxn2];
-			for (i64 y = pyn2 + 1; y < pyk2; y++)
+			for (i64 y_ = pyn2 + 1; y_ < pyk2; y_++)
 			{
 				pp2 = p2[3] * f1yy * kx1;
 				R += p2[0] * pp2;
@@ -676,7 +676,7 @@ void _picture::stretch_draw(_picture* bm, i64 x, i64 y, double m)
 				p2 += (4 * f1x);
 			}
 			p2 = (uchar*)&bm->data[(pyn2 + 1) * f1x + pxk2];
-			for (i64 y = pyn2 + 1; y < pyk2; y++)
+			for (i64 y_ = pyn2 + 1; y_ < pyk2; y_++)
 			{
 				pp2 = p2[3] * f1yy * kx2;
 				R += p2[0] * pp2;
@@ -685,10 +685,10 @@ void _picture::stretch_draw(_picture* bm, i64 x, i64 y, double m)
 				A += (255 - p2[3]) * f1yy * kx2;
 				p2 += (4 * f1x);
 			}
-			for (i64 y = pyn2 + 1; y < pyk2; y++)
+			for (i64 y_ = pyn2 + 1; y_ < pyk2; y_++)
 			{
-				p2 = (uchar*)&bm->data[y * f1x + pxn2 + 1];
-				for (i64 x = pxn2 + 1; x < pxk2; x++)
+				p2 = (uchar*)&bm->data[y_ * f1x + pxn2 + 1];
+				for (i64 x_ = pxn2 + 1; x_ < pxk2; x_++)
 				{
 					pp2 = p2[3] * f1xx * f1yy;
 					R += p2[0] * pp2;
@@ -916,7 +916,6 @@ void _picture::text16n(i64 x, i64 y, astr s, i64 n, uint c)
 		i64         probel = (*s == 32) ? 4 : 1;
 		const ushort* ss     = font16[(uchar)(*s++)];
 		i64         lx     = lx2;
-		uchar         r      = 0;
 		for (i64 j = lx - 1; j >= 0; j--)
 		{
 			if (ss[j]) break;
@@ -1030,7 +1029,6 @@ void _picture::text16(i64 x, i64 y, astr s, uint c)
 		i64         probel = (*s == 32) ? 4 : 1;
 		const ushort* ss     = font16[(uchar)(*s++)];
 		i64         lx     = lx2;
-		uchar         r      = 0;
 		for (i64 j = lx - 1; j >= 0; j--)
 		{
 			if (ss[j]) break;
@@ -1278,7 +1276,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 		for (int i = step; i <= rr; i += step * 2)
 		{
 			double  ce  = (xx[i - step].l2 + xx[i + step].l1) * 0.5;
-			xxxyyy* xxx = &(xx[i]);
+			xxx = &(xx[i]);
 			xxx->l1     = ce - ll * 0.5;
 			xxx->l2     = ce + ll * 0.5;
 			xxx->sm1    = sm1;
@@ -1532,7 +1530,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 						}
 						else
 						{
-							uint k3   = ((256 - xxax->kk_1) * (256 - kkw) / k2);
+							k3   = ((256 - xxax->kk_1) * (256 - kkw) / k2);
 							uint kkw2 = 256 - k3;
 							cc[0]     = (cc[0] * kkw2 + c_1 * k3) >> 8;
 							cc[1]     = (cc[1] * kkw2 + c_2 * k3) >> 8;
@@ -1578,7 +1576,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 							ax++;
 						}
 					xxxyyy* xxax = 0;
-					i64 xx11, xx22;
+					i64 xx11, xx22 = 0; // для параноии компилятора
 					if (ax <= rr)
 					{
 						xxax = &(xx[ax]);
@@ -1597,7 +1595,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 						{
 							nac = false;
 							d++;
-							uint k3   = ((256 - xx[ayx].kk_1) * (256 - kkw) / k2);
+							k3   = ((256 - xx[ayx].kk_1) * (256 - kkw) / k2);
 							uint kkw2 = 256 - k3;
 							cc[0]     = (cc[0] * kkw2 + c_1 * k3) >> 8;
 							cc[1]     = (cc[1] * kkw2 + c_2 * k3) >> 8;
@@ -1628,7 +1626,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 								}
 								if (kon)
 								{
-									uint k3   = ((256 - xx[ayx_next].kk_2) * (256 - kkw) / k2);
+									k3   = ((256 - xx[ayx_next].kk_2) * (256 - kkw) / k2);
 									uint kkw2 = 256 - k3;
 									cc[0]     = (cc[0] * kkw2 + c_1 * k3) >> 8;
 									cc[1]     = (cc[1] * kkw2 + c_2 * k3) >> 8;
@@ -2350,8 +2348,8 @@ void _picture::fill_ring(_xy p, double r, double d, uint c, uint c2)
 			double dd = (i - p.y) * (i - p.y) + dxdx0;
 			double ab = ab0;
 			uchar* cc = px(x1, i);
-			i64    d  = x1 - x2;
-			while (d++ <= 0)
+			i64    d_  = x1 - x2;
+			while (d_++ <= 0)
 			{
 				if (dd < rrmax)
 				{
@@ -2404,8 +2402,8 @@ void _picture::fill_ring(_xy p, double r, double d, uint c, uint c2)
 		double dd = (i - p.y) * (i - p.y) + dxdx0;
 		double ab = ab0;
 		uchar* cc = px(x1, i);
-		i64 d  = x1 - x2;
-		while (d++ <= 0)
+		i64 d_  = x1 - x2;
+		while (d_++ <= 0)
 		{
 			if (dd < rrmax)
 			{
