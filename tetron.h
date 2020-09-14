@@ -504,7 +504,7 @@ struct _one_tetron : public _tetron
 	void  push(_stack* mem)  override { _tetron::push(mem); mem->push_data(c, sizeof(c)); }
 	void  pop(_stack* mem)   override { _tetron::pop(mem); mem->pop_data(c, sizeof(c)); }
 
-	void  push(_wjson& b)    override { _tetron::push(b); b.add_mem("a", c, 128); b.add("x", d[0]); }
+	void  push(_wjson& b)    override { _tetron::push(b); b.add_mem("a", c, 128); }
 	void  pop(_rjson& b)     override { _tetron::pop(b); b.read_mem("a", c, 128); }
 
 	operator _one_tetron* () override { return this; }
