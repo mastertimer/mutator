@@ -104,9 +104,9 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <BrowseInformation>false</BrowseInformation>
-      <AdditionalIncludeDirectories>$(AMDAPPSDKROOT)include\;library\;mut\;set\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>mut\;library\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -147,7 +147,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>library\;mut\;mut\go\;set\;graphics\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>library\;mut\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -167,8 +167,8 @@
     <ClCompile Include="mut\mutator.cpp" />
     <ClCompile Include="mut\tetron.cpp" />
     <ClCompile Include="mut\t_function.cpp" />
-    <ClCompile Include="set\set.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="set.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\mbasic.h" />
@@ -182,7 +182,7 @@
     <ClInclude Include="mut\tetron.h" />
     <ClInclude Include="mut\t_function.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="set\set.h" />
+    <ClInclude Include="set.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mutator.rc" />

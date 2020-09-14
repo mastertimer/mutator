@@ -1,5 +1,5 @@
 ﻿#include "go.h"
-#include "set.h"
+#include "..\set.h"
 #include "t_function.h"
 
 _stack clipboard; // буффер обмена

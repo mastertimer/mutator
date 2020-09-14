@@ -19,9 +19,6 @@
     <Filter Include="Mutator">
       <UniqueIdentifier>{70361bfc-1f90-4dbc-acac-d4ac3f3fbb47}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SET">
-      <UniqueIdentifier>{48c4533f-e2a8-4202-8cd9-ad05add0a1aa}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -54,11 +51,11 @@
     <ClCompile Include="mut\go.cpp">
       <Filter>Mutator</Filter>
     </ClCompile>
-    <ClCompile Include="set\set.cpp">
-      <Filter>SET</Filter>
-    </ClCompile>
     <ClCompile Include="mult.cpp">
       <Filter>Mutator</Filter>
+    </ClCompile>
+    <ClCompile Include="set.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -92,11 +89,11 @@
     <ClInclude Include="mut\go.h">
       <Filter>Mutator</Filter>
     </ClInclude>
-    <ClInclude Include="set\set.h">
-      <Filter>SET</Filter>
-    </ClInclude>
     <ClInclude Include="mult.h">
       <Filter>Mutator</Filter>
+    </ClInclude>
+    <ClInclude Include="set.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
