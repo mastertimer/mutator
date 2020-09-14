@@ -420,15 +420,15 @@ struct _t_int : public _tetron
 {
 	i64 a = 0;
 
-	operator i64* ()         override { return &a; }
-	operator _t_int* ()        override { return this; }
+	operator i64* ()        override { return &a; }
+	operator _t_int* ()     override { return this; }
 
-	uchar type()               override { return 26; }
-	int   get_froglif()        override { return 0x40; }
-	void  push(_stack* mem)    override { _tetron::push(mem); *mem << a; }
-	void  pop(_stack* mem)     override { _tetron::pop(mem); *mem >> a; }
-	void  push(_wjson& b)      override { _tetron::push(b); b.add("a", a); }
-	void  pop(_rjson& b)       override { _tetron::pop(b); b.read("a", a); }
+	uchar type()            override { return 26; }
+	int   get_froglif()     override { return 0x40; }
+	void  push(_stack* mem) override { _tetron::push(mem); *mem << a; }
+	void  pop(_stack* mem)  override { _tetron::pop(mem); *mem >> a; }
+	void  push(_wjson& b)   override { _tetron::push(b); b.add("a", a); }
+	void  pop(_rjson& b)    override { _tetron::pop(b); b.read("a", a); }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -499,15 +499,15 @@ struct _one_tetron : public _tetron
 	_one_tetron(double p1) : d{ p1 } {}
 	_one_tetron(double p1, double p2) : d{ p1, p2 } {}
 
-	uchar type()               override { return 13; }
-	int   get_froglif()        override { return 0xAF; }
-	void  push(_stack* mem)    override { _tetron::push(mem); mem->push_data(c, sizeof(c)); }
-	void  pop(_stack* mem)     override { _tetron::pop(mem); mem->pop_data(c, sizeof(c)); }
+	uchar type()             override { return 13; }
+	int   get_froglif()      override { return 0xAF; }
+	void  push(_stack* mem)  override { _tetron::push(mem); mem->push_data(c, sizeof(c)); }
+	void  pop(_stack* mem)   override { _tetron::pop(mem); mem->pop_data(c, sizeof(c)); }
 
-	void  push(_wjson& b)      override { _tetron::push(b); b.add_mem("a", c, 128); }
-	void  pop(_rjson& b)       override { _tetron::pop(b); b.read_mem("a", c, 128); }
+	void  push(_wjson& b)    override { _tetron::push(b); b.add_mem("a", c, 128); b.add("x", d[0]); }
+	void  pop(_rjson& b)     override { _tetron::pop(b); b.read_mem("a", c, 128); }
 
-	operator _one_tetron* ()   override { return this; }
+	operator _one_tetron* () override { return this; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -519,7 +519,7 @@ struct _t_function : public _tetron
 	_t_function() = default;
 	_t_function(i64 b) : a(b) {}
 
-	operator i64* ()       override { return &a; }
+	operator i64* ()         override { return &a; }
 	operator _t_function* () override { return this; }
 
 	uchar type()             override { return 32; }

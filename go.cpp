@@ -743,10 +743,10 @@ void _g_circle::run(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_one_tetron* a = find_intermediate<_one_tetron>(n_center, flag_information, flag_parent);
 	if (a) center = { a->d[0], a->d[1] };
-	a = find_intermediate<_one_tetron>(n_radius, flag_information, flag_parent);
-	if (a) radius = a->d[0];
-	a = find_intermediate<_one_tetron>(n_width, flag_information, flag_parent);
-	if (a) width = a->d[0];
+	_t_double *aa = find_intermediate<_t_double>(n_radius, flag_information, flag_parent);
+	if (aa) radius = aa->a;
+	aa = find_intermediate<_t_double>(n_width, flag_information, flag_parent);
+	if (aa) width = aa->a;
 	del_area();
 	calc_local_area();
 	area_definite = false;
@@ -786,8 +786,8 @@ void _g_line::run(_tetron* tt0, _tetron* tt, u64 flags)
 	if (a) p1 = { a->d[0], a->d[1] };
 	a = find_intermediate<_one_tetron>(n_end, flag_information, flag_parent);
 	if (a) p2 = { a->d[0], a->d[1] };
-	a = find_intermediate<_one_tetron>(n_width, flag_information, flag_parent);
-	if (a) width = a->d[0];
+	_t_double* aa = find_intermediate<_t_double>(n_width, flag_information, flag_parent);
+	if (aa) width = aa->a;
 	del_area();
 	calc_local_area();
 	area_definite = false;
