@@ -335,7 +335,7 @@ astr _rjson::read_just_string()
 	buff.clear();
 	while (true)
 	{
-		char c = 0;
+		c = 0;
 		file.get(c);
 		if (!file.good()) { error = 5; return ""; }
 		if (c == '\"') break;

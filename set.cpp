@@ -214,11 +214,11 @@ int bad_string_to_int(std::wstring& s)
 	int r = 0;
 	int ii;
 	int l = (int)s.size();
-	wstr ss = s.data();
-	for (ii = 0; ii < l; ii++) if ((ss[ii] >= L'0') && (ss[ii] <= L'9')) break;
+	wstr ss_ = s.data();
+	for (ii = 0; ii < l; ii++) if ((ss_[ii] >= L'0') && (ss_[ii] <= L'9')) break;
 	for (int i = ii; i < l; i++)
-		if ((ss[i] >= L'0') && (ss[i] <= L'9'))
-			r = r * 10 + (ss[i] - L'0');
+		if ((ss_[i] >= L'0') && (ss_[i] <= L'9'))
+			r = r * 10 + (ss_[i] - L'0');
 		else
 			break;
 	return r;
@@ -666,7 +666,7 @@ void _super_stat::read(i64 n, _prices& c, _info_pak* inf)
 	c.pro[0].c = c.pok[0].c + delta + 1;
 	size_t aa1 = data.adata;
 	// декодирование продажи
-	for (int j = c.pro[0].c, n2 = 0, n = 0; n2 < rceni;)
+	for (int j = c.pro[0].c, n2 = 0, n_ = 0; n2 < rceni;)
 	{
 		data >> a;
 		int rez = a >> 6;
@@ -694,8 +694,8 @@ void _super_stat::read(i64 n, _prices& c, _info_pak* inf)
 			{
 				data.pop_int24(kk);
 			}
-			while ((j > read_cc.pro[n].c) && (n < rceni - 1)) n++;//
-			int kk3 = (j == read_cc.pro[n].c) ? read_cc.pro[n].k : 0;//
+			while ((j > read_cc.pro[n_].c) && (n_ < rceni - 1)) n_++;//
+			int kk3 = (j == read_cc.pro[n_].c) ? read_cc.pro[n_].k : 0;//
 			int kk2 = kk + kk3;//
 			if (kk2 > 0)
 			{
@@ -712,7 +712,7 @@ void _super_stat::read(i64 n, _prices& c, _info_pak* inf)
 	}
 	size_t aa2 = data.adata;
 	// декодирование покупки
-	for (int j = c.pok[0].c, n2 = 0, n = 0; n2 < rceni;)
+	for (int j = c.pok[0].c, n2 = 0, n_ = 0; n2 < rceni;)
 	{
 		data >> a;
 		int rez = a >> 6;
@@ -740,8 +740,8 @@ void _super_stat::read(i64 n, _prices& c, _info_pak* inf)
 			{
 				data.pop_int24(kk);
 			}
-			while ((j < read_cc.pok[n].c) && (n < rceni - 1)) n++;//
-			int kk3 = (j == read_cc.pok[n].c) ? read_cc.pok[n].k : 0;//
+			while ((j < read_cc.pok[n_].c) && (n_ < rceni - 1)) n_++;//
+			int kk3 = (j == read_cc.pok[n_].c) ? read_cc.pok[n_].k : 0;//
 			int kk2 = kk + kk3;//
 			if (kk2 > 0)
 			{
@@ -1446,7 +1446,7 @@ void _g_graph::draw(_isize size)
 	int vib = (int)(polzi_ * v_vib + 0.5); // !! ползунок
 
 	int period = 60;
-	int pause_max = 3;
+//	int pause_max = 3;
 	_element_chart* al = new _element_chart[ll]; // элементы линий
 	// 1-й проход - вычисление zmin, zmax
 	double zmin = 1E100;
@@ -2239,7 +2239,7 @@ void _oracle3::draw(int n, _area area, _bitmap* bm)
 			{
 				_prices w;
 				w.clear();
-				for (int i = 0; i < delta; i++)
+				for (int i_ = 0; i_ < delta; i_++)
 				{
 					part_ss.push_front(w);
 					if (part_ss.size() > max_part) part_ss.pop_back();
@@ -2259,7 +2259,7 @@ void _oracle3::draw(int n, _area area, _bitmap* bm)
 				begin_ss = i;
 			}
 			else
-				for (int i = 0; i < delta; i++)
+				for (int i_ = 0; i_ < delta; i_++)
 				{
 					part_ss.push_back(w);
 					if (part_ss.size() > max_part)
@@ -2298,33 +2298,33 @@ void _oracle3::draw(int n, _area area, _bitmap* bm)
 	double ddy = oo.y.max - oo.y.min;
 	for (int i = 0; i < kol; i++)
 	{
-		int ss = i * step;
-		while (pri[ss].empty())
+		int ss_ = i * step;
+		while (pri[ss_].empty())
 		{
-			if (ss + 1 >= (i + 1) * step) break;
-			ss++;
+			if (ss_ + 1 >= (i + 1) * step) break;
+			ss_++;
 		}
-		if (pri[ss].empty()) continue;
+		if (pri[ss_].empty()) continue;
 		int xx1 = x1 + (x2 - x1) * i / kol;
 		int xx2 = x1 + (x2 - x1) * (i + 1) / kol - 1;
 		for (int j = rceni - 1; j >= 0; j--)
 		{
-			i64 ce = pri[ss].pro[j].c;
+			i64 ce = pri[ss_].pro[j].c;
 			int yy1 = (int)(oo.y.min + (max - ce) * ddy / dd);
 			int yy2 = (int)(oo.y.min + (max - ce + 1) * ddy / dd) - 1;
 			if (yy2 < yy1) continue;
-			uint q = (uint)sqrt(pri[ss].pro[j].k) + 32;
+			uint q = (uint)sqrt(pri[ss_].pro[j].k) + 32;
 			if (q > 255) q = 255;
 			uint cc = (q << 8) + (q << 16) + 0xA0000000;
 			bm->fill_rectangle({ {xx1, xx2}, {yy1, yy2} }, cc);
 		}
 		for (int j = 0; j < rceni; j++)
 		{
-			i64 ce = pri[ss].pok[j].c;
+			i64 ce = pri[ss_].pok[j].c;
 			int yy1 = (int)(oo.y.min + (max - ce) * ddy / dd);
 			int yy2 = (int)(oo.y.min + (max - ce + 1) * ddy / dd) - 1;
 			if (yy2 < yy1) continue;
-			uint q = (uint)sqrt(pri[ss].pok[j].k) + 32;
+			uint q = (uint)sqrt(pri[ss_].pok[j].k) + 32;
 			if (q > 255) q = 255;
 			uint cc = q + (q << 8) + 0xA0000000;
 			bm->fill_rectangle({ {xx1, xx2}, {yy1, yy2} }, cc);
@@ -2343,26 +2343,26 @@ _recognize::_recognize()
 	std::wstring nabor = L"0123456789.,:;-()[]><=абвгдежзийклмнопрстуфхцчшщъыьэюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
 		L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	int L = (int)nabor.size();
-	std::wstring ss = L"0";
+	std::wstring ss_ = L"0";
 	ushort aa[20];
 	for (int nf = 0; nf < vf_; nf++)
 		for (int i = 0; i < L; i++)
 		{
 			wchar_t c = nabor[i];
-			ss[0] = c;
-			_isize size = bm_[nf].size_text(ss.data(), 8);
+			ss_[0] = c;
+			_isize size = bm_[nf].size_text(ss_.data(), 8);
 			//			if (c == ' ') ShowMessage(IntToStr((int)size.cx));
-			//			if (size.cy != 13) ShowMessage(ss+" "+IntToStr((int)size.cy));
+			//			if (size.cy != 13) ShowMessage(ss_+" "+IntToStr((int)size.cy));
 			if (size.x > 20) return;//что-то не то...
 			if ((size.x > bm_[nf].size.x) || (size.y > bm_[nf].size.y))
 				bm_[nf].resize({ std::max(size.x, bm_[nf].size.x), std::max(size.y, bm_[nf].size.y) });
 			bm_[nf].clear(0);
-			bm_[nf].text(0, 0, ss.data(), 8, 0xffffff, 0);
+			bm_[nf].text(0, 0, ss_.data(), 8, 0xffffff, 0);
 			ZeroMemory(aa, sizeof(ushort) * size.x);
 			for (i64 j = size.y - 1; j >= 0; j--)
 			{
 				uint* sl = bm_[nf].sl(j);
-				for (int i = 0; i < size.x; i++) aa[i] = (aa[i] << 1) + (sl[i] > 0);
+				for (int i_ = 0; i_ < size.x; i_++) aa[i_] = (aa[i_] << 1) + (sl[i_] > 0);
 			}
 			int na = 0;
 			int ko = (int)size.x - 1;
@@ -2491,9 +2491,9 @@ int _recognize::read_tablica_zayavok(int a, int& b)
 	//	image_.SaveToFile(L"err.bmp");
 	find_text13(0xFF0040FF, 10); // синим цветом 
 
-	std::wstring ss = std::to_wstring(a);
+	std::wstring ss_ = std::to_wstring(a);
 	for (uint i = 0; i < elem.size(); i++)
-		if (elem[i].s == ss) b++;
+		if (elem[i].s == ss_) b++;
 	return 0;
 }
 
