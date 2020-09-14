@@ -189,7 +189,6 @@ void _g_edit_int::key_down(ushort key)
 			}
 			else
 			{
-				int l = (int)std::to_wstring(*a).size();
 				if (cursor > l) cursor = l;
 				i64 mn = 1;
 				for (int i = cursor; i < l; i++) mn *= 10;
@@ -260,8 +259,6 @@ void _g_edit_string::ris2(_trans tr, bool final)
 	int rx_text = (int)(oo.x.length() - 8);
 	if ((l > 0) && (rx_text > 3))
 	{
-		int l2_min = 1;
-		int l2_max = l - first;
 		_isize size = master_bm.size_text(s->substr(first, len2).c_str(), sf);
 		if (size.x > rx_text)
 		{
@@ -486,8 +483,8 @@ void _g_edit_multi_string::key_down(ushort key)
 			if (cursor.x > l) cursor.x = l;
 			if (_g_scrollbar * polz = find1<_g_scrollbar>(flag_part))
 			{
-				int first = (int)(polz->position * max_i + 0.5);
-				if (first > cursor.y)
+				i64 first_ = (i64)(polz->position * max_i + 0.5);
+				if (first_ > cursor.y)
 				{
 					polz->position = (double)cursor.y / max_i;
 					polz->cha_area();
@@ -521,12 +518,12 @@ void _g_edit_multi_string::key_down(ushort key)
 		if (cursor.y < (int)str->line.size() - 1)
 		{
 			cursor.y++;
-			int l = (int)str->line[cursor.y].size();
+			l = (int)str->line[cursor.y].size();
 			if (cursor.x > l) cursor.x = l;
 			if (_g_scrollbar * polz = find1<_g_scrollbar>(flag_part))
 			{
-				i64 first = (i64)(polz->position * max_i + 0.5);
-				if (cursor.y >= first + len2)
+				i64 first_ = (i64)(polz->position * max_i + 0.5);
+				if (cursor.y >= first_ + len2)
 				{
 					polz->position = (double)(1LL + cursor.y - len2) / max_i;
 					polz->cha_area();
@@ -1361,7 +1358,7 @@ void _g_tetron2::ris2(_trans tr, bool final)
 	_xy p = a.center();
 	double r = a.radius();
 	double d = log(1.001 + r) * 0.5;
-	double y = 0.7 * (r - d) * 2;
+//	double y = 0.7 * (r - d) * 2;
 	uint c = c_min;
 	master_bm.fill_ring(p, r, d, c, c_background);
 	_tetron* t2 = find1<_tetron>(flag_specialty); // связанный тетрон
@@ -1553,9 +1550,9 @@ bool _g_link::mouse_move2(_xy r)
 	_xy v = p12 - p11;
 	double b = v.len();
 	double a = (r - p11).scalar(v) / b;
-	double k = a / b; // 0..1
+	double kk = a / b; // 0..1
 	int ii = act_li;
-	act_li = (int)(k * v_link * 2);
+	act_li = (int)(kk * v_link * 2);
 	if (act_li < 0) act_li = 0;
 	if (act_li >= v_link * 2) act_li = act_li = v_link * 2 - 1;
 

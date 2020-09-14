@@ -90,6 +90,7 @@ struct _element_chart // краткая информация элемента г
 
 struct _basic_curve // база для кривых
 {
+	virtual ~_basic_curve() {}
 	virtual int get_n()                                = 0; // количество элементов
 	virtual void get_n_info(int n, _element_chart* e)  = 0; // получить краткую информацию n-го элемента
 	virtual void get_t_info(int t, _element_chart* e)  = 0; // получить краткую информацию элемента со временем >= t

@@ -377,8 +377,8 @@ void _t_trans::ris(_trans tr, bool final)
 		if (_t_go * b = *a)
 			b->ris(tr, final);
 		else
-			if (_t_trans * b = *a)
-				b->ris(tr / b->trans, final);
+			if (_t_trans * bb = *a)
+				bb->ris(tr / bb->trans, final);
 	}
 	for (_layers_go a(this); a; a++) a->ris(tr, final);
 	master_chain_go.pop();
@@ -522,8 +522,8 @@ void _t_go::ris(_trans tr, bool final)
 		if (_t_go * b = *a)
 			b->ris(tr, final);
 		else
-			if (_t_trans * b = *a)
-				b->ris(tr / b->trans, final);
+			if (_t_trans * bb = *a)
+				bb->ris(tr / bb->trans, final);
 	}
 	auto ris_all = [&]() {
 		ris2(tr, final);
