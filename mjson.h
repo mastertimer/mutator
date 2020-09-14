@@ -13,13 +13,13 @@ struct _wjson
 	_wjson& arr(std::string_view name = "", bool lin = false); // массив
 	_wjson& end(); // конец структуры или массива
 
-	_wjson& add(std::string_view name, bool b)             { add_start(name) << ((b) ? "true" : "false"); return *this; }
-	_wjson& add(std::string_view name, char b)             { add_start(name) << (i64)b; return *this; }
-	_wjson& add(std::string_view name, u64 b)           { add_start(name) << b; return *this; }
-	_wjson& add(std::string_view name, i64 b)            { add_start(name) << b; return *this; }
-	_wjson& add(std::string_view name, double b)           { add_start(name) << b; return *this; }
-	_wjson& add(std::string_view name, std::string_view b) { add_start(name) << "\"" << b << "\""; return *this; }
-	_wjson& add(std::string_view name, astr b)      { add_start(name) << "\"" << b << "\""; return *this; }
+	_wjson& add(std::string_view name, bool b)             { add_start(name) << (b ? "true" : "false"); return *this; }
+	_wjson& add(std::string_view name, char b)             { add_start(name) << (i64)b;                 return *this; }
+	_wjson& add(std::string_view name, u64 b)              { add_start(name) << b;                      return *this; }
+	_wjson& add(std::string_view name, i64 b)              { add_start(name) << b;                      return *this; }
+	_wjson& add(std::string_view name, double b)           { add_start(name) << b;                      return *this; }
+	_wjson& add(std::string_view name, std::string_view b) { add_start(name) << "\"" << b << "\"";      return *this; }
+	_wjson& add(std::string_view name, astr b)             { add_start(name) << "\"" << b << "\"";      return *this; }
 
 	_wjson& add(std::string_view name, std::wstring_view b); //!!!!!
 	_wjson& add(std::string_view name, const _multi_string &b);
@@ -57,9 +57,9 @@ struct _rjson
 	bool arr(std::string_view name = ""); // массив
 	void end(); // конец структуры или массива
 
-	astr read_string(std::string_view name = "");
-	_area read_area2(std::string_view name = "");
-	_trans read_trans(std::string_view name = "");
+	astr      read_string(std::string_view name = "");
+	_area     read_area2(std::string_view name = "");
+	_trans    read_trans(std::string_view name = "");
 	_interval read_area(std::string_view name = "");
 
 	void read(std::string_view name, _picture& b);

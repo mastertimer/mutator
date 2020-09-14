@@ -1922,7 +1922,6 @@ void _nervous_oracle::draw(int n, _area area, _bitmap* bm)
 		if (zn[i].r_pro <= zn[i + 1].r_pro) pade_pro = false;
 		if (zn[i].r_pok <= zn[i + 1].r_pok) pade_pok = false;
 	}
-	_element_nervous& a = zn[n];
 	uint c = 0xFF808080;
 
 	if (rost_pro) c += 0x70;
@@ -2568,7 +2567,6 @@ int _recognize::read_prices_from_screen(_prices* pr)
 	pr->time.now();
 	image.grab_ecran_oo2(w2);
 	find_text13(0xFF0000FF); // синим цветом покупки
-	size_t ww = elem.size();
 	if (elem.size() != rceni * 2) return 3;
 	i64 pre = 0;
 	for (i64 i = 0; i < rceni; i++)
@@ -2610,7 +2608,7 @@ void _recognize::find_red_text13(uint err)
 		uint* sl = image.sl(j);
 		i64 first = -1;
 		i64 last = -100;
-		bool norm;
+		bool norm = true;
 		for (int i = 0; i < rx; i++) {
 			uint cc = sl[i];
 			uint e2 = (255 - ((cc >> 16) & 255)) + ((cc >> 8) & 255) + (cc & 255);
@@ -2660,7 +2658,7 @@ void _recognize::find_text13(uint c, int err)
 		uint* sl = image.sl(j);
 		i64 first = -1;
 		i64 last = -100;
-		bool norm;
+		bool norm = true;
 		for (int i = 0; i < rx; i++) {
 			uint cc = sl[i];
 			int e0 = (int)(cc & 255) - c0;
@@ -2711,7 +2709,7 @@ void _recognize::find_text13(uint c)
 		uint* sl = image.sl(j);
 		i64 first = -1;
 		i64 last = -100;
-		bool norm;
+		bool norm = true;
 		for (int i = 0; i < rx; i++) {
 			lin[i] = (lin[i] << 1) + (sl[i] == c);
 			if (lin[i])
