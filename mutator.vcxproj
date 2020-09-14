@@ -106,7 +106,7 @@
       <BrowseInformation>false</BrowseInformation>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>mut\;library\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -147,7 +147,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>library\;mut\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -157,43 +157,38 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="library\mbasic.cpp" />
-    <ClCompile Include="library\mgeometry.cpp" />
-    <ClCompile Include="library\mgraphics.cpp" />
-    <ClCompile Include="library\mjson.cpp" />
-    <ClCompile Include="mult.cpp" />
-    <ClCompile Include="mut\basic_go.cpp" />
-    <ClCompile Include="mut\go.cpp" />
-    <ClCompile Include="mut\mutator.cpp" />
-    <ClCompile Include="mut\tetron.cpp" />
-    <ClCompile Include="mut\t_function.cpp" />
+    <ClCompile Include="basic_go.cpp" />
+    <ClCompile Include="go.cpp" />
+    <ClCompile Include="mbasic.cpp" />
+    <ClCompile Include="mgeometry.cpp" />
+    <ClCompile Include="mgraphics.cpp" />
+    <ClCompile Include="mjson.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="mult.cpp" />
+    <ClCompile Include="mutator.cpp" />
     <ClCompile Include="set.cpp" />
+    <ClCompile Include="tetron.cpp" />
+    <ClCompile Include="t_function.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="library\mbasic.h" />
-    <ClInclude Include="library\mgeometry.h" />
-    <ClInclude Include="library\mgraphics.h" />
-    <ClInclude Include="library\mjson.h" />
+    <ClInclude Include="basic_go.h" />
+    <ClInclude Include="go.h" />
+    <ClInclude Include="mbasic.h" />
+    <ClInclude Include="mgeometry.h" />
+    <ClInclude Include="mgraphics.h" />
+    <ClInclude Include="mjson.h" />
     <ClInclude Include="mult.h" />
-    <ClInclude Include="mut\basic_go.h" />
-    <ClInclude Include="mut\go.h" />
-    <ClInclude Include="mut\mutator.h" />
-    <ClInclude Include="mut\tetron.h" />
-    <ClInclude Include="mut\t_function.h" />
+    <ClInclude Include="mutator.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="set.h" />
+    <ClInclude Include="tetron.h" />
+    <ClInclude Include="t_function.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mutator.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="MUTATOR.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include=".gitignore" />
-    <None Include="README.md" />
-    <None Include="tetrons.m00" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

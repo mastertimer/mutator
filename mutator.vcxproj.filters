@@ -1,60 +1,54 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Исходные файлы">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Файлы ресурсов">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Файлы заголовков">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Файлы ресурсов">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Library">
-      <UniqueIdentifier>{24489574-864b-4be3-868e-16fd7f8597c7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Mutator">
-      <UniqueIdentifier>{70361bfc-1f90-4dbc-acac-d4ac3f3fbb47}</UniqueIdentifier>
+    <Filter Include="Исходные файлы">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="library\mbasic.cpp">
-      <Filter>Library</Filter>
+    <ClCompile Include="set.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="library\mgeometry.cpp">
-      <Filter>Library</Filter>
+    <ClCompile Include="mbasic.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="mut\mutator.cpp">
-      <Filter>Mutator</Filter>
+    <ClCompile Include="mgeometry.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="mut\tetron.cpp">
-      <Filter>Mutator</Filter>
+    <ClCompile Include="mgraphics.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="mut\t_function.cpp">
-      <Filter>Mutator</Filter>
+    <ClCompile Include="mjson.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="library\mjson.cpp">
-      <Filter>Library</Filter>
+    <ClCompile Include="basic_go.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="library\mgraphics.cpp">
-      <Filter>Library</Filter>
+    <ClCompile Include="go.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="mut\basic_go.cpp">
-      <Filter>Mutator</Filter>
+    <ClCompile Include="mutator.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="mut\go.cpp">
-      <Filter>Mutator</Filter>
+    <ClCompile Include="t_function.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="tetron.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="mult.cpp">
-      <Filter>Mutator</Filter>
-    </ClCompile>
-    <ClCompile Include="set.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,37 +56,37 @@
     <ClInclude Include="resource.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="library\mbasic.h">
-      <Filter>Library</Filter>
+    <ClInclude Include="set.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="library\mgeometry.h">
-      <Filter>Library</Filter>
+    <ClInclude Include="mbasic.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="mut\mutator.h">
-      <Filter>Mutator</Filter>
+    <ClInclude Include="mgeometry.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="mut\tetron.h">
-      <Filter>Mutator</Filter>
+    <ClInclude Include="mgraphics.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="mut\t_function.h">
-      <Filter>Mutator</Filter>
+    <ClInclude Include="mjson.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="library\mjson.h">
-      <Filter>Library</Filter>
+    <ClInclude Include="basic_go.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="library\mgraphics.h">
-      <Filter>Library</Filter>
+    <ClInclude Include="go.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="mut\basic_go.h">
-      <Filter>Mutator</Filter>
+    <ClInclude Include="mutator.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="mut\go.h">
-      <Filter>Mutator</Filter>
+    <ClInclude Include="t_function.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="tetron.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="mult.h">
-      <Filter>Mutator</Filter>
-    </ClInclude>
-    <ClInclude Include="set.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
@@ -105,10 +99,5 @@
     <Image Include="MUTATOR.ico">
       <Filter>Файлы ресурсов</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include=".gitignore" />
-    <None Include="README.md" />
-    <None Include="tetrons.m00" />
   </ItemGroup>
 </Project>
