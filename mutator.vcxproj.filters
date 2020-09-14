@@ -30,9 +30,6 @@
     <ClCompile Include="mjson.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="basic_go.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="go.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -66,9 +63,6 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="mjson.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="basic_go.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="go.h">

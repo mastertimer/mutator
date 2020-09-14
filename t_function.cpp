@@ -284,7 +284,7 @@ void fun03(_tetron* tt0, _tetron* tt, u64 flags)
 				if (ra)
 				{
 					ra->del_area();
-					_trans t2 = ra->oko_trans();
+					t2 = ra->oko_trans();
 					double q = ra->local_area.x.max;
 					ra->local_area.x.max += (mouse_xy.x - mouse_xy_pr.x) / t2.scale;
 					if (ra->local_area.x.max <= ra->local_area.x.min) ra->local_area.x.max = q; // или выделять нулевую ширину
@@ -305,7 +305,7 @@ void fun03(_tetron* tt0, _tetron* tt, u64 flags)
 				if (ra)
 				{
 					ra->del_area();
-					_trans t2 = ra->oko_trans();
+					t2 = ra->oko_trans();
 					double q = ra->local_area.y.max;
 					ra->local_area.y.max += (mouse_xy.y - mouse_xy_pr.y) / t2.scale;
 					if (ra->local_area.y.max <= ra->local_area.y.min) ra->local_area.y.max = q; // или выделять нулевую ширину
@@ -880,7 +880,7 @@ void fun60(_tetron* tt0, _tetron* tt, u64 flags)
 	if (g == nullptr) return;
 	_tetron* a = g->find1<_tetron>(flag_specialty);
 	if (a == nullptr) return;
-	if (_t_basic_go* g = *a) g->clear_go_rod(); // всегда ли?
+	if (_t_basic_go* g_ = *a) g_->clear_go_rod(); // всегда ли?
 	delete_hvost(a, true);
 	g->run(0, g, flag_run);
 }
@@ -935,7 +935,7 @@ void fun64(_tetron* tt0, _tetron* tt, u64 flags)
 	_g_edit64bit* b1 = tt->find1<_g_edit64bit>(flag_information);
 	_g_list_link* ll = tt->find1<_g_list_link>(flag_information);
 	if ((b1 == nullptr) || (ll == nullptr)) return;
-	_g_button* mesto = tt->find1<_g_button>(flag_information);
+//	_g_button* mesto = tt->find1<_g_button>(flag_information);
 	_g_tetron* g0 = ll->find1<_g_tetron>(flag_specialty);
 	if (g0 == nullptr) return;
 	_tetron* a = g0->find1<_tetron>(flag_specialty);

@@ -158,7 +158,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="basic_go.cpp" />
     <ClCompile Include="go.cpp" />
     <ClCompile Include="basic.cpp" />
     <ClCompile Include="mgeometry.cpp" />
@@ -172,7 +171,6 @@
     <ClCompile Include="t_function.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="basic_go.h" />
     <ClInclude Include="go.h" />
     <ClInclude Include="basic.h" />
     <ClInclude Include="mgeometry.h" />

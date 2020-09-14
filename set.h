@@ -2,7 +2,7 @@
 
 #include <deque>
 
-#include "basic_go.h"
+#include "go.h"
 
 constexpr int rceni = 20; // предложений продажи, предложений покупки ( ВСЕГО = Rceni * 2 );
 
