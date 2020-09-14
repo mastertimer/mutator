@@ -71,8 +71,8 @@ _stack::_stack(void* data2, int vdata)
 
 void _stack::erase(i64 n, i64 k)
 {
-	if ((n < 0) || (n >= (i64)size)) return;
-	if ((k <= 0) || (n + k > (i64)size)) return;
+	if ((n < 0) || (n >= size)) return;
+	if ((k <= 0) || (n + k > size)) return;
 	size -= k;
 	adata = 0;
 	if (n == size) return;
@@ -112,7 +112,7 @@ _stack& _stack::operator<<(const std::wstring& a) noexcept
 	return *this;
 }
 
-void _stack::push_data(const void* data2, u64 vdata)
+void _stack::push_data(const void* data2, i64 vdata)
 {
 	if (size + vdata > capacity) set_capacity((size + vdata) * 2);
 	memcpy(data + size, data2, vdata);
@@ -148,21 +148,21 @@ _stack& _stack::operator>>(std::wstring& s) noexcept
 	return *this;
 }
 
-void _stack::pop_data(void* data2, u64 vdata)
+void _stack::pop_data(void* data2, i64 vdata)
 {
 	if (adata + vdata > size) return;
 	memcpy(data2, data + adata, vdata);
 	adata += vdata;
 }
 
-void _stack::revert(size_t bytes)
+void _stack::revert(i64 bytes)
 {
 	if (adata < bytes)
 		adata = 0;
 	else
 		adata -= bytes;
 }
-void _stack::skip(size_t bytes)
+void _stack::skip(i64 bytes)
 {
 	if (adata + bytes > size)
 		adata = size;
@@ -170,7 +170,7 @@ void _stack::skip(size_t bytes)
 		adata += bytes;
 }
 
-void _stack::set_capacity(u64 rdata)
+void _stack::set_capacity(i64 rdata)
 {
 	if (rdata <= capacity) return;
 	capacity    = rdata;
@@ -214,7 +214,7 @@ bool _multi_string::delete_char(i64 y, i64 x)
 	}
 	if (x >= (int)line[y].size())
 	{
-		if (y == line.size() - 1) return false;
+		if (y == (i64)line.size() - 1) return false;
 		line[y] += line[y + 1LL];
 		line.erase(line.begin() + (y + 1ULL));
 		return true;

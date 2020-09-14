@@ -1,8 +1,8 @@
 ﻿#include "mjson.h"
 #include "set.h"
 
-constexpr wchar_t ss_file[]  = L"..\\..\\set\\baza.cen";
-constexpr wchar_t mmm_file[] = L"..\\..\\set\\mmm.txt";
+constexpr wchar_t ss_file[]  = L"..\\..\\baza.cen";
+constexpr wchar_t mmm_file[] = L"..\\..\\mmm.txt";
 constexpr _prices cena_zero_ = { {}, {}, { 1,1,1,1,1 } };
 
 _super_stat      ss;               // сжатые цены

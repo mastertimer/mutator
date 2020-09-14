@@ -73,9 +73,9 @@ inline _rnd rnd;
 struct _stack
 {
 	char*  data;
-	u64 capacity;
-	u64 size;
-	u64 adata; // активный указатель
+	i64 capacity;
+	i64 size;
+	i64 adata; // активный указатель
 
 	_stack(i64 r = 0);              // конструктор, r - зарезервировать размер
 	_stack(void* data2, int vdata); // конструктор, инициализация куском памяти
@@ -90,7 +90,7 @@ struct _stack
 	t_b _stack& operator<<(_b a) noexcept;
 	    _stack& operator<<(const _stack& a) noexcept;
 	    _stack& operator<<(const std::wstring& a) noexcept;
-	    void    push_data(const void* data2, u64 vdata);
+	    void    push_data(const void* data2, i64 vdata);
 	    void    push_fill(int vdata, char c); // занести кучу одинаковых символов
 	    void    push_int24(int a);            // записать 3 байта
 
@@ -98,15 +98,15 @@ struct _stack
 	    _stack& operator>>(std::wstring& s) noexcept;
 	t_b _stack& operator>>(std::vector<_b>& b) noexcept;
 	t_b _stack& operator>>(_b& a) noexcept;
-	    void    pop_data(void* data2, u64 vdata);
+	    void    pop_data(void* data2, i64 vdata);
 	t_b void    pop_end(_b& a); // извлечь переменную из стека С КОНЦА
 	    void    pop_int24(int& a);
 
-	void revert(size_t bytes); // вернуть данные
-	void skip(size_t bytes);   // пропустить данные
+	void revert(i64 bytes); // вернуть данные
+	void skip(i64 bytes);   // пропустить данные
 
   private:
-	void set_capacity(u64 rdata); // изменить размер массива в большую сторону
+	void set_capacity(i64 rdata); // изменить размер массива в большую сторону
 };
 
 t_b _stack& _stack::operator<<(const std::vector<_b>& b) noexcept
@@ -118,7 +118,7 @@ t_b _stack& _stack::operator<<(const std::vector<_b>& b) noexcept
 
 t_b _stack& _stack::operator<<(_b a) noexcept
 {
-	if (size + sizeof(_b) > capacity) set_capacity((size + sizeof(_b)) * 2);
+	if (size + (i64)sizeof(_b) > capacity) set_capacity((size + sizeof(_b)) * 2);
 	*((_b*)(data + size)) = a;
 	size += sizeof(_b);
 	return *this;
@@ -135,7 +135,7 @@ t_b _stack& _stack::operator>>(std::vector<_b>& b) noexcept
 
 t_b _stack& _stack::operator>>(_b& a) noexcept
 {
-	if (adata + sizeof(_b) > size) return *this;
+	if (adata + (i64)sizeof(_b) > size) return *this;
 	a = *((_b*)(data + adata));
 	adata += sizeof(_b);
 	return *this;
