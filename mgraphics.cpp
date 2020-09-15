@@ -1636,8 +1636,8 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 							break;
 						}
 					}
-					uint sl1, sl2, k3, kkw2;
-					sl2 = 256 - kkw;
+					uint sl1_, sl2_, k3, kkw2;
+					sl2_ = 256 - kkw;
 					if (nac)
 					{
 						nac   = false;
@@ -1647,8 +1647,8 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 					}
 					else
 					{
-						sl1   = 256 - xxax->kk_1;
-						k3    = sl1 + sl2 - sl1 * sl2 / k2;
+						sl1_  = 256 - xxax->kk_1;
+						k3    = sl1_ + sl2_ - sl1_ * sl2_ / k2;
 						kkw2  = 256 - k3;
 						cc[0] = (cc[0] * kkw2 + c_1 * k3) >> 8;
 						cc[1] = (cc[1] * kkw2 + c_2 * k3) >> 8;
@@ -1673,8 +1673,8 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 						}
 						else
 						{
-							sl1   = 256 - xxax->kk_2;
-							k3    = sl1 + sl2 - sl1 * sl2 / k2;
+							sl1_   = 256 - xxax->kk_2;
+							k3    = sl1_ + sl2_ - sl1_ * sl2_ / k2;
 							kkw2  = 256 - k3;
 							cc[0] = (cc[0] * kkw2 + c_1 * k3) >> 8;
 							cc[1] = (cc[1] * kkw2 + c_2 * k3) >> 8;
@@ -1918,8 +1918,8 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 							break;
 						}
 					}
-					uint sl1, sl2, k3, kkw2;
-					sl2 = 256 - kkw;
+					uint sl1_, sl2_, k3, kkw2;
+					sl2_ = 256 - kkw;
 					if (xxax == nullptr) break; // для параноии компилятора
 					if (nac)
 					{
@@ -1930,8 +1930,8 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 					}
 					else
 					{
-						sl1   = 256 - xxax->kk_1;
-						k3    = sl1 + sl2 - sl1 * sl2 / k2;
+						sl1_  = 256 - xxax->kk_1;
+						k3    = sl1_ + sl2_ - sl1_ * sl2_ / k2;
 						kkw2  = 256 - k3;
 						cc[0] = (cc[0] * kkw2 + c_1 * k3) >> 8;
 						cc[1] = (cc[1] * kkw2 + c_2 * k3) >> 8;
@@ -1956,8 +1956,8 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 						}
 						else
 						{
-							sl1   = 256 - xxax->kk_2;
-							k3    = sl1 + sl2 - sl1 * sl2 / k2;
+							sl1_   = 256 - xxax->kk_2;
+							k3    = sl1_ + sl2_ - sl1_ * sl2_ / k2;
 							kkw2  = 256 - k3;
 							cc[0] = (cc[0] * kkw2 + c_1 * k3) >> 8;
 							cc[1] = (cc[1] * kkw2 + c_2 * k3) >> 8;

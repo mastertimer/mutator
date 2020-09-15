@@ -14,7 +14,13 @@ constexpr uint c_minn       = 0xFF082010;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+enum class _cursor { normal, size_all, hand_point, size_we, size_ns, drag }; // виды курсора
+
 inline _cursor g_cursor = _cursor::normal; // установленный курсор
+
+void set_cursorx(_cursor x);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 inline u64 id_tetron = 1; // глобальный счетчик id тетронов
 inline bool run_before_del_link = true; // вызывать ли спец функции перед удалением связи
@@ -542,7 +548,6 @@ struct _t_xy : public _tetron
 	void  pop(_stack* mem)   override { _tetron::pop(mem);  *mem >> a; }
 	void  push(_wjson& b)    override { _tetron::push(b);   b.add("a", a); }
 	void  pop(_rjson& b)     override { _tetron::pop(b);    b.read("a", a); }
-
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

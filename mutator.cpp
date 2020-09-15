@@ -1049,6 +1049,11 @@ void _t_function::run(_tetron* tt0, _tetron* tt, u64 flags)
 	}
 }
 
+_tetron* cr_one()
+{
+	return new _t_xy;
+}
+
 _tetron* create_tetron(const std::string& name)
 {
 #define make(name) {""#name, []() -> _tetron* { return new name; }}
@@ -1065,6 +1070,7 @@ _tetron* create_tetron(const std::string& name)
 		make(_g_link),
 		make(_g_circle),
 		make(_g_line),
+		make(_t_xy),
 		make(_g_rect),
 		make(_one_tetron),
 		make(_g_froglif),
