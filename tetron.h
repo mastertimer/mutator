@@ -51,6 +51,7 @@ struct _t_basic_go;
 struct _t_int;
 struct _t_double;
 struct _t_go;
+struct _t_xy;
 struct _g_scrollbar;
 struct _g_text;
 struct _g1list;
@@ -129,9 +130,10 @@ struct _tetron
 
 	        operator _tetron       * () { return this; }
 	virtual operator double        * () { return nullptr; }
-	virtual operator i64         * () { return nullptr; }
-	virtual operator _xy         * () { return nullptr; }
+	virtual operator i64           * () { return nullptr; }
+	virtual operator _xy           * () { return nullptr; }
 	virtual operator std::wstring  * () { return nullptr; }
+	virtual operator _t_xy         * () { return nullptr; }
 	virtual operator _t_string     * () { return nullptr; }
 	virtual operator _multi_string * () { return nullptr; }
 	virtual operator _picture      * () { return nullptr; }
@@ -542,12 +544,23 @@ struct _t_xy : public _tetron
 {
 	_xy a = { 0.0, 0.0 };
 
+	operator _t_xy* ()       override { return this; }
+
 	uchar type()             override { return 15; }
 	int get_froglif()        override { return 0x30; }
 	void  push(_stack* mem)  override { _tetron::push(mem); *mem << a; }
 	void  pop(_stack* mem)   override { _tetron::pop(mem);  *mem >> a; }
 	void  push(_wjson& b)    override { _tetron::push(b);   b.add("a", a); }
 	void  pop(_rjson& b)     override { _tetron::pop(b);    b.read("a", a); }
+
+/*	void  pop(_rjson& b)     override
+	{ 
+		double d[16];
+		_tetron::pop(b);
+		b.read_mem("a", d, 128);
+		a.x = d[0];
+		a.y = d[1];
+	}*/
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

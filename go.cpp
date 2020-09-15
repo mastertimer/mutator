@@ -741,8 +741,8 @@ void _g_circle::pop(_rjson& b)
 
 void _g_circle::run(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	_one_tetron* a = find_intermediate<_one_tetron>(n_center, flag_information, flag_parent);
-	if (a) center = { a->d[0], a->d[1] };
+	_t_xy* a = find_intermediate<_t_xy>(n_center, flag_information, flag_parent);
+	if (a) center = a->a;
 	_t_double *aa = find_intermediate<_t_double>(n_radius, flag_information, flag_parent);
 	if (aa) radius = aa->a;
 	aa = find_intermediate<_t_double>(n_width, flag_information, flag_parent);
@@ -782,10 +782,10 @@ void _g_froglif::ris2(_trans tr, bool final)
 
 void _g_line::run(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	_one_tetron* a = find_intermediate<_one_tetron>(n_begin, flag_information, flag_parent);
-	if (a) p1 = { a->d[0], a->d[1] };
-	a = find_intermediate<_one_tetron>(n_end, flag_information, flag_parent);
-	if (a) p2 = { a->d[0], a->d[1] };
+	_t_xy* a = find_intermediate<_t_xy>(n_begin, flag_information, flag_parent);
+	if (a) p1 = a->a;
+	a = find_intermediate<_t_xy>(n_end, flag_information, flag_parent);
+	if (a) p2 = a->a;
 	_t_double* aa = find_intermediate<_t_double>(n_width, flag_information, flag_parent);
 	if (aa) width = aa->a;
 	del_area();
