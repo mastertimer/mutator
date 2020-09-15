@@ -96,6 +96,7 @@ struct _basic_curve // база для кривых и оракулов
 	virtual void get_n_info(int n, _element_chart* e) = 0; // получить краткую информацию n-го элемента
 	virtual void get_t_info(int t, _element_chart* e) = 0; // получить краткую информацию элемента со временем >= t
 	virtual void draw(int n, _area area, _bitmap* bm) = 0; // нарисовать 1 элемент
+	virtual void recovery()                           = 0; // восстановить
 
 	virtual i64  prediction() { return 0; }                // отрезок времени роста
 };
@@ -122,7 +123,7 @@ struct _mctds_candle : public _basic_curve // источник данных дл
 	void get_n_info(int n, _element_chart* e); // получить краткую информацию n-го элемента
 	void get_t_info(int t, _element_chart* e); // получить краткую информацию элемента со временем >= t
 	void draw(int n, _area area, _bitmap* bm); // нарисовать 1 элемент
-	void recovery(); // выполнить
+	void recovery() override; // выполнить
 	void push(_stack* mem);
 	void pop(_stack* mem);
 };
@@ -168,7 +169,7 @@ struct _nervous_oracle : public _basic_curve // нервозный предск�
 	void get_n_info(int n, _element_chart* e); // получить краткую информацию n-го элемента
 	void get_t_info(int t, _element_chart* e); // получить краткую информацию элемента со временем >= t
 	void draw(int n, _area area, _bitmap* bm); // нарисовать 1 элемент
-	void recovery(); // выполнить
+	void recovery() override; // выполнить
 	void push(_stack* mem);
 	void pop(_stack* mem);
 	_latest_events get_latest_events(i64 nn); // получить последние события
@@ -199,7 +200,7 @@ struct _oracle3 : public _basic_curve // оракул 3-я версия
 	void get_n_info(int n, _element_chart* e); // получить краткую информацию n-го элемента
 	void get_t_info(int t, _element_chart* e); // получить краткую информацию элемента со временем >= t
 	void draw(int n, _area area, _bitmap* bm); // нарисовать 1 элемент
-	void recovery(); // выполнить
+	void recovery() override; // выполнить
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -285,5 +286,5 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void calc_all_prediction(_basic_curve &o);
+void calc_all_prediction(_basic_curve &o, i64& nn, double& kk);
 

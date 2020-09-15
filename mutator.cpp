@@ -639,7 +639,12 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_nervous_oracle rr;
-	calc_all_prediction(rr);
+	i64 nn = 0;
+	double kk = 1;
+	calc_all_prediction(rr, nn, kk);
+	MessageBox(0, std::to_wstring(nn).c_str(), L"упс", MB_OK | MB_TASKMODAL);
+	MessageBox(0, std::to_wstring(kk).c_str(), L"упс", MB_OK | MB_TASKMODAL);
+
 	//	_g_tetron* g = new _g_tetron;
 	//	g->add_flags(n_checkbox, flag_specialty);
 	//	_t_trans* tr = n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);

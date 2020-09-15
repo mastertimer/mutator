@@ -2873,16 +2873,49 @@ void _kusok_bukva::cod(ushort* aa, int vaa, wchar_t cc, char nf, i64 nbitt)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void calc_all_prediction(_basic_curve& o)
+void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 {
 	_super_stat ss_old = ss;
 	ss.clear();
 	_prices pr;
+	i64 rez = 0; // 0 - ожидание, 1 - покупка, 2 - продажа
+	int t_start = 0;
+	int t_end   = 0;
+	i64 cena = 0;
+	i64 cena2 = 0;
+	i64 vv = 0;
+	double k = 1;
 	for (i64 i = 0; i < ss_old.size; i++)
 	{
 		ss_old.read(i, pr);
 		ss.add(pr);
+		o.recovery();
+		if (rez == 1)
+		{
+			if (pr.time < t_start + 2) continue; // 2 секунды пауза между решением и действием
+			if (pr.time > t_start + 60) { rez = 0; continue; } // что-то не так
+			rez = 2;
+			cena = pr.pro[0].c;
+			continue;
+		}
+		if (rez == 2)
+		{
+			if (pr.time < t_end) continue; // еще не время
+			if (pr.time > t_end + 60) { rez = 0; continue; }; // что-то не так
+			cena2 = pr.pok[0].c;
+			rez = 0;
+			vv++;
+			k *= (cena2 * 0.999) / cena;
+			continue;
+		}
+		i64 t = o.prediction();
+		if (t <= 0) continue;
+		t_start = pr.time;
+		t_end = pr.time + t * 60;
+		rez = 1;
 	}
+	nn = vv;
+	kk = k;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
