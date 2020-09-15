@@ -43,7 +43,6 @@ constexpr u64 flag_specialty2   = 0x100;
 
 struct _link;
 struct _tetron;
-struct _one_tetron;
 struct _t_function;
 struct _t_trans;
 struct _t_string;
@@ -153,7 +152,6 @@ struct _tetron
 	virtual operator _g_rect       * () { return nullptr; }
 	virtual operator _t_trans      * () { return nullptr; }
 	virtual operator _t_basic_go   * () { return nullptr; }
-	virtual operator _one_tetron   * () { return nullptr; }
 
 private:
 	typedef void (*func_fl)(u64&, u64);
@@ -490,34 +488,6 @@ struct _t_multi_string : public _tetron
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _one_tetron : public _tetron
-{
-	union
-	{
-		i64 i[16]{};
-		u64 ui[16];
-		double d[16];
-		wchar_t s[64];
-		uchar c[128];
-	};
-
-	_one_tetron() = default;
-	_one_tetron(double p1) : d{ p1 } {}
-	_one_tetron(double p1, double p2) : d{ p1, p2 } {}
-
-	uchar type()             override { return 13; }
-	int   get_froglif()      override { return 0xAF; }
-	void  push(_stack* mem)  override { _tetron::push(mem); mem->push_data(c, sizeof(c)); }
-	void  pop(_stack* mem)   override { _tetron::pop(mem); mem->pop_data(c, sizeof(c)); }
-
-	void  push(_wjson& b)    override { _tetron::push(b); b.add_mem("a", c, 128); }
-	void  pop(_rjson& b)     override { _tetron::pop(b); b.read_mem("a", c, 128); }
-
-	operator _one_tetron* () override { return this; }
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 struct _t_function : public _tetron
 {
 	i64 a = 0;
@@ -552,15 +522,6 @@ struct _t_xy : public _tetron
 	void  pop(_stack* mem)   override { _tetron::pop(mem);  *mem >> a; }
 	void  push(_wjson& b)    override { _tetron::push(b);   b.add("a", a); }
 	void  pop(_rjson& b)     override { _tetron::pop(b);    b.read("a", a); }
-
-/*	void  pop(_rjson& b)     override
-	{ 
-		double d[16];
-		_tetron::pop(b);
-		b.read_mem("a", d, 128);
-		a.x = d[0];
-		a.y = d[1];
-	}*/
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

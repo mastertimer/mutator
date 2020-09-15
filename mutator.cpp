@@ -4,7 +4,7 @@
 	линию сделать более понятной
 	быстро создавать цвета
 	правильная альтернатива _g_tetron
-	one_tetron удалить
+	прокрутка типов тетронов не работает
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
@@ -1072,8 +1072,6 @@ _tetron* create_tetron(const std::string& name)
 		make(_g_line),
 		make(_t_xy),
 		make(_g_rect),
-//		make(_one_tetron),
-		{"_one_tetron", cr_one},
 		make(_g_froglif),
 		make(_g_scrollbar),
 		make(_g_color_ring),
@@ -1114,7 +1112,7 @@ _tetron* create_tetron(uchar tipt)
 	case 10: return new _g_circle;            // 0x74
 	case 11: return new _g_line;              // 0x70
 	case 12: return new _g_rect;              // 0xF4
-	case 13: return new _one_tetron;          // 0xAF
+
 	case 14: return new _g_froglif;           // 0x7F
 	case 15: return new _t_xy;                // 0x30
 	case 16: return new _g_scrollbar;         // 0xF8
