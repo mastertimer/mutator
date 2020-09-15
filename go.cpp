@@ -3,10 +3,10 @@
 
 #include "go.h"
 
-_trans    master_trans_go;     // трансформация тяни-толкай объекта, или объекта под мышкой
+_trans    master_trans_go;      // трансформация тяни-толкай объекта, или объекта под мышкой
 _chain_go master_chain_go;      // активная цепочка графических объектов
 bool      time_ris = false;     // отображать время рисования
-_trans   master_trans_go_move; // трансформация n_go_move
+_trans    master_trans_go_move; // трансформация n_go_move
 _xy       par_koo1;             // .....вспомогательная переменная  !!!ИЗБАВИТЬСЯ!!!
 
 void smena_avt();

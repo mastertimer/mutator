@@ -61,39 +61,39 @@ _tetron* create_tetron(uchar tipt)
 {
 	switch (tipt)
 	{
-	case  0: return new _tetron;				// 0x20  32
-	case  1: return new _g_edit64bit;			// 0xFE 254
-	case  2: return new _g1list;				// 0xF7 247
-	case  3: return new _t_multi_string;		// 0x90 144
-	case  4: return new _g_edit_int;			// 0xF9 249
-	case  5: return new _t_trans;				// 0xF0 240
-	case  6: return new _g_test_graph;			// 0xF2 242
-	case  7: return new _t_double;				// 0x50  80
-	case  8: return new _g_link;				// 0x7A 122
-	case  9: return new _g_graph;				// 0x71 113
-	case 10: return new _g_circle;				// 0x74 116
-	case 11: return new _g_line;				// 0x70 112
-	case 12: return new _g_rect;				// 0xF4 244
-	case 13: return new _one_tetron;			// 0xAF 175
-	case 14: return new _g_froglif;				// 0x7F 127
+	case  0: return new _tetron;              // 0x20
+	case  1: return new _g_edit64bit;         // 0xFE
+	case  2: return new _g1list;              // 0xF7
+	case  3: return new _t_multi_string;      // 0x90
+	case  4: return new _g_edit_int;          // 0xF9
+	case  5: return new _t_trans;             // 0xF0
+	case  6: return new _g_test_graph;        // 0xF2
+	case  7: return new _t_double;            // 0x50
+	case  8: return new _g_link;              // 0x7A
+	case  9: return new _g_graph;             // 0x71
+	case 10: return new _g_circle;            // 0x74
+	case 11: return new _g_line;              // 0x70
+	case 12: return new _g_rect;              // 0xF4
+	case 13: return new _one_tetron;          // 0xAF
+	case 14: return new _g_froglif;           // 0x7F
+	case 15: return new _t_xy;                // 0x30
+	case 16: return new _g_scrollbar;         // 0xF8
+	case 17: return new _g_color_ring;        // 0x72
+	case 18: return new _g_tetron2;           // 0xFF
 
-	case 16: return new _g_scrollbar;			// 0xF8 248
-	case 17: return new _g_color_ring;          // 0x72 114
-	case 18: return new _g_tetron2;				// 0xFF 255
+	case 24: return new _t_string;            // 0x10
+	case 25: return new _g_edit_string;       // 0xFB
+	case 26: return new _t_int;               // 0x40
 
-	case 24: return new _t_string;				// 0x10  16
-	case 25: return new _g_edit_string;			// 0xFB 251
-	case 26: return new _t_int;					// 0x40  64
+	case 28: return new _g_list_link;         // 0xF5
+	case 29: return new _g_text;              // 0xF1
+	case 30: return new _g_edit_multi_string; // 0xFD
+	case 31: return new _g_picture;           // 0xF6
+	case 32: return new _t_function;          // 0xA0
+	case 33: return new _g_edit_double;       // 0x79
+	case 34: return new _g_button;            // 0xF3
 
-	case 28: return new _g_list_link;			// 0xF5 245
-	case 29: return new _g_text;				// 0xF1 241
-	case 30: return new _g_edit_multi_string;	// 0xFD 253
-	case 31: return new _g_picture;				// 0xF6 246
-	case 32: return new _t_function;			// 0xA0 160
-	case 33: return new _g_edit_double;			// 0x79 121
-	case 34: return new _g_button;				// 0xF3 243
-
-	case 38: return new _g_tetron;				// 0xFA 250
+	case 38: return new _g_tetron;            // 0xFA
 	}
 	return nullptr;
 }
