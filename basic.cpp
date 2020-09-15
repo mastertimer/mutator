@@ -52,7 +52,13 @@ void _stack::pop_int24(int& a)
 	a -= 0x800000;
 }
 
-_stack::_stack(i64 r)
+bool _stack::operator==(const _stack& a) const noexcept
+{
+	if (size != a.size) return false;
+	return (memcmp(data, a.data, size) == 0);
+}
+
+_stack::_stack(i64 r) noexcept
 {
 	data     = (r) ? new char[r] : 0;
 	capacity = r;
@@ -60,7 +66,19 @@ _stack::_stack(i64 r)
 	adata    = 0;
 }
 
-_stack::_stack(void* data2, int vdata)
+_stack::_stack(const _stack& a) noexcept : capacity(a.size), size(a.size), adata(a.adata)
+{
+	data = new char[capacity];
+	memcpy(data, a.data, size);
+}
+
+_stack::_stack(_stack&& a) noexcept : data(a.data), capacity(a.capacity), size(a.size), adata(a.adata)
+{
+	a.data = nullptr;
+	a.capacity = a.size = a.adata = 0;
+}
+
+_stack::_stack(void* data2, int vdata) noexcept
 {
 	adata    = 0;
 	size     = vdata;

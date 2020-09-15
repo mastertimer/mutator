@@ -1300,8 +1300,6 @@ _super_stat::_super_stat()
 {
 	last_cc = cena_zero_;
 	read_cc = cena_zero_;
-	size = 0;
-	read_n = -666;
 	ip_last.ok = false;
 	ip_n.ok = false;
 }
@@ -1813,6 +1811,11 @@ bool _latest_events::stop()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+i64 _nervous_oracle::prediction()
+{
+	return get_latest_events(zn.size() - 1).start();
+}
 
 void _nervous_oracle::push(_stack* mem)
 {
@@ -2870,3 +2873,16 @@ void _kusok_bukva::cod(ushort* aa, int vaa, wchar_t cc, char nf, i64 nbitt)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void calc_all_prediction(_basic_curve& o)
+{
+	_super_stat ss_old = ss;
+	ss.clear();
+	_prices pr;
+	for (i64 i = 0; i < ss_old.size; i++)
+	{
+		ss_old.read(i, pr);
+		ss.add(pr);
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

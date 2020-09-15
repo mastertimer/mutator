@@ -72,14 +72,18 @@ inline _rnd rnd;
 
 struct _stack
 {
-	char*  data;
-	i64 capacity;
-	i64 size;
-	i64 adata; // активный указатель
+	char* data;
+	i64   capacity;
+	i64   size;
+	i64   adata; // активный указатель
 
-	_stack(i64 r = 0);              // конструктор, r - зарезервировать размер
-	_stack(void* data2, int vdata); // конструктор, инициализация куском памяти
+	_stack(i64 r = 0)              noexcept; // конструктор, r - зарезервировать размер
+	_stack(const _stack &a)        noexcept; // конструктор копии
+	_stack(_stack&& a)             noexcept; // конструктор переноса
+	_stack(void* data2, int vdata) noexcept; // конструктор, инициализация куском памяти
 	~_stack() { delete[] data; }
+
+	bool operator==(const _stack& a) const noexcept;
 
 	void clear() { size  = 0; adata = 0; }
 	void erase(i64 n, i64 k);
