@@ -167,7 +167,6 @@
     <ClCompile Include="mutator.cpp" />
     <ClCompile Include="set.cpp" />
     <ClCompile Include="tetron.cpp" />
-    <ClCompile Include="t_function.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="go.h" />

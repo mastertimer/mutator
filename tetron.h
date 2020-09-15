@@ -14,8 +14,6 @@ constexpr uint c_minn       = 0xFF082010;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-inline std::wstring exe_path; // путь к запущенному exe файлу
-
 inline _cursor g_cursor = _cursor::normal; // установленный курсор
 
 inline u64 id_tetron = 1; // глобальный счетчик id тетронов
@@ -536,7 +534,7 @@ struct _t_function : public _tetron
 
 struct _t_xy : public _tetron
 {
-	_xy a;
+	_xy a = { 0.0, 0.0 };
 
 	uchar type()             override { return 15; }
 	int get_froglif()        override { return 0x30; }

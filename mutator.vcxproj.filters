@@ -33,9 +33,6 @@
     <ClCompile Include="mutator.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="t_function.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="tetron.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
