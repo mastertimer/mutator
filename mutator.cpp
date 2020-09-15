@@ -4,7 +4,6 @@
 	линию сделать более понятной
 	быстро создавать цвета
 	правильная альтернатива _g_tetron
-	прокрутка типов тетронов не работает
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
@@ -352,7 +351,7 @@ void fun04(_tetron* tt0, _tetron* tt, u64 flags)
 	{
 		_xy tr = mouse_xy;
 		_t_trans* kor = *n_ko;
-		double kk = *n_wheel->operator i64 * () * 0.01;
+		double kk = *n_wheel->operator i64 * ();
 		if ((kk > 0) && (kor->trans.scale > 1E12)) return;
 		kor->cha_area(kor->calc_area());
 		kor->trans.MasToch(tr, pow(1.1, kk));
@@ -375,12 +374,10 @@ void fun04(_tetron* tt0, _tetron* tt, u64 flags)
 			_t_go* ra = *n_ramk2;
 			_t_trans* rat = ra->ttrans();
 			ra->del_area();
-			rat->trans.MasToch((ra->oko_trans() / rat->trans).inverse(tr), pow(1.1, *n_wheel->operator i64 * () *
-				0.01));
+			rat->trans.MasToch((ra->oko_trans() / rat->trans).inverse(tr), pow(1.1, *n_wheel->operator i64 * ()));
 			ra->add_area();
 			raa->del_area();
-			rat2->trans.MasToch((raa->oko_trans() / rat2->trans).inverse(tr), pow(1.1, *n_wheel->
-				operator i64 * () * 0.01));
+			rat2->trans.MasToch((raa->oko_trans() / rat2->trans).inverse(tr), pow(1.1, *n_wheel->operator i64 * ()));
 			raa->add_area();
 		}
 		return;

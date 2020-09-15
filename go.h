@@ -554,9 +554,9 @@ struct _g_tetron : public _t_go
 	operator std::wstring* () { return &hint; }
 
 	void ris2(_trans tr, bool final) override;
-	bool mouse_move2(_xy r)        override;
+	bool mouse_move2(_xy r)          override;
 	void mouse_finish_move()         override;
-	bool test_local_area(_xy b)    override; // лежит ли точка внутри
+	bool test_local_area(_xy b)      override; // лежит ли точка внутри
 	void add_unique_flags(_tetron* t, u64 flags, bool after = true) override; // создать уникальную связь
 
 private:

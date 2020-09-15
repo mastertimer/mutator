@@ -23,20 +23,20 @@ bool _bitmap::resize(_isize wh)
 
 _bitmap::_bitmap(int rx3, int ry3) : _picture(rx3, ry3)
 {
-	font.lfHeight = 13; // высота шрифта или символа
-	font.lfWidth = 0; // средняя ширина символов в шрифте
-	font.lfEscapement = 0; // угол, между вектором наклона и осью X устройства
-	font.lfOrientation = 0; // угол, между основной линией каждого символа и осью X устройства
-	font.lfWeight = 100; // толщина шрифта в диапазоне от 0 до 1000
-	font.lfItalic = 0; // курсивный шрифт
-	font.lfUnderline = 0; // подчеркнутый шрифт
-	font.lfStrikeOut = 0; // зачеркнутый шрифт
-	font.lfCharSet = RUSSIAN_CHARSET; // набор символов
-	font.lfOutPrecision = 0; // точность вывода
-	font.lfClipPrecision = 0; // точность отсечения
-	font.lfQuality = 0; // качество вывода
-	font.lfPitchAndFamily = 0; // ширина символов и семейство шрифта
-	memcpy(font.lfFaceName, L"Tahoma", 14); // название шрифта
+	font.lfHeight         = 13;              // высота шрифта или символа
+	font.lfWidth          = 0;               // средняя ширина символов в шрифте
+	font.lfEscapement     = 0;               // угол, между вектором наклона и осью X устройства
+	font.lfOrientation    = 0;               // угол, между основной линией каждого символа и осью X устройства
+	font.lfWeight         = 100;             // толщина шрифта в диапазоне от 0 до 1000
+	font.lfItalic         = 0;               // курсивный шрифт
+	font.lfUnderline      = 0;               // подчеркнутый шрифт
+	font.lfStrikeOut      = 0;               // зачеркнутый шрифт
+	font.lfCharSet        = RUSSIAN_CHARSET; // набор символов
+	font.lfOutPrecision   = 0;               // точность вывода
+	font.lfClipPrecision  = 0;               // точность отсечения
+	font.lfQuality        = 0;               // качество вывода
+	font.lfPitchAndFamily = 0;               // ширина символов и семейство шрифта
+	memcpy(font.lfFaceName, L"Tahoma", 14);  // название шрифта
 
 	BITMAPINFO bmi = { sizeof(BITMAPINFOHEADER), rx3, -ry3, 1, 32, BI_RGB, 0, 0, 0, 0, 0 };
 	bitmap2 = CreateDIBSection(0, &bmi, DIB_RGB_COLORS, (void**)(&data), 0, 0);
@@ -1636,7 +1636,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 							break;
 						}
 					}
-					uint sl1_, sl2_, k3, kkw2;
+					uint sl1_, sl2_, kkw2;
 					sl2_ = 256 - kkw;
 					if (nac)
 					{
@@ -1812,7 +1812,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 						}
 						else
 						{
-							uint k3   = ((256 - xxax->kk_1) * (256 - kkw) / k2);
+							k3   = ((256 - xxax->kk_1) * (256 - kkw) / k2);
 							uint kkw2 = 256 - k3;
 							cc[0]     = (cc[0] * kkw2 + c_1 * k3) >> 8;
 							cc[1]     = (cc[1] * kkw2 + c_2 * k3) >> 8;
@@ -1877,7 +1877,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 						{
 							nac = false;
 							d++;
-							uint k3   = ((256 - xx[ayx].kk_1) * (256 - kkw) / k2);
+							k3   = ((256 - xx[ayx].kk_1) * (256 - kkw) / k2);
 							uint kkw2 = 256 - k3;
 							cc[0]     = (cc[0] * kkw2 + c_1 * k3) >> 8;
 							cc[1]     = (cc[1] * kkw2 + c_2 * k3) >> 8;
@@ -1908,7 +1908,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 								}
 								if (kon)
 								{
-									uint k3   = ((256 - xx[ayx_next].kk_2) * (256 - kkw) / k2);
+									k3   = ((256 - xx[ayx_next].kk_2) * (256 - kkw) / k2);
 									uint kkw2 = 256 - k3;
 									cc[0]     = (cc[0] * kkw2 + c_1 * k3) >> 8;
 									cc[1]     = (cc[1] * kkw2 + c_2 * k3) >> 8;
@@ -1918,7 +1918,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 							break;
 						}
 					}
-					uint sl1_, sl2_, k3, kkw2;
+					uint sl1_, sl2_, kkw2;
 					sl2_ = 256 - kkw;
 					if (xxax == nullptr) break; // для параноии компилятора
 					if (nac)
@@ -2503,8 +2503,8 @@ void _picture::ring(_xy p, double r, double d, uint c)
 			double dd = (i - p.y) * (i - p.y) + dxdx0;
 			double ab = ab0;
 			uchar* cc = px(x1, i);
-			i64 d  = x1 - x2;
-			while (d++ <= 0)
+			i64 d_  = x1 - x2;
+			while (d_++ <= 0)
 			{
 				if ((dd < rrmax) && (dd > ddmin))
 				{
@@ -2552,8 +2552,8 @@ void _picture::ring(_xy p, double r, double d, uint c)
 		double dd = (i - p.y) * (i - p.y) + dxdx0;
 		double ab = ab0;
 		uchar* cc = px(x1, i);
-		i64 d  = x1 - x2;
-		while (d++ <= 0)
+		i64 d_  = x1 - x2;
+		while (d_++ <= 0)
 		{
 			if ((dd < rrmax) && (dd > ddmin))
 			{

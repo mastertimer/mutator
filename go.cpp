@@ -2164,7 +2164,7 @@ bool _g1list::mouse_wheel2(_xy r)
 		init_sel();
 		return true;
 	}
-	int dx = -(int)(*n_wheel->operator i64 * ());
+	int dx = *n_wheel->operator i64 * ();
 	if (dx == 0) return true;
 	del_area();
 	bool start = false;
@@ -2216,7 +2216,7 @@ bool _g_tetron::mouse_move2(_xy r)
 	if (n_hint) return true; // есть подсказка
 	_tetron* a = find1<_tetron>(flag_specialty);
 	std::wstring re;
-	if (a) re = string_to_wstring(a->name()) + L" " + uint64_to_wstr_hex(a->id);
+	if (a) re = string_to_wstring(a->name()) + L" " + std::to_wstring(a->id);
 	if (hint.size())
 	{
 		if (re.size()) re += L": ";

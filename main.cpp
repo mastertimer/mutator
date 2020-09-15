@@ -126,7 +126,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_MOUSEWHEEL:
 		init_shift(GET_KEYSTATE_WPARAM(wParam));
-		*n_wheel->operator i64* () = GET_WHEEL_DELTA_WPARAM(wParam);
+		*n_wheel->operator i64* () = GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 		n_wheel->run(0, n_wheel, flag_run);
 		if (!master_obl_izm.empty()) paint(hWnd);
 		return 0;
