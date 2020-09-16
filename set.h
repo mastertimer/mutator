@@ -212,7 +212,7 @@ struct _rnd_oracle : public _basic_curve // рандомный оракул
 	void get_t_info(int t, _element_chart* e) override {}
 	void draw(int n, _area area, _bitmap* bm) override {}
 	void recovery() override {}
-	i64 prediction() override { return i64(rnd(3) == 0) * 60; }
+	i64 prediction() override { return i64(rnd(15000) == 13) * 60; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

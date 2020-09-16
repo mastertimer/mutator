@@ -644,8 +644,9 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 	calc_all_prediction(rr, nn, kk);
 	MessageBox(0, std::to_wstring(nn).c_str(), L"упс", MB_OK | MB_TASKMODAL);
 	MessageBox(0, std::to_wstring(kk).c_str(), L"упс", MB_OK | MB_TASKMODAL);
-	i64 os = nn % 10;
-
+	if (nn == 0) return;
+	kk = pow(kk, 1.0 / nn);
+	MessageBox(0, std::to_wstring(kk).c_str(), L"упс", MB_OK | MB_TASKMODAL);
 
 	//	_g_tetron* g = new _g_tetron;
 	//	g->add_flags(n_checkbox, flag_specialty);
