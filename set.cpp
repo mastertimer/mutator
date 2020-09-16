@@ -1327,6 +1327,7 @@ void _statistics::add(_prices2& c)
 		udata.push_back(data.size());
 	}
 	time_t dt = c.time - last_cc.time;
+	if (dt < 0) dt = 0; // время может идти назад!
 
 	size++;
 	last_cc = c;
@@ -3254,6 +3255,28 @@ void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 	}
 	nn = vv;
 	kk = k;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void test_ss(i64 &k0, i64 &k1, i64 &k2, i64 &k3, i64 &kk)
+{
+	k0 = k1 = k2 = k3 = kk = 0;
+	int t = 0;
+	_prices pr;
+	for (i64 i = 0; i < ss.size; i++)
+	{
+		ss.read(i, pr);
+		switch (pr.time - t)
+		{
+		case 0: k0++; break;
+		case 1: k1++; break;
+		case 2: k2++; break;
+		case 3: k3++; break;
+		default: kk++;
+		}
+		t = pr.time;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
