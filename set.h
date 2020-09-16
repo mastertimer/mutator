@@ -119,10 +119,10 @@ struct _mctds_candle : public _basic_curve // источник данных дл
 	std::vector<_cen_pak> cen1m; // упакованные цены по минутам
 	double c_unpak = 0.01; // распаковка цен
 
-	int get_n(); // количество элементов
-	void get_n_info(int n, _element_chart* e); // получить краткую информацию n-го элемента
-	void get_t_info(int t, _element_chart* e); // получить краткую информацию элемента со временем >= t
-	void draw(int n, _area area, _bitmap* bm); // нарисовать 1 элемент
+	int get_n() override; // количество элементов
+	void get_n_info(int n, _element_chart* e) override; // получить краткую информацию n-го элемента
+	void get_t_info(int t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
+	void draw(int n, _area area, _bitmap* bm) override; // нарисовать 1 элемент
 	void recovery() override; // выполнить
 	void push(_stack* mem);
 	void pop(_stack* mem);
@@ -165,10 +165,10 @@ struct _nervous_oracle : public _basic_curve // нервозный предск�
 	std::vector<_element_nervous> zn; // данные
 	double c_unpak = 0.01; // распаковка цен
 
-	int get_n(); // количество элементов
-	void get_n_info(int n, _element_chart* e); // получить краткую информацию n-го элемента
-	void get_t_info(int t, _element_chart* e); // получить краткую информацию элемента со временем >= t
-	void draw(int n, _area area, _bitmap* bm); // нарисовать 1 элемент
+	int get_n() override; // количество элементов
+	void get_n_info(int n, _element_chart* e) override; // получить краткую информацию n-го элемента
+	void get_t_info(int t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
+	void draw(int n, _area area, _bitmap* bm) override; // нарисовать 1 элемент
 	void recovery() override; // выполнить
 	void push(_stack* mem);
 	void pop(_stack* mem);
@@ -196,11 +196,23 @@ struct _oracle3 : public _basic_curve // оракул 3-я версия
 	std::vector<_element_oracle> zn; // данные
 	double c_unpak = 0.01; // распаковка цен
 
-	int get_n(); // количество элементов
-	void get_n_info(int n, _element_chart* e); // получить краткую информацию n-го элемента
-	void get_t_info(int t, _element_chart* e); // получить краткую информацию элемента со временем >= t
-	void draw(int n, _area area, _bitmap* bm); // нарисовать 1 элемент
+	int get_n() override; // количество элементов
+	void get_n_info(int n, _element_chart* e) override; // получить краткую информацию n-го элемента
+	void get_t_info(int t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
+	void draw(int n, _area area, _bitmap* bm) override; // нарисовать 1 элемент
 	void recovery() override; // выполнить
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct _rnd_oracle : public _basic_curve // рандомный оракул
+{
+	int get_n() override { return 0; }
+	void get_n_info(int n, _element_chart* e) override {}
+	void get_t_info(int t, _element_chart* e) override {}
+	void draw(int n, _area area, _bitmap* bm) override {}
+	void recovery() override {}
+	i64 prediction() override { return i64(rnd(3) == 0) * 60; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
