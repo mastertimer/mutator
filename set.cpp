@@ -1355,6 +1355,9 @@ void _statistics::add(_prices2& c)
 	time_t dt = c.time - last_cc.time;
 	if (dt < 0) dt = 0; // время может идти назад!
 	if (dt == 1) push1(0); else { push1(1); pushn(dt, 31); }
+	if (dt > 600) baza.clear(); // если время > 10 минут, предыдущую статистику не использовать (сработает для ~100)
+
+	i64 delta_start = c.buy[roffer - 1].price - last_cc.buy[roffer - 1].price;
 
 	pushn(0, (8 - bit) % 8); // заполнить последний байт
 	size++;
