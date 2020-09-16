@@ -639,7 +639,7 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	_nervous_oracle2 rr;
+/*	_nervous_oracle2 rr;
 	i64 nn = 0;
 	double kk = 1;
 	calc_all_prediction(rr, nn, kk);
@@ -647,24 +647,11 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 	MessageBox(0, std::to_wstring(kk).c_str(), L"упс", MB_OK | MB_TASKMODAL);
 	if (nn == 0) return;
 	kk = pow(kk, 1.0 / nn);
-	MessageBox(0, std::to_wstring(kk).c_str(), L"упс", MB_OK | MB_TASKMODAL);
+	MessageBox(0, std::to_wstring(kk).c_str(), L"упс", MB_OK | MB_TASKMODAL);*/
 
 	//	_g_tetron* g = new _g_tetron;
 	//	g->add_flags(n_checkbox, flag_specialty);
 	//	_t_trans* tr = n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
-
-		//	MessageBox(0, to_wstring(c).c_str(), L"упс", MB_OK | MB_TASKMODAL);
-			//MessageBox(0, double_to_string(v, 4), L"упс", MB_OK | MB_TASKMODAL);
-		/*	int64 *n = tt->find1<int64>(flag_part); // активный супер
-			if (!n) return;
-			_tetron * b = to_tetron(master.chosen[*n]);
-			if (!b) return;
-			master.chosen[n_act] = b->id;
-			smena_avt();
-			_g_tetron* g = tt->find1<_g_tetron>(flag_information);
-			if (!g) return;
-			g->create_super_link(b);
-			g->run(0, g, flag_run);*/
 }
 
 void fun34(_tetron* tt0, _tetron* tt, u64 flags)
