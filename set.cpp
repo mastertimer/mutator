@@ -1,11 +1,12 @@
 ﻿/*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         | результат | итераций | 1 итерация
---------------------------------------------
-0.999    |   0.941        61       0.99900
-min(rnd) |   0.873        55       0.99753
-max(rnd) |   1.058        58       1.00097
-было     |   0.925        61       0.99872
+          | результат | итераций | 1 итерация
+---------------------------------------------
+0.999     |   0.941        61       0.99900
+min(rnd)  |   0.873        55       0.99753
+max(rnd)  |   1.058        58       1.00097
+было(err) |   0.925        61       0.99872
+было      |   0.955        21       0.99779
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -237,7 +238,7 @@ int bad_string_to_int(std::wstring& s)
 
 void buy_stock(_tetron* tt, bool buy)
 {
-	int otst_20 = 1;                                                      // 20 >= x >= 1, 1 - лучшая цена
+	int otst_20 = 1; // 20 >= x >= 1, 1 - лучшая цена
 	static int KKK;
 	static bool win8 = false;
 	static __int64 n = 0;
@@ -418,7 +419,7 @@ void buy_stock(_tetron* tt, bool buy)
 			kmax = bad_string_to_int(recognize.elem[kmax].s);
 			klot = bad_string_to_int(recognize.elem[klot].s);
 			if (klot == 0)
-			{                                                                 // на всякий случай
+			{ // на всякий случай
 				n = 1000;
 				return;
 			}
@@ -426,7 +427,7 @@ void buy_stock(_tetron* tt, bool buy)
 		//		KKK = KKK2 / klot;
 		KKK = kkk2;
 		if (KKK == 0) /*||(KKK > kmax)*/
-		{                                                                 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		{ // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			n = 1000;
 			return;
 		}
@@ -463,7 +464,7 @@ void buy_stock(_tetron* tt, bool buy)
 		SetCursorPos((int)(recognize.elem[kk].area.x.min + 20 + recognize.offset.x), (int)(recognize.elem[kk].area.y.min + 5 + recognize.offset.y));
 
 
-		MouseClick();                                                     // НЕЛЬЗЯ
+		MouseClick(); // НЕЛЬЗЯ
 		n = 18;
 		return;
 	}
@@ -507,7 +508,7 @@ void buy_stock(_tetron* tt, bool buy)
 			return;
 		}
 		SetCursorPos((int)(recognize.offset.x + recognize.image.size.x - 23), (int)(recognize.offset.y - 15));
-		MouseClick();                                                     // НЕЛЬЗЯ
+		MouseClick(); // НЕЛЬЗЯ
 		n = 40;
 		return;
 	}
@@ -1825,6 +1826,8 @@ bool _latest_events::stop()
 
 i64 _nervous_oracle::prediction()
 {
+	if (zn.size() < 10) return 0;
+	if (zn.back().time + 60 != ss.last_cc.time.to_minute()) return 0;
 	return get_latest_events(zn.size() - 1).start();
 }
 
@@ -2671,7 +2674,8 @@ void _recognize::find_text13(uint c, int err)
 		i64 first = -1;
 		i64 last = -100;
 		bool norm = true;
-		for (int i = 0; i < rx; i++) {
+		for (int i = 0; i < rx; i++)
+		{
 			uint cc = sl[i];
 			int e0 = (int)(cc & 255) - c0;
 			int e1 = (int)((cc >> 8) & 255) - c1;
@@ -2898,9 +2902,9 @@ void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 	double k = 1;
 	for (i64 i = 0; i < ss_old.size; i++)
 	{
+		o.recovery();
 		ss_old.read(i, pr);
 		ss.add(pr);
-		o.recovery();
 		if (rez == 1)
 		{
 			if (pr.time < t_start + 2) continue; // 2 секунды пауза между решением и действием

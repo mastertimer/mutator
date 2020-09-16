@@ -20,8 +20,8 @@ struct _date_time // дата и время
 {
 	uchar month, day, hour, minute, second; // (месяц+год), день, час, мин, сек
 
-	operator int(); // преобразовать в целое число
-	int to_minute(); // преобразовать в целое число без секунд
+	operator int(); // преобразовать в целое число (в секундах)
+	int to_minute(); // преобразовать в целое число без секунд (в секундах)
 	void operator =(int a); // присвоить число
 	void now(); // присвоить текущее время
 };
@@ -51,6 +51,7 @@ struct _super_stat // супер статистика цен
 	};
 
 	i64 size = 0; // количество записей
+	_prices last_cc; // последние цены
 
 	_super_stat();
 
@@ -63,7 +64,6 @@ struct _super_stat // супер статистика цен
 	void clear(); // удалить все данные
 
 private:
-	_prices last_cc; // последние цены
 	_stack data; // сжатые данные
 	std::vector<int> u_dd2; // указатель на место сжатых данных кратных StepPakCC
 
