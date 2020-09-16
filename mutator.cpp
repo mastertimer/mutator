@@ -639,7 +639,7 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	_nervous_oracle rr;
+	_nervous_oracle2 rr;
 	i64 nn = 0;
 	double kk = 1;
 	calc_all_prediction(rr, nn, kk);
