@@ -1326,9 +1326,37 @@ void _statistics::add(_prices2& c)
 		last_cc = cena_zero2_;
 		udata.push_back(data.size());
 	}
+
+	uchar byte = 0; // текущий байт
+	uchar bit = 0;
+	auto push1 = [&](uchar a)
+	{
+		byte |= (a << bit++);
+		if (bit == 8)
+		{
+			data.push_back(byte);
+			byte = bit = 0;
+		}
+	};
+	auto pushn = [&](u64 a, uchar n)
+	{
+		for (; n; n--)
+		{
+			byte |= ((a & 1) << bit++);
+			if (bit == 8)
+			{
+				data.push_back(byte);
+				byte = bit = 0;
+			}
+			a >>= 1;
+		}
+	};
+
 	time_t dt = c.time - last_cc.time;
 	if (dt < 0) dt = 0; // время может идти назад!
+	if (dt == 1) push1(0); else { push1(1); pushn(dt, 31); }
 
+	pushn(0, (8 - bit) % 8); // заполнить последний байт
 	size++;
 	last_cc = c;
 }

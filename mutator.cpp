@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
 #include <functional>
+#include <ctime>
 
 #include "mjson.h"
 #include "set.h"
@@ -639,13 +640,15 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	i64 k0, k1, k2, k3, kk;
+	time_t t = time(0);
+	MessageBox(0, std::to_wstring(t).c_str(), L"упс", MB_OK | MB_TASKMODAL);
+/*	i64 k0, k1, k2, k3, kk;
 	test_ss(k0, k1, k2, k3, kk);
 	MessageBox(0, (L"k0 = " + std::to_wstring(k0)).c_str(), L"упс", MB_OK | MB_TASKMODAL);
 	MessageBox(0, (L"k1 = " + std::to_wstring(k1)).c_str(), L"упс", MB_OK | MB_TASKMODAL);
 	MessageBox(0, (L"k2 = " + std::to_wstring(k2)).c_str(), L"упс", MB_OK | MB_TASKMODAL);
 	MessageBox(0, (L"k3 = " + std::to_wstring(k3)).c_str(), L"упс", MB_OK | MB_TASKMODAL);
-	MessageBox(0, (L"kk = " + std::to_wstring(kk)).c_str(), L"упс", MB_OK | MB_TASKMODAL);
+	MessageBox(0, (L"kk = " + std::to_wstring(kk)).c_str(), L"упс", MB_OK | MB_TASKMODAL);*/
 
 /*	_nervous_oracle2 rr;
 	i64 nn = 0;
