@@ -92,10 +92,12 @@ private:
 	void otgruzka(int rez, int Vrez, int* deko); // вспомогательная Pak()
 };
 
+constexpr _prices2 cena_zero2 = { {}, {}, 0 };
+
 struct _statistics // статистика цен, сжатая
 {
 	i64 size = 0; // количество записей
-	_prices2 last_cc; // последние цены
+	_prices2 last_cc = cena_zero2; // последние цены
 
 	void add(_prices2& c); // добавить цены (сжать)
 
@@ -105,6 +107,13 @@ private:
 	std::vector<i64> baza; // база, от которой считается дельта (+ покупка, - продажа)
 	i64 offer0 = 0; // какой цене соответствует baza[0]
 	static constexpr i64 step_pak_cc = 100; // период ключевых цен
+	uchar byte = 0; // текущий байт
+	uchar bit = 0;
+
+	void add0(_prices2& c); // не дельта!
+	void add1(_prices2& c); // дельта
+	void push1(uchar a); // добавить 1 байт
+	void pushn(u64 a, uchar n); // добавить n байт
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -16,7 +16,6 @@ max(rnd)  |   1.058        58       1.00097
 constexpr wchar_t ss_file[]  = L"..\\..\\baza.cen";
 constexpr wchar_t mmm_file[] = L"..\\..\\mmm.txt";
 constexpr _prices cena_zero_ = { {}, {}, { 1,1,1,1,1 } };
-constexpr _prices2 cena_zero2_ = { {}, {}, 0 };
 
 _super_stat      ss;               // сжатые цены
 _g_graph*        graph  = nullptr; // график
@@ -1319,46 +1318,65 @@ _super_stat::_super_stat()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _statistics::add(_prices2& c)
+void _statistics::push1(uchar a)
 {
-	if (size % step_pak_cc == 0)
+	byte |= (a << bit++);
+	if (bit == 8)
 	{
-		last_cc = cena_zero2_;
-		udata.push_back(data.size());
+		data.push_back(byte);
+		byte = bit = 0;
 	}
+}
 
-	uchar byte = 0; // текущий байт
-	uchar bit = 0;
-	auto push1 = [&](uchar a)
+void _statistics::pushn(u64 a, uchar n)
+{
+	for (; n; n--)
 	{
-		byte |= (a << bit++);
+		byte |= ((a & 1) << bit++);
 		if (bit == 8)
 		{
 			data.push_back(byte);
 			byte = bit = 0;
 		}
-	};
-	auto pushn = [&](u64 a, uchar n)
+		a >>= 1;
+	}
+}
+
+void _statistics::add0(_prices2& c)
+{
+	offer0 = c.buy[roffer - 1].price;
+	i64 offermax = c.sale[roffer - 1].price;
+	baza.clear();
+	baza.resize(offermax - offer0 + 1, 0);
+	for (i64 i = 0; i < roffer; i++)
 	{
-		for (; n; n--)
-		{
-			byte |= ((a & 1) << bit++);
-			if (bit == 8)
-			{
-				data.push_back(byte);
-				byte = bit = 0;
-			}
-			a >>= 1;
-		}
-	};
+		baza[c.buy[i].price - offer0] = c.buy[i].number;
+		baza[c.sale[i].price - offer0] = -c.sale[i].number;
+	}
+	pushn(offer0, 16);
+}
 
-	time_t dt = c.time - last_cc.time;
-	if (dt < 0) dt = 0; // время может идти назад!
-	if (dt == 1) push1(0); else { push1(1); pushn(dt, 31); }
-	if (dt > 600) baza.clear(); // если время > 10 минут, предыдущую статистику не использовать (сработает для ~100)
-
+void _statistics::add1(_prices2& c)
+{
 	i64 delta_start = c.buy[roffer - 1].price - last_cc.buy[roffer - 1].price;
+}
 
+void _statistics::add(_prices2& c)
+{
+	byte = bit = 0;
+	if (size % step_pak_cc == 0)
+	{
+		pushn(c.time, 31);
+		udata.push_back(data.size());
+		add0(c);
+	}
+	else
+	{
+		time_t dt = c.time - last_cc.time;
+		if (dt < 0) dt = 0; // время может идти назад!
+		if (dt == 1) push1(0); else { push1(1); pushn(dt, 31); }
+		if (dt > 180) add0(c); else add1(c);
+	}
 	pushn(0, (8 - bit) % 8); // заполнить последний байт
 	size++;
 	last_cc = c;
