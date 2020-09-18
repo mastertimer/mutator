@@ -1358,7 +1358,7 @@ void _statistics::add0(_prices2& c)
 
 void _statistics::add1(_prices2& c)
 {
-	i64 delta_start = c.buy[roffer - 1].price - last_cc.buy[roffer - 1].price;
+//	i64 delta_start = c.buy[roffer - 1].price - last_cc.buy[roffer - 1].price;
 }
 
 void _statistics::add(_prices2& c)
@@ -3308,24 +3308,62 @@ void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void test_ss(i64 &k0, i64 &k1, i64 &k2, i64 &k3, i64 &kk)
+void test_ss(std::vector<i64> &k)
 {
-	k0 = k1 = k2 = k3 = kk = 0;
-	int t = 0;
+	k.clear();
 	_prices pr;
 	for (i64 i = 0; i < ss.size; i++)
 	{
 		ss.read(i, pr);
-		switch (pr.time - t)
-		{
-		case 0: k0++; break;
-		case 1: k1++; break;
-		case 2: k2++; break;
-		case 3: k3++; break;
-		default: kk++;
-		}
-		t = pr.time;
+		_offer o = pr.pro[19];
+		if (o.k >= k.size()) k.resize((i64)o.k + 1, 0);
+		k[o.k]++;
 	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+50%
+продажа
+[19] 322
+[18] 325
+[17] 330
+[16] 336
+[15] 343
+[14] 344
+[13] 341
+[12] 334
+[11] 328
+[10] 325
+ [9] 320
+ [8] 313
+ [7] 303
+ [6] 283
+ [5] 260
+ [4] 238
+ [3] 217
+ [2] 199
+ [1] 122
+ [0] 241
+покупка
+ [0] 239
+ [1] 116
+ [2] 185
+ [3] 217
+ [4] 242
+ [5] 267
+ [6] 293
+ [7] 311
+ [8] 322
+ [9] 331
+[10] 339
+[11] 343
+[12] 347
+[13] 351
+[14] 354
+[15] 353
+[16] 347
+[17] 338
+[18] 330
+[19] 326
+*/

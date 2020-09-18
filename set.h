@@ -364,4 +364,4 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void calc_all_prediction(_basic_curve &o, i64& nn, double& kk);
-void test_ss(i64& k0, i64& k1, i64& k2, i64& k3, i64& kk);
+void test_ss(std::vector<i64>& k);

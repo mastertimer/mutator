@@ -641,8 +641,25 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	time_t t = time(0);
-	MessageBox(0, std::to_wstring(t).c_str(), L"упс", MB_OK | MB_TASKMODAL);
+	std::vector<i64> k;
+	test_ss(k);
+	i64 s = 0;
+	for (i64 i = 0; i < k.size(); i++) s += k[i];
+	s /= 2;
+	i64 ii = 0;
+	for (i64 i = 0; i < k.size(); i++)
+	{
+		s -= k[i];
+		if (s <= 0)
+		{
+			ii = i;
+			break;
+		}
+	}
+
+	MessageBox(0, std::to_wstring(ii).c_str(), L"упс", MB_OK | MB_TASKMODAL);
+
+
 /*	i64 k0, k1, k2, k3, kk;
 	test_ss(k0, k1, k2, k3, kk);
 	MessageBox(0, (L"k0 = " + std::to_wstring(k0)).c_str(), L"упс", MB_OK | MB_TASKMODAL);
