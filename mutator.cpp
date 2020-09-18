@@ -641,7 +641,11 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	for (i64 f = 0; f < 20; f++)
+	_g_graph* g = new _g_graph;
+	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
+
+
+/*	for (i64 f = 0; f < 20; f++)
 	{
 		std::vector<i64> k;
 		test_ss(f, k);
@@ -660,15 +664,7 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 		}
 
 		MessageBox(0, (std::to_wstring(f) + L" = " + std::to_wstring(ii)).c_str(), L"упс", MB_OK | MB_TASKMODAL);
-	}
-
-/*	i64 k0, k1, k2, k3, kk;
-	test_ss(k0, k1, k2, k3, kk);
-	MessageBox(0, (L"k0 = " + std::to_wstring(k0)).c_str(), L"упс", MB_OK | MB_TASKMODAL);
-	MessageBox(0, (L"k1 = " + std::to_wstring(k1)).c_str(), L"упс", MB_OK | MB_TASKMODAL);
-	MessageBox(0, (L"k2 = " + std::to_wstring(k2)).c_str(), L"упс", MB_OK | MB_TASKMODAL);
-	MessageBox(0, (L"k3 = " + std::to_wstring(k3)).c_str(), L"упс", MB_OK | MB_TASKMODAL);
-	MessageBox(0, (L"kk = " + std::to_wstring(kk)).c_str(), L"упс", MB_OK | MB_TASKMODAL);*/
+	}*/
 
 /*	_nervous_oracle2 rr;
 	i64 nn = 0;
@@ -1113,7 +1109,8 @@ _tetron* create_tetron(const std::string& name)
 		make(_g_edit_double),
 		make(_g_button),
 		make(_g_tetron),
-		make(_set_graph)
+		make(_set_graph),
+		make(_g_graph)
 	};
 	auto fun = ss_tetron.find(name);
 	if (fun == ss_tetron.end()) return nullptr;
@@ -1134,11 +1131,11 @@ _tetron* create_tetron(uchar tipt)
 	case  6: return new _g_test_graph;        // 0xF2
 	case  7: return new _t_double;            // 0x50
 	case  8: return new _g_link;              // 0x7A
-	case  9: return new _set_graph;             // 0x71
+	case  9: return new _set_graph;           // 0x71
 	case 10: return new _g_circle;            // 0x74
 	case 11: return new _g_line;              // 0x70
 	case 12: return new _g_rect;              // 0xF4
-
+	case 13: return new _g_graph;             // 0xFC
 	case 14: return new _g_froglif;           // 0x7F
 	case 15: return new _t_xy;                // 0x30
 	case 16: return new _g_scrollbar;         // 0xF8

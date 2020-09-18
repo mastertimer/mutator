@@ -618,7 +618,6 @@ struct _g_link : public _t_go
 	double k = 1.0;
 	int act_li = -1;
 
-	_g_link() = default;
 	uchar type() { return 8; }
 	int get_froglif() { return 0x7A; }
 	void calc_local_area();
@@ -627,6 +626,17 @@ struct _g_link : public _t_go
 	bool mouse_move2(_xy r) override;
 	void mouse_finish_move();
 	bool mouse_down_left2(_xy r) override;
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct _g_graph : public _t_go
+{
+	_g_graph() { local_area = { {0, 100}, {0, 100} }; }
+
+	uchar type() { return 13; }
+	int get_froglif() { return 0xFC; }
+	void ris2(_trans tr, bool final) override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

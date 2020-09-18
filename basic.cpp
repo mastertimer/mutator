@@ -513,6 +513,14 @@ _area _area::expansion(double b) const noexcept
 	return { {x.min - b, x.max + b}, {y.min - b, y.max + b} };
 }
 
+_area _area::scaling(double b) const noexcept
+{
+	if (empty()) return *this;
+	double k1 = (1 + b) / 2;
+	double k2 = (1 - b) / 2;
+	return { {x.min * k1 + x.max * k2, x.min * k2 + x.max * k1}, {y.min * k1 + y.max * k2, y.min * k2 + y.max * k1} };
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 _trans _trans::operator*(_trans tr) const noexcept

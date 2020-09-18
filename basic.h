@@ -614,7 +614,8 @@ struct _area
 	bool empty() const noexcept { return (x.min > x.max) || (y.min > y.max); }
 	void clear() noexcept { x = { 1.0, 0.0 }; }
 
-	_area expansion(double b) const noexcept; // расширенная область во все стороны
+	_area expansion(double b) const noexcept; // расширенная область во все стороны на b
+	_area scaling(double b) const noexcept; // промасштабированная область во все стороны в b
 
 	_xy center()       const noexcept { return { (x.max + x.min) * 0.5, (y.max + y.min) * 0.5 }; }
 	_xy top_left()     const noexcept { return { x.min, y.min }; } // верхний левый угол
