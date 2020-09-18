@@ -20,7 +20,7 @@ constexpr wchar_t mmm_file[] = L"..\\..\\mmm.txt";
 constexpr _prices cena_zero_ = { {}, {}, { 1,1,1,1,1 } };
 
 _super_stat      ss;               // сжатые цены
-_g_graph*        graph  = nullptr; // график
+_set_graph*        graph  = nullptr; // график
 
 _nervous_oracle *oracle = nullptr; // оракул
 _mctds_candle   *sv     = nullptr;
@@ -1386,13 +1386,13 @@ void _statistics::add(_prices2& c)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool _g_graph::mouse_down_left2(_xy r)
+bool _set_graph::mouse_down_left2(_xy r)
 {
 	x_tani = (i64)r.x;
 	return true;
 }
 
-void _g_graph::mouse_move_left2(_xy r)
+void _set_graph::mouse_move_left2(_xy r)
 {
 	i64 dx = ((i64)r.x - x_tani) / size_el;
 	if (dx == 0) return;
@@ -1409,19 +1409,19 @@ void _g_graph::mouse_move_left2(_xy r)
 	polz->run(0, polz, flag_run);
 }
 
-void _g_graph::run(_tetron* tt0, _tetron* tt, u64 flags)
+void _set_graph::run(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	obn = true;
 	cha_area();
 }
 
-_g_graph::_g_graph()
+_set_graph::_set_graph()
 {
 	graph = this;
 	local_area = { {0, 200}, {0, 100} };
 }
 
-void _g_graph::ris2(_trans tr, bool final)
+void _set_graph::ris2(_trans tr, bool final)
 {
 	_iarea a = tr(local_area);
 	draw(a.size());
@@ -1492,7 +1492,7 @@ std::string date_to_ansi_string(int time)
 	return res;
 }
 
-void _g_graph::draw(_isize size)
+void _set_graph::draw(_isize size)
 {
 	if (size.x > 8000) size.x = 8000;
 	if (size.y > 4000) size.y = 4000;

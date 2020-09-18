@@ -1,0 +1,390 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?application progid="SMath Studio Desktop" version="0.99.7561.40250"?>
+<worksheet xmlns="http://smath.info/schemas/worksheet/1.0">
+  <settings ppi="96">
+    <identity>
+      <id>1bdd47b9-6b6e-4f75-b331-1e19382cdeb2</id>
+      <revision>10</revision>
+    </identity>
+    <calculation>
+      <precision>4</precision>
+      <exponentialThreshold>5</exponentialThreshold>
+      <trailingZeros>false</trailingZeros>
+      <significantDigitsMode>false</significantDigitsMode>
+      <roundingMode>0</roundingMode>
+      <fractions>decimal</fractions>
+    </calculation>
+    <pageModel active="false" viewMode="2" printGrid="false" printAreas="true" simpleEqualsOnly="false" printBackgroundImages="true">
+      <paper id="1" orientation="Portrait" width="850" height="1100" />
+      <margins left="39" right="39" top="49" bottom="49" />
+      <header alignment="Center" color="#a9a9a9">&amp;[DATE] &amp;[TIME] - &amp;[FILENAME]</header>
+      <footer alignment="Center" color="#a9a9a9">&amp;[PAGENUM] / &amp;[COUNT]</footer>
+      <backgrounds />
+    </pageModel>
+    <dependencies>
+      <assembly name="SMath Studio Desktop" version="0.99.7561.40250" guid="a37cba83-b69c-4c71-9992-55ff666763bd" />
+      <assembly name="Math Region" version="0.99.7561.40250" guid="02f1ab51-215b-466e-a74d-5d8b1cf85e8d" />
+      <assembly name="SpecialFunctions" version="1.12.7561.40250" guid="2814e667-4e12-48b1-8d51-194e480eabc5" />
+    </dependencies>
+  </settings>
+  <regions type="content">
+    <region left="0" top="0" width="229" height="371" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">pr</e>
+          <e type="operand">241</e>
+          <e type="operand">317</e>
+          <e type="operand">503</e>
+          <e type="operand">797</e>
+          <e type="operand">1481</e>
+          <e type="operand">122</e>
+          <e type="operand">282</e>
+          <e type="operand">550</e>
+          <e type="operand">975</e>
+          <e type="operand">1851</e>
+          <e type="operand">199</e>
+          <e type="operand">328</e>
+          <e type="operand">634</e>
+          <e type="operand">1030</e>
+          <e type="operand">2000</e>
+          <e type="operand">217</e>
+          <e type="operand">415</e>
+          <e type="operand">775</e>
+          <e type="operand">1261</e>
+          <e type="operand">2213</e>
+          <e type="operand">238</e>
+          <e type="operand">482</e>
+          <e type="operand">878</e>
+          <e type="operand">1400</e>
+          <e type="operand">2352</e>
+          <e type="operand">260</e>
+          <e type="operand">519</e>
+          <e type="operand">934</e>
+          <e type="operand">1472</e>
+          <e type="operand">2478</e>
+          <e type="operand">283</e>
+          <e type="operand">549</e>
+          <e type="operand">977</e>
+          <e type="operand">1545</e>
+          <e type="operand">2674</e>
+          <e type="operand">303</e>
+          <e type="operand">576</e>
+          <e type="operand">1005</e>
+          <e type="operand">1637</e>
+          <e type="operand">2995</e>
+          <e type="operand">313</e>
+          <e type="operand">593</e>
+          <e type="operand">1021</e>
+          <e type="operand">1689</e>
+          <e type="operand">3129</e>
+          <e type="operand">320</e>
+          <e type="operand">602</e>
+          <e type="operand">1029</e>
+          <e type="operand">1695</e>
+          <e type="operand">3142</e>
+          <e type="operand">325</e>
+          <e type="operand">610</e>
+          <e type="operand">1039</e>
+          <e type="operand">1733</e>
+          <e type="operand">3261</e>
+          <e type="operand">328</e>
+          <e type="operand">625</e>
+          <e type="operand">1062</e>
+          <e type="operand">1758</e>
+          <e type="operand">3293</e>
+          <e type="operand">334</e>
+          <e type="operand">647</e>
+          <e type="operand">1101</e>
+          <e type="operand">1814</e>
+          <e type="operand">3357</e>
+          <e type="operand">341</e>
+          <e type="operand">677</e>
+          <e type="operand">1146</e>
+          <e type="operand">1865</e>
+          <e type="operand">3428</e>
+          <e type="operand">344</e>
+          <e type="operand">700</e>
+          <e type="operand">1180</e>
+          <e type="operand">1886</e>
+          <e type="operand">3424</e>
+          <e type="operand">343</e>
+          <e type="operand">711</e>
+          <e type="operand">1201</e>
+          <e type="operand">1937</e>
+          <e type="operand">3539</e>
+          <e type="operand">336</e>
+          <e type="operand">712</e>
+          <e type="operand">1200</e>
+          <e type="operand">1968</e>
+          <e type="operand">3652</e>
+          <e type="operand">330</e>
+          <e type="operand">705</e>
+          <e type="operand">1184</e>
+          <e type="operand">1978</e>
+          <e type="operand">3671</e>
+          <e type="operand">325</e>
+          <e type="operand">690</e>
+          <e type="operand">1166</e>
+          <e type="operand">2001</e>
+          <e type="operand">3773</e>
+          <e type="operand">322</e>
+          <e type="operand">684</e>
+          <e type="operand">1154</e>
+          <e type="operand">2023</e>
+          <e type="operand">3840</e>
+          <e type="operand">20</e>
+          <e type="operand">5</e>
+          <e type="function" args="102">mat</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="243" top="0" width="229" height="371" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">po</e>
+          <e type="operand">239</e>
+          <e type="operand">306</e>
+          <e type="operand">513</e>
+          <e type="operand">944</e>
+          <e type="operand">1982</e>
+          <e type="operand">116</e>
+          <e type="operand">294</e>
+          <e type="operand">603</e>
+          <e type="operand">1097</e>
+          <e type="operand">2325</e>
+          <e type="operand">185</e>
+          <e type="operand">339</e>
+          <e type="operand">664</e>
+          <e type="operand">1156</e>
+          <e type="operand">2367</e>
+          <e type="operand">217</e>
+          <e type="operand">442</e>
+          <e type="operand">843</e>
+          <e type="operand">1433</e>
+          <e type="operand">2567</e>
+          <e type="operand">242</e>
+          <e type="operand">512</e>
+          <e type="operand">953</e>
+          <e type="operand">1545</e>
+          <e type="operand">2690</e>
+          <e type="operand">267</e>
+          <e type="operand">558</e>
+          <e type="operand">1012</e>
+          <e type="operand">1676</e>
+          <e type="operand">2997</e>
+          <e type="operand">293</e>
+          <e type="operand">593</e>
+          <e type="operand">1053</e>
+          <e type="operand">1782</e>
+          <e type="operand">3225</e>
+          <e type="operand">311</e>
+          <e type="operand">612</e>
+          <e type="operand">1075</e>
+          <e type="operand">1851</e>
+          <e type="operand">3539</e>
+          <e type="operand">322</e>
+          <e type="operand">625</e>
+          <e type="operand">1082</e>
+          <e type="operand">1882</e>
+          <e type="operand">3715</e>
+          <e type="operand">331</e>
+          <e type="operand">639</e>
+          <e type="operand">1098</e>
+          <e type="operand">1907</e>
+          <e type="operand">3796</e>
+          <e type="operand">339</e>
+          <e type="operand">652</e>
+          <e type="operand">1130</e>
+          <e type="operand">2021</e>
+          <e type="operand">4285</e>
+          <e type="operand">343</e>
+          <e type="operand">662</e>
+          <e type="operand">1139</e>
+          <e type="operand">2015</e>
+          <e type="operand">4188</e>
+          <e type="operand">347</e>
+          <e type="operand">674</e>
+          <e type="operand">1156</e>
+          <e type="operand">2024</e>
+          <e type="operand">4162</e>
+          <e type="operand">351</e>
+          <e type="operand">699</e>
+          <e type="operand">1192</e>
+          <e type="operand">2052</e>
+          <e type="operand">4191</e>
+          <e type="operand">354</e>
+          <e type="operand">719</e>
+          <e type="operand">1219</e>
+          <e type="operand">2061</e>
+          <e type="operand">4200</e>
+          <e type="operand">353</e>
+          <e type="operand">740</e>
+          <e type="operand">1268</e>
+          <e type="operand">2188</e>
+          <e type="operand">4516</e>
+          <e type="operand">347</e>
+          <e type="operand">743</e>
+          <e type="operand">1273</e>
+          <e type="operand">2195</e>
+          <e type="operand">4571</e>
+          <e type="operand">338</e>
+          <e type="operand">736</e>
+          <e type="operand">1266</e>
+          <e type="operand">2172</e>
+          <e type="operand">4468</e>
+          <e type="operand">330</e>
+          <e type="operand">730</e>
+          <e type="operand">1270</e>
+          <e type="operand">2225</e>
+          <e type="operand">4574</e>
+          <e type="operand">326</e>
+          <e type="operand">721</e>
+          <e type="operand">1281</e>
+          <e type="operand">2278</e>
+          <e type="operand">4680</e>
+          <e type="operand">20</e>
+          <e type="operand">5</e>
+          <e type="function" args="102">mat</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="81" top="423" width="82" height="26" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">i</e>
+          <e type="operand">1</e>
+          <e type="operand">4</e>
+          <e type="function" args="2">range</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="198" top="432" width="92" height="26" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">j</e>
+          <e type="operand">1</e>
+          <e type="operand">20</e>
+          <e type="function" args="2">range</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="36" top="504" width="134" height="59" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">d</e>
+          <e type="operand">j</e>
+          <e type="operand">i</e>
+          <e type="function" args="3">el</e>
+          <e type="operand">pr</e>
+          <e type="operand">j</e>
+          <e type="operand">i</e>
+          <e type="operand">1</e>
+          <e type="operator" args="2">+</e>
+          <e type="function" args="3">el</e>
+          <e type="operand">pr</e>
+          <e type="operand">j</e>
+          <e type="operand">i</e>
+          <e type="function" args="3">el</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="252" top="576" width="261" height="371" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">d</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">1.3154</e>
+          <e type="operand">1.5868</e>
+          <e type="operand">1.5845</e>
+          <e type="operand">1.8582</e>
+          <e type="operand">2.3115</e>
+          <e type="operand">1.9504</e>
+          <e type="operand">1.7727</e>
+          <e type="operand">1.8985</e>
+          <e type="operand">1.6482</e>
+          <e type="operand">1.9329</e>
+          <e type="operand">1.6246</e>
+          <e type="operand">1.9417</e>
+          <e type="operand">1.9124</e>
+          <e type="operand">1.8675</e>
+          <e type="operand">1.6271</e>
+          <e type="operand">1.755</e>
+          <e type="operand">2.0252</e>
+          <e type="operand">1.8216</e>
+          <e type="operand">1.5945</e>
+          <e type="operand">1.68</e>
+          <e type="operand">1.9962</e>
+          <e type="operand">1.7996</e>
+          <e type="operand">1.576</e>
+          <e type="operand">1.6834</e>
+          <e type="operand">1.9399</e>
+          <e type="operand">1.7796</e>
+          <e type="operand">1.5814</e>
+          <e type="operand">1.7307</e>
+          <e type="operand">1.901</e>
+          <e type="operand">1.7448</e>
+          <e type="operand">1.6289</e>
+          <e type="operand">1.8296</e>
+          <e type="operand">1.8946</e>
+          <e type="operand">1.7218</e>
+          <e type="operand">1.6543</e>
+          <e type="operand">1.8526</e>
+          <e type="operand">1.8812</e>
+          <e type="operand">1.7093</e>
+          <e type="operand">1.6472</e>
+          <e type="operand">1.8537</e>
+          <e type="operand">1.8769</e>
+          <e type="operand">1.7033</e>
+          <e type="operand">1.6679</e>
+          <e type="operand">1.8817</e>
+          <e type="operand">1.9055</e>
+          <e type="operand">1.6992</e>
+          <e type="operand">1.6554</e>
+          <e type="operand">1.8732</e>
+          <e type="operand">1.9371</e>
+          <e type="operand">1.7017</e>
+          <e type="operand">1.6476</e>
+          <e type="operand">1.8506</e>
+          <e type="operand">1.9853</e>
+          <e type="operand">1.6928</e>
+          <e type="operand">1.6274</e>
+          <e type="operand">1.8381</e>
+          <e type="operand">2.0349</e>
+          <e type="operand">1.6857</e>
+          <e type="operand">1.5983</e>
+          <e type="operand">1.8155</e>
+          <e type="operand">2.0729</e>
+          <e type="operand">1.6892</e>
+          <e type="operand">1.6128</e>
+          <e type="operand">1.8271</e>
+          <e type="operand">2.119</e>
+          <e type="operand">1.6854</e>
+          <e type="operand">1.64</e>
+          <e type="operand">1.8557</e>
+          <e type="operand">2.1364</e>
+          <e type="operand">1.6794</e>
+          <e type="operand">1.6706</e>
+          <e type="operand">1.8559</e>
+          <e type="operand">2.1231</e>
+          <e type="operand">1.6899</e>
+          <e type="operand">1.7161</e>
+          <e type="operand">1.8856</e>
+          <e type="operand">2.1242</e>
+          <e type="operand">1.6871</e>
+          <e type="operand">1.753</e>
+          <e type="operand">1.8982</e>
+          <e type="operand">20</e>
+          <e type="operand">4</e>
+          <e type="function" args="82">mat</e>
+        </result>
+      </math>
+    </region>
+  </regions>
+</worksheet>

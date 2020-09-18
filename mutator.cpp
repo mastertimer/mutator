@@ -646,10 +646,10 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 		std::vector<i64> k;
 		test_ss(f, k);
 		i64 s = 0;
-		for (i64 i = 0; i < k.size(); i++) s += k[i];
+		for (i64 i = 0; i < (i64)k.size(); i++) s += k[i];
 		s = s * 31 / 32;
 		i64 ii = 0;
-		for (i64 i = 0; i < k.size(); i++)
+		for (i64 i = 0; i < (i64)k.size(); i++)
 		{
 			s -= k[i];
 			if (s <= 0)
@@ -1113,7 +1113,7 @@ _tetron* create_tetron(const std::string& name)
 		make(_g_edit_double),
 		make(_g_button),
 		make(_g_tetron),
-		make(_g_graph)
+		make(_set_graph)
 	};
 	auto fun = ss_tetron.find(name);
 	if (fun == ss_tetron.end()) return nullptr;
@@ -1134,7 +1134,7 @@ _tetron* create_tetron(uchar tipt)
 	case  6: return new _g_test_graph;        // 0xF2
 	case  7: return new _t_double;            // 0x50
 	case  8: return new _g_link;              // 0x7A
-	case  9: return new _g_graph;             // 0x71
+	case  9: return new _set_graph;             // 0x71
 	case 10: return new _g_circle;            // 0x74
 	case 11: return new _g_line;              // 0x70
 	case 12: return new _g_rect;              // 0xF4

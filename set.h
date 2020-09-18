@@ -282,13 +282,13 @@ struct _oracle3 : public _basic_curve // оракул 3-я версия
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _g_graph : public _t_go
+struct _set_graph : public _t_go
 {
 	std::vector<std::unique_ptr<_basic_curve>> curve; // кривая
 	bool obn = true; // обновить картинку
 	i64 size_el = 6; // размер элемента
 
-	_g_graph();
+	_set_graph();
 
 	uchar type()                     override { return 9; }
 	int get_froglif()                override { return 0x71; }
