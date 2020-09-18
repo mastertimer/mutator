@@ -647,7 +647,7 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 		test_ss(f, k);
 		i64 s = 0;
 		for (i64 i = 0; i < k.size(); i++) s += k[i];
-		s /= 8;
+		s = s * 31 / 32;
 		i64 ii = 0;
 		for (i64 i = 0; i < k.size(); i++)
 		{
