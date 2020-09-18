@@ -9,26 +9,27 @@
 
 struct _picture
 {
-	uint* data;
+	uint* data = nullptr;
 	_isize size;
-	bool transparent = false; // как бы от него избавиться???
+	bool transparent = false;
 
-	explicit _picture(int rx3 = 0, int ry3 = 0);
+	_picture() = default;
+	explicit _picture(_isize r) noexcept;
 	_picture(const _picture&) = delete;
 	_picture(_picture&& move) noexcept;
-	virtual ~_picture() { delete[] data; }
+	~_picture() noexcept { delete[] data; }
 
 	_picture& operator=(_picture&& move) noexcept;
 	void operator=(const _picture& move) noexcept;
 
 	uint* sl(i64 y) const noexcept { return &data[y * size.x]; }
+	void set_area(const _iarea& q) noexcept { area = q & size; }
+	bool resize(_isize wh) noexcept;
+	void set_transparent() noexcept; // узнать, есть ли прозрачные пиксели
 
-	void set_area(const _iarea &q) { area = q & size; }
-	bool resize(_isize wh);
-	void set_transparent(); // узнать, есть ли прозрачные пиксели
-	void invert_alpha(); // инвертировать альфа канал
+	// ниже не проверенные, или не универсальные функции
 
-	void clear(uint c = 0xFF000000);
+	void clear(uint c = 0xFF000000) noexcept;
 	void line(_ixy p1, _ixy p2, uint c, bool rep = false); // линия rep - полное замещение цвета
 	void lines(_xy p1, _xy p2, double l, uint c); // точная линия заданной толщины
 	void text16(i64 x, i64 y, astr s, uint c); // простой текст высотой 16

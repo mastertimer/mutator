@@ -973,7 +973,7 @@ void _g_test_graph::ris2(_trans tr, bool final)
 	static bool first = true;
 	if (first)
 	{
-		_picture te(120, 90);
+		_picture te({ 120, 90 });
 		te.clear();
 		for (int i = 0; i < 100; i++)
 			te.line({ rnd(120), rnd(90) }, { rnd(120), rnd(90) }, 0xFF2080FF);
@@ -988,7 +988,7 @@ void _g_test_graph::ris2(_trans tr, bool final)
 	master_bm.stretch_draw(&a, (int)(oo.x.min + 20), (int)(oo.y.min + 20), 1);
 }
 
-_g_test_graph::_g_test_graph() : a(250, 150)
+_g_test_graph::_g_test_graph() : a({ 250, 150 })
 {
 	local_area = { {0, 300}, {0, 200} };
 }

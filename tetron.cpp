@@ -1,6 +1,6 @@
 ﻿#include "tetron.h"
 
-__hash_table<_link> link;
+__hash_table<_link> glink;
 
 uint hash_func(const _he_intermediate& a)
 {
@@ -158,14 +158,14 @@ _tetron* _tetron::copy_plus()
 
 u64 _tetron::get_flags(_tetron* t)
 {
-	_link& li = *::link.find(_pair_tetron(this, t));
+	_link& li = *glink.find(_pair_tetron(this, t));
 	return (li.low_tetron) ? li.get_flags(this) : 0;
 }
 
 void _tetron::set2_flags(_tetron* t, u64 flags, func_fl trans, bool after)
 {
 	if (!t) return;
-	auto   err = ::link.find(_pair_tetron(this, t));
+	auto   err = glink.find(_pair_tetron(this, t));
 	_link& li  = *err;
 	u64 fl  = (li.low_tetron) ? li.get_flags(this) : 0;
 	trans(fl, flags);
@@ -246,10 +246,10 @@ void _tetron::add_unique_flags(_tetron* t, u64 flags, bool after)
 void optimize_hash_intermediate()
 { // проверить подбор k, чтобы удалялось ~ 50%
 	if (hash_intermediate.size < 100000) return; // примерно 10МБ
-	uint          size_old   = hash_intermediate.size;
+	uint size_old = hash_intermediate.size;
 	static u64 old_number = 0;
-	static double k          = 0.5;
-	u64        n_gr       = (u64)(old_number + (number_intermediate - old_number) * k);
+	static double k = 0.5;
+	u64 n_gr = (u64)(old_number + (number_intermediate - old_number) * k);
 	for (auto& i : hash_intermediate)
 	{
 		if ((i.tetron_before->get_flags(i.tetron_intermediate) == 0) ||
@@ -257,8 +257,8 @@ void optimize_hash_intermediate()
 			hash_intermediate.erase(i);
 	}
 	old_number = n_gr;
-	double k2  = k / ((size_old * 0.5) / hash_intermediate.size);
-	k          = k * 0.9 + k2 * 0.1;
+	double k2 = k / ((size_old * 0.5) / hash_intermediate.size);
+	k = k * 0.9 + k2 * 0.1;
 }
 
 void delete_hvost(_tetron* t, bool del_t, bool run_func)
@@ -295,7 +295,7 @@ _link::~_link()
 	}
 	if (n_low + 1ULL < low_tetron->link.size())
 	{
-		_link* li = low_tetron->link[n_low]                       = low_tetron->link.back();
+		_link* li = low_tetron->link[n_low] = low_tetron->link.back();
 		((li->low_tetron == low_tetron) ? li->n_low : li->n_high) = n_low;
 	}
 	low_tetron->link.pop_back();
@@ -303,13 +303,13 @@ _link::~_link()
 	{
 		if (n_high + 1ULL < high_tetron->link.size())
 		{
-			_link* li = high_tetron->link[n_high]                      = high_tetron->link.back();
+			_link* li = high_tetron->link[n_high] = high_tetron->link.back();
 			((li->low_tetron == high_tetron) ? li->n_low : li->n_high) = n_high;
 		}
 		high_tetron->link.pop_back();
 	}
 	low_tetron = nullptr;
-	link.erase(this);
+	glink.erase(this);
 }
 
 void _frozen::operator++(int)

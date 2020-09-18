@@ -320,7 +320,7 @@ private:
 inline __hash_table <_he_intermediate> hash_intermediate;
 inline u64 number_intermediate = 0;
 
-extern __hash_table<_link> link; // ??? если сделать inline - будут ошибки при закрытии
+extern __hash_table<_link> glink; // ??? если сделать inline - будут ошибки при закрытии
 
 void delete_hvost(_tetron* t, bool del_t = false, bool run_func = true);
 void optimize_hash_intermediate();

@@ -550,6 +550,8 @@ struct _iarea
 	_iarea(_isize b) : x{ 0, b.x }, y{ 0, b.y } {}
 	_iarea(_iinterval x_, _iinterval y_) : x(x_), y(y_) {}
 
+	bool operator!=(_isize b) const noexcept;
+
 	void operator&=(const _iarea& b) noexcept { x &= b.x; y &= b.y; }
 
 	_iarea operator&(const _iarea& b) const noexcept { _iarea c(*this); c &= b; return c; }

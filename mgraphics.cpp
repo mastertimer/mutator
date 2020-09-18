@@ -21,7 +21,7 @@ bool _bitmap::resize(_isize wh)
 	return true;
 }
 
-_bitmap::_bitmap(int rx3, int ry3) : _picture(rx3, ry3)
+_bitmap::_bitmap(int rx3, int ry3) : _picture({ rx3, ry3 })
 {
 	font.lfHeight         = 13;              // высота шрифта или символа
 	font.lfWidth          = 0;               // средняя ширина символов в шрифте
@@ -141,16 +141,17 @@ void _bitmap::grab_ecran_oo2(HWND hwnd)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_picture::_picture(int rx3, int ry3) : data(nullptr), size{ rx3, ry3 }
+_picture::_picture(_isize r) noexcept
 {
+	area = size = r.correct();
 	if (!size.empty()) data = new uint[size.square()];
-	area = size;
 }
 
-_picture::_picture(_picture&& move) noexcept :
-   data(move.data), size(move.size), transparent(move.transparent), area(move.area)
+_picture::_picture(_picture&& move) noexcept : data(move.data), size(move.size), transparent(move.transparent),
+	area(move.area)
 {
 	move.data = nullptr;
+	move.area = move.size = { 0,0 };
 }
 
 void _picture::operator=(const _picture& move) noexcept
@@ -170,20 +171,11 @@ _picture& _picture::operator=(_picture&& move) noexcept
 	area        = move.area;
 	transparent = move.transparent;
 	move.data   = nullptr;
+	move.area   = move.size = { 0,0 };
 	return *this;
 }
 
-void _picture::invert_alpha()
-{
-	i64 r = size.square();
-	for (i64 i = 0; i < r; i++)
-	{
-		uint a = 255 - (data[i] >> 24);
-		data[i] = (data[i] & 0xffffff) + (a << 24);
-	}
-}
-
-void _picture::set_transparent()
+void _picture::set_transparent() noexcept
 {
 	i64 r = size.square();
 	for (i64 i = 0; i < r; i++)
@@ -222,20 +214,27 @@ void _picture::draw(_ixy r, _picture &bm)
 	}
 }
 
-bool _picture::resize(_isize wh)
+bool _picture::resize(_isize wh) noexcept
 {
 	wh = wh.correct();
 	if (size == wh) return false;
 	size = wh;
 	delete[] data;
-	data = (size.x * size.y) ? (new uint[size.x * size.y]) : 0;
+	data = (size.empty()) ? nullptr : (new uint[size.square()]);
 	area = size;
+	transparent = false;
 	return true;
 }
 
-void _picture::clear(uint c)
+void _picture::clear(uint c) noexcept
 {
+	if (area != size)
+	{
+		fill_rectangle(size, c, true);
+		return;
+	}
 	transparent = ((c >> 24) != 0xff);
+	// сделать 64 цикл!
 	fill_rectangle(size, c, true);
 }
 
