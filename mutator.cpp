@@ -641,24 +641,26 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	std::vector<i64> k;
-	test_ss(k);
-	i64 s = 0;
-	for (i64 i = 0; i < k.size(); i++) s += k[i];
-	s /= 2;
-	i64 ii = 0;
-	for (i64 i = 0; i < k.size(); i++)
+	for (i64 f = 0; f < 20; f++)
 	{
-		s -= k[i];
-		if (s <= 0)
+		std::vector<i64> k;
+		test_ss(f, k);
+		i64 s = 0;
+		for (i64 i = 0; i < k.size(); i++) s += k[i];
+		s /= 8;
+		i64 ii = 0;
+		for (i64 i = 0; i < k.size(); i++)
 		{
-			ii = i;
-			break;
+			s -= k[i];
+			if (s <= 0)
+			{
+				ii = i;
+				break;
+			}
 		}
+
+		MessageBox(0, (std::to_wstring(f) + L" = " + std::to_wstring(ii)).c_str(), L"упс", MB_OK | MB_TASKMODAL);
 	}
-
-	MessageBox(0, std::to_wstring(ii).c_str(), L"упс", MB_OK | MB_TASKMODAL);
-
 
 /*	i64 k0, k1, k2, k3, kk;
 	test_ss(k0, k1, k2, k3, kk);
