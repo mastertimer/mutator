@@ -880,24 +880,24 @@ struct _matrix
 	double* data = nullptr;
 	_isize size;
 
-//	matrix() = default;
-//	matrix(const matrix& a) noexcept;
-//	matrix(matrix&& a) noexcept;
+	_matrix() = default;
+	_matrix(const _matrix& a) noexcept;
+	_matrix(_matrix&& a) noexcept;
 //	matrix(size_t ry, size_t rx) noexcept;
 //	matrix(size_t ry, size_t rx, double z) noexcept;// заполнить числом z
 //	matrix(size_t ry, size_t rx, const std::function<double(size_t, size_t)>& fun) noexcept; // задать из функции fun
 //	matrix(size_t ry) noexcept; // вектор
-//	matrix(size_t ry, const std::function<double(size_t)>& fun) noexcept; // вектор задать из функции
-//	~matrix();
+	_matrix(i64 ry, const std::function<double(i64)>& fun) noexcept; // вектор задать из функции
+	~_matrix() { delete[] data; }
 
-//	void operator=(const matrix& a) noexcept;
-//	void operator=(matrix&& a) noexcept;
+	void operator=(const _matrix& a) noexcept;
+	void operator=(_matrix&& a) noexcept;
 //	void operator+=(const matrix& a) noexcept;
 
 //	void set_diagonal_matrix(size_t n, double dz) noexcept; // задать матрицу диагонального вида
 
 	double* operator[](i64 n) { return data + (n * size.x); } // нужная строчка
-//	void resize(size_t ry, size_t rx); // изменить размер матрицы ! данные не сохраняются
+	void resize(_isize r); // изменить размер матрицы ! данные не сохраняются
 //	inline bool empty() const noexcept { return rx_ * ry_ == 0; } // проверка на нулевой размер
 //	inline size_t size_x() const noexcept { return rx_; } // размер по x
 //	inline size_t size_y() const noexcept { return ry_; } // размер по y

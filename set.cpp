@@ -3262,6 +3262,11 @@ void _kusok_bukva::cod(ushort* aa, int vaa, wchar_t cc, char nf, i64 nbitt)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void _g_graph::add(const _matrix& b)
+{
+	curve.push_back({b});
+}
+
 void _g_graph::ris2(_trans tr, bool final)
 {
 	constexpr double ot = 0.03; // отступ от каждой стороны

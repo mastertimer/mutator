@@ -379,6 +379,8 @@ struct _g_graph : public _t_go
 	uchar type() { return 13; }
 	int get_froglif() { return 0xFC; }
 	void ris2(_trans tr, bool final) override;
+
+	void add(const _matrix& b);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

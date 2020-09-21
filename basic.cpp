@@ -3916,34 +3916,33 @@ void _rjson::read(std::string_view name, std::wstring& b)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*void matrix::operator=(matrix&& a) noexcept
+void _matrix::operator=(_matrix&& a) noexcept
 {
-	if (data_) delete[] data_;
-	data_ = a.data_;
-	ry_ = a.ry_;
-	rx_ = a.rx_;
-	a.data_ = nullptr;
-	a.ry_ = 0;
-}*/
+	if (data) delete[] data;
+	data = a.data;
+	size = a.size;
+	a.data = nullptr;
+	a.size = {};
+}
 
-/*void matrix::operator=(const matrix& a) noexcept
+void _matrix::operator=(const _matrix& a) noexcept
 {
-	resize(a.ry_, a.rx_);
-	memcpy(data_, a.data_, ry_ * rx_ * sizeof(double));
-}*/
+	resize(a.size);
+	memcpy(data, a.data, size.square() * sizeof(double));
+}
 
-/*matrix::matrix(matrix&& a) noexcept : data_(a.data_), ry_(a.ry_), rx_(a.rx_)
+_matrix::_matrix(_matrix&& a) noexcept : data(a.data), size(a.size)
 {
-	a.data_ = nullptr;
-	a.ry_ = 0;
-}*/
+	a.data = nullptr;
+	a.size = {};
+}
 
-/*matrix::matrix(const matrix& a) noexcept : ry_(a.ry_), rx_(a.rx_)
+_matrix::_matrix(const _matrix& a) noexcept : size(a.size)
 {
-	if (ry_ * rx_ == 0) return;
-	data_ = new double[ry_ * rx_];
-	memcpy(data_, a.data_, ry_ * rx_ * sizeof(double));
-}*/
+	if (size.empty()) return;
+	data = new double[size.square()];
+	memcpy(data, a.data, size.square() * sizeof(double));
+}
 
 /*matrix matrix::operator<<(const matrix& a) const noexcept
 {
@@ -4044,12 +4043,12 @@ void _rjson::read(std::string_view name, std::wstring& b)
 			data_[n] = fun(j, i);
 }*/
 
-/*matrix::matrix(size_t ry, const std::function<double(size_t)>& fun)  noexcept : ry_(ry), rx_(1)
+_matrix::_matrix(i64 ry, const std::function<double(i64)>& fun)  noexcept : size{1, ry}
 {
-	if (ry_ == 0) return;
-	data_ = new double[ry_];
-	for (size_t i = 0; i < ry_; i++) data_[i] = fun(i);
-}*/
+	if (ry == 0) return;
+	data = new double[ry];
+	for (i64 i = 0; i < ry; i++) data[i] = fun(i);
+}
 
 /*matrix::matrix(size_t ry) noexcept : ry_(ry), rx_(1)
 {
@@ -4061,21 +4060,15 @@ void _rjson::read(std::string_view name, std::wstring& b)
 	if (ry_ * rx_) data_ = new double[ry_ * rx_];
 }*/
 
-/*matrix::~matrix()
+void _matrix::resize(_isize r)
 {
-	if (data_) delete[] data_;
-}*/
-
-/*void matrix::resize(size_t ry, size_t rx)
-{
-	if (rx * ry > rx_ * ry_)
+	if (r.square() > size.square())
 	{
-		if (data_) delete[] data_;
-		data_ = new double[rx * ry];
+		delete[] data;
+		data = new double[r.square()];
 	}
-	ry_ = ry;
-	rx_ = rx;
-}*/
+	size = r;
+}
 
 /*void matrix::MinMax(double* mi, double* ma)
 {

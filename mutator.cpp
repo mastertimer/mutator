@@ -8,7 +8,6 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
-#include <functional>
 #include <ctime>
 
 #include "set.h"
@@ -641,7 +640,7 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
-
+	g->add(_matrix(100, [](i64 n) { return sin(n * 0.1); }));
 
 /*	for (i64 f = 0; f < 20; f++)
 	{
