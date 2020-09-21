@@ -4283,26 +4283,22 @@ void _rjson::read(std::string_view name, std::wstring& b)
 	return m_->data_[y * (m_->rx_) + x_] - m_->data_[(y - 1) * (m_->rx_) + x_];
 }*/
 
-/*void MatrixColumn::MinMax(double* mi, double* ma)
+bool matrix_column::min_max(double* mi, double* ma)
 {
-	if ((x_ < 0) || (x_ >= m_->rx_))
-	{
-		*mi = 1.0;
-		*ma = 0;
-		return;
-	}
-	double* da = m_->data_;
-	double mii = da[x_];
-	double maa = da[x_];
-	size_t vdata = m_->rx_ * m_->ry_;
-	for (size_t i = x_ + m_->rx_; i < vdata; i += m_->rx_)
+	if ((x < 0) || (x >= m->size.x) || (m->size.y < 1)) return false;
+	double* da = m->data;
+	double mii = da[x];
+	double maa = da[x];
+	i64 vdata = m->size.square();
+	for (i64 i = x + m->size.x; i < vdata; i += m->size.x)
 	{
 		if (da[i] < mii) mii = da[i];
 		if (da[i] > maa) maa = da[i];
 	}
 	*mi = mii;
 	*ma = maa;
-}*/
+	return true;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

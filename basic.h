@@ -862,24 +862,23 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*struct matrix;
+struct _matrix;
 
-struct MatrixColumn // столбец матрицы
+struct matrix_column // столбец матрицы
 {
-	matrix* m_; // указатель на матрицу
-	size_t x_; // номер столбца
+	_matrix* m; // указатель на матрицу
+	i64 x; // номер столбца
 
-//	void MinMax(double* mi, double* ma); // найти диапазон
+	bool min_max(double* mi, double* ma); // найти диапазон
 //	double Delta(size_t y = 1); // разница 2-х элементов [y] - [y-1]
-};*/
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct matrix
+struct _matrix
 {
-	double* data_ = nullptr;
-	size_t ry_ = 0;
-	size_t rx_ = 0;
+	double* data = nullptr;
+	_isize size;
 
 //	matrix() = default;
 //	matrix(const matrix& a) noexcept;
@@ -897,13 +896,13 @@ struct matrix
 
 //	void set_diagonal_matrix(size_t n, double dz) noexcept; // задать матрицу диагонального вида
 
-//	inline double* operator[](size_t n) { return data_ + (n * rx_); } // нужная строчка
+	double* operator[](i64 n) { return data + (n * size.x); } // нужная строчка
 //	void resize(size_t ry, size_t rx); // изменить размер матрицы ! данные не сохраняются
 //	inline bool empty() const noexcept { return rx_ * ry_ == 0; } // проверка на нулевой размер
 //	inline size_t size_x() const noexcept { return rx_; } // размер по x
 //	inline size_t size_y() const noexcept { return ry_; } // размер по y
 //	inline size_t size() const noexcept { return ry_ * rx_; } // размер
-//	inline MatrixColumn Column(size_t x) { return { this, x }; } // столбец матрицы
+	matrix_column column(i64 x) { return { this, x }; } // столбец матрицы
 
 //	void MinMax(double* mi, double* ma); // найти диапазон
 

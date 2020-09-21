@@ -3272,11 +3272,6 @@ void _g_graph::ris2(_trans tr, bool final)
 	
 	unsigned int col_setka = c_min - 0x80000000; // цвет сетки
 	unsigned int col_font = c_max - 0x80000000; // цвет шрифта
-	/*image_.Clear(0);
-	GList* b = Find1<GList>(flag_part);
-	if (!b) return;
-	Tetron* tt = b->link_[GList::N_list].tetron_;
-	if (!tt) return;*/
 
 	// вычисление диапазона
 	double minx = 1;
@@ -3284,19 +3279,17 @@ void _g_graph::ris2(_trans tr, bool final)
 	double miny = 1;
 	double maxy = 0;
 
-/*	for (int i = 0; i < tt->vlink_; i++)
+	for (auto &i : curve)
 	{
-		Tetron* a = tt->link_[i].tetron_;
-		if (!a) continue;
-		if (!(tt->link_[i].flags_ & flag_parasite)) continue;
-		matrix* c = *a;
-		if (!c) continue;
-		if (c->size_x() != 2) continue;                                   // должно быть 2 столбца
+		_matrix* c = &i.a;
+		if ((c->size.x < 1)|| (c->size.x > 2)) continue; // должно быть 1-2 столбца
 		double min, max;
-		c->Column(0).MinMax(&min, &max);
-		double de = c->Column(0).Delta();
-		min -= de * 0.5;
-		max += de * 0.5;
+		if (c->size.x == 2)
+			c->column(0).min_max(&min, &max);
+		{
+			min = 0;
+			max = c->size.y - 1;
+		}
 		if (minx > maxx)
 		{
 			minx = min;
@@ -3307,7 +3300,10 @@ void _g_graph::ris2(_trans tr, bool final)
 			if (min < minx) minx = min;
 			if (max > maxx) maxx = max;
 		}
-		c->Column(1).MinMax(&min, &max);
+		if (c->size.x == 2)
+			c->column(1).min_max(&min, &max);
+		else
+			c->column(0).min_max(&min, &max);
 		if (miny > maxy)
 		{
 			miny = min;
@@ -3318,7 +3314,7 @@ void _g_graph::ris2(_trans tr, bool final)
 			if (min < miny) miny = min;
 			if (max > maxy) maxy = max;
 		}
-	}*/
+	}
 	if ((minx > maxx)||(miny > maxy)) return;
 	double dx = maxx - minx;
 	if (dx == 0) dx = 1;
@@ -3328,39 +3324,30 @@ void _g_graph::ris2(_trans tr, bool final)
 	maxx += dx * 0.005;
 	miny -= dy * 0.005;
 	maxy += dy * 0.005;
-/*	// рисование графиков
-	double kx = rrx_ / (maxx - minx);
-	double oox = static_cast<double>(-dx_);
-	double ky = rry_ / (maxy - miny);
-	double ooy = static_cast<double>(rry_ - dy_);
-	unsigned int CCGG[] = { 0x40FF80, 0x40FFFF, 0xFFFF80 };
+	// рисование графиков
+	double kx = a.x.length() / (maxx - minx);
+	double ky = a.y.length() / (maxy - miny);
+	uint CCGG[] = { 0xFF40FF80, 0xFF40FFFF, 0xFFFFFF80 };
 	int ng = 0;
-	for (int i = 0; i < tt->vlink_; i++)
+	for (auto& j : curve)
 	{
-		Tetron* a = tt->link_[i].tetron_;
-		if (!a) continue;
-		if (!(tt->link_[i].flags_ & flag_parasite)) continue;
-		matrix* c = *a;
-		if (!c) continue;
-		if (c->size_x() != 2) continue;                                   // должно быть 2 столбца
-		double de = c->Column(0).Delta() * 0.45;
-		int xpr = 0;
-		int ypr = 0;
-		unsigned int cc = (ng < _countof(CCGG)) ? CCGG[ng] : C_MAX;
+		_matrix* c = &j.a;
+		if ((c->size.x < 1) || (c->size.x > 2)) continue; // должно быть 1-2 столбца
+		i64 xpr = 0;
+		i64 ypr = 0;
+		uint cc = (ng < _countof(CCGG)) ? CCGG[ng] : c_max;
 		ng++;
-		for (int i = 0; i < c->size_y(); i++)
+		for (int i = 0; i < c->size.y; i++)
 		{
 			double x = (*c)[i][0];
-			double y1 = 0;
-			double y2 = (*c)[i][1];
-			//			image_.FillRectD(oox + (x - de - minx)*kx, ooy - (y1 - miny)*ky, oox + (x + de - minx)*kx, ooy - (y2 - miny)*ky, C_DEF);
-			int xx = int(oox + (x - minx) * kx);
-			int yy = int(ooy - (y2 - miny) * ky);
-			if (i > 0) image_.Line(xpr, ypr, xx, yy, cc);
+			double y = (*c)[i][1];
+			i64 xx = int(a.x.min + (x - minx) * kx);
+			i64 yy = int(a.y.max - (y - miny) * ky);
+			if (i > 0) master_bm.line({ xpr, ypr }, { xx, yy }, cc);
 			xpr = xx;
 			ypr = yy;
 		}
-	}*/
+	}
 	// рисование осей
 	if (a.y.length() > 10)
 	{
