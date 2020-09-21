@@ -2,7 +2,7 @@
 
 #include <deque>
 
-#include "go.h"
+#include "tetron.h"
 
 constexpr int rceni = 20; // предложений продажи, предложений покупки ( ВСЕГО = Rceni * 2 );
 constexpr i64 roffer = 20; // предложений продажи, предложений покупки ( ВСЕГО = roffer * 2 );
