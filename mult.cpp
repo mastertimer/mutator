@@ -1,4 +1,4 @@
-#include "mgraphics.h"
+#include "basic.h"
 #include "mult.h"
 
 _bitmap mult(1920, 1080);

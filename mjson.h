@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-#include "mgraphics.h"
+#include "basic.h"
 
 struct _wjson
 {

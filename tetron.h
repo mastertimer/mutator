@@ -2,7 +2,7 @@
 
 #include <map>
 
-#include "mgraphics.h"
+#include "basic.h"
 #include "mjson.h"
 
 constexpr uint c_background = 0xFF000000;
