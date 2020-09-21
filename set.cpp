@@ -3272,8 +3272,6 @@ void _g_graph::ris2(_trans tr, bool final)
 	constexpr double ot = 0.03; // отступ от каждой стороны
 	_area a = tr(local_area);
 	master_bm.rectangle(a, c_def);
-	_area a1 = a.scaling(1.0 - ot * 2);
-	master_bm.rectangle(a1, c_def);
 	
 	unsigned int col_setka = c_min - 0x80000000; // цвет сетки
 	unsigned int col_font = c_max - 0x80000000; // цвет шрифта
@@ -3325,10 +3323,10 @@ void _g_graph::ris2(_trans tr, bool final)
 	if (dx == 0) dx = 1;
 	double dy = maxy - miny;
 	if (dy == 0) dy = 1;
-	minx -= dx * 0.005;
-	maxx += dx * 0.005;
-	miny -= dy * 0.005;
-	maxy += dy * 0.005;
+	minx -= dx * ot;
+	maxx += dx * ot;
+	miny -= dy * ot;
+	maxy += dy * ot;
 	// рисование графиков
 	double kx = a.x.length() / (maxx - minx);
 	double ky = a.y.length() / (maxy - miny);
@@ -3344,8 +3342,17 @@ void _g_graph::ris2(_trans tr, bool final)
 		ng++;
 		for (int i = 0; i < c->size.y; i++)
 		{
-			double x = (*c)[i][0];
-			double y = (*c)[i][1];
+			double x, y;
+			if (c->size.x == 2)
+			{
+				x = (*c)[i][0];
+				y = (*c)[i][1];
+			}
+			else
+			{
+				x = i;
+				y = (*c)[i][0];
+			}
 			i64 xx = int(a.x.min + (x - minx) * kx);
 			i64 yy = int(a.y.max - (y - miny) * ky);
 			if (i > 0) master_bm.line({ xpr, ypr }, { xx, yy }, cc);
