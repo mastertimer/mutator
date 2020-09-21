@@ -161,7 +161,6 @@
   <ItemGroup>
     <ClCompile Include="go.cpp" />
     <ClCompile Include="basic.cpp" />
-    <ClCompile Include="mjson.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mult.cpp" />
     <ClCompile Include="mutator.cpp" />
@@ -171,7 +170,6 @@
   <ItemGroup>
     <ClInclude Include="go.h" />
     <ClInclude Include="basic.h" />
-    <ClInclude Include="mjson.h" />
     <ClInclude Include="mult.h" />
     <ClInclude Include="mutator.h" />
     <ClInclude Include="resource.h" />

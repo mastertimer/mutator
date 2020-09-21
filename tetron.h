@@ -3,7 +3,6 @@
 #include <map>
 
 #include "basic.h"
-#include "mjson.h"
 
 constexpr uint c_background = 0xFF000000;
 constexpr uint c_maxx       = 0xFFA0FFC0;
