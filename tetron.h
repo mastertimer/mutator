@@ -162,7 +162,7 @@ struct _id
 	u64 id = 0;
 
 	_id() = default;
-	_id(u64 b)   : id(b)                      {}
+	_id(u64 b)      : id(b)                      {}
 	_id(_tetron* b) : id(b->id)                  {}
 	void operator = (_id b)                      { id = b.id; };
 	void operator = (_tetron* b)                 { id = (b) ? b->id : 0; };
@@ -282,12 +282,12 @@ private:
 
 struct _he_intermediate
 {
-	_tetron* tetron_before = nullptr;
-	_tetron* tetron_after = nullptr;
+	_tetron* tetron_before       = nullptr;
+	_tetron* tetron_after        = nullptr;
 	_tetron* tetron_intermediate = nullptr; // искомый тетрон
 	u64 flags_before = 0;
-	u64 flags_after = 0;
-	u64 number = 0; // порядковый номер
+	u64 flags_after  = 0;
+	u64 number       = 0; // порядковый номер
 
 	_he_intermediate() = default;
 	_he_intermediate(_tetron* t1, _tetron* t2, u64 f1, u64 f2) : tetron_before(t1), tetron_after(t2),
@@ -303,9 +303,10 @@ struct _he_intermediate
 struct _frozen // для цикла по слепку связей
 {
 	_frozen(_tetron* t, u64 flags_);
+
 	void operator++(int);
-	operator bool() { return tetron2; }
-	operator _tetron* () { return tetron2; }
+	operator bool()       { return tetron2; }
+	operator _tetron* ()  { return tetron2; }
 	_tetron* operator->() { return tetron2; }
 
 private:
@@ -561,15 +562,15 @@ struct _t_trans : public _t_basic_go
 
 	~_t_trans() { if (run_before_del_link) del_area(); }
 
-	uchar     type()               override { return 5; }
-	int       get_froglif()        override { return 0xF0; }
-	void      push(_stack* mem)    override { _t_basic_go::push(mem); *mem << trans; }
-	void      pop(_stack* mem)     override { _t_basic_go::pop(mem); *mem >> trans; }
-	void      push(_wjson& b)      override { _t_basic_go::push(b); b.add("trans", trans); }
-	void      pop(_rjson& b)       override { _t_basic_go::pop(b); trans = b.read_trans("trans"); }
-	_t_trans* ttrans()             override { return this; } // ищет первый тетрон с трансофрмацией, указывающий на этот _t_go
+	uchar     type()            override { return 5; }
+	int       get_froglif()     override { return 0xF0; }
+	void      push(_stack* mem) override { _t_basic_go::push(mem); *mem << trans; }
+	void      pop(_stack* mem)  override { _t_basic_go::pop(mem); *mem >> trans; }
+	void      push(_wjson& b)   override { _t_basic_go::push(b); b.add("trans", trans); }
+	void      pop(_rjson& b)    override { _t_basic_go::pop(b); trans = b.read_trans("trans"); }
+	_t_trans* ttrans()          override { return this; } // ищет первый тетрон с трансофрмацией, указывающий на этот _t_go
 
-	operator _t_trans* ()          override { return this; }
+	operator _t_trans* ()       override { return this; }
 
 	void clear_go_rod() override; // удалить все графические родительские связи
 	bool mouse_move(_trans tr, bool final) override; // перемещение мышки
@@ -666,11 +667,11 @@ struct _g_circle : public _t_go
 
 	operator _g_circle* ()  override { return this; }
 
-	void push(_wjson& b)                              override;
-	void pop(_rjson& b)                               override;
-	void ris2(_trans tr, bool final)                 override;
+	void push(_wjson& b)                           override;
+	void pop(_rjson& b)                            override;
+	void ris2(_trans tr, bool final)               override;
 	void run(_tetron* tt0, _tetron* tt, u64 flags) override;
-	bool test_local_area(_xy b)                     override; // лежит ли точка внутри
+	bool test_local_area(_xy b)                    override; // лежит ли точка внутри
 
 	void calc_local_area();
 
@@ -695,14 +696,14 @@ struct _g_froglif : public _t_go
 
 	_g_froglif() { local_area = { {0, 24}, {0, 24} }; }
 
-	uchar type()               override { return 14; }
-	int   get_froglif()        override { return 0x7F; }
-	void  push(_stack* mem)    override { _t_go::push(mem); mem->push_data(f, size_f); }
-	void  pop(_stack* mem)     override { _t_go::pop(mem); mem->pop_data(f, size_f); }
-	void  push(_wjson& b)      override { _t_go::push(b); b.add_mem("f", f, size_f); }
-	void  pop(_rjson& b)       override { _t_go::pop(b); b.read_mem("f", f, size_f); }
+	uchar type()            override { return 14; }
+	int   get_froglif()     override { return 0x7F; }
+	void  push(_stack* mem) override { _t_go::push(mem); mem->push_data(f, size_f); }
+	void  pop(_stack* mem)  override { _t_go::pop(mem); mem->pop_data(f, size_f); }
+	void  push(_wjson& b)   override { _t_go::push(b); b.add_mem("f", f, size_f); }
+	void  pop(_rjson& b)    override { _t_go::pop(b); b.read_mem("f", f, size_f); }
 
-	operator i64* ()         override { return &f_int64; }
+	operator i64* ()       override { return &f_int64; }
 
 	void ris2(_trans tr, bool final) override;
 };
@@ -718,11 +719,11 @@ struct _g_line : public _t_go
 	void  push(_stack* mem) override { _t_go::push(mem); *mem << p1 << p2 << width; }
 	void  pop(_stack* mem)  override { _t_go::pop(mem); *mem >> p1 >> p2 >> width; }
 
-	void push(_wjson& b)                              override;
-	void pop(_rjson& b)                               override;
-	void ris2(_trans tr, bool final)                 override;
+	void push(_wjson& b)                           override;
+	void pop(_rjson& b)                            override;
+	void ris2(_trans tr, bool final)               override;
 	void run(_tetron* tt0, _tetron* tt, u64 flags) override;
-	bool test_local_area(_xy b)                     override; // лежит ли точка внутри
+	bool test_local_area(_xy b)                    override; // лежит ли точка внутри
 
 	void calc_local_area();
 
@@ -824,12 +825,12 @@ struct _g_scrollbar : public _t_go
 	int   get_froglif()                override { return 0xF8; }
 	void  push(_stack* mem)            override { _t_go::push(mem); *mem << position << vid; }
 	void  pop(_stack* mem)             override { _t_go::pop(mem); *mem >> position >> vid; }
-	bool  mouse_down_left2(_xy r)    override { mouse_move_left2(r); return true; }
-	void  mouse_up_left2(_xy r)      override {}
+	bool  mouse_down_left2(_xy r)      override { mouse_move_left2(r); return true; }
+	void  mouse_up_left2(_xy r)        override {}
 
 	void  push(_wjson& b)              override;
 	void  pop(_rjson& b)               override;
-	void  mouse_move_left2(_xy r)    override;
+	void  mouse_move_left2(_xy r)      override;
 	void  ris2(_trans tr, bool final)  override;
 	void  after_create_link(_link* li) override;
 
@@ -841,7 +842,7 @@ struct _g_scrollbar : public _t_go
 extern bool      time_ris;             // отображать время рисования
 extern _trans    master_trans_go;      // трансформация тяни-толкай объекта, или объекта под мышкой
 extern _trans    master_trans_go_move; // трансформация n_go_move
-extern _xy     par_koo1;             // .....вспомогательная переменная  !!!ИЗБАВИТЬСЯ!!!
+extern _xy       par_koo1;             // .....вспомогательная переменная  !!!ИЗБАВИТЬСЯ!!!
 extern _chain_go master_chain_go;      // активная цепочка графических объектов
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -885,7 +886,7 @@ struct _g_edit_int : public _t_go
 	int   get_froglif()               override { return 0xF9; }
 
 	void  ris2(_trans tr, bool final) override;
-	bool  mouse_wheel2(_xy r)       override;
+	bool  mouse_wheel2(_xy r)         override;
 	void  key_down(ushort key)        override;
 	void  key_press(ushort key)       override;
 };
@@ -923,10 +924,10 @@ struct _g_edit_multi_string : public _t_go
 	void  push(_wjson& b)   override { _t_go::push(b); b.add("strings", strings); }
 	void  pop(_rjson& b)    override { _t_go::pop(b); b.read("strings", strings); }
 
-	void ris2(_trans tr, bool final)                  override;
-	void key_press(ushort key)                        override;
-	void key_down(ushort key)                         override;
-	bool mouse_down_left2(_xy r)                    override;
+	void ris2(_trans tr, bool final)               override;
+	void key_press(ushort key)                     override;
+	void key_down(ushort key)                      override;
+	bool mouse_down_left2(_xy r)                   override;
 	void run(_tetron* tt0, _tetron* tt, u64 flags) override;
 
 private:
@@ -965,18 +966,18 @@ struct _g_button : public _t_go
 
 	operator std::wstring* ()        override { return &hint; }
 	operator _picture* ()            override { return &picture; }
-	operator i64* ()               override { return &checked; }
+	operator i64* ()                 override { return &checked; }
 	operator _g_button* ()           override { return this; }
 
 	uchar type()                     override { return 34; }
 	int   get_froglif()              override { return 0xF3; }
-	void  mouse_up_left2(_xy r)    override { cha_area(); }
-	void  mouse_move_left2(_xy r)  override {}
+	void  mouse_up_left2(_xy r)      override { cha_area(); }
+	void  mouse_move_left2(_xy r)    override {}
 
 	void ris2(_trans tr, bool final) override;
-	bool mouse_move2(_xy r)        override;
+	bool mouse_move2(_xy r)          override;
 	void mouse_finish_move()         override;
-	bool mouse_down_left2(_xy r)   override;
+	bool mouse_down_left2(_xy r)     override;
 	void push(_stack* mem)           override;
 	void pop(_stack* mem)            override;
 	void push(_wjson& b)             override;
@@ -995,9 +996,9 @@ struct _g_color_ring : public _t_go
 	uchar type() { return 17; }
 	int get_froglif() { return 0x72; }
 	void ris2(_trans tr, bool final) override;
-	bool mouse_down_left2(_xy r)   override { change(r, true); return true; }
-	void mouse_move_left2(_xy r)   override { change(r, false); }
-	void mouse_up_left2(_xy r)     override {}
+	bool mouse_down_left2(_xy r)     override { change(r, true); return true; }
+	void mouse_move_left2(_xy r)     override { change(r, false); }
+	void mouse_up_left2(_xy r)       override {}
 
 private:
 	static constexpr double li_r_1 = 0.35;
@@ -1045,9 +1046,9 @@ struct _g1list : public _t_go
 	operator _g1list* ()       override { return this; }
 
 	void ris2(_trans tr, bool final) override;
-	bool mouse_wheel2(_xy r)       override;
+	bool mouse_wheel2(_xy r)         override;
 	void mouse_finish_move()         override;
-	bool mouse_move2(_xy r)        override;
+	bool mouse_move2(_xy r)          override;
 
 private:
 	void init_sel(); // задать F_sel

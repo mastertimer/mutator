@@ -462,7 +462,6 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 struct _ixy // индекс, номер
 {
 	i64 x, y;
@@ -605,8 +604,8 @@ struct _area
 	operator _iarea() const noexcept { return { x, y }; }
 
 	bool operator<=(const _area& b) const noexcept;
-	bool operator<(const _area& b) const noexcept; // внутри, грани могут касаться, но не равно
-	bool inside(const _area& b) const noexcept;    // внутри, грани не касаются!
+	bool operator<(const _area& b)  const noexcept; // внутри, грани могут касаться, но не равно
+	bool inside(const _area& b)     const noexcept;    // внутри, грани не касаются!
 
 	void operator&=(const _area& b) noexcept { x &= b.x; y &= b.y; }
 	void operator+=(const _area& b) noexcept;
@@ -642,19 +641,19 @@ struct _trans
 	_xy offset = { 0.0, 0.0 };
 
 	_area operator()(const _area& b) const noexcept; // применение трансформации
-	_xy  operator()(const _xy& b) const noexcept; // применение трансформации
-	double operator()(double b) const noexcept { return scale * b; } // применение трансформации
+	_xy  operator()(const _xy& b)    const noexcept; // применение трансформации
+	double operator()(double b)      const noexcept { return scale * b; } // применение трансформации
 
-	_trans operator*(_trans tr) const noexcept;  // сместить и промасштабировать
-	_trans operator/(_trans tr) const noexcept;  // обратно сместить и промасштабировать
+	_trans operator*(_trans tr)      const noexcept;  // сместить и промасштабировать
+	_trans operator/(_trans tr)      const noexcept;  // обратно сместить и промасштабировать
 
-	void operator*=(_trans tr) noexcept { offset += tr.offset * scale; scale *= tr.scale; }
+	void operator*=(_trans tr)             noexcept { offset += tr.offset * scale; scale *= tr.scale; }
 	void operator/=(_trans tr); // обратно сместить и промасштабировать
 	bool operator!=(const _trans& b) const noexcept;
 
-	_trans inverse() const noexcept;   // обратная трансформация
-	_xy inverse(_xy b) const noexcept;
-	_area inverse(const _area& b) const noexcept;
+	_trans inverse()                 const noexcept;   // обратная трансформация
+	_xy inverse(_xy b)               const noexcept;
+	_area inverse(const _area& b)    const noexcept;
 
 	void MasToch(_xy b, double m); // промасштабировать вокруг точки
 };
@@ -789,13 +788,13 @@ struct _wjson
 	_wjson& arr(std::string_view name = "", bool lin = false); // массив
 	_wjson& end(); // конец структуры или массива
 
-	_wjson& add(std::string_view name, bool b) { add_start(name) << (b ? "true" : "false"); return *this; }
-	_wjson& add(std::string_view name, char b) { add_start(name) << (i64)b;                 return *this; }
-	_wjson& add(std::string_view name, u64 b) { add_start(name) << b;                      return *this; }
-	_wjson& add(std::string_view name, i64 b) { add_start(name) << b;                      return *this; }
-	_wjson& add(std::string_view name, double b) { add_start(name) << b;                      return *this; }
-	_wjson& add(std::string_view name, std::string_view b) { add_start(name) << "\"" << b << "\"";      return *this; }
-	_wjson& add(std::string_view name, astr b) { add_start(name) << "\"" << b << "\"";      return *this; }
+	_wjson& add(std::string_view name, bool b) { add_start(name) << (b ? "true" : "false");        return *this; }
+	_wjson& add(std::string_view name, char b) { add_start(name) << (i64)b;                        return *this; }
+	_wjson& add(std::string_view name, u64 b)  { add_start(name) << b;                             return *this; }
+	_wjson& add(std::string_view name, i64 b)  { add_start(name) << b;                             return *this; }
+	_wjson& add(std::string_view name, double b) { add_start(name) << b;                           return *this; }
+	_wjson& add(std::string_view name, std::string_view b) { add_start(name) << "\"" << b << "\""; return *this; }
+	_wjson& add(std::string_view name, astr b) { add_start(name) << "\"" << b << "\"";             return *this; }
 
 	_wjson& add(std::string_view name, std::wstring_view b); //!!!!!
 	_wjson& add(std::string_view name, const _multi_string& b);
@@ -834,9 +833,9 @@ struct _rjson
 	void end(); // конец структуры или массива
 
 	astr      read_string(std::string_view name = "");
-	_area     read_area2(std::string_view name = "");
-	_trans    read_trans(std::string_view name = "");
-	_interval read_area(std::string_view name = "");
+	_area     read_area2( std::string_view name = "");
+	_trans    read_trans( std::string_view name = "");
+	_interval read_area(  std::string_view name = "");
 
 	void read(std::string_view name, _picture& b);
 	void read(std::string_view name, _multi_string& b);
