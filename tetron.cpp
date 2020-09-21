@@ -870,6 +870,7 @@ void _t_go::ris(_trans tr, bool final)
 				bb->ris(tr / bb->trans, final);
 	}
 	auto ris_all = [&]() {
+		master_bm.set_area(tr(local_area) & master_obl_izm);
 		ris2(tr, final);
 		if (!final)
 			for (_layers_go a(this); a; a++) a->ris(tr, final);
@@ -2834,14 +2835,6 @@ void _g_link::ris2(_trans tr, bool final)
 	_tetron* t2 = g2->find1<_tetron>(flag_specialty);
 	u64 f = t1->get_flags(t2);
 
-	constexpr uint cc[32] =
-	{
-		0xFF0080FD, 0xFFEF0000, 0xFF9E3BFF, 0xFF938700, 0xFF12AA00, 0xFFD34E0D, 0xFF7470DC, 0xFF4D9682,
-		0xFFC80FCE, 0xFFB06381,	0xFFE22653, 0xFF009D93, 0xFFC4439D, 0xFF258ECB, 0xFF659B00, 0xFF3F77FF,
-		0xFF887E87, 0xFF9659DD, 0xFFB57000, 0xFF39A337, 0xFF5D84BE, 0xFFAF1FFB, 0xFFDE028A, 0xFF768F51,
-		0xFFB400FC,	0xFFE23700, 0xFFCB29B2, 0xFFA3755A, 0xFFC45D37, 0xFFEB171B, 0xFF966DA8, 0xFFAC4ACF
-	};
-
 	_xy v = p21 - p11;
 	v /= v.len();
 	double b = (pp12 - pp11).len() * 0.5;
@@ -2853,7 +2846,7 @@ void _g_link::ris2(_trans tr, bool final)
 		double bb = b * (v_link - 0.5 - i) / v_link;
 		double dl = sqrt(r * r - bb * bb) - r * cos(dalpha);
 		double dl2 = (k > 0.9) ? dl : 0;
-		uint c = (f & (1ULL << i)) ? cc[i] : cclow(cc[i]);
+		uint c = (f & (1ULL << i)) ? color_set[i] : cclow(color_set[i]);
 		double t = 1;
 		if (al == i)
 		{
@@ -2863,7 +2856,7 @@ void _g_link::ris2(_trans tr, bool final)
 		if ((al != -1) || (f & (1ULL << i)))
 			master_bm.lines(pp11 + (pp12 - pp11) * ((i + 0.5) / (v_link * 2)) + v * dl,
 				pp21 + (pp22 - pp21) * ((i + 0.5) / (v_link * 2)) - v * dl2, t, c);
-		c = (f & (1ULL << (i + 32))) ? cc[i] : cclow(cc[i]);
+		c = (f & (1ULL << (i + 32))) ? color_set[i] : cclow(color_set[i]);
 		t = 1;
 		if (al == (v_link * 2 - 1 - i))
 		{

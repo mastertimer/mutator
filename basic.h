@@ -34,6 +34,12 @@ constexpr i64 bit8[256] = {
 
 #define bit16(x) (bit8[(x)&255]+bit8[((x)>>8)&255]) // количество 1-бит в 16-битном числе
 
+constexpr uint color_set[32] = { // набор разных цветов одной яркости
+	0xFF0080FD, 0xFFEF0000, 0xFF9E3BFF, 0xFF938700, 0xFF12AA00, 0xFFD34E0D, 0xFF7470DC, 0xFF4D9682,
+	0xFFC80FCE, 0xFFB06381,	0xFFE22653, 0xFF009D93, 0xFFC4439D, 0xFF258ECB, 0xFF659B00, 0xFF3F77FF,
+	0xFF887E87, 0xFF9659DD, 0xFFB57000, 0xFF39A337, 0xFF5D84BE, 0xFFAF1FFB, 0xFFDE028A, 0xFF768F51,
+	0xFFB400FC,	0xFFE23700, 0xFFCB29B2, 0xFFA3755A, 0xFFC45D37, 0xFFEB171B, 0xFF966DA8, 0xFFAC4ACF };
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 inline std::wstring exe_path; // путь к запущенному exe файлу

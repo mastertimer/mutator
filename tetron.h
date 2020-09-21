@@ -430,9 +430,9 @@ struct _t_int : public _tetron
 	uchar type()            override { return 26; }
 	int   get_froglif()     override { return 0x40; }
 	void  push(_stack* mem) override { _tetron::push(mem); *mem << a; }
-	void  pop(_stack* mem)  override { _tetron::pop(mem); *mem >> a; }
-	void  push(_wjson& b)   override { _tetron::push(b); b.add("a", a); }
-	void  pop(_rjson& b)    override { _tetron::pop(b); b.read("a", a); }
+	void  pop(_stack* mem)  override { _tetron::pop(mem);  *mem >> a; }
+	void  push(_wjson& b)   override { _tetron::push(b);   b.add("a", a); }
+	void  pop(_rjson& b)    override { _tetron::pop(b);    b.read("a", a); }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -446,9 +446,9 @@ struct _t_double : public _tetron
 	uchar type()            override { return 7; }
 	int   get_froglif()     override { return 0x50; }
 	void  push(_stack* mem) override { _tetron::push(mem); *mem << a; }
-	void  pop(_stack* mem)  override { _tetron::pop(mem); *mem >> a; }
-	void  push(_wjson& b)   override { _tetron::push(b); b.add("a", a); }
-	void  pop(_rjson& b)    override { _tetron::pop(b); b.read("a", a); }
+	void  pop(_stack* mem)  override { _tetron::pop(mem);  *mem >> a; }
+	void  push(_wjson& b)   override { _tetron::push(b);   b.add("a", a); }
+	void  pop(_rjson& b)    override { _tetron::pop(b);    b.read("a", a); }
 
 	operator double* ()     override { return &a; }
 };
@@ -462,9 +462,9 @@ struct _t_string : public _tetron
 	uchar type()              override { return 24; }
 	int   get_froglif()       override { return 0x10; }
 	void  push(_stack* mem)   override { _tetron::push(mem); *mem << s; }
-	void  pop(_stack* mem)    override { _tetron::pop(mem); *mem >> s; }
-	void  push(_wjson& b)     override { _tetron::push(b); b.add("s", s); }
-	void  pop(_rjson& b)      override { _tetron::pop(b); b.read("s", s); }
+	void  pop(_stack* mem)    override { _tetron::pop(mem);  *mem >> s; }
+	void  push(_wjson& b)     override { _tetron::push(b);   b.add("s", s); }
+	void  pop(_rjson& b)      override { _tetron::pop(b);    b.read("s", s); }
 
 	operator std::wstring* () override { return &s; }
 	operator _t_string* ()    override { return this; }
@@ -479,9 +479,9 @@ struct _t_multi_string : public _tetron
 	uchar type()               override { return 3; }
 	int   get_froglif()        override { return 0x90; }
 	void  push(_stack* mem)    override { _tetron::push(mem); s.push(mem); }
-	void  pop(_stack* mem)     override { _tetron::pop(mem); s.pop(mem); }
-	void  push(_wjson& b)      override { _tetron::push(b); b.add("s", s); }
-	void  pop(_rjson& b)       override { _tetron::pop(b); b.read("s", s); }
+	void  pop(_stack* mem)     override { _tetron::pop(mem);  s.pop(mem); }
+	void  push(_wjson& b)      override { _tetron::push(b);   b.add("s", s); }
+	void  pop(_rjson& b)       override { _tetron::pop(b);    b.read("s", s); }
 
 	operator _multi_string* () override { return &s; }
 };
@@ -699,9 +699,9 @@ struct _g_froglif : public _t_go
 	uchar type()            override { return 14; }
 	int   get_froglif()     override { return 0x7F; }
 	void  push(_stack* mem) override { _t_go::push(mem); mem->push_data(f, size_f); }
-	void  pop(_stack* mem)  override { _t_go::pop(mem); mem->pop_data(f, size_f); }
-	void  push(_wjson& b)   override { _t_go::push(b); b.add_mem("f", f, size_f); }
-	void  pop(_rjson& b)    override { _t_go::pop(b); b.read_mem("f", f, size_f); }
+	void  pop(_stack* mem)  override { _t_go::pop(mem);  mem->pop_data(f, size_f); }
+	void  push(_wjson& b)   override { _t_go::push(b);   b.add_mem("f", f, size_f); }
+	void  pop(_rjson& b)    override { _t_go::pop(b);    b.read_mem("f", f, size_f); }
 
 	operator i64* ()       override { return &f_int64; }
 
@@ -743,9 +743,9 @@ struct _g_picture : public _t_go
 	uchar type()            override { return 31; }
 	int   get_froglif()     override { return 0xF6; }
 	void  push(_stack* mem) override { _t_go::push(mem); *mem << pic; }
-	void  pop(_stack* mem)  override { _t_go::pop(mem); *mem >> pic; }
-	void  push(_wjson& b)   override { _t_go::push(b); b.add("pic", pic); }
-	void  pop(_rjson& b)    override { _t_go::pop(b); b.read("pic", pic); }
+	void  pop(_stack* mem)  override { _t_go::pop(mem);  *mem >> pic; }
+	void  push(_wjson& b)   override { _t_go::push(b);   b.add("pic", pic); }
+	void  pop(_rjson& b)    override { _t_go::pop(b);    b.read("pic", pic); }
 
 	operator _g_picture* () override { return this; }
 	operator _picture* ()   override { return &pic; }
@@ -770,9 +770,9 @@ struct _g_text : public _t_go
 	int   get_froglif()       override { return 0xF1; }
 	bool  mouse_move2(_xy r)  override { return false; }
 	void  push(_stack* mem)   override { _t_go::push(mem); *mem << s; }
-	void  pop(_stack* mem)    override { _t_go::pop(mem); *mem >> s; }
-	void  push(_wjson& b)     override { _t_go::push(b); b.add("s", s); }
-	void  pop(_rjson& b)      override { _t_go::pop(b); b.read("s", s); }
+	void  pop(_stack* mem)    override { _t_go::pop(mem);  *mem >> s; }
+	void  push(_wjson& b)     override { _t_go::push(b);   b.add("s", s); }
+	void  pop(_rjson& b)      override { _t_go::pop(b);    b.read("s", s); }
 
 	operator std::wstring* () override { return &s; }
 	operator _g_text* ()      override { return this; }
@@ -865,9 +865,9 @@ struct _g_edit_double : public _g_rect
 	uchar type()            override { return 33; }
 	int   get_froglif()     override { return 0x79; }
 	void  push(_stack* mem) override { _g_rect::push(mem); *mem << a; }
-	void  pop(_stack* mem)  override { _g_rect::pop(mem); *mem >> a; }
-	void  push(_wjson& b)   override { _g_rect::push(b); b.add("a", a); }
-	void  pop(_rjson& b)    override { _g_rect::pop(b); b.read("a", a); }
+	void  pop(_stack* mem)  override { _g_rect::pop(mem);  *mem >> a; }
+	void  push(_wjson& b)   override { _g_rect::push(b);   b.add("a", a); }
+	void  pop(_rjson& b)    override { _g_rect::pop(b);    b.read("a", a); }
 
 	void ris2(_trans tr, bool final) override;
 	void key_down(ushort key)        override;
@@ -920,9 +920,9 @@ struct _g_edit_multi_string : public _t_go
 	uchar type()            override { return 30; }
 	int   get_froglif()     override { return 0xFD; }
 	void  push(_stack* mem) override { _t_go::push(mem); strings.push(mem); }
-	void  pop(_stack* mem)  override { _t_go::pop(mem); strings.pop(mem); }
-	void  push(_wjson& b)   override { _t_go::push(b); b.add("strings", strings); }
-	void  pop(_rjson& b)    override { _t_go::pop(b); b.read("strings", strings); }
+	void  pop(_stack* mem)  override { _t_go::pop(mem);  strings.pop(mem); }
+	void  push(_wjson& b)   override { _t_go::push(b);   b.add("strings", strings); }
+	void  pop(_rjson& b)    override { _t_go::pop(b);    b.read("strings", strings); }
 
 	void ris2(_trans tr, bool final)               override;
 	void key_press(ushort key)                     override;
@@ -1039,9 +1039,9 @@ struct _g1list : public _t_go
 	uchar type()               override { return 2; }
 	int   get_froglif()        override { return 0xF7; }
 	void  push(_stack* mem)    override { _t_go::push(mem); *mem << oo; }
-	void  pop(_stack* mem)     override { _t_go::pop(mem); *mem >> oo; }
-	void  push(_wjson& b)      override { _t_go::push(b); b.add("oo", oo); }
-	void  pop(_rjson& b)       override { _t_go::pop(b); oo = b.read_area2("oo"); }
+	void  pop(_stack* mem)     override { _t_go::pop(mem);  *mem >> oo; }
+	void  push(_wjson& b)      override { _t_go::push(b);   b.add("oo", oo); }
+	void  pop(_rjson& b)       override { _t_go::pop(b);    oo = b.read_area2("oo"); }
 
 	operator _g1list* ()       override { return this; }
 
@@ -1067,9 +1067,9 @@ struct _g_tetron : public _t_go
 	uchar  type()            override { return 38; }
 	int    get_froglif()     override { return 0xFA; }
 	void   push(_stack* mem) override { _t_go::push(mem); *mem << hint; }
-	void   pop(_stack* mem)  override { _t_go::pop(mem); *mem >> hint; }
-	void   push(_wjson& b)   override { _t_go::push(b); b.add("hint", hint); }
-	void   pop(_rjson& b)    override { _t_go::pop(b); b.read("hint", hint); }
+	void   pop(_stack* mem)  override { _t_go::pop(mem);  *mem >> hint; }
+	void   push(_wjson& b)   override { _t_go::push(b);   b.add("hint", hint); }
+	void   pop(_rjson& b)    override { _t_go::pop(b);    b.read("hint", hint); }
 	double final_radius()    override { return 21.0; } // минимальный полуразмер, после которого не рисуется
 
 	operator _g_tetron* () { return this; }
@@ -1116,7 +1116,7 @@ _t* find1_plus_gtetron(_tetron* tet, u64 flags)
 	{
 		_tetron* a = (*i)(tet);
 		if (!i->test_flags(tet, flags)) continue;
-		if (_g_tetron* g = *a) // как редактировать hint _g_tetron?
+		if (_g_tetron* g = *a)
 		{
 			_t* t2 = g->find1<_t>(flag_specialty);
 			if (t2 != nullptr) return t2;

@@ -16,14 +16,6 @@ constexpr i64 start_element = (max_element + min_element) / 2;  // первоначально
 constexpr i64 start_link    = start_element * 3; // первоначально количество связей
 constexpr double best_dist  = radius * 4; // оптимальная дистанция
 
-constexpr uint color[32] =
-{ 
-	0xFF0080FD, 0xFFEF0000, 0xFF9E3BFF, 0xFF938700, 0xFF12AA00, 0xFFD34E0D, 0xFF7470DC,	0xFF4D9682,
-	0xFFC80FCE, 0xFFB06381,	0xFFE22653, 0xFF009D93, 0xFFC4439D, 0xFF258ECB, 0xFF659B00, 0xFF3F77FF,
-	0xFF887E87, 0xFF9659DD, 0xFFB57000, 0xFF39A337, 0xFF5D84BE, 0xFFAF1FFB, 0xFFDE028A, 0xFF768F51,
-	0xFFB400FC,	0xFFE23700, 0xFFCB29B2, 0xFFA3755A, 0xFFC45D37, 0xFFEB171B, 0xFF966DA8, 0xFFAC4ACF
-};
-
 constexpr uint fr[16] =
 {
 	0xBE3B0D3E, 0xD8B09960, 0x8BC79403, 0x590FF05C, 0x8E149C5D,	0xFE3A1270, 0xB16E7870, 0xC6663333,
@@ -267,8 +259,8 @@ _bitmap* draw_mult()
 	double y = 0.7 * (radius - dd) * 2;
 	for (auto i : element)
 	{
-		mult.ring(i->p, radius, dd, color[i->type]);
-		mult.froglif(i->p - _xy{ y / 2, y / 2 }, y, (uchar*)&fr[i->type], 2, color[i->type]);
+		mult.ring(i->p, radius, dd, color_set[i->type]);
+		mult.froglif(i->p - _xy{ y / 2, y / 2 }, y, (uchar*)&fr[i->type], 2, color_set[i->type]);
 	}
 	for (auto i : element)
 		for (auto j : i->link)
@@ -280,12 +272,12 @@ _bitmap* draw_mult()
 			v1 *= radius / v1.len();
 			p1 += v1.rotation(-0.2);
 			p2 += (-v1).rotation(0.2);
-			mult.lines(p1, p2, ddl, color[16 + j.f]);
+			mult.lines(p1, p2, ddl, color_set[16 + j.f]);
 			e *= 5.0 / e.len();
 			_xy e1 = e.rotation(0.3);
 			_xy e2 = e.rotation(-0.3);
-			mult.lines(p2, p2 + e1, ddl, color[16 + j.f]);
-			mult.lines(p2, p2 + e2, ddl, color[16 + j.f]);
+			mult.lines(p2, p2 + e1, ddl, color_set[16 + j.f]);
+			mult.lines(p2, p2 + e2, ddl, color_set[16 + j.f]);
 		}
 	for (auto& i : signal)
 		if (k_signal <= 1.0)

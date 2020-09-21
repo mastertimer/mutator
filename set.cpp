@@ -3330,7 +3330,6 @@ void _g_graph::ris2(_trans tr, bool final)
 	// рисование графиков
 	double kx = a.x.length() / (maxx - minx);
 	double ky = a.y.length() / (maxy - miny);
-	uint CCGG[] = { 0xFF40FF80, 0xFF40FFFF, 0xFFFFFF80 };
 	int ng = 0;
 	for (auto& j : curve)
 	{
@@ -3338,7 +3337,7 @@ void _g_graph::ris2(_trans tr, bool final)
 		if ((c->size.x < 1) || (c->size.x > 2)) continue; // должно быть 1-2 столбца
 		i64 xpr = 0;
 		i64 ypr = 0;
-		uint cc = (ng < _countof(CCGG)) ? CCGG[ng] : c_max;
+		uint cc = (ng < _countof(color_set)) ? color_set[ng] : c_max;
 		ng++;
 		for (int i = 0; i < c->size.y; i++)
 		{
