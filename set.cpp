@@ -12,7 +12,6 @@ max(rnd)  |   1.058        58       1.00097
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include "mjson.h"
 #include "set.h"
 
 constexpr wchar_t ss_file[]  = L"..\\..\\baza.cen";
@@ -20,7 +19,7 @@ constexpr wchar_t mmm_file[] = L"..\\..\\mmm.txt";
 constexpr _prices cena_zero_ = { {}, {}, { 1,1,1,1,1 } };
 
 _super_stat      ss;               // сжатые цены
-_set_graph*        graph  = nullptr; // график
+_set_graph*      graph  = nullptr; // график
 
 _nervous_oracle *oracle = nullptr; // оракул
 _mctds_candle   *sv     = nullptr;
@@ -3259,6 +3258,156 @@ void _kusok_bukva::cod(ushort* aa, int vaa, wchar_t cc, char nf, i64 nbitt)
 	}*/
 
 	dalee[n].cod(aa + 1, vaa - 1, cc, nf, nbitt);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void _g_graph::ris2(_trans tr, bool final)
+{
+	constexpr double ot = 0.03; // отступ от каждой стороны
+	_area a = tr(local_area);
+	master_bm.rectangle(a, c_def);
+	_area a1 = a.scaling(1.0 - ot * 2);
+	master_bm.rectangle(a1, c_def);
+	
+	unsigned int col_setka = c_min - 0x80000000; // цвет сетки
+	unsigned int col_font = c_max - 0x80000000; // цвет шрифта
+	/*image_.Clear(0);
+	GList* b = Find1<GList>(flag_part);
+	if (!b) return;
+	Tetron* tt = b->link_[GList::N_list].tetron_;
+	if (!tt) return;*/
+
+	// вычисление диапазона
+	double minx = 1;
+	double maxx = 0;
+	double miny = 1;
+	double maxy = 0;
+
+/*	for (int i = 0; i < tt->vlink_; i++)
+	{
+		Tetron* a = tt->link_[i].tetron_;
+		if (!a) continue;
+		if (!(tt->link_[i].flags_ & flag_parasite)) continue;
+		matrix* c = *a;
+		if (!c) continue;
+		if (c->size_x() != 2) continue;                                   // должно быть 2 столбца
+		double min, max;
+		c->Column(0).MinMax(&min, &max);
+		double de = c->Column(0).Delta();
+		min -= de * 0.5;
+		max += de * 0.5;
+		if (minx > maxx)
+		{
+			minx = min;
+			maxx = max;
+		}
+		else
+		{
+			if (min < minx) minx = min;
+			if (max > maxx) maxx = max;
+		}
+		c->Column(1).MinMax(&min, &max);
+		if (miny > maxy)
+		{
+			miny = min;
+			maxy = max;
+		}
+		else
+		{
+			if (min < miny) miny = min;
+			if (max > maxy) maxy = max;
+		}
+	}*/
+	if ((minx > maxx)||(miny > maxy)) return;
+	double dx = maxx - minx;
+	if (dx == 0) dx = 1;
+	double dy = maxy - miny;
+	if (dy == 0) dy = 1;
+	minx -= dx * 0.005;
+	maxx += dx * 0.005;
+	miny -= dy * 0.005;
+	maxy += dy * 0.005;
+/*	// рисование графиков
+	double kx = rrx_ / (maxx - minx);
+	double oox = static_cast<double>(-dx_);
+	double ky = rry_ / (maxy - miny);
+	double ooy = static_cast<double>(rry_ - dy_);
+	unsigned int CCGG[] = { 0x40FF80, 0x40FFFF, 0xFFFF80 };
+	int ng = 0;
+	for (int i = 0; i < tt->vlink_; i++)
+	{
+		Tetron* a = tt->link_[i].tetron_;
+		if (!a) continue;
+		if (!(tt->link_[i].flags_ & flag_parasite)) continue;
+		matrix* c = *a;
+		if (!c) continue;
+		if (c->size_x() != 2) continue;                                   // должно быть 2 столбца
+		double de = c->Column(0).Delta() * 0.45;
+		int xpr = 0;
+		int ypr = 0;
+		unsigned int cc = (ng < _countof(CCGG)) ? CCGG[ng] : C_MAX;
+		ng++;
+		for (int i = 0; i < c->size_y(); i++)
+		{
+			double x = (*c)[i][0];
+			double y1 = 0;
+			double y2 = (*c)[i][1];
+			//			image_.FillRectD(oox + (x - de - minx)*kx, ooy - (y1 - miny)*ky, oox + (x + de - minx)*kx, ooy - (y2 - miny)*ky, C_DEF);
+			int xx = int(oox + (x - minx) * kx);
+			int yy = int(ooy - (y2 - miny) * ky);
+			if (i > 0) image_.Line(xpr, ypr, xx, yy, cc);
+			xpr = xx;
+			ypr = yy;
+		}
+	}*/
+	// рисование осей
+	if (a.y.length() > 10)
+	{
+		//		image_.LineGor(0, image_.ry_ - 5, image_.rx_ - 1, C_MAXX);
+		int maxN = a.x.length() / 35;
+		if (maxN > 1)
+		{
+			double mi, step;
+			OSpordis(minx, maxx, maxN, mi, step);
+			int zn = (int)(-log10(step * 1.1) + 1);
+			if (zn < 0) zn = 0;
+			for (double x = mi; x < maxx; x += step)
+			{
+				int xx = (int)((x - minx) * a.x.length() / (maxx - minx));
+				master_bm.line({ xx + (i64)a.x.min, (i64)a.y.min }, { xx + (i64)a.x.min, (i64)a.y.max }, col_setka);
+				std::string s = double_to_astring(x, zn);
+				_isize l = master_bm.size_text16(s);
+				if (xx < a.x.length() - 50) master_bm.text16(a.x.min+xx - l.x / 2, a.y.min, s.data(), col_font);////////
+				if (xx > 50) master_bm.text16(a.x.min+xx - l.x / 2, a.y.max - 13, s.data(), col_font);//////////////
+
+			}
+		}
+	}
+	if (a.x.length() > 10)
+	{
+		//		image_.LineVer(0, 0, image_.ry_ - 1, C_MAXX);
+//		int dex = 35; // длина подписи
+		int maxN = a.y.length() / 15;
+		if (maxN > 1)
+		{
+			double mi, step;
+			OSpordis(miny, maxy, maxN, mi, step);
+			int zn = (int)(-log10(step * 1.1) + 1);
+			if (zn < 0) zn = 0;
+			for (double y = mi; y < maxy; y += step)
+			{
+				double yy = -(y - miny) * a.y.length() / (maxy - miny) + a.y.length();
+				master_bm.line({ (i64)a.x.min, (i64)a.y.min + (i64)yy }, { (i64)a.x.max, (i64)a.y.min + (i64)yy }, col_setka);
+				std::string s = double_to_astring(y, zn);
+				_isize l = master_bm.size_text16(s);
+				if (yy > 16) master_bm.text16(a.x.min+2, a.y.min+(int)(yy - 6), s.data(), col_font);
+				if (yy + 16 < a.y.length())
+					master_bm.text16(a.x.max - l.x - 2, a.y.min + (int)(yy - 6), s.data(), col_font);
+			}
+		}
+	}
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
