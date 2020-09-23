@@ -60,7 +60,7 @@ void paint_mult(HWND hwnd)
 	RECT rect;
 	GetClientRect(hwnd, &rect);
 	_bitmap* bm = draw_mult();
-	bm->text16(0, 0, std::to_string(t.count() / 1000000).c_str(), c_max);
+	bm->text16(0, 0, std::to_string(t.count() / 1000000), c_max);
 	BitBlt(hdc, 0, 0, rect.right, rect.bottom, bm->hdc, 0, 0, SRCCOPY);
 	ReleaseDC(hwnd, hdc);
 	t = std::chrono::high_resolution_clock::now() - t0;

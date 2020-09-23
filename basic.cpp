@@ -1617,7 +1617,7 @@ void _picture::text16n(i64 x, i64 y, astr s, i64 n, uint c)
 	}
 }
 
-void _picture::text16(i64 x, i64 y, astr s, uint c)
+void _picture::text16(i64 x, i64 y, std::string_view st, uint c)
 {
 	constexpr int ly = 13;
 	if ((y >= area.y.max) || (y + ly <= area.y.min)) return;
@@ -1635,11 +1635,12 @@ void _picture::text16(i64 x, i64 y, astr s, uint c)
 	i64 j1 = ly;
 	if (y < area.y.min) j0 = area.y.min - y;
 	if (y + ly > area.y.max) j1 = area.y.max - y;
-	while ((*s) && (*s != '\n') && (x < area.x.max))
+	for (auto s: st)
 	{
-		i64         probel = (*s == 32) ? 4 : 1;
-		const ushort* ss = font16[(uchar)(*s++)];
-		i64         lx = lx2;
+		if (x >= area.x.max) break;
+		i64 probel = (s == 32) ? 4 : 1;
+		const ushort* ss = font16[(uchar)s];
+		i64 lx = lx2;
 		for (i64 j = lx - 1; j >= 0; j--)
 		{
 			if (ss[j]) break;

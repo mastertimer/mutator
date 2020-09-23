@@ -1618,8 +1618,8 @@ void _set_graph::draw(_isize size)
 		{
 			double yy = bm.size.y - 0.5 - (y - y_.min) * bm.size.y / (y_.max - y_.min);
 			bm.line({ dex, (int)(yy) }, { bm.size.x - dex, (int)(yy) }, col_setka);
-			bm.text16(0, (int)(yy - 7), double_to_astring(y, 2).c_str(), col_setka_font);
-			bm.text16(bm.size.x - dex, (int)(yy - 7), double_to_astring(y, 2).data(), col_setka_font);
+			bm.text16(0, (int)(yy - 7), double_to_astring(y, 2), col_setka_font);
+			bm.text16(bm.size.x - dex, (int)(yy - 7), double_to_astring(y, 2), col_setka_font);
 		}
 	}
 	// рисование вертикальных линий сетки с подписями
@@ -1670,8 +1670,8 @@ void _set_graph::draw(_isize size)
 			ii = (time_[i] / dele[ido + 1]) % ost[ido + 1];
 			s[1] = '0' + (ii % 10);
 			s[0] = '0' + (ii / 10);
-			bm.text16((int)(x - 13), bm.size.y - 11, s.data(), col_setka_font);
-			bm.text16((int)(x - 13), -2, s.data(), col_setka_font);
+			bm.text16((int)(x - 13), bm.size.y - 11, s, col_setka_font);
+			bm.text16((int)(x - 13), -2, s, col_setka_font);
 			continue;
 		}
 		if (sca)
@@ -3352,8 +3352,8 @@ void _g_graph::ris2(_trans tr, bool final)
 				x = i;
 				y = (*c)[i][0];
 			}
-			i64 xx = int(a.x.min + (x - minx) * kx);
-			i64 yy = int(a.y.max - (y - miny) * ky);
+			i64 xx = i64(a.x.min + (x - minx) * kx);
+			i64 yy = i64(a.y.max - (y - miny) * ky);
 			if (i > 0) master_bm.line({ xpr, ypr }, { xx, yy }, cc);
 			xpr = xx;
 			ypr = yy;
@@ -3362,29 +3362,37 @@ void _g_graph::ris2(_trans tr, bool final)
 	// рисование осей
 	if (a.y.length() > 10)
 	{
-		//		image_.LineGor(0, image_.ry_ - 5, image_.rx_ - 1, C_MAXX);
-		int maxN = a.x.length() / 35;
+		int maxN = a.x.length() / 9; // 1-е приближение
 		if (maxN > 1)
 		{
 			double mi, step;
 			OSpordis(minx, maxx, maxN, mi, step);
 			int zn = (int)(-log10(step * 1.1) + 1);
 			if (zn < 0) zn = 0;
-			for (double x = mi; x < maxx; x += step)
+			i64 dex = std::max(master_bm.size_text16(double_to_astring(minx, zn)).x,
+				master_bm.size_text16(double_to_astring(maxx, zn)).x) + 4;
+			maxN = a.x.length() / dex; // 2-е приближение
+			if (maxN > 1)
 			{
-				int xx = (int)((x - minx) * a.x.length() / (maxx - minx));
-				master_bm.line({ xx + (i64)a.x.min, (i64)a.y.min }, { xx + (i64)a.x.min, (i64)a.y.max }, col_setka);
-				std::string s = double_to_astring(x, zn);
-				_isize l = master_bm.size_text16(s);
-				if (xx < a.x.length() - 50) master_bm.text16(a.x.min+xx - l.x / 2, a.y.min, s.data(), col_font);////////
-				if (xx > 50) master_bm.text16(a.x.min+xx - l.x / 2, a.y.max - 13, s.data(), col_font);//////////////
-
+				OSpordis(minx, maxx, maxN, mi, step);
+				zn = (int)(-log10(step * 1.1) + 1);
+				if (zn < 0) zn = 0;
+				for (double x = mi; x < maxx; x += step)
+				{
+					double xx = (x - minx) * kx;
+					master_bm.line({ i64(xx + a.x.min), (i64)a.y.min }, { i64(xx + a.x.min), (i64)a.y.max }, col_setka);
+					std::string s = double_to_astring(x, zn);
+					_isize l = master_bm.size_text16(s);
+					if (xx < a.x.length() - 50)	master_bm.text16(a.x.min + xx - l.x / 2, std::max(a.y.min, 0.0),
+						s, col_font);
+					if (xx > 50) master_bm.text16(a.x.min + xx - l.x / 2, std::min((i64)a.y.max, master_bm.size.y) - 13,
+						s, col_font);
+				}
 			}
 		}
 	}
 	if (a.x.length() > 10)
 	{
-		//		image_.LineVer(0, 0, image_.ry_ - 1, C_MAXX);
 //		int dex = 35; // длина подписи
 		int maxN = a.y.length() / 15;
 		if (maxN > 1)
@@ -3395,17 +3403,16 @@ void _g_graph::ris2(_trans tr, bool final)
 			if (zn < 0) zn = 0;
 			for (double y = mi; y < maxy; y += step)
 			{
-				double yy = -(y - miny) * a.y.length() / (maxy - miny) + a.y.length();
-				master_bm.line({ (i64)a.x.min, (i64)a.y.min + (i64)yy }, { (i64)a.x.max, (i64)a.y.min + (i64)yy }, col_setka);
+				double yy = (y - miny) * ky;
+				master_bm.line({ (i64)a.x.min, i64(a.y.max - yy) }, { (i64)a.x.max, i64(a.y.max - yy) }, col_setka);
 				std::string s = double_to_astring(y, zn);
 				_isize l = master_bm.size_text16(s);
-				if (yy > 16) master_bm.text16(a.x.min+2, a.y.min+(int)(yy - 6), s.data(), col_font);
-				if (yy + 16 < a.y.length())
-					master_bm.text16(a.x.max - l.x - 2, a.y.min + (int)(yy - 6), s.data(), col_font);
+				if (a.y.length() - yy > 16) master_bm.text16(std::max(a.x.min, 0.0) + 2, a.y.max - yy - 6, s, col_font);
+				if (yy > 16) master_bm.text16(std::min((i64)a.x.max, master_bm.size.x) - l.x - 2, a.y.max - yy - 6,
+					s, col_font);
 			}
 		}
 	}
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

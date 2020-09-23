@@ -5,10 +5,10 @@
 быстро создавать цвета
 правильная альтернатива _g_tetron
 упорядочить функции _picture
-сделать видимую сетку при увеличении
-!!пляшет график цен при увеличении, тоже сделать видимой сетку
+!!пляшет график цен при увеличении, сделать видимой подписи сетки
+сделать список имен (i - цикл, t - tetron, s - строка и т.д.)
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+/*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <ctime>
 
@@ -1074,11 +1074,6 @@ void _t_function::run(_tetron* tt0, _tetron* tt, u64 flags)
 	}
 }
 
-_tetron* cr_one()
-{
-	return new _t_xy;
-}
-
 _tetron* create_tetron(const std::string& name)
 {
 #define make(name) {""#name, []() -> _tetron* { return new name; }}
@@ -1115,10 +1110,10 @@ _tetron* create_tetron(const std::string& name)
 		make(_set_graph),
 		make(_g_graph)
 	};
+#undef make
 	auto fun = ss_tetron.find(name);
 	if (fun == ss_tetron.end()) return nullptr;
 	return fun->second();
-#undef make
 }
 
 _tetron* create_tetron(uchar tipt)
@@ -1166,7 +1161,7 @@ namespace mutator
 {
 	void save_to_txt_file(wstr fn)
 	{
-		_wjson                     tet(fn);
+		_wjson tet(fn);
 		std::map<u64, _tetron*> tt; // чтобы упорядочить тетроны
 		for (auto i : all_tetron) tt[i->id] = i;
 		tet.arr("tetrons");
