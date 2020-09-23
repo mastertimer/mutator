@@ -1703,7 +1703,6 @@ void _view_stat::get_n_info(i64 n, _element_chart* e)
 	e->time = cen1m[n].time;
 	e->min = cen1m[n].min * ss.c_unpak;
 	e->max = cen1m[n].max * ss.c_unpak;
-	e->middle = (e->min + e->max) * 0.5;
 }
 
 void _view_stat::get_t_info(int t, _element_chart* e)
@@ -1719,7 +1718,6 @@ void _view_stat::get_t_info(int t, _element_chart* e)
 	e->time = cen1m[xx].time;
 	e->min = cen1m[xx].min * ss.c_unpak;
 	e->max = cen1m[xx].max * ss.c_unpak;
-	e->middle = (e->min + e->max) * 0.5;
 }
 
 void _view_stat::draw(i64 n, _area area, _bitmap* bm)
@@ -1820,7 +1818,6 @@ void _mctds_candle::get_n_info(i64 n, _element_chart* e)
 	e->time = cen1m[n].time;
 	e->min = cen1m[n].min * ss.c_unpak;
 	e->max = cen1m[n].max * ss.c_unpak;
-	e->middle = cen1m[n].cc * ss.c_unpak;
 }
 
 void _mctds_candle::get_t_info(int t, _element_chart* e)
@@ -2027,9 +2024,7 @@ void _nervous_oracle::get_n_info(i64 n, _element_chart* e)
 	}
 	e->n = n;
 	e->time = zn[n].time;
-	e->middle = ((double)zn[n].max_pro + (double)zn[n].min_pok) * 0.5 * ss.c_unpak;
-	e->min = e->middle;
-	e->max = e->middle;
+	e->min = e->max = ((double)zn[n].max_pro + (double)zn[n].min_pok) * 0.5 * ss.c_unpak;
 }
 
 void _nervous_oracle::get_t_info(int t, _element_chart* e)
@@ -2043,9 +2038,7 @@ void _nervous_oracle::get_t_info(int t, _element_chart* e)
 	int xx = (int)(x - zn.begin());
 	e->n = xx;
 	e->time = zn[xx].time;
-	e->middle = ((double)zn[xx].max_pro + (double)zn[xx].min_pok) * 0.5 * ss.c_unpak;
-	e->min = e->middle;
-	e->max = e->middle;
+	e->min = e->max = ((double)zn[xx].max_pro + (double)zn[xx].min_pok) * 0.5 * ss.c_unpak;
 }
 
 _latest_events _nervous_oracle::get_latest_events(i64 nn)
@@ -2329,9 +2322,7 @@ void _nervous_oracle2::get_n_info(i64 n, _element_chart* e)
 	}
 	e->n = n;
 	e->time = zn[n].time;
-	e->middle = ((double)zn[n].max_pro + (double)zn[n].min_pok) * 0.5 * ss.c_unpak;
-	e->min = e->middle;
-	e->max = e->middle;
+	e->min = e->max = ((double)zn[n].max_pro + (double)zn[n].min_pok) * 0.5 * ss.c_unpak;
 }
 
 void _nervous_oracle2::get_t_info(int t, _element_chart* e)
@@ -2345,9 +2336,7 @@ void _nervous_oracle2::get_t_info(int t, _element_chart* e)
 	int xx = (int)(x - zn.begin());
 	e->n = xx;
 	e->time = zn[xx].time;
-	e->middle = ((double)zn[xx].max_pro + (double)zn[xx].min_pok) * 0.5 * ss.c_unpak;
-	e->min = e->middle;
-	e->max = e->middle;
+	e->min = e->max = ((double)zn[xx].max_pro + (double)zn[xx].min_pok) * 0.5 * ss.c_unpak;
 }
 
 _latest_events _nervous_oracle2::get_latest_events(i64 nn)
@@ -2615,7 +2604,6 @@ void _oracle3::get_n_info(i64 n, _element_chart* e)
 	e->time = zn[n].time;
 	e->min = (zn[n].min - 1) * ss.c_unpak;
 	e->max = zn[n].max * ss.c_unpak;
-	e->middle = (e->min + e->max) * 0.5;
 }
 
 void _oracle3::get_t_info(int t, _element_chart* e)
@@ -2631,7 +2619,6 @@ void _oracle3::get_t_info(int t, _element_chart* e)
 	e->time = zn[xx].time;
 	e->min = (zn[xx].min - 1) * ss.c_unpak;
 	e->max = zn[xx].max * ss.c_unpak;
-	e->middle = (e->min + e->max) * 0.5;
 }
 
 void _oracle3::recovery()
