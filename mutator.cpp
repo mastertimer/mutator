@@ -17,6 +17,13 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void show_message(i64 s)
+{
+	MessageBox(0, (std::to_wstring(s)).c_str(), L"целое число", MB_OK | MB_TASKMODAL);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 _stack clipboard; // буффер обмена
 
 void fun03(_tetron* tt0, _tetron* tt, u64 flags);
@@ -640,13 +647,15 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	_g_graph* g = new _g_graph;
+	show_message(test_ss2());
+
+/*	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
 	std::vector<i64> k;
 	test_ss(19, k);
 	g->add(_matrix(266, [&k](i64 n) { return (double)k[n]; }));
 	test_ss(11, k);
-	g->add(_matrix(266, [&k](i64 n) { return (double)k[n]; }));
+	g->add(_matrix(266, [&k](i64 n) { return (double)k[n]; }));*/
 
 /*	for (i64 f = 0; f < 20; f++)
 	{

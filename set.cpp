@@ -679,7 +679,7 @@ void _super_stat::read(i64 n, _prices& c, _info_pak* inf)
 	c.pro[0].c = c.pok[0].c + delta + 1;
 	size_t aa1 = data.adata;
 	// декодирование продажи
-	for (int j = c.pro[0].c, n2 = 0, n_ = 0; n2 < rceni;)
+	for (int j = c.pro[0].c, n2 = 0, n_ = 0; n2 < roffer;)
 	{
 		data >> a;
 		int rez = a >> 6;
@@ -707,12 +707,12 @@ void _super_stat::read(i64 n, _prices& c, _info_pak* inf)
 			{
 				data.pop_int24(kk);
 			}
-			while ((j > read_cc.pro[n_].c) && (n_ < rceni - 1)) n_++;//
+			while ((j > read_cc.pro[n_].c) && (n_ < roffer - 1)) n_++;//
 			int kk3 = (j == read_cc.pro[n_].c) ? read_cc.pro[n_].k : 0;//
 			int kk2 = kk + kk3;//
 			if (kk2 > 0)
 			{
-				if (n2 >= rceni)
+				if (n2 >= roffer)
 				{
 					throw 1;
 				}
@@ -725,7 +725,7 @@ void _super_stat::read(i64 n, _prices& c, _info_pak* inf)
 	}
 	size_t aa2 = data.adata;
 	// декодирование покупки
-	for (int j = c.pok[0].c, n2 = 0, n_ = 0; n2 < rceni;)
+	for (int j = c.pok[0].c, n2 = 0, n_ = 0; n2 < roffer;)
 	{
 		data >> a;
 		int rez = a >> 6;
@@ -753,12 +753,12 @@ void _super_stat::read(i64 n, _prices& c, _info_pak* inf)
 			{
 				data.pop_int24(kk);
 			}
-			while ((j < read_cc.pok[n_].c) && (n_ < rceni - 1)) n_++;//
+			while ((j < read_cc.pok[n_].c) && (n_ < roffer - 1)) n_++;//
 			int kk3 = (j == read_cc.pok[n_].c) ? read_cc.pok[n_].k : 0;//
 			int kk2 = kk + kk3;//
 			if (kk2 > 0)
 			{
-				if (n2 >= rceni)
+				if (n2 >= roffer)
 				{
 					throw 1;
 				}
@@ -834,7 +834,7 @@ void _super_stat::add(_prices& c)
 	// кодирование продажи
 	int rez = 0; // количество байт на дельту
 	int Vrez = 0; // количество отсчетов
-	for (int j = c.pro[0].c, n2 = 0, n = 0; j <= c.pro[rceni - 1].c; j++)
+	for (int j = c.pro[0].c, n2 = 0, n = 0; j <= c.pro[roffer - 1].c; j++)
 	{
 		if (Vrez == 64)
 		{
@@ -843,7 +843,7 @@ void _super_stat::add(_prices& c)
 			rez = 0;
 		}
 		if (j > c.pro[n2].c) n2++;
-		while ((j > last_cc.pro[n].c) && (n < rceni - 1)) n++; //
+		while ((j > last_cc.pro[n].c) && (n < roffer - 1)) n++; //
 		int kk2 = (j == c.pro[n2].c) ? c.pro[n2].k : 0;
 		int kk3 = (j == last_cc.pro[n].c) ? last_cc.pro[n].k : 0; //
 		int kk = kk2 - kk3; //
@@ -1071,7 +1071,7 @@ void _super_stat::add(_prices& c)
 	size_t aa2 = data.size;
 	rez = 0; // количество байт на дельту
 	Vrez = 0; // количество отсчетов
-	for (int j = c.pok[0].c, n2 = 0, n = 0; j >= c.pok[rceni - 1].c; j--)
+	for (int j = c.pok[0].c, n2 = 0, n = 0; j >= c.pok[roffer - 1].c; j--)
 	{
 		if (Vrez == 64)
 		{
@@ -1080,7 +1080,7 @@ void _super_stat::add(_prices& c)
 			rez = 0;
 		}
 		if (j < c.pok[n2].c) n2++;
-		while ((j < last_cc.pok[n].c) && (n < rceni - 1)) n++; //
+		while ((j < last_cc.pok[n].c) && (n < roffer - 1)) n++; //
 		int kk2 = (j == c.pok[n2].c) ? c.pok[n2].k : 0;
 		int kk3 = (j == last_cc.pok[n].c) ? last_cc.pok[n].k : 0; //
 		int kk = kk2 - kk3; //
@@ -2566,16 +2566,16 @@ void _oracle3::recovery()
 				we.time = t;
 				we.ncc.min = i;
 				we.ncc.max = i + 1;
-				we.max = cc.pro[rceni - 1].c;
-				we.min = cc.pok[rceni - 1].c;
+				we.max = cc.pro[roffer - 1].c;
+				we.min = cc.pok[roffer - 1].c;
 				zn.push_back(we);
 				cp = &zn.back();
 			}
 			else
 			{
 				if (cp == 0) continue; // для паранойи компилятора
-				if (cc.pok[rceni - 1].c < cp->min) cp->min = cc.pok[rceni - 1].c;
-				if (cc.pro[rceni - 1].c > cp->max) cp->max = cc.pro[rceni - 1].c;
+				if (cc.pok[roffer - 1].c < cp->min) cp->min = cc.pok[roffer - 1].c;
+				if (cc.pro[roffer - 1].c > cp->max) cp->max = cc.pro[roffer - 1].c;
 				cp->ncc.max++;
 			}
 		}
@@ -2596,16 +2596,16 @@ void _oracle3::recovery()
 			we.time = t;
 			we.ncc.min = i;
 			we.ncc.max = i + 1;
-			we.max = cc.pro[rceni - 1].c;
-			we.min = cc.pok[rceni - 1].c;
+			we.max = cc.pro[roffer - 1].c;
+			we.min = cc.pok[roffer - 1].c;
 			zn.push_back(we);
 			cp = &zn.back();
 		}
 		else
 		{
 			if (cp == 0) continue; // для паранойи компилятора
-			if (cc.pok[rceni - 1].c < cp->min) cp->min = cc.pok[rceni - 1].c;
-			if (cc.pro[rceni - 1].c > cp->max) cp->max = cc.pro[rceni - 1].c;
+			if (cc.pok[roffer - 1].c < cp->min) cp->min = cc.pok[roffer - 1].c;
+			if (cc.pro[roffer - 1].c > cp->max) cp->max = cc.pro[roffer - 1].c;
 			cp->ncc.max++;
 		}
 	}
@@ -2698,7 +2698,7 @@ void _oracle3::draw(int n, _area area, _bitmap* bm)
 		if (pri[ss_].empty()) continue;
 		int xx1 = x1 + (x2 - x1) * i / kol;
 		int xx2 = x1 + (x2 - x1) * (i + 1) / kol - 1;
-		for (int j = rceni - 1; j >= 0; j--)
+		for (int j = roffer - 1; j >= 0; j--)
 		{
 			i64 ce = pri[ss_].pro[j].c;
 			int yy1 = (int)(oo.y.min + (max - ce) * ddy / dd);
@@ -2709,7 +2709,7 @@ void _oracle3::draw(int n, _area area, _bitmap* bm)
 			uint cc = (q << 8) + (q << 16) + 0xA0000000;
 			bm->fill_rectangle({ {xx1, xx2}, {yy1, yy2} }, cc);
 		}
-		for (int j = 0; j < rceni; j++)
+		for (int j = 0; j < roffer; j++)
 		{
 			i64 ce = pri[ss_].pok[j].c;
 			int yy1 = (int)(oo.y.min + (max - ce) * ddy / dd);
@@ -2917,22 +2917,22 @@ i64 to_int(const std::wstring& s) // преобразование в число 
 int _recognize::test_image(_prices* pr)
 {
 	find_text13(0xFF0000FF); // синим цветом покупки
-	if (elem.size() != rceni * 2) return 3;
+	if (elem.size() != roffer * 2) return 3;
 	i64 pre = 0;
-	for (int i = 0; i < rceni; i++)
+	for (int i = 0; i < roffer; i++)
 	{
 		i64 a = to_int(elem[i * 2i64].s);
 		if (a <= pre) return 4;
 		pre = a;
 		if ((a < 1) || (a > 65000)) return 5;
-		pr->pok[rceni - 1 - i].c = static_cast<ushort>(a);
+		pr->pok[roffer - 1 - i].c = static_cast<ushort>(a);
 		a = to_int(elem[i * 2i64 + 1i64].s);
 		if ((a < 1) || (a > 2000000000)) return 6;
-		pr->pok[rceni - 1 - i].k = static_cast<int>(a);
+		pr->pok[roffer - 1 - i].k = static_cast<int>(a);
 	}
 	find_red_text13(24); // красным цветом продажи
-	if (elem.size() != rceni * 2) return 7;
-	for (int i = 0; i < rceni; i++)
+	if (elem.size() != roffer * 2) return 7;
+	for (int i = 0; i < roffer; i++)
 	{
 		i64 a = to_int(elem[i * 2i64].s);
 		if (a <= pre) return 8;
@@ -2956,23 +2956,23 @@ int _recognize::read_prices_from_screen(_prices* pr)
 	pr->time.now();
 	image.grab_ecran_oo2(w2);
 	find_text13(0xFF0000FF); // синим цветом покупки
-	if (elem.size() != rceni * 2) return 3;
+	if (elem.size() != roffer * 2) return 3;
 	i64 pre = 0;
-	for (i64 i = 0; i < rceni; i++)
+	for (i64 i = 0; i < roffer; i++)
 	{
 		std::wstring swe = elem[i * 2].s;
 		i64 a = to_int(swe);
 		if (a <= pre) return 4;
 		pre = a;
 		if ((a < 1) || (a > 65000)) return 5;
-		pr->pok[rceni - 1 - i].c = static_cast<ushort>(a);
+		pr->pok[roffer - 1 - i].c = static_cast<ushort>(a);
 		a = to_int(elem[i * 2 + 1].s);
 		if ((a < 1) || (a > 2000000000)) return 6;
-		pr->pok[rceni - 1 - i].k = static_cast<int>(a);
+		pr->pok[roffer - 1 - i].k = static_cast<int>(a);
 	}
 	find_red_text13(24); // красным цветом продажи
-	if (elem.size() != rceni * 2) return 7;
-	for (i64 i = 0; i < rceni; i++)
+	if (elem.size() != roffer * 2) return 7;
+	for (i64 i = 0; i < roffer; i++)
 	{
 		i64 a = to_int(elem[i * 2].s);
 		if (a <= pre) return 8;
@@ -3417,6 +3417,17 @@ void _g_graph::ris2(_trans tr, bool final)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+bool _prices::operator==(const _prices& p) const noexcept
+{
+	for (i64 i = 0; i < roffer; i++)
+	{
+		if ((pok[i] != p.pok[i]) || (pro[i] != p.pro[i])) return false;
+	}
+	return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 {
 	_super_stat ss_old = ss;
@@ -3475,6 +3486,26 @@ void test_ss(i64 f, std::vector<i64> &k)
 		if (o.k >= k.size()) k.resize((i64)o.k + 1, 0);
 		k[o.k]++;
 	}
+}
+
+i64 test_ss2()
+{
+	_prices pr;
+	_prices prpr = cena_zero_;
+	i64 s = 0;
+	i64 k = 0;
+	for (i64 i = 0; i < ss.size; i++)
+	{
+		ss.read(i, pr);
+		if (pr == prpr)
+		{
+			k++;
+			if (k > s) s = k;
+		}
+		else k = 0;
+		prpr = pr;
+	}
+	return s;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

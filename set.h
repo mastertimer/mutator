@@ -4,7 +4,6 @@
 
 #include "tetron.h"
 
-constexpr int rceni = 20; // предложений продажи, предложений покупки ( ВСЕГО = Rceni * 2 );
 constexpr i64 roffer = 20; // предложений продажи, предложений покупки ( ВСЕГО = roffer * 2 );
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -13,6 +12,8 @@ struct _offer // предложение
 {
 	ushort c; // цена
 	int k; // количество
+
+	bool operator!=(_offer p) const noexcept { return (c != p.c) || (k != p.k); }
 };
 
 struct _offer2  // предложение с удобными типами, хранится всё равно в сжатом виде
@@ -37,12 +38,13 @@ struct _date_time // дата и время
 
 struct _prices // массив спроса предложения
 {
-	_offer pok[rceni]; // предложение покупки (порядок с самого выгодного)
-	_offer pro[rceni]; // предложение продажи (порядок с самого выгодного)
+	_offer pok[roffer]; // предложение покупки (порядок с самого выгодного)
+	_offer pro[roffer]; // предложение продажи (порядок с самого выгодного)
 	_date_time time; // время
 
 	void clear()       noexcept { time.second = 200; } // метка пустого прайса
-	bool empty() const noexcept { return (time.second == 200); } // проверка на пустоту 
+	bool empty() const noexcept { return (time.second == 200); } // проверка на пустоту
+	bool operator==(const _prices& p) const noexcept; // время не учитывается при сравнении
 };
 
 struct _prices2 // массив спроса предложения с удобными типами
@@ -387,3 +389,4 @@ struct _g_graph : public _t_go
 
 void calc_all_prediction(_basic_curve &o, i64& nn, double& kk);
 void test_ss(i64 f, std::vector<i64>& k);
+i64 test_ss2();
