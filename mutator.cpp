@@ -656,7 +656,7 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 	for (i64 j = 19; j >= 0; j -= 3)
 	{
 		test_ss(j, k);
-		g->add(_matrix(266, [&k](i64 n) { return (double)k[n]; }), std::to_string(j));
+		g->add(_matrix(700, [&k](i64 n) { return (double)k[n]; }), std::to_string(j)); // 266
 	}
 
 /*	for (i64 f = 0; f < 20; f++)

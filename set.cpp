@@ -24,6 +24,7 @@ _set_graph*      graph  = nullptr; // график
 _nervous_oracle *oracle = nullptr; // оракул
 _mctds_candle   *sv     = nullptr;
 _oracle3        *o3     = nullptr;
+_view_stat      *o_test = nullptr; // тестовый график
 
 _recognize       recognize;
 
@@ -54,16 +55,18 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 		sb->vid = 2;
 		graph->add_flags(sb, flag_sub_go + flag_part + (flag_run << 32));
 	}
-	constexpr bool ora3 = false;
 	sv = new _mctds_candle;
 	oracle = new _nervous_oracle;
-	o3 = (ora3) ? new _oracle3 : nullptr;
+//	o3 = new _oracle3;
+	o_test = new _view_stat;
 	graph->curve.push_back(std::unique_ptr<_basic_curve>(sv));
-	graph->curve.push_back(std::unique_ptr<_basic_curve>(oracle));
-	if (ora3) graph->curve.push_back(std::unique_ptr<_basic_curve>(o3));
+//	graph->curve.push_back(std::unique_ptr<_basic_curve>(oracle));
+	if (o3) graph->curve.push_back(std::unique_ptr<_basic_curve>(o3));
+	if (o_test) graph->curve.push_back(std::unique_ptr<_basic_curve>(o_test));
 	sv->recovery();
 	oracle->recovery();
-	if (ora3) o3->recovery();
+	if (o3) o3->recovery();
+	if (o_test) o_test->recovery();
 	graph->cha_area();
 	graph->obn = true;
 	load_mmm((exe_path + mmm_file).c_str());
@@ -1554,7 +1557,7 @@ void _set_graph::draw(_isize size)
 			{ // сработало
 				if (al[i].min < zmin) zmin = al[i].min;
 				if (al[i].max > zmax) zmax = al[i].max;
-				curve[i]->get_n_info(al[i].n + 1, &al[i]);
+				curve[i]->get_n_info(al[i].n + 1i64, &al[i]);
 			}
 		}
 	}
@@ -1591,7 +1594,7 @@ void _set_graph::draw(_isize size)
 				double yma = bm.size.y - (al[i].max - zmin) * bm.size.y / (zmax - zmin);
 				double x = r_el * (ke - 1i64);
 				curve[i]->draw(al[i].n, { {x, x + r_el}, {yma, ymi} }, &bm);
-				curve[i]->get_n_info(al[i].n + 1, &al[i]);
+				curve[i]->get_n_info(al[i].n + 1i64, &al[i]);
 			}
 		}
 	}
@@ -1689,23 +1692,135 @@ void _set_graph::draw(_isize size)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-int _mctds_candle::get_n()
+void _view_stat::get_n_info(i64 n, _element_chart* e)
 {
-	return (int)cen1m.size();
-}
-
-void _mctds_candle::get_n_info(int n, _element_chart* e)
-{
-	if (n >= (int)cen1m.size())
+	if (n >= (i64)cen1m.size())
 	{
 		e->n = -1;
 		return;
 	}
 	e->n = n;
 	e->time = cen1m[n].time;
-	e->min = cen1m[n].min * c_unpak;
-	e->max = cen1m[n].max * c_unpak;
-	e->middle = cen1m[n].cc * c_unpak;
+	e->min = cen1m[n].min * ss.c_unpak;
+	e->max = cen1m[n].max * ss.c_unpak;
+	e->middle = (e->min + e->max) * 0.5;
+}
+
+void _view_stat::get_t_info(int t, _element_chart* e)
+{
+	auto x = lower_bound(cen1m.begin(), cen1m.end(), t);
+	if (x == cen1m.end())
+	{
+		e->n = -1;
+		return;
+	}
+	i64 xx = (x - cen1m.begin());
+	e->n = xx;
+	e->time = cen1m[xx].time;
+	e->min = cen1m[xx].min * ss.c_unpak;
+	e->max = cen1m[xx].max * ss.c_unpak;
+	e->middle = (e->min + e->max) * 0.5;
+}
+
+void _view_stat::draw(i64 n, _area area, _bitmap* bm)
+{
+	double r = 5;
+	uint c = 0x800000ff;
+	bm->fill_ring(area.center(), r, r * 0.1, c, c);
+}
+
+void _view_stat::recovery()
+{
+	i64 vcc = 0;
+	if (cen1m.size()) vcc = cen1m.back().ncc.max;
+	i64 ssvcc = ss.size;
+	if (ssvcc == vcc) return; // ничего не изменилось
+	if (vcc < ssvcc) // добавились несколько цен
+	{
+		_prices cc;
+		int t = 0;
+		_cen_pak* cp = 0;
+		if (cen1m.size())
+		{
+			cp = &cen1m.back();
+			t = cp->time;
+		}
+		for (i64 i = vcc; i < ssvcc; i++)
+		{
+			if (i > 572737) // i > 572738
+			{
+				if (cp == 0) continue;
+			}
+			ss.read(i, cc);
+			int t2 = cc.time.to_minute();
+			if (t2 != t)
+			{
+				t = t2;
+				_cen_pak we;
+				we.time = t;
+				we.ncc.min = i;
+				we.ncc.max = i + 1;
+				we.min = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
+				we.max = we.min;
+				cen1m.push_back(we);
+				cp = &cen1m.back();
+			}
+			else
+			{
+				if (cp == 0) continue; // для паранойи компилятора
+				int aa = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
+				if (aa < cp->min) cp->min = aa;
+				if (aa > cp->max) cp->max = aa;
+				cp->ncc.max++;
+			}
+		}
+		return;
+	}
+	_prices cc; // уменьшились цены, полный пересчет
+	cen1m.clear();
+	int t = 0;
+	_cen_pak* cp = 0;
+	for (i64 i = 0; i < ssvcc; i++)
+	{
+		ss.read(i, cc);
+		int t2 = cc.time.to_minute();
+		if (t2 != t)
+		{
+			t = t2;
+			_cen_pak we;
+			we.time = t;
+			we.ncc.min = i;
+			we.ncc.max = i + 1;
+			we.min = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
+			we.max = we.min;
+			cen1m.push_back(we);
+			cp = &cen1m.back();
+		}
+		else
+		{
+			if (cp == 0) continue; // для паранойи компилятора
+			int aa = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
+			if (aa < cp->min) cp->min = aa;
+			if (aa > cp->max) cp->max = aa;
+			cp->ncc.max++;
+		}
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void _mctds_candle::get_n_info(i64 n, _element_chart* e)
+{
+	if (n >= (i64)cen1m.size())
+	{
+		e->n = -1;
+		return;
+	}
+	e->n = n;
+	e->time = cen1m[n].time;
+	e->min = cen1m[n].min * ss.c_unpak;
+	e->max = cen1m[n].max * ss.c_unpak;
+	e->middle = cen1m[n].cc * ss.c_unpak;
 }
 
 void _mctds_candle::get_t_info(int t, _element_chart* e)
@@ -1723,12 +1838,12 @@ void _mctds_candle::pop(_stack* mem)
 	*mem >> cen1m;
 }
 
-void _mctds_candle::draw(int n, _area area, _bitmap* bm)
+void _mctds_candle::draw(i64 n, _area area, _bitmap* bm)
 {
-	double min_ = cen1m[n].min * c_unpak;
-	double max_ = cen1m[n].max * c_unpak;
-	double first_ = cen1m[n].first * c_unpak;
-	double last_ = cen1m[n].last * c_unpak;
+	double min_ = cen1m[n].min * ss.c_unpak;
+	double max_ = cen1m[n].max * ss.c_unpak;
+	double first_ = cen1m[n].first * ss.c_unpak;
+	double last_ = cen1m[n].last * ss.c_unpak;
 
 	_area oo = area;
 	int x1 = (int)(oo.x.min + 1);
@@ -1757,7 +1872,6 @@ void _mctds_candle::draw(int n, _area area, _bitmap* bm)
 		bm->fill_rectangle({ {x1, x2}, {(int)yfi, (int)yla} }, col_pade);
 		bm->line({ (x1 + x2) >> 1, (int)oo.y.max }, { (x1 + x2) >> 1, (int)oo.y.min }, col_pade);
 	}
-
 }
 
 void _mctds_candle::recovery()
@@ -1779,10 +1893,6 @@ void _mctds_candle::recovery()
 		}
 		for (i64 i = vcc; i < ssvcc; i++)
 		{
-			if (i > 572737) // i > 572738
-			{
-				if (cp == 0) continue;
-			}
 			ss.read(i, cc);
 			int t2 = cc.time.to_minute();
 			if (t2 != t)
@@ -1908,21 +2018,16 @@ void _nervous_oracle::pop(_stack* mem)
 	*mem >> zn;
 }
 
-int _nervous_oracle::get_n()
+void _nervous_oracle::get_n_info(i64 n, _element_chart* e)
 {
-	return (int)zn.size();
-}
-
-void _nervous_oracle::get_n_info(int n, _element_chart* e)
-{
-	if (n >= (int)zn.size())
+	if (n >= (i64)zn.size())
 	{
 		e->n = -1;
 		return;
 	}
 	e->n = n;
 	e->time = zn[n].time;
-	e->middle = ((double)zn[n].max_pro + (double)zn[n].min_pok) * 0.5 * c_unpak;
+	e->middle = ((double)zn[n].max_pro + (double)zn[n].min_pok) * 0.5 * ss.c_unpak;
 	e->min = e->middle;
 	e->max = e->middle;
 }
@@ -1938,7 +2043,7 @@ void _nervous_oracle::get_t_info(int t, _element_chart* e)
 	int xx = (int)(x - zn.begin());
 	e->n = xx;
 	e->time = zn[xx].time;
-	e->middle = ((double)zn[xx].max_pro + (double)zn[xx].min_pok) * 0.5 * c_unpak;
+	e->middle = ((double)zn[xx].max_pro + (double)zn[xx].min_pok) * 0.5 * ss.c_unpak;
 	e->min = e->middle;
 	e->max = e->middle;
 }
@@ -1981,14 +2086,14 @@ _latest_events _nervous_oracle::get_latest_events(i64 nn)
 		if (a == 0) continue;
 		e.event[ee] = a;
 		e.minute[ee] = (int)(nn - n);
-		e.x[ee] = ((double)zn[n].max_pro + (double)zn[n].min_pok) * 0.5 * c_unpak;
+		e.x[ee] = ((double)zn[n].max_pro + (double)zn[n].min_pok) * 0.5 * ss.c_unpak;
 		ee++;
 		if (ee == 4) break;
 	}
 	return e;
 }
 
-void _nervous_oracle::draw(int n, _area area, _bitmap* bm)
+void _nervous_oracle::draw(i64 n, _area area, _bitmap* bm)
 {
 	const i64 k = 4;
 	if (n < k) return;
@@ -2215,21 +2320,16 @@ void _nervous_oracle2::pop(_stack* mem)
 	*mem >> zn;
 }
 
-int _nervous_oracle2::get_n()
+void _nervous_oracle2::get_n_info(i64 n, _element_chart* e)
 {
-	return (int)zn.size();
-}
-
-void _nervous_oracle2::get_n_info(int n, _element_chart* e)
-{
-	if (n >= (int)zn.size())
+	if (n >= (i64)zn.size())
 	{
 		e->n = -1;
 		return;
 	}
 	e->n = n;
 	e->time = zn[n].time;
-	e->middle = ((double)zn[n].max_pro + (double)zn[n].min_pok) * 0.5 * c_unpak;
+	e->middle = ((double)zn[n].max_pro + (double)zn[n].min_pok) * 0.5 * ss.c_unpak;
 	e->min = e->middle;
 	e->max = e->middle;
 }
@@ -2245,7 +2345,7 @@ void _nervous_oracle2::get_t_info(int t, _element_chart* e)
 	int xx = (int)(x - zn.begin());
 	e->n = xx;
 	e->time = zn[xx].time;
-	e->middle = ((double)zn[xx].max_pro + (double)zn[xx].min_pok) * 0.5 * c_unpak;
+	e->middle = ((double)zn[xx].max_pro + (double)zn[xx].min_pok) * 0.5 * ss.c_unpak;
 	e->min = e->middle;
 	e->max = e->middle;
 }
@@ -2288,14 +2388,14 @@ _latest_events _nervous_oracle2::get_latest_events(i64 nn)
 		if (a == 0) continue;
 		e.event[ee] = a;
 		e.minute[ee] = (int)(nn - n);
-		e.x[ee] = ((double)zn[n].max_pro + (double)zn[n].min_pok) * 0.5 * c_unpak;
+		e.x[ee] = ((double)zn[n].max_pro + (double)zn[n].min_pok) * 0.5 * ss.c_unpak;
 		ee++;
 		if (ee == 4) break;
 	}
 	return e;
 }
 
-void _nervous_oracle2::draw(int n, _area area, _bitmap* bm)
+void _nervous_oracle2::draw(i64 n, _area area, _bitmap* bm)
 {
 	const i64 k = 4;
 	if (n < k) return;
@@ -2504,17 +2604,17 @@ void _nervous_oracle2::recovery()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _oracle3::get_n_info(int n, _element_chart* e)
+void _oracle3::get_n_info(i64 n, _element_chart* e)
 {
-	if (n >= (int)zn.size())
+	if (n >= (i64)zn.size())
 	{
 		e->n = -1;
 		return;
 	}
 	e->n = n;
 	e->time = zn[n].time;
-	e->min = (zn[n].min - 1) * c_unpak;
-	e->max = zn[n].max * c_unpak;
+	e->min = (zn[n].min - 1) * ss.c_unpak;
+	e->max = zn[n].max * ss.c_unpak;
 	e->middle = (e->min + e->max) * 0.5;
 }
 
@@ -2529,14 +2629,9 @@ void _oracle3::get_t_info(int t, _element_chart* e)
 	int xx = (int)(x - zn.begin());
 	e->n = xx;
 	e->time = zn[xx].time;
-	e->min = (zn[xx].min - 1) * c_unpak;
-	e->max = zn[xx].max * c_unpak;
+	e->min = (zn[xx].min - 1) * ss.c_unpak;
+	e->max = zn[xx].max * ss.c_unpak;
 	e->middle = (e->min + e->max) * 0.5;
-}
-
-int _oracle3::get_n()
-{
-	return (int)zn.size();
 }
 
 void _oracle3::recovery()
@@ -2611,7 +2706,7 @@ void _oracle3::recovery()
 	}
 }
 
-void _oracle3::draw(int n, _area area, _bitmap* bm)
+void _oracle3::draw(i64 n, _area area, _bitmap* bm)
 {
 	static _prices pri[61]; // цены
 	static int min, max; // разброс по y
@@ -3273,7 +3368,7 @@ void _g_graph::ris2(_trans tr, bool final)
 	_area a = tr(local_area);
 	master_bm.rectangle(a, c_def);
 	
-	unsigned int col_setka = c_min - 0x80000000; // цвет сетки
+	unsigned int col_setka = c_min - 0xA0000000; // цвет сетки
 	unsigned int col_font = c_max - 0x80000000; // цвет шрифта
 
 	// вычисление диапазона

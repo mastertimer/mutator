@@ -71,6 +71,7 @@ struct _super_stat // супер статистика цен
 
 	i64 size = 0; // количество записей
 	_prices last_cc; // последние цены
+	static constexpr double c_unpak = 0.01; // распаковка цен
 
 	_super_stat();
 
@@ -135,10 +136,10 @@ struct _basic_curve // база для кривых и оракулов
 {
 	virtual     ~_basic_curve() {}
 
-	virtual int  get_n()                              = 0; // количество элементов
-	virtual void get_n_info(int n, _element_chart* e) = 0; // получить краткую информацию n-го элемента
+	virtual i64  get_n()                              = 0; // количество элементов
+	virtual void get_n_info(i64 n, _element_chart* e) = 0; // получить краткую информацию n-го элемента
 	virtual void get_t_info(int t, _element_chart* e) = 0; // получить краткую информацию элемента со временем >= t
-	virtual void draw(int n, _area area, _bitmap* bm) = 0; // нарисовать 1 элемент
+	virtual void draw(i64 n, _area area, _bitmap* bm) = 0; // нарисовать 1 элемент
 	virtual void recovery()                           = 0; // восстановить
 
 	virtual i64  prediction() { return 0; }                // отрезок времени роста
@@ -160,15 +161,37 @@ struct _mctds_candle : public _basic_curve // источник данных дл
 	};
 
 	std::vector<_cen_pak> cen1m; // упакованные цены по минутам
-	double c_unpak = 0.01; // распаковка цен
 
-	int get_n() override; // количество элементов
-	void get_n_info(int n, _element_chart* e) override; // получить краткую информацию n-го элемента
+	i64 get_n()                               override { return cen1m.size(); } // количество элементов
+	void get_n_info(i64 n, _element_chart* e) override; // получить краткую информацию n-го элемента
 	void get_t_info(int t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
-	void draw(int n, _area area, _bitmap* bm) override; // нарисовать 1 элемент
-	void recovery() override; // выполнить
+	void draw(i64 n, _area area, _bitmap* bm) override; // нарисовать 1 элемент
+	void recovery()                           override; // обновить
 	void push(_stack* mem);
 	void pop(_stack* mem);
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct _view_stat : public _basic_curve // тестовое отображение статистических данных
+{
+	struct _cen_pak // данные по минуте
+	{
+		int time = 0;   // общее время
+		_iinterval ncc; // диапазон цен
+		ushort min = 0; // минимальная цена
+		ushort max = 0; // макимальная цена
+
+		bool operator < (int a) const noexcept { return (time < a); } // для алгоритма поиска по времени
+	};
+
+	std::vector<_cen_pak> cen1m; // упакованные цены по минутам
+
+	i64 get_n()                               override { return cen1m.size(); } // количество элементов
+	void get_n_info(i64 n, _element_chart* e) override; // получить краткую информацию n-го элемента
+	void get_t_info(int t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
+	void draw(i64 n, _area area, _bitmap* bm) override; // нарисовать 1 элемент
+	void recovery()                           override; // обновить
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -206,12 +229,11 @@ struct _nervous_oracle : public _basic_curve // нервозный предск�
 	};
 
 	std::vector<_element_nervous> zn; // данные
-	double c_unpak = 0.01; // распаковка цен
 
-	int get_n() override; // количество элементов
-	void get_n_info(int n, _element_chart* e) override; // получить краткую информацию n-го элемента
+	i64 get_n() override { return zn.size(); } // количество элементов
+	void get_n_info(i64 n, _element_chart* e) override; // получить краткую информацию n-го элемента
 	void get_t_info(int t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
-	void draw(int n, _area area, _bitmap* bm) override; // нарисовать 1 элемент
+	void draw(i64 n, _area area, _bitmap* bm) override; // нарисовать 1 элемент
 	void recovery() override; // выполнить
 	void push(_stack* mem);
 	void pop(_stack* mem);
@@ -225,7 +247,7 @@ struct _nervous_oracle2 : public _basic_curve // нервозный предск
 {
 	struct _element_nervous // краткая информация элемента графика
 	{
-		int time = 0; // время
+		int time = 0;       // время
 		_iinterval ncc;     // диапазон цен
 
 		ushort min_pok = 0; // минимальная покупка
@@ -233,21 +255,20 @@ struct _nervous_oracle2 : public _basic_curve // нервозный предск
 		ushort min_pro = 0; // минимальная продажа
 		ushort max_pro = 0; // максимальная продажа
 
-		int    v_r = 0; // количество слагаемых
-		double r = 0; // средний размер
-		double r_pok = 0; // средний размер покупки
-		double r_pro = 0; // средний размер продажи
+		int    v_r = 0;     // количество слагаемых
+		double r = 0;       // средний размер
+		double r_pok = 0;   // средний размер покупки
+		double r_pro = 0;   // средний размер продажи
 
 		bool operator < (int a) const noexcept { return (time < a); } // для алгоритма поиска по времени
 	};
 
 	std::vector<_element_nervous> zn; // данные
-	double c_unpak = 0.01; // распаковка цен
 
-	int get_n() override; // количество элементов
-	void get_n_info(int n, _element_chart* e) override; // получить краткую информацию n-го элемента
+	i64 get_n() override { return zn.size(); } // количество элементов
+	void get_n_info(i64 n, _element_chart* e) override; // получить краткую информацию n-го элемента
 	void get_t_info(int t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
-	void draw(int n, _area area, _bitmap* bm) override; // нарисовать 1 элемент
+	void draw(i64 n, _area area, _bitmap* bm) override; // нарисовать 1 элемент
 	void recovery() override; // выполнить
 	void push(_stack* mem);
 	void pop(_stack* mem);
@@ -273,12 +294,11 @@ struct _oracle3 : public _basic_curve // оракул 3-я версия
 	std::deque<_prices> part_ss; // часть супер-статистики
 	i64 begin_ss = 0; // начало куска супер-статистики
 	std::vector<_element_oracle> zn; // данные
-	double c_unpak = 0.01; // распаковка цен
 
-	int get_n() override; // количество элементов
-	void get_n_info(int n, _element_chart* e) override; // получить краткую информацию n-го элемента
+	i64 get_n() override { return zn.size(); } // количество элементов
+	void get_n_info(i64 n, _element_chart* e) override; // получить краткую информацию n-го элемента
 	void get_t_info(int t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
-	void draw(int n, _area area, _bitmap* bm) override; // нарисовать 1 элемент
+	void draw(i64 n, _area area, _bitmap* bm) override; // нарисовать 1 элемент
 	void recovery() override; // выполнить
 };
 
