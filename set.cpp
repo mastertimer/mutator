@@ -3262,9 +3262,9 @@ void _kusok_bukva::cod(ushort* aa, int vaa, wchar_t cc, char nf, i64 nbitt)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_graph::add(const _matrix& b)
+void _g_graph::add(const _matrix& b, std::string_view s)
 {
-	curve.push_back({b});
+	curve.push_back({b, std::string(s)});
 }
 
 void _g_graph::ris2(_trans tr, bool final)
@@ -3335,9 +3335,10 @@ void _g_graph::ris2(_trans tr, bool final)
 	{
 		_matrix* c = &j.a;
 		if ((c->size.x < 1) || (c->size.x > 2)) continue; // должно быть 1-2 столбца
-		i64 xpr = 0;
-		i64 ypr = 0;
+		double xpr = 0;
+		double ypr = 0;
 		uint cc = (ng < _countof(color_set)) ? color_set[ng] : c_max;
+//		cc -= 0x80000000;
 		ng++;
 		for (int i = 0; i < c->size.y; i++)
 		{
@@ -3352,9 +3353,9 @@ void _g_graph::ris2(_trans tr, bool final)
 				x = i;
 				y = (*c)[i][0];
 			}
-			i64 xx = i64(a.x.min + (x - minx) * kx);
-			i64 yy = i64(a.y.max - (y - miny) * ky);
-			if (i > 0) master_bm.line({ xpr, ypr }, { xx, yy }, cc);
+			double xx = (a.x.min + (x - minx) * kx);
+			double yy = (a.y.max - (y - miny) * ky);
+			if (i > 0) master_bm.lines({ xpr, ypr }, { xx, yy }, j.width, cc);
 			xpr = xx;
 			ypr = yy;
 		}
@@ -3412,6 +3413,22 @@ void _g_graph::ris2(_trans tr, bool final)
 					s, col_font);
 			}
 		}
+	}
+	if ((a.x.length() > 50) && (a.y.length() > 50))
+	{
+		i64 y = std::max(a.y.min, 0.0);
+		i64 x = std::min((i64)a.x.max, master_bm.size.x) - 50;
+		ng = -1;
+		for (auto& j : curve)
+		{
+			ng++;
+			if (j.caption == "") continue;
+			y += 16;
+			uint cc = (ng < _countof(color_set)) ? color_set[ng] : c_max;
+			master_bm.text16(x, y, j.caption, cc);
+			master_bm.lines({ x - 20.0, y + 6.0 }, { x - 4.0, y + 6.0 }, j.width, cc);
+		}
+
 	}
 }
 
@@ -3479,12 +3496,15 @@ void test_ss(i64 f, std::vector<i64> &k)
 {
 	k.clear();
 	_prices pr;
+	_prices prpr = cena_zero_;
 	for (i64 i = 0; i < ss.size; i++)
 	{
 		ss.read(i, pr);
+		if (pr == prpr) continue; // игнор одинаковых
 		_offer o = pr.pro[f];
 		if (o.k >= k.size()) k.resize((i64)o.k + 1, 0);
 		k[o.k]++;
+		prpr = pr;
 	}
 }
 

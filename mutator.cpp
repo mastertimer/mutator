@@ -7,6 +7,7 @@
 упорядочить функции _picture
 !!пляшет график цен при увеличении, сделать видимой подписи сетки
 сделать список имен (i - цикл, t - tetron, s - строка и т.д.)
+рисование ломанной линии
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -647,15 +648,16 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	show_message(test_ss2());
+//	show_message(test_ss2());
 
-/*	_g_graph* g = new _g_graph;
+	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
 	std::vector<i64> k;
-	test_ss(19, k);
-	g->add(_matrix(266, [&k](i64 n) { return (double)k[n]; }));
-	test_ss(11, k);
-	g->add(_matrix(266, [&k](i64 n) { return (double)k[n]; }));*/
+	for (i64 j = 19; j >= 0; j -= 3)
+	{
+		test_ss(j, k);
+		g->add(_matrix(266, [&k](i64 n) { return (double)k[n]; }), std::to_string(j));
+	}
 
 /*	for (i64 f = 0; f < 20; f++)
 	{

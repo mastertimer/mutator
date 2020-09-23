@@ -367,7 +367,9 @@ private:
 
 struct _curve
 {
-	_matrix a; // данные  - 1 или 2 стобца
+	_matrix a; // данные - 1 или 2 стобца
+	std::string caption; // подпись линии
+	double width = 1.5; // толщина линии
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -382,7 +384,7 @@ struct _g_graph : public _t_go
 	int get_froglif() { return 0xFC; }
 	void ris2(_trans tr, bool final) override;
 
-	void add(const _matrix& b);
+	void add(const _matrix& b, std::string_view s = "");
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
