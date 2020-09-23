@@ -180,6 +180,7 @@ struct _view_stat : public _basic_curve // тестовое отображени
 		_iinterval ncc; // диапазон цен
 		ushort min = 0; // минимальная цена
 		ushort max = 0; // макимальная цена
+		int k = 0; // количество совпадений
 
 		bool operator < (int a) const noexcept { return (time < a); } // для алгоритма поиска по времени
 	};

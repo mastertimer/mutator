@@ -1722,8 +1722,8 @@ void _view_stat::get_t_info(int t, _element_chart* e)
 
 void _view_stat::draw(i64 n, _area area, _bitmap* bm)
 {
-	double r = 5;
-	uint c = 0x800000ff;
+	double r = cen1m[n].k;
+	uint c = 0xffff0000;
 	bm->fill_ring(area.center(), r, r * 0.1, c, c);
 }
 
@@ -1745,10 +1745,6 @@ void _view_stat::recovery()
 		}
 		for (i64 i = vcc; i < ssvcc; i++)
 		{
-			if (i > 572737) // i > 572738
-			{
-				if (cp == 0) continue;
-			}
 			ss.read(i, cc);
 			int t2 = cc.time.to_minute();
 			if (t2 != t)
@@ -1760,6 +1756,7 @@ void _view_stat::recovery()
 				we.ncc.max = i + 1;
 				we.min = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
 				we.max = we.min;
+				we.k = (cc.pro[1].k == 570);
 				cen1m.push_back(we);
 				cp = &cen1m.back();
 			}
@@ -1769,6 +1766,7 @@ void _view_stat::recovery()
 				int aa = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
 				if (aa < cp->min) cp->min = aa;
 				if (aa > cp->max) cp->max = aa;
+				if (cc.pro[1].k == 570) cp->k++;
 				cp->ncc.max++;
 			}
 		}
@@ -1791,6 +1789,7 @@ void _view_stat::recovery()
 			we.ncc.max = i + 1;
 			we.min = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
 			we.max = we.min;
+			we.k = (cc.pro[1].k == 570);
 			cen1m.push_back(we);
 			cp = &cen1m.back();
 		}
@@ -1800,6 +1799,7 @@ void _view_stat::recovery()
 			int aa = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
 			if (aa < cp->min) cp->min = aa;
 			if (aa > cp->max) cp->max = aa;
+			if (cc.pro[1].k == 570) cp->k++;
 			cp->ncc.max++;
 		}
 	}
