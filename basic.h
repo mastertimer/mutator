@@ -690,10 +690,10 @@ struct _picture
 	void set_area(const _iarea& q) noexcept { area = q & size; }
 	bool resize(_isize wh) noexcept;
 	void set_transparent() noexcept; // узнать, есть ли прозрачные пиксели
+	void clear(uint c = 0xFF000000) noexcept;
 
 	// ниже не проверенные, или не универсальные функции
 
-	void clear(uint c = 0xFF000000) noexcept;
 	void line(_ixy p1, _ixy p2, uint c, bool rep = false); // линия rep - полное замещение цвета
 	void lines(_xy p1, _xy p2, double l, uint c); // точная линия заданной толщины
 	void text16(i64 x, i64 y, std::string_view st, uint c); // простой текст высотой 16

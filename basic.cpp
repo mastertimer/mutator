@@ -840,14 +840,13 @@ bool _picture::resize(_isize wh) noexcept
 
 void _picture::clear(uint c) noexcept
 {
-	if (area != size)
-	{
-		fill_rectangle(size, c, true);
-		return;
-	}
+	if (area != size) { fill_rectangle(size, c, true); return; }
 	transparent = ((c >> 24) != 0xff);
-	// сделать 64 цикл!
-	fill_rectangle(size, c, true);
+	u64 cc = (((u64)c) << 32) + c;
+	u64* ee = (u64*)data;
+	u64* eemax = (u64*)(&(data[size.y * size.x - 1]));
+	while (ee < eemax) *ee++ = cc;
+	if (ee == eemax) *((uint*)ee) = c;
 }
 
 void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
