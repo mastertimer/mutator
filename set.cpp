@@ -57,7 +57,7 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 	}
 	sv = new _mctds_candle;
 	oracle = new _nervous_oracle;
-//	o3 = new _oracle3;
+	o3 = new _oracle3;
 	o_test = new _view_stat;
 	graph->curve.push_back(std::unique_ptr<_basic_curve>(sv));
 //	graph->curve.push_back(std::unique_ptr<_basic_curve>(oracle));
@@ -200,24 +200,15 @@ void fun30(_tetron* tt0, _tetron* tt, u64 flags)
 	graph->cha_area();
 }
 
-void MouseMoveClick(i64 x, i64 y)
+void mouse_move_click(i64 x, i64 y)
 {
 	SetCursorPos((int)x, (int)y);
-	//	Mouse->CursorPos = a;
-	//	mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0,GetMessageExtraInfo());
-	//	mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0,GetMessageExtraInfo());
 	mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
 	mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-	//down press up
-	//		keybd_event('8', 0, 0, 0);
-	//		keybd_event('8', 0, KEYEVENTF_KEYUP, 0);
-
 }
 
-void MouseClick()
+void mouse_click()
 {
-	//	mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0,GetMessageExtraInfo());
-	//	mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0,GetMessageExtraInfo());
 	mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
 	mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
 }
@@ -262,10 +253,10 @@ void buy_stock(_tetron* tt, bool buy)
 		RECT rr;
 		if (!recognize.find_window_prices(&rr)) return;
 		if (buy)
-			MouseMoveClick(rr.left + 20ll, 6ll + rr.top + 15 * (4ll - otst_20));
+			mouse_move_click(rr.left + 20ll, 6ll + rr.top + 15 * (4ll - otst_20));
 		else
-			MouseMoveClick(rr.left + 20ll, 6ll + rr.top + 15 * (37ll + otst_20));
-		MouseClick();
+			mouse_move_click(rr.left + 20ll, 6ll + rr.top + 15 * (37ll + otst_20));
+		mouse_click();
 		n = 2;
 		return;
 	}
@@ -331,9 +322,9 @@ void buy_stock(_tetron* tt, bool buy)
 		}
 		if (abs(recognize.elem[kk].area.x.min - recognize.elem[kk2].area.x.min) < 5) win8 = true;
 		if (win8)
-			MouseMoveClick(recognize.elem[kk].area.x.min + 260 + recognize.offset.x, recognize.elem[kk].area.y.min + 3 + recognize.offset.y);
+			mouse_move_click(recognize.elem[kk].area.x.min + 260 + recognize.offset.x, recognize.elem[kk].area.y.min + 3 + recognize.offset.y);
 		else
-			MouseMoveClick(recognize.elem[kk].area.x.min + 110 + recognize.offset.x, recognize.elem[kk].area.y.min + 30 + recognize.offset.y);
+			mouse_move_click(recognize.elem[kk].area.x.min + 110 + recognize.offset.x, recognize.elem[kk].area.y.min + 30 + recognize.offset.y);
 		n = 13;
 		return;
 	}
@@ -347,9 +338,9 @@ void buy_stock(_tetron* tt, bool buy)
 			return;
 		}
 		if (win8)
-			MouseMoveClick(recognize.elem[kk].area.x.min + 220 + recognize.offset.x, recognize.elem[kk].area.y.min + 20 + recognize.offset.y);
+			mouse_move_click(recognize.elem[kk].area.x.min + 220 + recognize.offset.x, recognize.elem[kk].area.y.min + 20 + recognize.offset.y);
 		else
-			MouseMoveClick(recognize.elem[kk].area.x.min + 70 + recognize.offset.x, recognize.elem[kk].area.y.min + 47 + recognize.offset.y);
+			mouse_move_click(recognize.elem[kk].area.x.min + 70 + recognize.offset.x, recognize.elem[kk].area.y.min + 47 + recognize.offset.y);
 		n = 14;
 		return;
 	}
@@ -363,9 +354,9 @@ void buy_stock(_tetron* tt, bool buy)
 			return;
 		}
 		if (win8)
-			MouseMoveClick(recognize.elem[kk].area.x.min + 220 + recognize.offset.x, recognize.elem[kk].area.y.min + 3 + recognize.offset.y);
+			mouse_move_click(recognize.elem[kk].area.x.min + 220 + recognize.offset.x, recognize.elem[kk].area.y.min + 3 + recognize.offset.y);
 		else
-			MouseMoveClick(recognize.elem[kk].area.x.min + 70 + recognize.offset.x, recognize.elem[kk].area.y.min + 30 + recognize.offset.y);
+			mouse_move_click(recognize.elem[kk].area.x.min + 70 + recognize.offset.x, recognize.elem[kk].area.y.min + 30 + recognize.offset.y);
 		n = 15;
 		return;
 	}
@@ -390,9 +381,9 @@ void buy_stock(_tetron* tt, bool buy)
 			return;
 		}
 		if (win8)
-			MouseMoveClick(recognize.elem[kk].area.x.min + 100 + recognize.offset.x, recognize.elem[kk].area.y.min + 3 + recognize.offset.y);
+			mouse_move_click(recognize.elem[kk].area.x.min + 100 + recognize.offset.x, recognize.elem[kk].area.y.min + 3 + recognize.offset.y);
 		else
-			MouseMoveClick(recognize.elem[kk].area.x.min + 70 + recognize.offset.x, recognize.elem[kk].area.y.min + 30 + recognize.offset.y);
+			mouse_move_click(recognize.elem[kk].area.x.min + 70 + recognize.offset.x, recognize.elem[kk].area.y.min + 30 + recognize.offset.y);
 		n = 16;
 		return;
 	}
@@ -465,7 +456,7 @@ void buy_stock(_tetron* tt, bool buy)
 		SetCursorPos((int)(recognize.elem[kk].area.x.min + 20 + recognize.offset.x), (int)(recognize.elem[kk].area.y.min + 5 + recognize.offset.y));
 
 
-		MouseClick(); // НЕЛЬЗЯ
+		mouse_click(); // НЕЛЬЗЯ
 		n = 18;
 		return;
 	}
@@ -490,7 +481,7 @@ void buy_stock(_tetron* tt, bool buy)
 			return;
 		}
 		SetCursorPos((int)(recognize.elem[kk].area.x.min + 20 + recognize.offset.x), (int)(recognize.elem[kk].area.y.min + 5 + recognize.offset.y));
-		MouseClick();                                                     // НЕЛЬЗЯ
+		mouse_click();                                                     // НЕЛЬЗЯ
 		n = 29;
 		return;
 	}
@@ -509,7 +500,7 @@ void buy_stock(_tetron* tt, bool buy)
 			return;
 		}
 		SetCursorPos((int)(recognize.offset.x + recognize.image.size.x - 23), (int)(recognize.offset.y - 15));
-		MouseClick(); // НЕЛЬЗЯ
+		mouse_click(); // НЕЛЬЗЯ
 		n = 40;
 		return;
 	}
@@ -1419,7 +1410,6 @@ _set_graph::_set_graph()
 	local_area = { {0, 200}, {0, 100} };
 }
 
-// вынести в общий модуль?
 void OSpordis(double min, double max, i64 maxN, double& mi, double& step)
 {
 	i64 n;
@@ -1576,17 +1566,15 @@ void _set_graph::ris2(_trans tr, bool final)
 				double ymi = a.y.max - (al[i].min - zmin) * a.y.length() / (zmax - zmin);
 				double yma = a.y.max - (al[i].max - zmin) * a.y.length() / (zmax - zmin);
 				double x = r_el * (ke - 1i64) + a.x.min;
-				curve[i]->draw(al[i].n, { {x, x + r_el}, {yma, ymi} }, &master_bm);
+				curve[i]->draw(al[i].n, { {x, x + r_el}, {yma, ymi} });
 				curve[i]->get_n_info(al[i].n + 1i64, &al[i]);
 			}
 		}
 	}
 	delete[] al;
-
 	// рисование сетки
-
-	uint col_setka = c_max - 0xE0000000; // цвет сетки
-	uint col_setka_font = c_def; // цвет подписи сетки
+	uint col_setka      = c_max - 0xE0000000; // цвет сетки
+	uint col_setka_font = c_def;              // цвет подписи сетки
 	if (time_.size() < 1)
 	{
 		master_bm.line({ a.x.min, a.y.min }, { a.x.max, a.y.max }, 0xFF800000);
@@ -1707,11 +1695,11 @@ void _view_stat::get_t_info(int t, _element_chart* e)
 	e->max = cen1m[xx].max * ss.c_unpak;
 }
 
-void _view_stat::draw(i64 n, _area area, _bitmap* bm)
+void _view_stat::draw(i64 n, _area area)
 {
 	double r = cen1m[n].k * area.x.length() * 0.15;
 	uint c = 0xffff0000;
-	bm->fill_ring(area.center(), r, r * 0.1, c, c);
+	master_bm.fill_ring(area.center(), r, r * 0.1, c, c);
 }
 
 void _view_stat::recovery()
@@ -1822,7 +1810,7 @@ void _mctds_candle::pop(_stack* mem)
 	*mem >> cen1m;
 }
 
-void _mctds_candle::draw(i64 n, _area area, _bitmap* bm)
+void _mctds_candle::draw(i64 n, _area area)
 {
 	double min_   = cen1m[n].min   * ss.c_unpak;
 	double max_   = cen1m[n].max   * ss.c_unpak;
@@ -1848,13 +1836,13 @@ void _mctds_candle::draw(i64 n, _area area, _bitmap* bm)
 	}
 	if (first_ <= last_)
 	{
-		bm->fill_rectangle({ xx, {yla, yfi} }, col_rost);
-		bm->line({ xx.center(), area.y.max }, { xx.center(), area.y.min }, col_rost);
+		master_bm.fill_rectangle({ xx, {yla, yfi} }, col_rost);
+		master_bm.line({ xx.center(), area.y.max }, { xx.center(), area.y.min }, col_rost);
 	}
 	else
 	{
-		bm->fill_rectangle({ xx, {yfi, yla} }, col_pade);
-		bm->line({ xx.center(), area.y.max }, { xx.center(), area.y.min }, col_pade);
+		master_bm.fill_rectangle({ xx, {yfi, yla} }, col_pade);
+		master_bm.line({ xx.center(), area.y.max }, { xx.center(), area.y.min }, col_pade);
 	}
 }
 
@@ -2073,7 +2061,7 @@ _latest_events _nervous_oracle::get_latest_events(i64 nn)
 	return e;
 }
 
-void _nervous_oracle::draw(i64 n, _area area, _bitmap* bm)
+void _nervous_oracle::draw(i64 n, _area area)
 {
 	const i64 k = 4;
 	if (n < k) return;
@@ -2105,7 +2093,7 @@ void _nervous_oracle::draw(i64 n, _area area, _bitmap* bm)
 
 	if (c == 0xFF808080) return;
 
-	bm->fill_ring(area.center(), r, r * 0.1, c, c);
+	master_bm.fill_ring(area.center(), r, r * 0.1, c, c);
 }
 
 void _nervous_oracle::recovery()
@@ -2371,7 +2359,7 @@ _latest_events _nervous_oracle2::get_latest_events(i64 nn)
 	return e;
 }
 
-void _nervous_oracle2::draw(i64 n, _area area, _bitmap* bm)
+void _nervous_oracle2::draw(i64 n, _area area)
 {
 	const i64 k = 4;
 	if (n < k) return;
@@ -2403,7 +2391,7 @@ void _nervous_oracle2::draw(i64 n, _area area, _bitmap* bm)
 
 	if (c == 0xFF808080) return;
 
-	bm->fill_ring(area.center(), r, r * 0.1, c, c);
+	master_bm.fill_ring(area.center(), r, r * 0.1, c, c);
 }
 
 void _nervous_oracle2::recovery()
@@ -2680,7 +2668,7 @@ void _oracle3::recovery()
 	}
 }
 
-void _oracle3::draw(i64 n, _area area, _bitmap* bm)
+void _oracle3::draw(i64 n, _area area)
 {
 	static _prices pri[61]; // цены
 	static i64 min, max; // разброс по y
@@ -2736,9 +2724,8 @@ void _oracle3::draw(i64 n, _area area, _bitmap* bm)
 		max = zn[n].max;
 	}
 
-	_area oo = area;
-	i64 x1 = (i64)oo.x.min;
-	i64 x2 = (i64)oo.x.max;
+	i64 x1 = (i64)area.x.min;
+	i64 x2 = (i64)area.x.max;
 	i64 dx = x2 - x1;
 	if (dx < 2) return;
 	i64 step = 60;
@@ -2755,7 +2742,7 @@ void _oracle3::draw(i64 n, _area area, _bitmap* bm)
 	if (dx >= 120) step = 1;
 	i64 kol = 60 / step;
 	i64 dd = max - min;
-	double ddy = oo.y.max - oo.y.min;
+	double ddy = area.y.max - area.y.min;
 	for (i64 i = 0; i < kol; i++)
 	{
 		i64 ss_ = i * step;
@@ -2770,24 +2757,26 @@ void _oracle3::draw(i64 n, _area area, _bitmap* bm)
 		for (int j = roffer - 1; j >= 0; j--)
 		{
 			i64 ce = pri[ss_].pro[j].c;
-			i64 yy1 = (i64)(oo.y.min + (max - ce) * ddy / dd);
-			i64 yy2 = (i64)(oo.y.min + (max - ce + 1) * ddy / dd) - 1;
-			if (yy2 < yy1) continue;
+			_iinterval yy(area.y.min + (max - ce) * ddy / dd, area.y.min + (max - ce + 1) * ddy / dd);
+			yy.min++;
+			yy.max--;
+			if (yy.empty()) continue;
 			uint q = (uint)sqrt(pri[ss_].pro[j].k) + 32;
 			if (q > 255) q = 255;
-			uint cc = (q << 8) + (q << 16) + 0xA0000000;
-			bm->fill_rectangle({ {xx1, xx2}, {yy1, yy2} }, cc);
+			uint cc = (q << 8) + (q << 16) + 0x60000000;
+			master_bm.fill_rectangle({ {xx1, xx2}, yy}, cc);
 		}
 		for (int j = 0; j < roffer; j++)
 		{
 			i64 ce = pri[ss_].pok[j].c;
-			i64 yy1 = (i64)(oo.y.min + (max - ce) * ddy / dd);
-			i64 yy2 = (i64)(oo.y.min + (max - ce + 1) * ddy / dd) - 1;
-			if (yy2 < yy1) continue;
+			_iinterval yy(area.y.min + (max - ce) * ddy / dd, area.y.min + (max - ce + 1) * ddy / dd);
+			yy.min++;
+			yy.max--;
+			if (yy.empty()) continue;
 			uint q = (uint)sqrt(pri[ss_].pok[j].k) + 32;
 			if (q > 255) q = 255;
-			uint cc = q + (q << 8) + 0xA0000000;
-			bm->fill_rectangle({ {xx1, xx2}, {yy1, yy2} }, cc);
+			uint cc = q + (q << 8) + 0x60000000;
+			master_bm.fill_rectangle({ {xx1, xx2}, yy }, cc);
 		}
 	}
 }

@@ -138,7 +138,7 @@ struct _basic_curve // база для кривых и оракулов
 	virtual i64  get_n()                              = 0; // количество элементов
 	virtual void get_n_info(i64 n, _element_chart* e) = 0; // получить краткую информацию n-го элемента
 	virtual void get_t_info(int t, _element_chart* e) = 0; // получить краткую информацию элемента со временем >= t
-	virtual void draw(i64 n, _area area, _bitmap* bm) = 0; // нарисовать 1 элемент
+	virtual void draw(i64 n, _area area)              = 0; // нарисовать 1 элемент
 	virtual void recovery()                           = 0; // восстановить
 
 	virtual i64  prediction() { return 0; }                // отрезок времени роста
@@ -164,7 +164,7 @@ struct _mctds_candle : public _basic_curve // источник данных дл
 	i64 get_n()                               override { return cen1m.size(); } // количество элементов
 	void get_n_info(i64 n, _element_chart* e) override; // получить краткую информацию n-го элемента
 	void get_t_info(int t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
-	void draw(i64 n, _area area, _bitmap* bm) override; // нарисовать 1 элемент
+	void draw(i64 n, _area area)              override; // нарисовать 1 элемент
 	void recovery()                           override; // обновить
 	void push(_stack* mem);
 	void pop(_stack* mem);
@@ -190,7 +190,7 @@ struct _view_stat : public _basic_curve // тестовое отображени
 	i64 get_n()                               override { return cen1m.size(); } // количество элементов
 	void get_n_info(i64 n, _element_chart* e) override; // получить краткую информацию n-го элемента
 	void get_t_info(int t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
-	void draw(i64 n, _area area, _bitmap* bm) override; // нарисовать 1 элемент
+	void draw(i64 n, _area area)              override; // нарисовать 1 элемент
 	void recovery()                           override; // обновить
 };
 
@@ -233,7 +233,7 @@ struct _nervous_oracle : public _basic_curve // нервозный предск�
 	i64 get_n() override { return zn.size(); } // количество элементов
 	void get_n_info(i64 n, _element_chart* e) override; // получить краткую информацию n-го элемента
 	void get_t_info(int t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
-	void draw(i64 n, _area area, _bitmap* bm) override; // нарисовать 1 элемент
+	void draw(i64 n, _area area)              override; // нарисовать 1 элемент
 	void recovery() override; // выполнить
 	void push(_stack* mem);
 	void pop(_stack* mem);
@@ -268,7 +268,7 @@ struct _nervous_oracle2 : public _basic_curve // нервозный предск
 	i64 get_n() override { return zn.size(); } // количество элементов
 	void get_n_info(i64 n, _element_chart* e) override; // получить краткую информацию n-го элемента
 	void get_t_info(int t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
-	void draw(i64 n, _area area, _bitmap* bm) override; // нарисовать 1 элемент
+	void draw(i64 n, _area area)              override; // нарисовать 1 элемент
 	void recovery() override; // выполнить
 	void push(_stack* mem);
 	void pop(_stack* mem);
@@ -298,7 +298,7 @@ struct _oracle3 : public _basic_curve // оракул 3-я версия
 	i64 get_n() override { return zn.size(); } // количество элементов
 	void get_n_info(i64 n, _element_chart* e) override; // получить краткую информацию n-го элемента
 	void get_t_info(int t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
-	void draw(i64 n, _area area, _bitmap* bm) override; // нарисовать 1 элемент
+	void draw(i64 n, _area area)              override; // нарисовать 1 элемент
 	void recovery() override; // выполнить
 };
 
