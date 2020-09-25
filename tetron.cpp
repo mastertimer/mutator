@@ -1185,18 +1185,16 @@ void _g_picture::ris2(_trans tr, bool final)
 	if (pic.size.x * pic.size.y == 0)
 	{
 		int rr = 100;
-		master_bm.line({ (int)tr.offset.x, (int)tr.offset.y }, { (int)(tr.offset.x + rr * tr.scale), (int)tr.offset.y },
-			c_def);
-		master_bm.line({ (int)(tr.offset.x + rr * tr.scale), (int)tr.offset.y },
-			{ (int)(tr.offset.x + rr * tr.scale), (int)(tr.offset.y + rr * tr.scale) }, c_def);
-		master_bm.line({ (int)(tr.offset.x + rr * tr.scale), (int)(tr.offset.y + rr * tr.scale) },
-			{ (int)tr.offset.x, (int)(tr.offset.y + rr * tr.scale) }, c_def);
-		master_bm.line({ (int)tr.offset.x, (int)(tr.offset.y + rr * tr.scale) }, { (int)tr.offset.x, (int)tr.offset.y },
-			c_def);
-		master_bm.line({ (int)tr.offset.x, (int)tr.offset.y },
-			{ (int)(tr.offset.x + rr * tr.scale), (int)(tr.offset.y + rr * tr.scale) }, c_def);
-		master_bm.line({ (int)(tr.offset.x + rr * tr.scale), (int)tr.offset.y },
-			{ (int)tr.offset.x, (int)(tr.offset.y + rr * tr.scale) }, c_def);
+		master_bm.line({ tr.offset.x, tr.offset.y }, { tr.offset.x + rr * tr.scale, tr.offset.y }, c_def);
+		master_bm.line({ tr.offset.x + rr * tr.scale, tr.offset.y },
+			{ tr.offset.x + rr * tr.scale, tr.offset.y + rr * tr.scale }, c_def);
+		master_bm.line({ tr.offset.x + rr * tr.scale, tr.offset.y + rr * tr.scale },
+			{ tr.offset.x, tr.offset.y + rr * tr.scale }, c_def);
+		master_bm.line({ tr.offset.x, tr.offset.y + rr * tr.scale }, { tr.offset.x, tr.offset.y }, c_def);
+		master_bm.line({ tr.offset.x, tr.offset.y },
+			{ tr.offset.x + rr * tr.scale, tr.offset.y + rr * tr.scale }, c_def);
+		master_bm.line({ tr.offset.x + rr * tr.scale, tr.offset.y },
+			{ tr.offset.x, tr.offset.y + rr * tr.scale }, c_def);
 		return;
 	}
 	_area oo = tr(local_area);
@@ -1323,7 +1321,7 @@ void _g_test_graph::ris2(_trans tr, bool final)
 			te.line({ rnd(120), rnd(90) }, { rnd(120), rnd(90) }, 0xFF2080FF);
 		first = false;
 		a.clear(0xFF0000FF);
-		_iarea ogr({ 30, 225 }, { 25, 125 });
+		_iarea ogr({ 30LL, 225LL }, { 25LL, 125LL });
 		a.set_area(ogr);
 		a.stretch_draw(&te, 0, 0, 3.3);
 		a.rectangle(ogr, 0x80FF0000);
@@ -1385,13 +1383,13 @@ void _g_scrollbar::ris2(_trans tr, bool final)
 	uint c = c_def;
 	if ((vid & 1) == 0)
 	{
-		master_bm.line({ (int)a.x.min, (int)a.y(0.5) }, { (int)a.x.max, (int)a.y(0.5) }, c);
-		master_bm.line({ (int)a.x(position), (int)a.y.min }, { (int)a.x(position), (int)a.y.max }, c);
+		master_bm.line({ a.x.min, a.y(0.5) }, { a.x.max, a.y(0.5) }, c);
+		master_bm.line({ a.x(position), a.y.min }, { a.x(position), a.y.max }, c);
 	}
 	else
 	{
-		master_bm.line({ (int)a.x(0.5), (int)a.y.min }, { (int)a.x(0.5), (int)a.y.max }, c);
-		master_bm.line({ (int)a.x.min, (int)a.y(position) }, { (int)a.x.max, (int)a.y(position) }, c);
+		master_bm.line({ a.x(0.5), a.y.min }, { a.x(0.5), a.y.max }, c);
+		master_bm.line({ a.x.min, a.y(position) }, { a.x.max, a.y(position) }, c);
 	}
 }
 
@@ -1427,7 +1425,7 @@ void _g_edit_double::ris2(_trans tr, bool final)
 	if (n_act_key == this)
 	{
 		_isize size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
-		master_bm.line({ (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + 1) }, { (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + sf2) }, c0);
+		master_bm.line({ oo.x.min + 4 + size.x, oo.y.min + 1 }, { oo.x.min + 4 + size.x, oo.y.min + sf2 }, c0);
 	}
 }
 
@@ -1537,8 +1535,7 @@ void _g_edit_int::ris2(_trans tr, bool final)
 	if (n_act_key == this)
 	{
 		_isize size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
-		master_bm.line({ (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + 1) }, { (int)(oo.x.min + 4 + size.x),
-			(int)(oo.y.min + sf2) }, c0);
+		master_bm.line({ oo.x.min + 4 + size.x, oo.y.min + 1 }, { oo.x.min + 4 + size.x, oo.y.min + sf2 }, c0);
 	}
 }
 
@@ -1703,17 +1700,14 @@ void _g_edit_string::ris2(_trans tr, bool final)
 					first--;
 				}
 		}
-		master_bm.text((int)(oo.x.min + 5), (int)oo.y.min, s->substr(first, len2).c_str(), sf, c0, 0xff000000);
-		if (first > 0)
-			master_bm.line({ (int)(oo.x.min + 2), (int)oo.y.min }, { (int)(oo.x.min + 2), (int)oo.y.max }, 0x30C0F0);
-		if (len2 < l - first)
-			master_bm.line({ (int)(oo.x.max - 2), (int)oo.y.min }, { (int)(oo.x.max - 2), (int)oo.y.max },
-				0x30C0F0);
+		master_bm.text((int)(oo.x.min + 5), (int)oo.y.min, s->substr(first, len2).c_str(), sf, c0, 0);
+		if (first > 0)        master_bm.line({ oo.x.min + 2, oo.y.min }, { oo.x.min + 2, oo.y.max }, 0xFF30C0F0);
+		if (len2 < l - first) master_bm.line({ oo.x.max - 2, oo.y.min }, { oo.x.max - 2, oo.y.max }, 0xFF30C0F0);
 	}
 	if (n_act_key == this)
 	{
 		_isize size = master_bm.size_text(s->substr(first, (i64)cursor - first).c_str(), sf);
-		master_bm.line({ (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + 1) }, { (int)(oo.x.min + 4 + size.x), (int)(oo.y.min + sf) }, c0);
+		master_bm.line({ oo.x.min + 4 + size.x, oo.y.min + 1 }, { oo.x.min + 4 + size.x, oo.y.min + sf }, c0);
 	}
 }
 
@@ -1819,20 +1813,20 @@ void _g_edit_multi_string::ris2(_trans tr, bool final)
 	{
 		i64 ii = first + i;
 		master_bm.text((int)(oo.x.min + 4 * tr.scale), (int)(oo.y.min + (i * 16LL + 4) * tr.scale),
-			str->line[ii].c_str(), sf, c_def, 0xff000000);
+			str->line[ii].c_str(), sf, c_def, 0);
 	}
-	if (first) master_bm.line({ (int)(oo.x.min + 2 * tr.scale), (int)(oo.y.min + 2 * tr.scale) },
-		{ (int)(oo.x.max - 2 * tr.scale), (int)(oo.y.min + 2 * tr.scale) }, 0x30C0F0);
-	if (first + k < (int)str->line.size()) master_bm.line({ (int)(oo.x.min + 2 * tr.scale), (int)(oo.y.max - 2 * tr.scale) },
-		{ (int)(oo.x.max - 2 * tr.scale), (int)(oo.y.max - 2 * tr.scale) }, 0x30C0F0);
+	if (first) master_bm.line({ oo.x.min + 2 * tr.scale, oo.y.min + 2 * tr.scale },
+		{ oo.x.max - 2 * tr.scale, oo.y.min + 2 * tr.scale }, 0xFF30C0F0);
+	if (first + k < (int)str->line.size()) master_bm.line({ oo.x.min + 2 * tr.scale, oo.y.max - 2 * tr.scale },
+		{ oo.x.max - 2 * tr.scale, oo.y.max - 2 * tr.scale }, 0xFF30C0F0);
 
 	if (n_act_key == this)
 	{
 		_isize size = master_bm.size_text(str->line[cursor.y].substr(0, cursor.x).c_str(), sf);
-		master_bm.line({ (int)(oo.x.min + 4 * tr.scale + size.x - 1),
-			(int)(oo.y.min + (((i64)cursor.y - first) * 16 + 4) * tr.scale) },
-			{ (int)(oo.x.min + 4 * tr.scale + size.x - 1),
-			(int)(oo.y.min + ((cursor.y + 1LL - first) * 16 + 4) * tr.scale) }, c_def);
+		master_bm.line({ oo.x.min + 4 * tr.scale + size.x - 1,
+			oo.y.min + (((i64)cursor.y - first) * 16 + 4) * tr.scale },
+			{ oo.x.min + 4 * tr.scale + size.x - 1,
+			oo.y.min + ((cursor.y + 1LL - first) * 16 + 4) * tr.scale }, c_def);
 	}
 }
 
@@ -1960,7 +1954,7 @@ void _g_edit_multi_string::key_press(ushort key)
 	cha_area();
 }
 
-_g_edit_multi_string::_g_edit_multi_string() : cursor{ 0,0 }
+_g_edit_multi_string::_g_edit_multi_string() : cursor{ 0LL, 0LL }
 {
 	local_area = { {0, 100}, {0, 100} };
 	key_fokus = true;
@@ -2045,10 +2039,8 @@ void _g_edit64bit::ris2(_trans tr, bool final)
 	{
 		for (int i = 0; i <= 8; i++)
 		{
-			master_bm.line({ (int)oo.x.min, (int)(oo.y.min + d2 * 0.125 * i) },
-				{ (int)oo.x.max, (int)(oo.y.min + d2 * 0.125 * i) }, c_def);
-			master_bm.line({ (int)(oo.x.min + d * 0.125 * i), (int)oo.y.min },
-				{ (int)(oo.x.min + d * 0.125 * i), (int)oo.y.max }, c_def);
+			master_bm.line({ oo.x.min, oo.y.min + d2 * 0.125 * i }, { oo.x.max, oo.y.min + d2 * 0.125 * i }, c_def);
+			master_bm.line({ oo.x.min + d * 0.125 * i, oo.y.min }, { oo.x.min + d * 0.125 * i, oo.y.max }, c_def);
 		}
 		if (act >= 0)
 		{
@@ -2356,12 +2348,12 @@ void _g_list_link::ris2(_trans tr, bool final)
 		s = std::to_wstring(ii) + L". " + s;
 		uint color = c_def;
 		master_bm.text((int)(oo.x.min + 4 * tr.scale), (int)(oo.y.min + (i * 16.0 + 4) * tr.scale), s.c_str(), sf,
-			color, 0xff000000);
+			color, 0);
 	}
-	if (first) master_bm.line({ (int)(oo.x.min + 2 * tr.scale), (int)(oo.y.min + 2 * tr.scale) },
-		{ (int)(oo.x.max - 2 * tr.scale), (int)(oo.y.min + 2 * tr.scale) }, 0x30C0F0);
-	if (first + k < (int)a->link.size()) master_bm.line({ (int)(oo.x.min + 2 * tr.scale), (int)(oo.y.max - 2 * tr.scale) },
-		{ (int)(oo.x.max - 2 * tr.scale),	(int)(oo.y.max - 2 * tr.scale) }, 0x30C0F0);
+	if (first) master_bm.line({ oo.x.min + 2 * tr.scale, oo.y.min + 2 * tr.scale },
+		{ oo.x.max - 2 * tr.scale, oo.y.min + 2 * tr.scale }, 0xFF30C0F0);
+	if (first + k < (int)a->link.size()) master_bm.line({ oo.x.min + 2 * tr.scale, oo.y.max - 2 * tr.scale },
+		{ oo.x.max - 2 * tr.scale, oo.y.max - 2 * tr.scale }, 0xFF30C0F0);
 	master_bm.rectangle({ {(i64)(oo.x.min + 2 * tr.scale), (i64)(oo.x.max - 2 * tr.scale) + 1},
 		{(i64)(oo.y.min + (4 + ((i64)cursor - first) * 16) * tr.scale),
 		(i64)(oo.y.min + (19 + ((i64)cursor - first) * 16) * tr.scale) + 1} }, c_def);

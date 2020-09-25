@@ -68,7 +68,6 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 	if (o3) o3->recovery();
 	if (o_test) o_test->recovery();
 	graph->cha_area();
-	graph->obn = true;
 	load_mmm((exe_path + mmm_file).c_str());
 }
 
@@ -192,14 +191,12 @@ void fun21(_tetron* tt0, _tetron* tt, u64 flags)
 void fun22(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	graph->size_el++;
-	graph->obn = true;
 	graph->cha_area();
 }
 
 void fun30(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (graph->size_el > 1) graph->size_el--;
-	graph->obn = true;
 	graph->cha_area();
 }
 
@@ -1413,7 +1410,6 @@ void _set_graph::mouse_move_left2(_xy r)
 
 void _set_graph::run(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	obn = true;
 	cha_area();
 }
 
@@ -1421,13 +1417,6 @@ _set_graph::_set_graph()
 {
 	graph = this;
 	local_area = { {0, 200}, {0, 100} };
-}
-
-void _set_graph::ris2(_trans tr, bool final)
-{
-	_iarea a = tr(local_area);
-	draw(a.size());
-	master_bm.draw({ a.x.min, a.y.min }, bm);
 }
 
 // вынести в общий модуль?
@@ -1494,15 +1483,9 @@ std::string date_to_ansi_string(int time)
 	return res;
 }
 
-void _set_graph::draw(_isize size)
+void _set_graph::ris2(_trans tr, bool final)
 {
-	if (size.x > 8000) size.x = 8000;
-	if (size.y > 4000) size.y = 4000;
-	if (bm.resize(size)) obn = true;
-	if (!obn) return;
-	obn = false;
-	bm.clear(c_background);
-
+	_area a = tr(local_area);
 	_interval y_; // диапазон у (grid)
 	static std::vector<int> time_; // отсчеты времени (grid)
 
@@ -1514,9 +1497,9 @@ void _set_graph::draw(_isize size)
 	int ll = (int)curve.size();
 	if (ll == 0) return;
 
-	i64 k_el = bm.size.x / size_el;
+	i64 k_el = local_area.x.length() / size_el;
 	if (k_el < 1) return;
-	double r_el = (double)bm.size.x / k_el;
+	double r_el = local_area.x.length() / k_el;
 
 	int n = curve[0]->get_n();
 	if (n == 0) return;
@@ -1526,7 +1509,7 @@ void _set_graph::draw(_isize size)
 	int vib = (int)(polzi_ * v_vib + 0.5); // !! ползунок
 
 	int period = 60;
-//	int pause_max = 3;
+	//	int pause_max = 3;
 	_element_chart* al = new _element_chart[ll]; // элементы линий
 	// 1-й проход - вычисление zmin, zmax
 	double zmin = 1E100;
@@ -1590,10 +1573,10 @@ void _set_graph::draw(_isize size)
 			if (al[i].n < 0) continue;
 			if (al[i].time == timelast)
 			{ // сработало
-				double ymi = bm.size.y - (al[i].min - zmin) * bm.size.y / (zmax - zmin);
-				double yma = bm.size.y - (al[i].max - zmin) * bm.size.y / (zmax - zmin);
-				double x = r_el * (ke - 1i64);
-				curve[i]->draw(al[i].n, { {x, x + r_el}, {yma, ymi} }, &bm);
+				double ymi = a.y.max - (al[i].min - zmin) * a.y.length() / (zmax - zmin);
+				double yma = a.y.max - (al[i].max - zmin) * a.y.length() / (zmax - zmin);
+				double x = r_el * (ke - 1i64) + a.x.min;
+				curve[i]->draw(al[i].n, { {x, x + r_el}, {yma, ymi} }, &master_bm);
 				curve[i]->get_n_info(al[i].n + 1i64, &al[i]);
 			}
 		}
@@ -1606,23 +1589,23 @@ void _set_graph::draw(_isize size)
 	uint col_setka_font = c_def; // цвет подписи сетки
 	if (time_.size() < 1)
 	{
-		bm.line({ 0, 0 }, { bm.size.x - 1, bm.size.y - 1 }, 0xFF800000);
-		bm.line({ 0, bm.size.y - 1 }, { bm.size.x - 1 , 0 }, 0xFF800000);
+		master_bm.line({ a.x.min, a.y.min }, { a.x.max, a.y.max }, 0xFF800000);
+		master_bm.line({ a.x.min, a.y.max }, { a.x.max , a.y.min }, 0xFF800000);
 		return;
 	}
 	// рисование горизонтальных линий сетки с подписями
 	i64 dex = 35; // длина подписи
-	i64 maxN = bm.size.y / 15;
+	i64 maxN = a.y.length() / 15;
 	if (maxN > 1)
 	{
 		double mi, step;
 		OSpordis(y_.min, y_.max, maxN, mi, step);
 		for (double y = mi; y < y_.max; y += step)
 		{
-			double yy = bm.size.y - 0.5 - (y - y_.min) * bm.size.y / (y_.max - y_.min);
-			bm.line({ dex, (int)(yy) }, { bm.size.x - dex, (int)(yy) }, col_setka);
-			bm.text16(0, (int)(yy - 7), double_to_astring(y, 2), col_setka_font);
-			bm.text16(bm.size.x - dex, (int)(yy - 7), double_to_astring(y, 2), col_setka_font);
+			double yy = a.y.max - 0.5 - (y - y_.min) * a.y.length() / (y_.max - y_.min);
+			master_bm.line({ a.x.min + dex, yy }, { a.x.max - dex, yy }, col_setka);
+			master_bm.text16(a.x.min, (int)(yy - 7), double_to_astring(y, 2), col_setka_font);
+			master_bm.text16(a.x.max - dex, (int)(yy - 7), double_to_astring(y, 2), col_setka_font);
 		}
 	}
 	// рисование вертикальных линий сетки с подписями
@@ -1663,31 +1646,31 @@ void _set_graph::draw(_isize size)
 		if (time_[i] % stept == 0)
 		{ // вертикальная линия с подписью
 			double x = rel * i;
-			if ((x <= dex) || (x >= (i64)bm.size.x - dex)) continue;
+			if ((x <= dex) || (x >= a.x.length() - dex)) continue;
 			uint cl = (sca) ? (0x80FF0000) : col_setka;
-			bm.line({ (int)x, 0 }, { (int)x, bm.size.y - 1 }, cl);
-			if ((x - 13 <= dex) || (x + 13 >= (i64)bm.size.x - dex)) continue;
+			master_bm.line({ i64(a.x.min + x), a.y.min }, { a.x.min + x, a.y.max }, cl);
+			if ((x - 13 <= dex) || (x + 13 >= a.x.length() - dex)) continue;
 			int ii = (time_[i] / dele[ido]) % ost[ido];
 			s[4] = '0' + (ii % 10);
 			s[3] = '0' + (ii / 10);
 			ii = (time_[i] / dele[ido + 1]) % ost[ido + 1];
 			s[1] = '0' + (ii % 10);
 			s[0] = '0' + (ii / 10);
-			bm.text16((int)(x - 13), bm.size.y - 11, s, col_setka_font);
-			bm.text16((int)(x - 13), -2, s, col_setka_font);
+			master_bm.text16(x - 13 + a.x.min, a.y.max - 11, s, col_setka_font);
+			master_bm.text16(x - 13 + a.x.min, a.y.min - 2, s, col_setka_font);
 			continue;
 		}
 		if (sca)
 		{
 			double x = rel * i;
-			if ((x <= dex) || (x >= (i64)bm.size.x - dex)) continue;
-			bm.line({ (int)x, 0 }, { (int)x, bm.size.y - 1 }, 0x80FF0000);
+			if ((x <= dex) || (x >= a.x.length() - dex)) continue;
+			master_bm.line({ a.x.min + x, a.y.min }, { a.x.min + x, a.y.max }, 0x80FF0000);
 		}
 	}
 	// рисование даты
-	bm.text16n(dex + 10, 10, date_to_ansi_string(mintime).data(), 4, c_max - 0x80000000);
+	master_bm.text16n(a.x.min + dex + 10, a.y.min + 10, date_to_ansi_string(mintime).data(), 4, c_max - 0x80000000);
 	// рисование количества элементов
-	bm.text16n(dex + 10, 60, std::to_string(ss.size).data(), 2, 0x60ff0000);
+	master_bm.text16n(a.x.min + dex + 10, a.y.min + 60, std::to_string(ss.size).data(), 2, 0x60ff0000);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1843,8 +1826,8 @@ void _mctds_candle::draw(i64 n, _area area, _bitmap* bm)
 	double last_ = cen1m[n].last * ss.c_unpak;
 
 	_area oo = area;
-	int x1 = (int)(oo.x.min + 1);
-	int x2 = (int)(oo.x.max - 1);
+	i64 x1 = (i64)(oo.x.min + 1);
+	i64 x2 = (i64)(oo.x.max - 1);
 	if (x2 < x1) return;
 
 	uint col_rost = 0xFF28A050; // цвет ростущей свечки
@@ -1861,13 +1844,13 @@ void _mctds_candle::draw(i64 n, _area area, _bitmap* bm)
 	}
 	if (first_ <= last_)
 	{
-		bm->fill_rectangle({ {x1, x2}, {(int)yla, (int)yfi} }, col_rost);
-		bm->line({ (x1 + x2) >> 1, (int)oo.y.max }, { (x1 + x2) >> 1, (int)oo.y.min }, col_rost);
+		bm->fill_rectangle({ {x1, x2}, {yla, yfi} }, col_rost);
+		bm->line({ (x1 + x2) >> 1, oo.y.max }, { (x1 + x2) >> 1, oo.y.min }, col_rost);
 	}
 	else
 	{
-		bm->fill_rectangle({ {x1, x2}, {(int)yfi, (int)yla} }, col_pade);
-		bm->line({ (x1 + x2) >> 1, (int)oo.y.max }, { (x1 + x2) >> 1, (int)oo.y.min }, col_pade);
+		bm->fill_rectangle({ {x1, x2}, {yfi, yla} }, col_pade);
+		bm->line({ (x1 + x2) >> 1, oo.y.max }, { (x1 + x2) >> 1, oo.y.min }, col_pade);
 	}
 }
 
@@ -2696,7 +2679,7 @@ void _oracle3::recovery()
 void _oracle3::draw(i64 n, _area area, _bitmap* bm)
 {
 	static _prices pri[61]; // цены
-	static int min, max; // разброс по y
+	static i64 min, max; // разброс по y
 	min = 0;
 	max = 1;
 	for (auto& i : pri) i.clear();
@@ -2750,11 +2733,11 @@ void _oracle3::draw(i64 n, _area area, _bitmap* bm)
 	}
 
 	_area oo = area;
-	int x1 = (int)oo.x.min;
-	int x2 = (int)oo.x.max;
-	int dx = x2 - x1;
+	i64 x1 = (i64)oo.x.min;
+	i64 x2 = (i64)oo.x.max;
+	i64 dx = x2 - x1;
 	if (dx < 2) return;
-	int step = 60;
+	i64 step = 60;
 	if (dx >= 4) step = 30;
 	if (dx >= 6) step = 20;
 	if (dx >= 8) step = 15;
@@ -2766,8 +2749,8 @@ void _oracle3::draw(i64 n, _area area, _bitmap* bm)
 	if (dx >= 40) step = 3;
 	if (dx >= 60) step = 2;
 	if (dx >= 120) step = 1;
-	int kol = 60 / step;
-	int dd = max - min;
+	i64 kol = 60 / step;
+	i64 dd = max - min;
 	double ddy = oo.y.max - oo.y.min;
 	for (int i = 0; i < kol; i++)
 	{
@@ -2778,13 +2761,13 @@ void _oracle3::draw(i64 n, _area area, _bitmap* bm)
 			ss_++;
 		}
 		if (pri[ss_].empty()) continue;
-		int xx1 = x1 + (x2 - x1) * i / kol;
-		int xx2 = x1 + (x2 - x1) * (i + 1) / kol - 1;
+		i64 xx1 = x1 + (x2 - x1) * i / kol;
+		i64 xx2 = x1 + (x2 - x1) * (i + 1) / kol - 1;
 		for (int j = roffer - 1; j >= 0; j--)
 		{
 			i64 ce = pri[ss_].pro[j].c;
-			int yy1 = (int)(oo.y.min + (max - ce) * ddy / dd);
-			int yy2 = (int)(oo.y.min + (max - ce + 1) * ddy / dd) - 1;
+			i64 yy1 = (i64)(oo.y.min + (max - ce) * ddy / dd);
+			i64 yy2 = (i64)(oo.y.min + (max - ce + 1) * ddy / dd) - 1;
 			if (yy2 < yy1) continue;
 			uint q = (uint)sqrt(pri[ss_].pro[j].k) + 32;
 			if (q > 255) q = 255;
@@ -2794,8 +2777,8 @@ void _oracle3::draw(i64 n, _area area, _bitmap* bm)
 		for (int j = 0; j < roffer; j++)
 		{
 			i64 ce = pri[ss_].pok[j].c;
-			int yy1 = (int)(oo.y.min + (max - ce) * ddy / dd);
-			int yy2 = (int)(oo.y.min + (max - ce + 1) * ddy / dd) - 1;
+			i64 yy1 = (i64)(oo.y.min + (max - ce) * ddy / dd);
+			i64 yy2 = (i64)(oo.y.min + (max - ce + 1) * ddy / dd) - 1;
 			if (yy2 < yy1) continue;
 			uint q = (uint)sqrt(pri[ss_].pok[j].k) + 32;
 			if (q > 255) q = 255;

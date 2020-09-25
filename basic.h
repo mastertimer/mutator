@@ -472,6 +472,16 @@ private:
 struct _ixy // индекс, номер
 {
 	i64 x, y;
+
+	_ixy(i64 x_, i64 y_)       noexcept : x(x_), y(y_) {}
+	_ixy(i64 x_, double y_)    noexcept : x(x_), y(y_) { if ((y_ < 0) && (y != y_)) y--; }
+	_ixy(double x_, i64 y_)    noexcept : x(x_), y(y_) { if ((x_ < 0) && (x != x_)) x--; }
+
+	_ixy(double x_, double y_) noexcept : x(x_), y(y_)
+	{
+		if ((x_ < 0) && (x != x_)) x--;
+		if ((y_ < 0) && (y != y_)) y--;
+	}
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -480,13 +490,7 @@ struct _xy
 {
 	double x, y;
 
-	operator _ixy() const noexcept
-	{
-		_ixy res{ (i64)x, (i64)y };
-		if (x < 0.0) if (x != res.x) res.x--;
-		if (y < 0.0) if (y != res.y) res.y--;
-		return res;
-	}
+	operator _ixy() const noexcept { return { x, y }; }
 
 	_xy operator-()         const noexcept { return { -x,  -y }; }
 
@@ -518,7 +522,7 @@ struct _isize // [0...x), [0...y)
 	i64 x = 0, y = 0;
 
 	bool   empty()   const noexcept { return ((x <= 0) || (y <= 0)); }
-	i64     square()  const noexcept { return ((x <= 0) || (y <= 0)) ? 0 : (x * y); }
+	i64    square()  const noexcept { return ((x <= 0) || (y <= 0)) ? 0 : (x * y); }
 	_xy    center()  const noexcept { return { x * 0.5, y * 0.5 }; }
 	_isize correct() const noexcept { if ((x <= 0) || (y <= 0)) return { 0, 0 }; return { x, y }; } // для удобства
 
@@ -543,9 +547,20 @@ struct _iinterval // [...)
 	i64 min = 0;
 	i64 max = 0;
 
+	_iinterval() noexcept = default;
+	_iinterval(i64 min_, i64 max_)       noexcept : min(min_), max(max_) {}
+	_iinterval(i64 min_, double max_)    noexcept : min(min_), max(max_) { if ((max_ < 0) && (max != max_)) max--; }
+	_iinterval(double min_, i64 max_)    noexcept : min(min_), max(max_) { if ((min_ < 0) && (min != min_)) min--; }
+
+	_iinterval(double min_, double max_) noexcept : min(min_), max(max_)
+	{
+		if ((min_ < 0) && (min != min_)) min--;
+		if ((max_ < 0) && (max != max_)) max--;
+	}
+
 	void operator&=(const _iinterval& b) noexcept { if (b.min > min) min = b.min; if (b.max < max) max = b.max; }
 
-	i64 size()    const noexcept { return (min < max) ? (max - min) : 0; }
+	i64  size()  const noexcept { return (min < max) ? (max - min) : 0; }
 	bool empty() const noexcept { return (max <= min); }
 };
 
@@ -554,7 +569,7 @@ struct _iarea
 	_iinterval x, y; // [...) [...)
 
 	_iarea() = default;
-	_iarea(_isize b) : x{ 0, b.x }, y{ 0, b.y } {}
+	_iarea(_isize b) : x{ 0LL, b.x }, y{ 0LL, b.y } {}
 	_iarea(_iinterval x_, _iinterval y_) : x(x_), y(y_) {}
 
 	bool operator!=(_isize b) const noexcept;
@@ -591,7 +606,7 @@ struct _interval // [...]
 
 	void operator&=(const _interval& b) noexcept { if (b.min > min) min = b.min; if (b.max < max) max = b.max; }
 
-	double length() { return (max > min) ? (max - min) : 0; }
+	double length() const noexcept { return (max > min) ? (max - min) : 0; }
 };
 
 constexpr double de_i = 0.0001; // для больших чисел - не правильно!

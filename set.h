@@ -307,7 +307,6 @@ struct _oracle3 : public _basic_curve // оракул 3-я версия
 struct _set_graph : public _t_go
 {
 	std::vector<std::unique_ptr<_basic_curve>> curve; // кривая
-	bool obn = true; // обновить картинку
 	i64 size_el = 6; // размер элемента
 
 	_set_graph();
@@ -321,11 +320,8 @@ struct _set_graph : public _t_go
 	void mouse_move_left2(_xy r) override; // процесс перетаскивания
 
 private:
-	_bitmap bm;
 	i64 x_tani = 0; // предыдущая координата x при перетаскивании
 	int v_vib = 0; // диапазон полосы прокрутки
-
-	void draw(_isize size);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
