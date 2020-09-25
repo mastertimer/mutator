@@ -549,19 +549,20 @@ struct _iinterval // [...)
 
 	_iinterval() noexcept = default;
 	_iinterval(i64 min_, i64 max_)       noexcept : min(min_), max(max_) {}
-	_iinterval(i64 min_, double max_)    noexcept : min(min_), max(max_) { if ((max_ < 0) && (max != max_)) max--; }
+	_iinterval(i64 min_, double max_)    noexcept : min(min_), max(max_) { if ((max_ > 0) || (max == max_)) max++; }
 	_iinterval(double min_, i64 max_)    noexcept : min(min_), max(max_) { if ((min_ < 0) && (min != min_)) min--; }
 
 	_iinterval(double min_, double max_) noexcept : min(min_), max(max_)
 	{
 		if ((min_ < 0) && (min != min_)) min--;
-		if ((max_ < 0) && (max != max_)) max--;
+		if ((max_ > 0) || (max == max_)) max++;
 	}
 
 	void operator&=(const _iinterval& b) noexcept { if (b.min > min) min = b.min; if (b.max < max) max = b.max; }
 
-	i64  size()  const noexcept { return (min < max) ? (max - min) : 0; }
-	bool empty() const noexcept { return (max <= min); }
+	i64  size()   const noexcept { return (min < max) ? (max - min) : 0; }
+	bool empty()  const noexcept { return (max <= min); }
+	i64  center() const noexcept { i64 s = min + max; if (s < 0) s--; return s >> 1; }
 };
 
 struct _iarea
