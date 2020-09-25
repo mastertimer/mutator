@@ -1410,50 +1410,42 @@ _set_graph::_set_graph()
 	local_area = { {0, 200}, {0, 100} };
 }
 
-void OSpordis(double min, double max, i64 maxN, double& mi, double& step)
+void os_pordis(double min, double max, i64 maxN, double& mi, double& step, double min_step = 0.0)
 {
 	i64 n;
 	double step2;
 	if (maxN < 2) maxN = 2;
 	step = exp(round(log((max - min) / maxN) / log(10)) * log(10));
+	auto fun = [&]()
+	{
+		mi = (i64(min / step)) * step;
+		if (mi < min) mi += step;
+		n = (i64((max - mi) / step)) + 1;
+	};
 	do
 	{
-		{
-			mi = (i64(min / step)) * step;
-			if (mi < min) mi += step;
-			n = (i64((max - mi) / step)) + 1;
-		}
+		fun();
 		if (n < maxN) step = step * 0.1; else break;
 	} while (true);
 	while (n > maxN)
 	{
 		step = step * 10;
-		{
-			mi = (i64(min / step)) * step;
-			if (mi < min) mi += step;
-			n = (i64((max - mi) / step)) + 1;
-		}
+		fun();
 	}
 	step2 = step;
 	step = step2 * 0.2;
-	{
-		mi = (i64(min / step)) * step;
-		if (mi < min) mi += step;
-		n = (i64((max - mi) / step)) + 1;
-	}
-	if (n <= maxN) return;
+	fun();
+	if (n <= maxN) goto end;
 	step = step2 * 0.5;
-	{
-		mi = (i64(min / step)) * step;
-		if (mi < min) mi += step;
-		n = (i64((max - mi) / step)) + 1;
-	}
-	if (n <= maxN) return;
+	fun();
+	if (n <= maxN) goto end;
 	step = step2;
+	fun();
+end:
+	if (step < min_step)
 	{
-		mi = (i64(min / step)) * step;
-		if (mi < min) mi += step;
-		n = (i64((max - mi) / step)) + 1;
+		step = min_step;
+		fun();
 	}
 }
 
@@ -1587,7 +1579,7 @@ void _set_graph::ris2(_trans tr, bool final)
 	if (maxN > 1)
 	{
 		double mi, step;
-		OSpordis(y_.min, y_.max, maxN, mi, step);
+		os_pordis(y_.min, y_.max, maxN, mi, step, ss.c_unpak);
 		for (double y = mi; y < y_.max; y += step)
 		{
 			double yy = a.y.max - (y - y_.min) * a.y.length() / (y_.max - y_.min);
@@ -2724,21 +2716,21 @@ void _oracle3::draw(i64 n, _area area)
 		max = zn[n].max;
 	}
 
-	i64 x1 = (i64)area.x.min;
-	i64 x2 = (i64)area.x.max;
-	i64 dx = x2 - x1;
+	_iinterval xx = area.x;
+	xx.min++;
+	i64 dx = xx.size();
 	if (dx < 2) return;
 	i64 step = 60;
-	if (dx >= 4) step = 30;
-	if (dx >= 6) step = 20;
-	if (dx >= 8) step = 15;
-	if (dx >= 10) step = 12;
-	if (dx >= 12) step = 10;
-	if (dx >= 20) step = 6;
-	if (dx >= 24) step = 5;
-	if (dx >= 30) step = 4;
-	if (dx >= 40) step = 3;
-	if (dx >= 60) step = 2;
+	if (dx >=   4) step = 30;
+	if (dx >=   6) step = 20;
+	if (dx >=   8) step = 15;
+	if (dx >=  10) step = 12;
+	if (dx >=  12) step = 10;
+	if (dx >=  20) step = 6;
+	if (dx >=  24) step = 5;
+	if (dx >=  30) step = 4;
+	if (dx >=  40) step = 3;
+	if (dx >=  60) step = 2;
 	if (dx >= 120) step = 1;
 	i64 kol = 60 / step;
 	i64 dd = max - min;
@@ -2752,8 +2744,8 @@ void _oracle3::draw(i64 n, _area area)
 			ss_++;
 		}
 		if (pri[ss_].empty()) continue;
-		i64 xx1 = x1 + (x2 - x1) * i / kol;
-		i64 xx2 = x1 + (x2 - x1) * (i + 1) / kol - 1;
+		i64 xx1 = xx.min + dx * i / kol;
+		i64 xx2 = xx.min + dx * (i + 1) / kol - 1;
 		for (int j = roffer - 1; j >= 0; j--)
 		{
 			i64 ce = pri[ss_].pro[j].c;
@@ -3425,7 +3417,7 @@ void _g_graph::ris2(_trans tr, bool final)
 		if (maxN > 1)
 		{
 			double mi, step;
-			OSpordis(minx, maxx, maxN, mi, step);
+			os_pordis(minx, maxx, maxN, mi, step);
 			int zn = (int)(-log10(step * 1.1) + 1);
 			if (zn < 0) zn = 0;
 			i64 dex = std::max(master_bm.size_text16(double_to_astring(minx, zn)).x,
@@ -3433,7 +3425,7 @@ void _g_graph::ris2(_trans tr, bool final)
 			maxN = a.x.length() / dex; // 2-е приближение
 			if (maxN > 1)
 			{
-				OSpordis(minx, maxx, maxN, mi, step);
+				os_pordis(minx, maxx, maxN, mi, step);
 				zn = (int)(-log10(step * 1.1) + 1);
 				if (zn < 0) zn = 0;
 				for (double x = mi; x < maxx; x += step)
@@ -3457,7 +3449,7 @@ void _g_graph::ris2(_trans tr, bool final)
 		if (maxN > 1)
 		{
 			double mi, step;
-			OSpordis(miny, maxy, maxN, mi, step);
+			os_pordis(miny, maxy, maxN, mi, step);
 			int zn = (int)(-log10(step * 1.1) + 1);
 			if (zn < 0) zn = 0;
 			for (double y = mi; y < maxy; y += step)
