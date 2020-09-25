@@ -61,8 +61,8 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 	o_test = new _view_stat;
 	graph->curve.push_back(std::unique_ptr<_basic_curve>(sv));
 //	graph->curve.push_back(std::unique_ptr<_basic_curve>(oracle));
-	if (o3) graph->curve.push_back(std::unique_ptr<_basic_curve>(o3));
 	if (o_test) graph->curve.push_back(std::unique_ptr<_basic_curve>(o_test));
+	if (o3) graph->curve.push_back(std::unique_ptr<_basic_curve>(o3));
 	sv->recovery();
 	oracle->recovery();
 	if (o3) o3->recovery();
@@ -1690,7 +1690,7 @@ void _view_stat::get_t_info(int t, _element_chart* e)
 void _view_stat::draw(i64 n, _area area)
 {
 	double r = cen1m[n].k * area.x.length() * 0.15;
-	uint c = 0xffff0000;
+	uint c = 0x80ff0000;
 	master_bm.fill_ring(area.center(), r, r * 0.1, c, c);
 }
 
@@ -2715,7 +2715,6 @@ void _oracle3::draw(i64 n, _area area)
 		min = zn[n].min - 1;
 		max = zn[n].max;
 	}
-
 	_iinterval xx = area.x;
 	xx.min++;
 	i64 dx = xx.size();
@@ -2756,6 +2755,8 @@ void _oracle3::draw(i64 n, _area area)
 			uint q = (uint)sqrt(pri[ss_].pro[j].k) + 32;
 			if (q > 255) q = 255;
 			uint cc = (q << 8) + (q << 16) + 0x60000000;
+			if ((pri[ss_].pro[j].k == 250)) cc = 0xffff00ff;
+			if ((pri[ss_].pro[j].k == 250) && (j == 0)) cc = 0xffffffff;
 			master_bm.fill_rectangle({ {xx1, xx2}, yy}, cc);
 		}
 		for (int j = 0; j < roffer; j++)

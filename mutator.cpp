@@ -654,7 +654,8 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
 	std::vector<i64> k;
-	for (i64 j = 19; j >= 0; j -= 3)
+//	for (i64 j = 19; j >= 0; j -= 3)
+	for (i64 j = 0; j <= 4; j++)
 	{
 		test_ss(j, k);
 		g->add(_matrix(700, [&k](i64 n) { return (double)k[n]; }), std::to_string(j)); // 266
