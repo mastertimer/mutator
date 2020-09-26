@@ -408,3 +408,4 @@ struct _g_graph : public _t_go
 void calc_all_prediction(_basic_curve &o, i64& nn, double& kk);
 void test_ss(i64 f, std::vector<i64>& k);
 i64 test_ss2();
+void test_ss3(std::vector<i64>& k);

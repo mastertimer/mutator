@@ -3543,6 +3543,28 @@ void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void test_ss3(std::vector<i64>& k)
+{
+	k.clear();
+	_prices pr;
+	_prices prpr = cena_zero_;
+	for (i64 i = 0; i < ss.size; i++)
+	{
+		ss.read(i, pr);
+		if (pr == prpr) continue; // игнор одинаковых
+		for (i64 j = 0; j < roffer; j++)
+		{
+			i64 o = pr.pro[j].k;
+			if (o >= (i64)k.size()) k.resize(o + 1, 0);
+			k[o]++;
+			o = pr.pok[j].k;
+			if (o >= (i64)k.size()) k.resize(o + 1, 0);
+			k[o]++;
+		}
+		prpr = pr;
+	}
+}
+
 void test_ss(i64 f, std::vector<i64> &k)
 {
 	k.clear();
