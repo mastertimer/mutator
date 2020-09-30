@@ -388,6 +388,7 @@ struct _curve
 {
 	_matrix a; // данные - 1 или 2 стобца
 	std::string caption; // подпись линии
+	bool bar = false; // гистограмма
 	double width = 1.5; // толщина линии
 };
 
@@ -403,13 +404,13 @@ struct _g_graph : public _t_go
 	int get_froglif() { return 0xFC; }
 	void ris2(_trans tr, bool final) override;
 
-	void add(const _matrix& b, std::string_view s = "");
+	void add(const _matrix& b, std::string_view s = "", bool bar = false);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void calc_all_prediction(_basic_curve &o, i64& nn, double& kk);
 void test_ss(i64 f, std::vector<i64>& k);
-i64 test_ss2();
 void test_ss3(std::vector<i64>& k);
 double test_ss4();
+void test_ss5(std::vector<i64>& k);

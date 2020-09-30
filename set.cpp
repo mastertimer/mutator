@@ -1374,6 +1374,15 @@ void _statistics::add0(const _prices2& c)
 		i64 n = (std::upper_bound(fr.begin(), fr.end(), a) - fr.begin()) - 1;
 		pushn(n, 6);
 		pushn(a - fr[n].first, fr[n].bit);
+		if (i == roffer - 1) continue;
+		i64 delta = c.buy[i].price - c.buy[i + 1].price;
+		if (delta <= 8)
+			pushn(1i64 << (delta - 1), delta);
+		else
+		{
+			pushn(0, 8);
+			pushn(delta, 13);
+		}
 	}
 	for (i64 i = 0; i < roffer; i++)
 	{
@@ -1381,6 +1390,15 @@ void _statistics::add0(const _prices2& c)
 		i64 n = (std::upper_bound(fr.begin(), fr.end(), a) - fr.begin()) - 1;
 		pushn(n, 6);
 		pushn(a - fr[n].first, fr[n].bit);
+		if (i == 0) continue;
+		i64 delta = c.sale[i].price - c.sale[i - 1].price;
+		if (delta <= 8)
+			pushn(1i64 << (delta - 1), delta);
+		else
+		{
+			pushn(0, 8);
+			pushn(delta, 13);
+		}
 	}
 }
 
@@ -3349,9 +3367,9 @@ void _kusok_bukva::cod(ushort* aa, int vaa, wchar_t cc, char nf, i64 nbitt)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_graph::add(const _matrix& b, std::string_view s)
+void _g_graph::add(const _matrix& b, std::string_view s, bool bar)
 {
-	curve.push_back({b, std::string(s)});
+	curve.push_back({b, std::string(s), bar});
 }
 
 void _g_graph::ris2(_trans tr, bool final)
@@ -3394,6 +3412,11 @@ void _g_graph::ris2(_trans tr, bool final)
 			c->column(1).min_max(&min, &max);
 		else
 			c->column(0).min_max(&min, &max);
+		if (i.bar)
+		{
+			if (max < 0) max = 0;
+			if (min > 0) min = 0;
+		}
 		if (miny > maxy)
 		{
 			miny = min;
@@ -3418,6 +3441,7 @@ void _g_graph::ris2(_trans tr, bool final)
 	double kx = a.x.length() / (maxx - minx);
 	double ky = a.y.length() / (maxy - miny);
 	int ng = 0;
+	double delta_bar = 0;
 	for (auto& j : curve)
 	{
 		_matrix* c = &j.a;
@@ -3442,10 +3466,14 @@ void _g_graph::ris2(_trans tr, bool final)
 			}
 			double xx = (a.x.min + (x - minx) * kx);
 			double yy = (a.y.max - (y - miny) * ky);
-			if (i > 0) master_bm.lines({ xpr, ypr }, { xx, yy }, j.width, cc);
+			if (j.bar)
+				master_bm.lines({ xx + delta_bar, (a.y.max + miny * ky) }, { xx + delta_bar, yy }, j.width, cc);
+			else
+				if (i > 0) master_bm.lines({ xpr, ypr }, { xx, yy }, j.width, cc);
 			xpr = xx;
 			ypr = yy;
 		}
+		if (j.bar) delta_bar += j.width;
 	}
 	// рисование осей
 	if (a.y.length() > 10)
@@ -3613,12 +3641,12 @@ void test_ss3(std::vector<i64>& k)
 	{
 		ss.read(i, pr);
 		if (pr == prpr) continue; // игнор одинаковых
-		for (i64 j = 0; j < roffer; j++)
+		for (i64 j = 0; j < roffer-1; j++)
 		{
-			i64 o = pr.pro[j].k;
+			i64 o = pr.pro[j + 1].c - pr.pro[j].c;
 			if (o >= (i64)k.size()) k.resize(o + 1, 0);
 			k[o]++;
-			o = pr.pok[j].k;
+			o = pr.pok[j].c - pr.pok[j + 1].c;
 			if (o >= (i64)k.size()) k.resize(o + 1, 0);
 			k[o]++;
 		}
@@ -3629,37 +3657,34 @@ void test_ss3(std::vector<i64>& k)
 void test_ss(i64 f, std::vector<i64> &k)
 {
 	k.clear();
+	if ((f < 0) || (f >= roffer - 1)) return;
 	_prices pr;
 	_prices prpr = cena_zero_;
 	for (i64 i = 0; i < ss.size; i++)
 	{
 		ss.read(i, pr);
 		if (pr == prpr) continue; // игнор одинаковых
-		_offer o = pr.pro[f];
-		if (o.k >= k.size()) k.resize((i64)o.k + 1, 0);
-		k[o.k]++;
+		i64 o = pr.pok[f].c - pr.pok[f + 1].c;
+		if (o >= (i64)k.size()) k.resize(o + 1, 0);
+		k[o]++;
 		prpr = pr;
 	}
 }
 
-i64 test_ss2()
+void test_ss5(std::vector<i64>& k)
 {
+	k.clear();
 	_prices pr;
 	_prices prpr = cena_zero_;
-	i64 s = 0;
-	i64 k = 0;
 	for (i64 i = 0; i < ss.size; i++)
 	{
 		ss.read(i, pr);
-		if (pr == prpr)
-		{
-			k++;
-			if (k > s) s = k;
-		}
-		else k = 0;
+		if (pr == prpr) continue; // игнор одинаковых
+		i64 o = pr.pro[0].c - pr.pok[0].c;
+		if (o >= (i64)k.size()) k.resize(o + 1, 0);
+		k[o]++;
 		prpr = pr;
 	}
-	return s;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

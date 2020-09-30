@@ -13,8 +13,6 @@
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <ctime>
-#include <algorithm>
-#include <array>
 
 #include "set.h"
 #include "mutator.h"
@@ -657,31 +655,31 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	show_message(test_ss4());
-//	std::array<i64,7> v = { 1, 2, 3, 4, 5, 6, 7 };
-//	show_message(std::upper_bound(v.begin(), v.end(), 4)- v.begin());
-
-//	_statistics sss;
-//	sss.add({});
 /*	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
 	std::vector<i64> k;
 	test_ss3(k);
-	g->add(_matrix(700, [&k](i64 n) { return (double)k[n]; }), "сумма"); // 266
+	g->add(_matrix(k.size(), [&k](i64 n) { return log(k[n] + 1.0); }), "сумма", true); // 266
 
+	i64 ee = 9; // 1 - 8
 	i64 s = 0;
 	for (i64 i = 0; i < (i64)k.size(); i++) s += k[i];
 	i64 ss = 0;
-	for (i64 i = 1; i <= 266+8; i++) ss += k[i];
-	MessageBox(0, std::to_wstring(ss*64.0/s).c_str(), L"упс", MB_OK | MB_TASKMODAL);*/
+	for (i64 i = ee; i < (i64)k.size(); i++) ss += k[i];
+	MessageBox(0, std::to_wstring(double(ss)/s).c_str(), L"упс", MB_OK | MB_TASKMODAL); // ss*64.0/s*/
 
 /*	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
 	std::vector<i64> k;
-	for (i64 j = 0; j <= 4; j++)
-	{
-		test_ss(j, k);
-		g->add(_matrix(700, [&k](i64 n) { return (double)k[n]; }), std::to_string(j)); // 266
-	}*/
+	//for (i64 j = 0; j < 19; j += 6)
+	//{
+	//	test_ss(j, k);
+	//	g->add(_matrix(k.size(), [&k](i64 n) { return log(k[n]+1.0); }), std::to_string(j), true);
+	//}
+	test_ss3(k);
+	g->add(_matrix(k.size(), [&k](i64 n) { return log(k[n]/38.0 + 1.0); }), "sr", true);
+	test_ss5(k);
+	g->add(_matrix(k.size(), [&k](i64 n) { return log(k[n] + 1.0); }), "delta", true);*/
 
 /*	for (i64 f = 0; f < 20; f++)
 	{
