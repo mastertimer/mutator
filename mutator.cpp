@@ -651,22 +651,22 @@ void fun31(_tetron* tt0, _tetron* tt, u64 flags)
 void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 {
 }
-
+// 1..4
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	show_message(test_ss4());
 /*	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
 	std::vector<i64> k;
-	test_ss3(k);
-	g->add(_matrix(k.size(), [&k](i64 n) { return log(k[n] + 1.0); }), "сумма", true); // 266
+	test_ss5(k);
+	g->add(_matrix(k.size(), [&k](i64 n) { return log(k[n] + 1.0); }), "граница", true); // 266
 
-	i64 ee = 9; // 1 - 8
+	i64 ee = 5; 
 	i64 s = 0;
 	for (i64 i = 0; i < (i64)k.size(); i++) s += k[i];
 	i64 ss = 0;
-	for (i64 i = ee; i < (i64)k.size(); i++) ss += k[i];
-	MessageBox(0, std::to_wstring(double(ss)/s).c_str(), L"упс", MB_OK | MB_TASKMODAL); // ss*64.0/s*/
+	for (i64 i = 1; i <= 7; i++) ss += k[i];
+	MessageBox(0, std::to_wstring(ss * 8.0 / s).c_str(), L"упс", MB_OK | MB_TASKMODAL); // ss*64.0/s*/
 
 /*	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
