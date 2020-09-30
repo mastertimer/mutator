@@ -102,7 +102,7 @@ struct _statistics // статистика цен, сжатая
 	i64 size = 0; // количество записей
 	_prices2 last_cc = cena_zero2; // последние цены
 
-	void add(_prices2& c); // добавить цены (сжать)
+	void add(const _prices2& c); // добавить цены (сжать)
 
 private:
 	std::vector<uchar> data;
@@ -113,8 +113,8 @@ private:
 	uchar byte = 0; // текущий байт
 	uchar bit = 0;
 
-	void add0(_prices2& c); // не дельта!
-	void add1(_prices2& c); // дельта
+	void add0(const _prices2& c); // не дельта!
+	void add1(const _prices2& c); // дельта
 	void push1(uchar a); // добавить 1 байт
 	void pushn(u64 a, uchar n); // добавить n байт
 };

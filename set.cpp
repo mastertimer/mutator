@@ -19,6 +19,7 @@ constexpr wchar_t mmm_file[] = L"..\\..\\mmm.txt";
 constexpr _prices cena_zero_ = { {}, {}, { 1,1,1,1,1 } };
 
 _super_stat      ss;               // сжатые цены
+_statistics      sss;              // сжатые цены
 _set_graph*      graph  = nullptr; // график
 
 _nervous_oracle *oracle = nullptr; // оракул
@@ -1334,7 +1335,7 @@ void _statistics::pushn(u64 a, uchar n)
 	}
 }
 
-void _statistics::add0(_prices2& c)
+void _statistics::add0(const _prices2& c)
 {
 	offer0 = c.buy[roffer - 1].price;
 	i64 offermax = c.sale[roffer - 1].price;
@@ -1346,14 +1347,44 @@ void _statistics::add0(_prices2& c)
 		baza[c.sale[i].price - offer0] = -c.sale[i].number;
 	}
 	pushn(offer0, 16);
+
+	struct _frequency
+	{
+		i64 first; // первое число кодируемое
+		uchar bit; // количество дополнительных бит
+	};
+	static const _frequency fr[64] = {{1, 0}, {2, 3}, {10, 3}, {18, 4}, {34, 4}, {50, 0}, {51, 1}, {53, 2}, {57, 3},
+		{65, 3}, {73, 4}, {89, 4}, {100, 0}, {101, 3}, {109, 3}, {117, 3}, {125, 4}, {141, 3}, {149, 3}, {157, 4},
+		{173, 3}, {181, 4}, {197, 3}, {205, 3}, {213, 3}, {221, 3}, {229, 3}, {237, 4}, {250, 0}, {251, 3}, {259, 3},
+		{267, 4}, {283, 4}, {299, 3}, {307, 4}, {323, 3}, {331, 4}, {347, 3}, {355, 4}, {371, 4}, {387, 4}, {403, 4},
+		{419, 5}, {451, 4}, {467, 4}, {483, 5}, {515, 5}, {547, 5}, {579, 5}, {611, 5}, {643, 6}, {707, 6}, {771, 6},
+		{835, 6}, {899, 6}, {963, 6}, {1027, 6}, {1091, 7}, {1219, 7}, {1347, 8}, {1603, 9}, {2115, 10}, {3139, 12},
+		{7235, 30}};
+	bool error = false;
+	i64 me = 0;
+	for (i64 i = 0; i < 63; i++)
+	{
+		i64 delta = (1ll << fr[i].bit);
+		if (fr[i + 1].first - fr[i].first > delta) error = true;
+		if (fr[i + 1].first - fr[i].first < delta) me++;
+	}
+
+	for (i64 i = roffer - 1; i >= 0; i--)
+	{
+		c.buy[i].number;
+	}
+	for (i64 i = 0; i < roffer; i++)
+	{
+		c.sale[i].number;
+	}
 }
 
-void _statistics::add1(_prices2& c)
+void _statistics::add1(const _prices2& c)
 {
 //	i64 delta_start = c.buy[roffer - 1].price - last_cc.buy[roffer - 1].price;
 }
 
-void _statistics::add(_prices2& c)
+void _statistics::add(const _prices2& c)
 {
 	byte = bit = 0;
 	if (size % step_pak_cc == 0)

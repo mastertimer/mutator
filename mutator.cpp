@@ -650,7 +650,7 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 	 1/64 - 1..1         0.8   1
 	 2/64 - 2..9         2.0   8
 	 3/64 - 10..17       2.8   8
-	 4/64 - 17..33       4.1  16
+	 4/64 - 18..33       4.1  16
 	 5/64 - 34..49       4.8  16
 	 6/64 - 50..50       6.1   1
 	 7/64 - 51..52       6.9   2
@@ -661,7 +661,7 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 	12/64 - 89..99      11.8  11*
 	13/64 - 100..100    13.3   1
 	14/64 - 101..108    14.2   8
-	15/64 - 108..116    15.1   8
+	15/64 - 109..116    15.1   8
 	16/64 - 117..124    15.8   8
 	17/64 - 125..140    17.1  16
 	18/64 - 141..148    17.6   8
@@ -687,7 +687,7 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 	38/64 - 347..354    37.8   8
 	39/64 - 355..370    39.0  16
 	40/64 - 371..386    40.0  16
-	41/64 - 372..402    40.9  16
+	41/64 - 387..402    40.9  16
 	42/64 - 403..418    41.7  16
 	43/64 - 419..450    43.3  32
 	44/64 - 451..466    44.1  16
@@ -709,12 +709,14 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 	60/64 - 1347..1602  59.6 256
 	61/64 - 1603..2114  60.9 512
 	62/64 - 2115..3138  61.9 1024
-	63/64 - 3138..7234  63.2 4096
+	63/64 - 3139..7234  63.2 4096
 	64/64 - 7235..670941
 */
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	_g_graph* g = new _g_graph;
+	_statistics sss;
+	sss.add({});
+/*	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
 	std::vector<i64> k;
 	test_ss3(k);
@@ -724,7 +726,7 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 	for (i64 i = 0; i < (i64)k.size(); i++) s += k[i];
 	i64 ss = 0;
 	for (i64 i = 1; i <= 266+8; i++) ss += k[i];
-	MessageBox(0, std::to_wstring(ss*64.0/s).c_str(), L"упс", MB_OK | MB_TASKMODAL);
+	MessageBox(0, std::to_wstring(ss*64.0/s).c_str(), L"упс", MB_OK | MB_TASKMODAL);*/
 
 /*	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
