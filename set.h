@@ -16,12 +16,12 @@ struct _offer // предложение
 	bool operator!=(_offer p) const noexcept { return (c != p.c) || (k != p.k); }
 };
 
-struct _offer2  // предложение с удобными типами, хранится всё равно в сжатом виде
+struct _one_stat // единица статистики
 {
-	i64 price;  // цена
-	i64 number; // количество
+	i64 value;   // значение / цена
+	i64 number;  // количество
 
-	void operator=(_offer a) noexcept { price = a.c; number = a.k; }
+	void operator=(_offer a) noexcept { value = a.c; number = a.k; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,8 +51,8 @@ struct _prices // массив спроса предложения
 
 struct _prices2 // массив спроса предложения с удобными типами
 {
-	_offer2 buy[roffer];  // предложение покупки (порядок с самого выгодного)
-	_offer2 sale[roffer]; // предложение продажи (порядок с самого выгодного)
+	_one_stat buy[roffer];  // предложение покупки (порядок с самого выгодного)
+	_one_stat sale[roffer]; // предложение продажи (порядок с самого выгодного)
 	time_t time;          // время
 
 	_prices2() = default;
@@ -75,7 +75,7 @@ struct _super_stat // супер статистика цен
 	};
 
 	i64 size = 0; // количество записей
-	_prices last_cc; // последние цены
+	_prices last_cc{}; // последние цены
 	static constexpr double c_unpak = 0.01; // распаковка цен
 
 	_super_stat();
@@ -100,7 +100,7 @@ private:
 	void otgruzka(int rez, int Vrez, int* deko); // вспомогательная Pak()
 };
 
-struct _statistics // статистика цен, сжатая
+struct _set_stat // статистика цен, сжатая
 {
 	i64 size = 0; // количество записей
 	_prices2 last_cc; // последние цены
@@ -386,10 +386,10 @@ private:
 
 struct _curve
 {
-	_matrix a; // данные - 1 или 2 стобца
-	std::string caption; // подпись линии
-	bool bar = false; // гистограмма
-	double width = 1.5; // толщина линии
+	_matrix     a;             // данные - 1 или 2 стобца
+	std::string caption;       // подпись линии
+	bool        bar   = false; // гистограмма
+	double      width = 1.5;   // толщина линии
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -405,6 +405,25 @@ struct _g_graph : public _t_go
 	void ris2(_trans tr, bool final) override;
 
 	void add(const _matrix& b, std::string_view s = "", bool bar = false);
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct _statistics
+{
+	std::vector<i64> data;
+
+	i64 size() const noexcept { return data.size(); }
+
+	void set_number_buy(i64 n);    // статистика количеств n-й покупки
+	void set_number_sale(i64 n);   // статистика количеств n-й продажи
+	void set_number_buy();         // статистика количеств покупки
+	void set_number_sale();        // статистика количеств продажи
+	void set_number();             // статистика количеств
+
+	i64 first_zero(i64 start);     // номер первого нулевого элемента начиная со start (-1 если не нашлось)
+	i64 number_not_zero();         // количество ненулевых элементов
+	double arithmetic_size();      // арифметический размер в битах
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

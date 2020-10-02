@@ -651,10 +651,14 @@ void fun31(_tetron* tt0, _tetron* tt, u64 flags)
 void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 {
 }
-// 1..4
+
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	show_message(test_ss4());
+	_statistics s;
+	s.set_number();
+	show_message(s.size());
+	show_message(s.number_not_zero());
+//	show_message(test_ss4());
 /*	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
 	std::vector<i64> k;

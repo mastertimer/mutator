@@ -21,7 +21,7 @@ constexpr wchar_t mmm_file[] = L"..\\..\\mmm.txt";
 constexpr _prices cena_zero_ = { {}, {}, { 1,1,1,1,1 } };
 
 _super_stat      ss;               // сжатые цены
-_statistics      sss;              // сжатые цены
+_set_stat        sss;              // сжатые цены
 _set_graph*      graph  = nullptr; // график
 
 _nervous_oracle *oracle = nullptr; // оракул
@@ -1313,7 +1313,7 @@ _super_stat::_super_stat()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _statistics::push1(uchar a)
+void _set_stat::push1(uchar a)
 {
 	byte |= (a << bit++);
 	if (bit == 8)
@@ -1323,7 +1323,7 @@ void _statistics::push1(uchar a)
 	}
 }
 
-void _statistics::pushn(u64 a, uchar n)
+void _set_stat::pushn(u64 a, uchar n)
 {
 	for (; n; n--)
 	{
@@ -1348,16 +1348,16 @@ inline bool operator<(i64 a, _frequency b) noexcept
 	return (a < b.first);
 }
 
-void _statistics::add0(const _prices2& c)
+void _set_stat::add0(const _prices2& c)
 {
-	offer0 = c.buy[roffer - 1].price;
-	i64 offermax = c.sale[roffer - 1].price;
+	offer0 = c.buy[roffer - 1].value;
+	i64 offermax = c.sale[roffer - 1].value;
 	baza.clear();
 	baza.resize(offermax - offer0 + 1, 0);
 	for (i64 i = 0; i < roffer; i++)
 	{
-		baza[c.buy[i].price - offer0] = c.buy[i].number;
-		baza[c.sale[i].price - offer0] = -c.sale[i].number;
+		baza[c.buy[i].value - offer0] = c.buy[i].number;
+		baza[c.sale[i].value - offer0] = -c.sale[i].number;
 	}
 	pushn(offer0, 16);
 
@@ -1375,7 +1375,7 @@ void _statistics::add0(const _prices2& c)
 		pushn(n, 6);
 		pushn(a - fr[n].first, fr[n].bit);
 		if (i == roffer - 1) continue;
-		i64 delta = c.buy[i].price - c.buy[i + 1].price;
+		i64 delta = c.buy[i].value - c.buy[i + 1].value;
 		if (delta <= 8)
 			pushn(1i64 << (delta - 1), delta);
 		else
@@ -1384,7 +1384,7 @@ void _statistics::add0(const _prices2& c)
 			pushn(delta, 13); // *
 		}
 	}
-	i64 d2 = c.sale[0].price - c.buy[0].price;
+	i64 d2 = c.sale[0].value - c.buy[0].value;
 	if (d2 <= 7)
 		pushn(d2, 3);
 	else
@@ -1399,7 +1399,7 @@ void _statistics::add0(const _prices2& c)
 		pushn(n, 6);
 		pushn(a - fr[n].first, fr[n].bit);
 		if (i == 0) continue;
-		i64 delta = c.sale[i].price - c.sale[i - 1].price;
+		i64 delta = c.sale[i].value - c.sale[i - 1].value;
 		if (delta <= 8)
 			pushn(1i64 << (delta - 1), delta);
 		else
@@ -1410,12 +1410,12 @@ void _statistics::add0(const _prices2& c)
 	}
 }
 
-void _statistics::add1(const _prices2& c)
+void _set_stat::add1(const _prices2& c)
 {
 //	i64 delta_start = c.buy[roffer - 1].price - last_cc.buy[roffer - 1].price;
 }
 
-void _statistics::add(const _prices2& c)
+void _set_stat::add(const _prices2& c)
 {
 	byte = bit = 0;
 	if ((size % step_pak_cc == 0)||true)
@@ -3579,6 +3579,7 @@ _prices2::_prices2(const _prices& a)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 {
 	_super_stat ss_old = ss;
@@ -3622,6 +3623,121 @@ void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 	}
 	nn = vv;
 	kk = k;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+i64 _statistics::number_not_zero()
+{
+	i64 s = 0;
+	for (i64 i : data) if (i) s++;
+	return s;
+}
+
+i64 _statistics::first_zero(i64 start)
+{
+	for (i64 i = start; i < (i64)data.size(); i++) if (data[i] == 0) return i;
+	return -1;
+}
+
+double _statistics::arithmetic_size()
+{
+	double s = 0;
+	return s;
+}
+
+void _statistics::set_number_sale(i64 n)
+{
+	data.clear();
+	if ((n < 0) || (n >= roffer)) return;
+	_prices pr;
+	_prices prpr = cena_zero_;
+	for (i64 i = 0; i < ss.size; i++)
+	{
+		ss.read(i, pr);
+		if (pr == prpr) continue; // игнор одинаковых
+		i64 o = pr.pro[n].k;
+		if (o >= (i64)data.size()) data.resize(o + 1, 0);
+		data[o]++;
+		prpr = pr;
+	}
+}
+
+void _statistics::set_number_buy(i64 n)
+{
+	data.clear();
+	if ((n < 0) || (n >= roffer)) return;
+	_prices pr;
+	_prices prpr = cena_zero_;
+	for (i64 i = 0; i < ss.size; i++)
+	{
+		ss.read(i, pr);
+		if (pr == prpr) continue; // игнор одинаковых
+		i64 o = pr.pok[n].k;
+		if (o >= (i64)data.size()) data.resize(o + 1, 0);
+		data[o]++;
+		prpr = pr;
+	}
+}
+
+void _statistics::set_number_buy()
+{
+	data.clear();
+	_prices pr;
+	_prices prpr = cena_zero_;
+	for (i64 i = 0; i < ss.size; i++)
+	{
+		ss.read(i, pr);
+		if (pr == prpr) continue; // игнор одинаковых
+		for (i64 n = 0; n < roffer; n++)
+		{
+			i64 o = pr.pok[n].k;
+			if (o >= (i64)data.size()) data.resize(o + 1, 0);
+			data[o]++;
+		}
+		prpr = pr;
+	}
+}
+
+void _statistics::set_number_sale()
+{
+	data.clear();
+	_prices pr;
+	_prices prpr = cena_zero_;
+	for (i64 i = 0; i < ss.size; i++)
+	{
+		ss.read(i, pr);
+		if (pr == prpr) continue; // игнор одинаковых
+		for (i64 n = 0; n < roffer; n++)
+		{
+			i64 o = pr.pro[n].k;
+			if (o >= (i64)data.size()) data.resize(o + 1, 0);
+			data[o]++;
+		}
+		prpr = pr;
+	}
+}
+
+void _statistics::set_number()
+{
+	data.clear();
+	_prices pr;
+	_prices prpr = cena_zero_;
+	for (i64 i = 0; i < ss.size; i++)
+	{
+		ss.read(i, pr);
+		if (pr == prpr) continue; // игнор одинаковых
+		for (i64 n = 0; n < roffer; n++)
+		{
+			i64 o = pr.pro[n].k;
+			if (o >= (i64)data.size()) data.resize(o + 1, 0);
+			data[o]++;
+			o = pr.pok[n].k;
+			if (o >= (i64)data.size()) data.resize(o + 1, 0);
+			data[o]++;
+		}
+		prpr = pr;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
