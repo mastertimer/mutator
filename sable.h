@@ -100,10 +100,10 @@ private:
 	void otgruzka(int rez, int Vrez, int* deko); // вспомогательная Pak()
 };
 
-struct _set_stat // статистика цен, сжатая
+struct _sable_stat // статистика цен, сжатая
 {
 	i64 size = 0; // количество записей
-	_prices2 last_cc; // последние цены
+	_prices2 last_cc{}; // последние цены
 	std::vector<uchar> data;
 
 	void add(const _prices2& c); // добавить цены (сжать)
@@ -307,12 +307,12 @@ struct _oracle3 : public _basic_curve // оракул 3-я версия
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _set_graph : public _t_go
+struct _sable_graph : public _t_go
 {
 	std::vector<std::unique_ptr<_basic_curve>> curve; // кривая
 	i64 size_el = 6; // размер элемента
 
-	_set_graph();
+	_sable_graph();
 
 	uchar type()                     override { return 9; }
 	int get_froglif()                override { return 0x71; }
@@ -411,9 +411,10 @@ struct _g_graph : public _t_go
 
 struct _statistics
 {
-	std::vector<i64> data;
+	std::vector<_one_stat> data;
 
-	i64 size() const noexcept { return data.size(); }
+	i64 max_value() const noexcept { if (data.empty()) return 0; return data.back().value; }
+	i64 min_value() const noexcept { if (data.empty()) return 0; return data.front().value; }
 
 	void set_number_buy(i64 n);    // статистика количеств n-й покупки
 	void set_number_sale(i64 n);   // статистика количеств n-й продажи
@@ -421,9 +422,11 @@ struct _statistics
 	void set_number_sale();        // статистика количеств продажи
 	void set_number();             // статистика количеств
 
-	i64 first_zero(i64 start);     // номер первого нулевого элемента начиная со start (-1 если не нашлось)
-	i64 number_not_zero();         // количество ненулевых элементов
+	i64 first_zero();              // номер первого нулевого элемента начиная со start (-1 если не нашлось)
+	i64 number_not_zero() { return data.size(); } // количество значений с ненулевым количеством
 	double arithmetic_size();      // арифметический размер в битах
+
+	void set(std::vector<i64>& a);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

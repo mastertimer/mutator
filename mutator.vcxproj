@@ -163,7 +163,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mult.cpp" />
     <ClCompile Include="mutator.cpp" />
-    <ClCompile Include="set.cpp" />
+    <ClCompile Include="sable.cpp" />
     <ClCompile Include="tetron.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -171,7 +171,7 @@
     <ClInclude Include="mult.h" />
     <ClInclude Include="mutator.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="set.h" />
+    <ClInclude Include="sable.h" />
     <ClInclude Include="tetron.h" />
   </ItemGroup>
   <ItemGroup>

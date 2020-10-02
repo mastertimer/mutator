@@ -14,15 +14,15 @@ max(rnd)  |   1.058        58       1.00097
 
 #include <array>
 #include <algorithm>
-#include "set.h"
+#include "sable.h"
 
 constexpr wchar_t ss_file[]  = L"..\\..\\baza.cen";
 constexpr wchar_t mmm_file[] = L"..\\..\\mmm.txt";
 constexpr _prices cena_zero_ = { {}, {}, { 1,1,1,1,1 } };
 
 _super_stat      ss;               // сжатые цены
-_set_stat        sss;              // сжатые цены
-_set_graph*      graph  = nullptr; // график
+_sable_stat        sss;              // сжатые цены
+_sable_graph*      graph  = nullptr; // график
 
 _nervous_oracle *oracle = nullptr; // оракул
 _mctds_candle   *sv     = nullptr;
@@ -1313,7 +1313,7 @@ _super_stat::_super_stat()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _set_stat::push1(uchar a)
+void _sable_stat::push1(uchar a)
 {
 	byte |= (a << bit++);
 	if (bit == 8)
@@ -1323,7 +1323,7 @@ void _set_stat::push1(uchar a)
 	}
 }
 
-void _set_stat::pushn(u64 a, uchar n)
+void _sable_stat::pushn(u64 a, uchar n)
 {
 	for (; n; n--)
 	{
@@ -1348,7 +1348,7 @@ inline bool operator<(i64 a, _frequency b) noexcept
 	return (a < b.first);
 }
 
-void _set_stat::add0(const _prices2& c)
+void _sable_stat::add0(const _prices2& c)
 {
 	offer0 = c.buy[roffer - 1].value;
 	i64 offermax = c.sale[roffer - 1].value;
@@ -1410,12 +1410,12 @@ void _set_stat::add0(const _prices2& c)
 	}
 }
 
-void _set_stat::add1(const _prices2& c)
+void _sable_stat::add1(const _prices2& c)
 {
 //	i64 delta_start = c.buy[roffer - 1].price - last_cc.buy[roffer - 1].price;
 }
 
-void _set_stat::add(const _prices2& c)
+void _sable_stat::add(const _prices2& c)
 {
 	byte = bit = 0;
 	if ((size % step_pak_cc == 0)||true)
@@ -1438,13 +1438,13 @@ void _set_stat::add(const _prices2& c)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool _set_graph::mouse_down_left2(_xy r)
+bool _sable_graph::mouse_down_left2(_xy r)
 {
 	x_tani = (i64)r.x;
 	return true;
 }
 
-void _set_graph::mouse_move_left2(_xy r)
+void _sable_graph::mouse_move_left2(_xy r)
 {
 	i64 dx = ((i64)r.x - x_tani) / size_el;
 	if (dx == 0) return;
@@ -1461,12 +1461,12 @@ void _set_graph::mouse_move_left2(_xy r)
 	polz->run(0, polz, flag_run);
 }
 
-void _set_graph::run(_tetron* tt0, _tetron* tt, u64 flags)
+void _sable_graph::run(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	cha_area();
 }
 
-_set_graph::_set_graph()
+_sable_graph::_sable_graph()
 {
 	graph = this;
 	local_area = { {0, 200}, {0, 100} };
@@ -1527,7 +1527,7 @@ std::string date_to_ansi_string(int time)
 	return res;
 }
 
-void _set_graph::ris2(_trans tr, bool final)
+void _sable_graph::ris2(_trans tr, bool final)
 {
 	_area a = tr(local_area);
 	_interval y_; // диапазон у (grid)
@@ -3627,16 +3627,21 @@ void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-i64 _statistics::number_not_zero()
+void _statistics::set(std::vector<i64>& a)
 {
-	i64 s = 0;
-	for (i64 i : data) if (i) s++;
-	return s;
+	i64 k = 0;
+	for (auto i : a) if (i) k++;
+	data.clear();
+	data.reserve(k);
+	for (i64 i = 0; i < (i64)a.size(); i++)
+		if (a[i]) data.push_back({ i, a[i] });
 }
 
-i64 _statistics::first_zero(i64 start)
+i64 _statistics::first_zero()
 {
-	for (i64 i = start; i < (i64)data.size(); i++) if (data[i] == 0) return i;
+	for (i64 i = 1; i < (i64)data.size(); i++)
+		if (data[i].value != data[i - 1].value + 1)
+			return data[i - 1].value + 1;
 	return -1;
 }
 
@@ -3648,8 +3653,8 @@ double _statistics::arithmetic_size()
 
 void _statistics::set_number_sale(i64 n)
 {
-	data.clear();
-	if ((n < 0) || (n >= roffer)) return;
+	if ((n < 0) || (n >= roffer)) { data.clear(); return; }
+	std::vector<i64> a;
 	_prices pr;
 	_prices prpr = cena_zero_;
 	for (i64 i = 0; i < ss.size; i++)
@@ -3657,16 +3662,17 @@ void _statistics::set_number_sale(i64 n)
 		ss.read(i, pr);
 		if (pr == prpr) continue; // игнор одинаковых
 		i64 o = pr.pro[n].k;
-		if (o >= (i64)data.size()) data.resize(o + 1, 0);
-		data[o]++;
+		if (o >= (i64)a.size()) a.resize(o + 1, 0);
+		a[o]++;
 		prpr = pr;
 	}
+	set(a);
 }
 
 void _statistics::set_number_buy(i64 n)
 {
-	data.clear();
-	if ((n < 0) || (n >= roffer)) return;
+	if ((n < 0) || (n >= roffer)) { data.clear(); return; }
+	std::vector<i64> a;
 	_prices pr;
 	_prices prpr = cena_zero_;
 	for (i64 i = 0; i < ss.size; i++)
@@ -3674,15 +3680,16 @@ void _statistics::set_number_buy(i64 n)
 		ss.read(i, pr);
 		if (pr == prpr) continue; // игнор одинаковых
 		i64 o = pr.pok[n].k;
-		if (o >= (i64)data.size()) data.resize(o + 1, 0);
-		data[o]++;
+		if (o >= (i64)a.size()) a.resize(o + 1, 0);
+		a[o]++;
 		prpr = pr;
 	}
+	set(a);
 }
 
 void _statistics::set_number_buy()
 {
-	data.clear();
+	std::vector<i64> a;
 	_prices pr;
 	_prices prpr = cena_zero_;
 	for (i64 i = 0; i < ss.size; i++)
@@ -3692,16 +3699,17 @@ void _statistics::set_number_buy()
 		for (i64 n = 0; n < roffer; n++)
 		{
 			i64 o = pr.pok[n].k;
-			if (o >= (i64)data.size()) data.resize(o + 1, 0);
-			data[o]++;
+			if (o >= (i64)a.size()) a.resize(o + 1, 0);
+			a[o]++;
 		}
 		prpr = pr;
 	}
+	set(a);
 }
 
 void _statistics::set_number_sale()
 {
-	data.clear();
+	std::vector<i64> a;
 	_prices pr;
 	_prices prpr = cena_zero_;
 	for (i64 i = 0; i < ss.size; i++)
@@ -3711,16 +3719,17 @@ void _statistics::set_number_sale()
 		for (i64 n = 0; n < roffer; n++)
 		{
 			i64 o = pr.pro[n].k;
-			if (o >= (i64)data.size()) data.resize(o + 1, 0);
-			data[o]++;
+			if (o >= (i64)a.size()) a.resize(o + 1, 0);
+			a[o]++;
 		}
 		prpr = pr;
 	}
+	set(a);
 }
 
 void _statistics::set_number()
 {
-	data.clear();
+	std::vector<i64> a;
 	_prices pr;
 	_prices prpr = cena_zero_;
 	for (i64 i = 0; i < ss.size; i++)
@@ -3730,14 +3739,15 @@ void _statistics::set_number()
 		for (i64 n = 0; n < roffer; n++)
 		{
 			i64 o = pr.pro[n].k;
-			if (o >= (i64)data.size()) data.resize(o + 1, 0);
-			data[o]++;
+			if (o >= (i64)a.size()) a.resize(o + 1, 0);
+			a[o]++;
 			o = pr.pok[n].k;
-			if (o >= (i64)data.size()) data.resize(o + 1, 0);
-			data[o]++;
+			if (o >= (i64)a.size()) a.resize(o + 1, 0);
+			a[o]++;
 		}
 		prpr = pr;
 	}
+	set(a);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

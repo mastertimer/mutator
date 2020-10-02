@@ -18,9 +18,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="set.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="mutator.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -33,12 +30,12 @@
     <ClCompile Include="basic.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="sable.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="set.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="mutator.h">
@@ -51,6 +48,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="basic.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="sable.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

@@ -14,7 +14,7 @@
 
 #include <ctime>
 
-#include "set.h"
+#include "sable.h"
 #include "mutator.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -656,7 +656,7 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_statistics s;
 	s.set_number();
-	show_message(s.size());
+	show_message(s.max_value());
 	show_message(s.number_not_zero());
 //	show_message(test_ss4());
 /*	_g_graph* g = new _g_graph;
@@ -1144,7 +1144,7 @@ _tetron* create_tetron(const std::string& name)
 		make(_g_edit_double),
 		make(_g_button),
 		make(_g_tetron),
-		make(_set_graph),
+		make(_sable_graph),
 		make(_g_graph)
 	};
 #undef make
@@ -1166,7 +1166,7 @@ _tetron* create_tetron(uchar tipt)
 	case  6: return new _g_test_graph;        // 0xF2
 	case  7: return new _t_double;            // 0x50
 	case  8: return new _g_link;              // 0x7A
-	case  9: return new _set_graph;           // 0x71
+	case  9: return new _sable_graph;           // 0x71
 	case 10: return new _g_circle;            // 0x74
 	case 11: return new _g_line;              // 0x70
 	case 12: return new _g_rect;              // 0xF4
