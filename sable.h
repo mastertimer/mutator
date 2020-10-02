@@ -415,7 +415,7 @@ struct _statistics
 
 	i64 max_value() const noexcept { if (data.empty()) return 0; return data.back().value; }
 	i64 min_value() const noexcept { if (data.empty()) return 0; return data.front().value; }
-	i64 number() const noexcept;   // общее количество
+	i64 number(i64 start = 0) const noexcept;   // общее количество (начиная со start)
 
 	void sable_number_buy(i64 n);  // статистика количеств n-й покупки
 	void sable_number_sale(i64 n); // статистика количеств n-й продажи
@@ -425,9 +425,25 @@ struct _statistics
 
 	i64 first_zero();              // номер первого нулевого элемента начиная со start (-1 если не нашлось)
 	i64 number_not_zero() { return data.size(); } // количество значений с ненулевым количеством
-	double arithmetic_size1();     // арифметический размер одного числа в битах
+	double arithmetic_size1(i64 start = 0); // арифметический размер одного числа в битах (начиная со start)
 
 	void set(std::vector<i64>& a);
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct _cdf1 // структура частот для сжатия чисел
+{
+	struct _frequency
+	{
+		i64 first = 0; // первое число кодируемое
+		uchar bit = 0; // количество дополнительных бит
+	};
+
+	uchar bit0 = 0; // количество обязательных бит
+	std::vector<_frequency> fr; // распредление равновероятных интервалов
+
+	void calc(_statistics &st, uchar b0, uchar b_last);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
