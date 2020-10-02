@@ -21,8 +21,8 @@ constexpr wchar_t mmm_file[] = L"..\\..\\mmm.txt";
 constexpr _prices cena_zero_ = { {}, {}, { 1,1,1,1,1 } };
 
 _super_stat      ss;               // сжатые цены
-_sable_stat        sss;              // сжатые цены
-_sable_graph*      graph  = nullptr; // график
+_sable_stat      sss;              // сжатые цены
+_sable_graph    *graph  = nullptr; // график
 
 _nervous_oracle *oracle = nullptr; // оракул
 _mctds_candle   *sv     = nullptr;
@@ -1415,7 +1415,7 @@ void _sable_stat::add1(const _prices2& c)
 //	i64 delta_start = c.buy[roffer - 1].price - last_cc.buy[roffer - 1].price;
 }
 
-void _sable_stat::add(const _prices2& c)
+void _sable_stat::add(const _prices2& c) // 53.14 на 40
 {
 	byte = bit = 0;
 	if ((size % step_pak_cc == 0)||true)
@@ -3627,6 +3627,13 @@ void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+i64 _statistics::number() const noexcept
+{
+	i64 s = 0;
+	for (auto &i : data) s += i.number;
+	return s;
+}
+
 void _statistics::set(std::vector<i64>& a)
 {
 	i64 k = 0;
@@ -3645,13 +3652,19 @@ i64 _statistics::first_zero()
 	return -1;
 }
 
-double _statistics::arithmetic_size()
+double _statistics::arithmetic_size1()
 {
 	double s = 0;
-	return s;
+	i64 n = number();
+	for (auto i : data)
+	{
+		double p = double(i.number) / n;
+		s -= p * log(p);
+	}
+	return s / log(2.0);
 }
 
-void _statistics::set_number_sale(i64 n)
+void _statistics::sable_number_sale(i64 n)
 {
 	if ((n < 0) || (n >= roffer)) { data.clear(); return; }
 	std::vector<i64> a;
@@ -3669,7 +3682,7 @@ void _statistics::set_number_sale(i64 n)
 	set(a);
 }
 
-void _statistics::set_number_buy(i64 n)
+void _statistics::sable_number_buy(i64 n)
 {
 	if ((n < 0) || (n >= roffer)) { data.clear(); return; }
 	std::vector<i64> a;
@@ -3687,7 +3700,7 @@ void _statistics::set_number_buy(i64 n)
 	set(a);
 }
 
-void _statistics::set_number_buy()
+void _statistics::sable_number_buy()
 {
 	std::vector<i64> a;
 	_prices pr;
@@ -3707,7 +3720,7 @@ void _statistics::set_number_buy()
 	set(a);
 }
 
-void _statistics::set_number_sale()
+void _statistics::sable_number_sale()
 {
 	std::vector<i64> a;
 	_prices pr;
@@ -3727,7 +3740,7 @@ void _statistics::set_number_sale()
 	set(a);
 }
 
-void _statistics::set_number()
+void _statistics::sable_number()
 {
 	std::vector<i64> a;
 	_prices pr;

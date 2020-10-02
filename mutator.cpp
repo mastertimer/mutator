@@ -655,9 +655,8 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_statistics s;
-	s.set_number();
-	show_message(s.max_value());
-	show_message(s.number_not_zero());
+	s.sable_number();
+	show_message(s.arithmetic_size1() * 40.0 / 8.0);
 //	show_message(test_ss4());
 /*	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);

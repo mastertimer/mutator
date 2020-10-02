@@ -415,16 +415,17 @@ struct _statistics
 
 	i64 max_value() const noexcept { if (data.empty()) return 0; return data.back().value; }
 	i64 min_value() const noexcept { if (data.empty()) return 0; return data.front().value; }
+	i64 number() const noexcept;   // общее количество
 
-	void set_number_buy(i64 n);    // статистика количеств n-й покупки
-	void set_number_sale(i64 n);   // статистика количеств n-й продажи
-	void set_number_buy();         // статистика количеств покупки
-	void set_number_sale();        // статистика количеств продажи
-	void set_number();             // статистика количеств
+	void sable_number_buy(i64 n);  // статистика количеств n-й покупки
+	void sable_number_sale(i64 n); // статистика количеств n-й продажи
+	void sable_number_buy();       // статистика количеств покупки
+	void sable_number_sale();      // статистика количеств продажи
+	void sable_number();           // статистика количеств
 
 	i64 first_zero();              // номер первого нулевого элемента начиная со start (-1 если не нашлось)
 	i64 number_not_zero() { return data.size(); } // количество значений с ненулевым количеством
-	double arithmetic_size();      // арифметический размер в битах
+	double arithmetic_size1();     // арифметический размер одного числа в битах
 
 	void set(std::vector<i64>& a);
 };
