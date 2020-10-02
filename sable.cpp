@@ -3765,6 +3765,18 @@ void _statistics::sable_number()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+_up_statistics::_up_statistics(_statistics& s) : st(&s), min(s.min_value()), max(s.max_value())
+{
+}
+
+i64 _up_statistics::operator[](i64 n)
+{
+	if ((n < min) || (n > max)) return 0;
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 i64 bit_for_value(i64 k)
 {
 	k--;
@@ -3784,21 +3796,26 @@ void _cdf1::calc(_statistics& st, uchar b0, uchar b_last)
 	i64 n = (1ll << b0);
 	fr.resize(n + 1);
 	i64 j = 0;
+	i64 dj = 0;
 	for (i64 i = 0; i < n - 1; i++)
 	{
-		i64 nnn = st.number(j);
-		fr[i].first = st.data[j].value;
-		i64 nnn1 = st.data[j].number;
+		i64 nnn = st.number(j + (dj > 0));
+		fr[i].first = st.data[j].value + dj;
+		i64 nnn1 = st.data[j].number * (dj == 0);
 		i64 best_k = 1;
 		i64 k = 1;
-		double s0 = 6 * nnn1 + (6 + st.arithmetic_size1(j + k) - log(n - 1 - i) / log(2)) * (nnn - nnn1);
+		double s0 = 6 * nnn1 + (6 + st.arithmetic_size1(j + 1) - log(n - 1 - i) / log(2)) * (nnn - nnn1);
 		do
 		{
 			nnn1 += st.data[j + k].number;
 			k++;
 			double s = (6 + bit_for_value(k)) * nnn1 + (6 + st.arithmetic_size1(j + k) - log(n - 1 - i) / log(2)) *
 				(nnn - nnn1);
-			if (s < s0) best_k = k;
+			if (s < s0)
+			{
+				best_k = k;
+				s0 = s;
+			}
 			if (k > best_k * 2) break;
 		} while (j + k < (i64)st.data.size());
 		j += best_k;
