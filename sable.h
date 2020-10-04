@@ -462,15 +462,12 @@ struct _cdf1 // структура частот для сжатия чисел
 	uchar bit0 = 0; // количество обязательных бит
 	std::vector<_frequency> fr; // распредление равновероятных интервалов
 
-	void calc(_statistics &st, uchar b0, uchar b_last);
-	void calc2(_statistics& st, uchar b0, i64 max_value);
-	void calc3(_statistics& st, uchar b0, i64 max_value);
+	void calc(_statistics& st, uchar b0, i64 max_value);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void calc_all_prediction(_basic_curve &o, i64& nn, double& kk);
-void test_ss(i64 f, std::vector<i64>& k);
 void test_ss3(std::vector<i64>& k);
 double test_ss4();
 void test_ss5(std::vector<i64>& k);

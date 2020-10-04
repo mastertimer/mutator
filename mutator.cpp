@@ -679,7 +679,7 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 	/*_statistics s;
 	s.sable_number();
 	_cdf1 ee;
-	ee.calc2(s, 6, 1000000000);
+	ee.calc(s, 6, 1000000000);
 	std::stringstream ss;
 
 	for (i64 i = 0; i <= 64; i++)
@@ -715,27 +715,6 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 	g->add(_matrix(k.size(), [&k](i64 n) { return log(k[n]/38.0 + 1.0); }), "sr", true);
 	test_ss5(k);
 	g->add(_matrix(k.size(), [&k](i64 n) { return log(k[n] + 1.0); }), "delta", true);*/
-
-/*	for (i64 f = 0; f < 20; f++)
-	{
-		std::vector<i64> k;
-		test_ss(f, k);
-		i64 s = 0;
-		for (i64 i = 0; i < (i64)k.size(); i++) s += k[i];
-		s = s * 31 / 32;
-		i64 ii = 0;
-		for (i64 i = 0; i < (i64)k.size(); i++)
-		{
-			s -= k[i];
-			if (s <= 0)
-			{
-				ii = i;
-				break;
-			}
-		}
-
-		MessageBox(0, (std::to_wstring(f) + L" = " + std::to_wstring(ii)).c_str(), L"упс", MB_OK | MB_TASKMODAL);
-	}*/
 
 /*	_nervous_oracle2 rr;
 	i64 nn = 0;
