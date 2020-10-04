@@ -1350,7 +1350,7 @@ inline bool operator<(i64 a, _frequency b) noexcept
 
 void _sable_stat::add0(const _prices2& c)
 {
-	offer0 = c.buy[roffer - 1].value;
+	offer_pr = offer0 = c.buy[roffer - 1].value;
 	i64 offermax = c.sale[roffer - 1].value;
 	baza.clear();
 	baza.resize(offermax - offer0 + 1, 0);
@@ -1412,13 +1412,15 @@ void _sable_stat::add0(const _prices2& c)
 
 void _sable_stat::add1(const _prices2& c)
 {
-//	i64 delta_start = c.buy[roffer - 1].price - last_cc.buy[roffer - 1].price;
+	i64 delta_start = c.buy[roffer - 1].value - offer_pr;
+	bbb2.push(delta_start);
+	offer_pr = c.buy[roffer - 1].value;
 }
 
 void _sable_stat::add(const _prices2& c) // 53.14 на 40  50.9 - арифм.
 {
 	byte = bit = 0;
-	if ((size % step_pak_cc == 0)||true)
+	if ((size % step_pak_cc == 0))
 	{
 		pushn(c.time, 31);
 		udata.push_back(data.size());
@@ -3954,6 +3956,29 @@ void test_ss5(std::vector<i64>& k)
 		k[o]++;
 		prpr = pr;
 	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void _basic_statistics::push(i64 x)
+{
+	if (x - start >= (i64)data.size()) data.resize(x - start + 1, 0);
+	if (x < start) { data.insert(data.begin(), start - x, 0); start = x; }
+	data[x - start]++;
+}
+
+i64 _basic_statistics::number() const noexcept
+{
+	i64 s = 0;
+	for (auto i : data) s += i;
+	return s;
+}
+
+i64 _basic_statistics::operator[](i64 x) const noexcept
+{
+	if (x - start >= (i64)data.size()) return 0;
+	if (x < start) return 0;
+	return data[x - start];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

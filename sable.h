@@ -112,6 +112,7 @@ private:
 	std::vector<i64> udata; // указатель на место сжатых данных кратных step_pak_cc
 	std::vector<i64> baza; // база, от которой считается дельта (+ покупка, - продажа)
 	i64 offer0 = 0; // какой цене соответствует baza[0]
+	i64 offer_pr = 0; // с какой цены начинался предыдущий набор
 	static constexpr i64 step_pak_cc = 100; // период ключевых цен
 	uchar byte = 0; // текущий байт
 	uchar bit = 0;
@@ -409,7 +410,19 @@ struct _g_graph : public _t_go
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _statistics
+struct _basic_statistics // базовая разреженная статистика с нулями
+{
+	std::vector<i64> data;
+	i64 start = 0;
+
+	void push(i64 x); // добавить число в статистику
+	i64 number() const noexcept;
+	i64 operator[](i64 x) const noexcept;
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct _statistics // сжатая статистика
 {
 	std::vector<_one_stat> data;
 	typedef std::vector<_one_stat>::iterator _it;
@@ -471,3 +484,5 @@ void calc_all_prediction(_basic_curve &o, i64& nn, double& kk);
 void test_ss3(std::vector<i64>& k);
 double test_ss4();
 void test_ss5(std::vector<i64>& k);
+
+inline _basic_statistics bbb2;

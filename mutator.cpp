@@ -25,6 +25,12 @@ void show_message(i64 s)
 	MessageBox(0, (std::to_wstring(s)).c_str(), L"целое число", MB_OK | MB_TASKMODAL);
 }
 
+void show_message(i64 a, i64 b)
+{
+	MessageBox(0, (L"a=" + std::to_wstring(a) + L"  b=" + std::to_wstring(b)).c_str(), L"пара чисел",
+		MB_OK | MB_TASKMODAL);
+}
+
 void show_message(double s)
 {
 	MessageBox(0, (std::to_wstring(s)).c_str(), L"вещественное число", MB_OK | MB_TASKMODAL);
@@ -676,6 +682,15 @@ void ToClipboard(astr text)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
+	show_message(test_ss4());
+
+	show_message(bbb2.number(), bbb2[0]);
+
+	_g_graph* g = new _g_graph;
+	n_ko->operator _t_basic_go* ()->set_t_trans(g, flag_sub_go + flag_part);
+
+	g->add(_matrix(bbb2.data.size(), [&](i64 n) { return bbb2.data[n]; }), "граница", true);
+
 	/*_statistics s;
 	s.sable_number();
 	_cdf1 ee;
@@ -689,7 +704,6 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 	ToClipboard(ss.str().c_str());*/
 
 	//	show_message(s.arithmetic_size1() * 40.0 / 8.0);
-	show_message(test_ss4());
 /*	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
 	std::vector<i64> k;
