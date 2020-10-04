@@ -413,9 +413,9 @@ struct _statistics
 {
 	std::vector<_one_stat> data;
 
-	i64 max_value() const noexcept { if (data.empty()) return 0; return data.back().value; }
-	i64 min_value() const noexcept { if (data.empty()) return 0; return data.front().value; }
-	i64 number(i64 start = 0) const noexcept;   // общее количество (начиная со start)
+	i64 min_value() const noexcept { return (data.empty()) ? 0 : data.front().value; }
+	i64 max_value() const noexcept { return (data.empty()) ? 0 : data.back().value; }
+	i64 number(i64 start = 0) const noexcept; // общее количество (начиная со start)
 
 	void sable_number_buy(i64 n);  // статистика количеств n-й покупки
 	void sable_number_sale(i64 n); // статистика количеств n-й продажи
@@ -432,15 +432,16 @@ struct _statistics
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _up_statistics // для удобства поиска количества по значению
+struct _up_statistics // для удобства поиска количества по значению при обходе по возрастанию
 {
 	_statistics* st;
-	_up_statistics(_statistics& s);
 
+	_up_statistics(_statistics& s) : st(&s), li(s.data.begin()), last_value(s.min_value()) {}
 	i64 operator[](i64 n);
+
 private:
-	i64 min;
-	i64 max;
+	std::vector<_one_stat>::iterator li;
+	i64 last_value;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

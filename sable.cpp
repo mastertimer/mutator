@@ -3765,14 +3765,26 @@ void _statistics::sable_number()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_up_statistics::_up_statistics(_statistics& s) : st(&s), min(s.min_value()), max(s.max_value())
-{
-}
-
 i64 _up_statistics::operator[](i64 n)
 {
-	if ((n < min) || (n > max)) return 0;
-	return 0;
+	if (n == last_value) goto end1;
+	if (n == last_value + 1)
+	{
+		last_value = n;
+		if (li == st->data.end()) return 0;
+		if (li->value < n)
+		{
+			li++;
+			goto end1;
+		}
+		goto end2;
+	}
+	last_value = n;
+	li = std::lower_bound(st->data.begin(), st->data.end(), n, [](_one_stat a, i64 b) { return (a.value < b); });
+end1:
+	if (li == st->data.end()) return 0;
+end2:
+	return (li->value == n) ? li->number : 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
