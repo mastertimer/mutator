@@ -3627,10 +3627,10 @@ void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-i64 _statistics::number(i64 start) const noexcept
+i64 _statistics::number() const noexcept
 {
 	i64 s = 0;
-	for (i64 i = start; i < (i64)data.size(); i++) s += data[i].number;
+	for (auto &i :data) s += i.number;
 	return s;
 }
 
@@ -3652,13 +3652,13 @@ i64 _statistics::first_zero()
 	return -1;
 }
 
-double _statistics::arithmetic_size1(i64 start)
+double _statistics::arithmetic_size1()
 {
 	double s = 0;
-	i64 n = number(start);
-	for (i64 i = start; i < (i64)data.size(); i++)
+	double n = 1.0 / number();
+	for (auto &i : data)
 	{
-		double p = double(data[i].number) / n;
+		double p = i.number * n;
 		s -= p * log(p);
 	}
 	return s / log(2.0);
@@ -3765,7 +3765,7 @@ void _statistics::sable_number()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-i64 _up_statistics::operator[](i64 n)
+i64 _up_statistics::operator[](i64 n) noexcept
 {
 	if (n == last_value) goto end1;
 	if (n == last_value + 1)
@@ -3787,6 +3787,14 @@ end2:
 	return (li->value == n) ? li->number : 0;
 }
 
+i64 _up_statistics::number_from(i64 start) noexcept
+{
+	(*this)[start]; // настроить li
+	i64 s = 0;
+	for (auto i = li; i != st->data.end(); ++i) s += i->number;
+	return s;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 i64 bit_for_value(i64 k)
@@ -3804,36 +3812,37 @@ i64 bit_for_value(i64 k)
 
 void _cdf1::calc(_statistics& st, uchar b0, uchar b_last)
 {
+	_up_statistics st2(st);
 	bit0 = b0;
 	i64 n = (1ll << b0);
 	fr.resize(n + 1);
-	i64 j = 0;
-	i64 dj = 0;
+	i64 j = 1; // !!! начинается с 1 !!!
 	for (i64 i = 0; i < n - 1; i++)
 	{
-		i64 nnn = st.number(j + (dj > 0));
-		fr[i].first = st.data[j].value + dj;
-		i64 nnn1 = st.data[j].number * (dj == 0);
+		i64 nnn = st2.number_from(j);
+		fr[i].first = j;
+		i64 nnn1 = st2[j];
 		i64 best_k = 1;
 		i64 k = 1;
-		double s0 = 6 * nnn1 + (6 + st.arithmetic_size1(j + 1) - log(n - 1 - i) / log(2)) * (nnn - nnn1);
+		double s0 = nnn1 * log(nnn1 * (n - i) / double(nnn)) + (nnn - nnn1) * // потери в e-битах
+			log((nnn - nnn1) * (n - i) / (double(nnn) * (n - i - 1)));
 		do
 		{
-			nnn1 += st.data[j + k].number;
+			nnn1 += st2[j + k];
 			k++;
-			double s = (6 + bit_for_value(k)) * nnn1 + (6 + st.arithmetic_size1(j + k) - log(n - 1 - i) / log(2)) *
-				(nnn - nnn1);
+			double s = nnn1 * log(nnn1 * (n - i) / double(nnn)) + (nnn - nnn1) * // потери в e-битах
+				log((nnn - nnn1) * (n - i) / (double(nnn) * (n - i - 1))) + nnn1 * (bit_for_value(k) * log(2) - log(k));
 			if (s < s0)
 			{
 				best_k = k;
 				s0 = s;
 			}
 			if (k > best_k * 2) break;
-		} while (j + k < (i64)st.data.size());
+		} while (true);
 		j += best_k;
 		fr[i].bit = bit_for_value(best_k);
 	}
-	fr[n - 1].first = st.data[j].value;
+	fr[n - 1].first = j;
 	fr[n - 1].bit = b_last;
 	fr[n].first = fr[n - 1].first + (1ll << fr[n - 1].bit);
 	fr[n].bit = 0;
