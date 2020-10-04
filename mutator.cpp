@@ -676,7 +676,7 @@ void ToClipboard(astr text)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-/*	_statistics s;
+	/*_statistics s;
 	s.sable_number();
 	_cdf1 ee;
 	ee.calc2(s, 6, 1000000000);

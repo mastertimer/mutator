@@ -464,6 +464,7 @@ struct _cdf1 // структура частот для сжатия чисел
 
 	void calc(_statistics &st, uchar b0, uchar b_last);
 	void calc2(_statistics& st, uchar b0, i64 max_value);
+	void calc3(_statistics& st, uchar b0, i64 max_value);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
