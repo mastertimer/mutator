@@ -412,10 +412,12 @@ struct _g_graph : public _t_go
 struct _statistics
 {
 	std::vector<_one_stat> data;
+	typedef std::vector<_one_stat>::iterator _it;
 
 	i64 min_value() const noexcept { return (data.empty()) ? 0 : data.front().value; }
 	i64 max_value() const noexcept { return (data.empty()) ? 0 : data.back().value; }
-	i64 number() const noexcept; // общее количество
+	i64 number(_it be, _it en) noexcept; // общее количество
+	i64 number() noexcept { return number(data.begin(), data.end()); }
 
 	void sable_number_buy(i64 n);  // статистика количеств n-й покупки
 	void sable_number_sale(i64 n); // статистика количеств n-й продажи
@@ -425,7 +427,8 @@ struct _statistics
 
 	i64 first_zero();              // номер первого нулевого элемента начиная со start (-1 если не нашлось)
 	i64 number_not_zero() { return data.size(); } // количество значений с ненулевым количеством
-	double arithmetic_size1(); // арифметический размер одного числа в битах
+	double arithmetic_size(_it be, _it en); // арифметический размер в битах
+	double arithmetic_size() { return arithmetic_size(data.begin(), data.end()); }
 
 	void set(std::vector<i64>& a);
 };
@@ -439,6 +442,7 @@ struct _up_statistics // для удобства поиска количеств
 	_up_statistics(_statistics& s) : st(&s), li(s.data.begin()), last_value(s.min_value()) {}
 	i64 operator[](i64 n) noexcept;
 	i64 number_from(i64 start = 0) noexcept; // общее количество (начиная со start)
+	double arithmetic_size(_iinterval o); // арифметический размер в битах
 
 private:
 	std::vector<_one_stat>::iterator li;

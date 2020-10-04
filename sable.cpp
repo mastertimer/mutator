@@ -3627,10 +3627,10 @@ void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-i64 _statistics::number() const noexcept
+i64 _statistics::number(_it be, _it en) noexcept
 {
 	i64 s = 0;
-	for (auto &i :data) s += i.number;
+	for (auto i = be; i != en; ++i) s += i->number;
 	return s;
 }
 
@@ -3652,16 +3652,12 @@ i64 _statistics::first_zero()
 	return -1;
 }
 
-double _statistics::arithmetic_size1()
+double _statistics::arithmetic_size(_it be, _it en)
 {
 	double s = 0;
-	double n = 1.0 / number();
-	for (auto &i : data)
-	{
-		double p = i.number * n;
-		s -= p * log(p);
-	}
-	return s / log(2.0);
+	double n = 1.0 / number(be, en);
+	for (auto i = be; i != en; ++i) s += i->number * log(i->number * n);
+	return -s / log(2.0);
 }
 
 void _statistics::sable_number_sale(i64 n)
@@ -3765,6 +3761,13 @@ void _statistics::sable_number()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+double _up_statistics::arithmetic_size(_iinterval o)
+{
+	(*this)[o.min]; // настроить li
+	return st->arithmetic_size(li, std::lower_bound(st->data.begin(), st->data.end(), o.max,
+		[](_one_stat a, i64 b) { return (a.value < b); }));
+}
+
 i64 _up_statistics::operator[](i64 n) noexcept
 {
 	if (n == last_value) goto end1;
@@ -3790,9 +3793,7 @@ end2:
 i64 _up_statistics::number_from(i64 start) noexcept
 {
 	(*this)[start]; // настроить li
-	i64 s = 0;
-	for (auto i = li; i != st->data.end(); ++i) s += i->number;
-	return s;
+	return st->number(li, st->data.end());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3830,8 +3831,9 @@ void _cdf1::calc(_statistics& st, uchar b0, uchar b_last)
 		{
 			nnn1 += st2[j + k];
 			k++;
-			double s = nnn1 * log(nnn1 * (n - i) / double(nnn)) + (nnn - nnn1) * // потери в e-битах
-				log((nnn - nnn1) * (n - i) / (double(nnn) * (n - i - 1))) + nnn1 * (bit_for_value(k) * log(2) - log(k));
+			double s = nnn1 * log(nnn1 * (n - i) / double(nnn)) + // потери в e-битах
+				(nnn - nnn1) * log((nnn - nnn1) * (n - i) / (double(nnn) * (n - i - 1))) + 
+				(nnn1 * bit_for_value(k) - st2.arithmetic_size({ j, j + k })) * log(2);
 			if (s < s0)
 			{
 				best_k = k;
