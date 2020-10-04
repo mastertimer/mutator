@@ -558,6 +558,8 @@ struct _iinterval // [...)
 		if ((max_ > 0) || (max == max_)) max++;
 	}
 
+	void  operator=(i64 b) noexcept { min = b; max = b + 1; }
+
 	void operator&=(const _iinterval& b) noexcept { if (b.min > min) min = b.min; if (b.max < max) max = b.max; }
 
 	i64  size()   const noexcept { return (min < max) ? (max - min) : 0; }

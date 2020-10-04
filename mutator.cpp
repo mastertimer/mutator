@@ -663,10 +663,13 @@ void ToClipboard(astr text)
 		EmptyClipboard(); //очищаем буфер
 		size_t ll = strlen(text) + 1;
 		hgBuffer = GlobalAlloc(GMEM_DDESHARE, ll);//выделяем память
+		if (!hgBuffer) goto end;
 		chBuffer = (char*)GlobalLock(hgBuffer); //блокируем память
+		if (!chBuffer) goto end;
 		strcpy_s(chBuffer, ll, LPCSTR(text));
 		GlobalUnlock(hgBuffer);//разблокируем память
 		SetClipboardData(CF_TEXT, hgBuffer);//помещаем текст в буфер обмена
+	end:
 		CloseClipboard(); //закрываем буфер обмена
 	}
 }
@@ -676,7 +679,7 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 /*	_statistics s;
 	s.sable_number();
 	_cdf1 ee;
-	ee.calc(s, 6, 30);
+	ee.calc2(s, 6, 1000000000);
 	std::stringstream ss;
 
 	for (i64 i = 0; i <= 64; i++)
