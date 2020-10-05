@@ -690,10 +690,10 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 /*	_sable_statistics sasa;
 	sasa.calc();
 	_cdf1 ee;
-	ee.calc(sasa.number, 6, 1000000000);
+	ee.calc(sasa.delta, 3, 7000);
 	std::stringstream ss;
 
-	for (i64 i = 0; i <= 64; i++)
+	for (i64 i = 0; i <= 8; i++)
 	{
 		ss << "{" << ee.fr[i].first << ", " << (int)ee.fr[i].bit << "}, ";
 	}
@@ -722,18 +722,11 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 	for (i64 i = 1; i <= 7; i++) ss += k[i];
 	MessageBox(0, std::to_wstring(ss * 8.0 / s).c_str(), L"упс", MB_OK | MB_TASKMODAL); // ss*64.0/s*/
 
-/*	_g_graph* g = new _g_graph;
+/*	_sable_statistics sasa;
+	sasa.calc();
+	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
-	std::vector<i64> k;
-	//for (i64 j = 0; j < 19; j += 6)
-	//{
-	//	test_ss(j, k);
-	//	g->add(_matrix(k.size(), [&k](i64 n) { return log(k[n]+1.0); }), std::to_string(j), true);
-	//}
-	test_ss3(k);
-	g->add(_matrix(k.size(), [&k](i64 n) { return log(k[n]/38.0 + 1.0); }), "sr", true);
-	test_ss5(k);
-	g->add(_matrix(k.size(), [&k](i64 n) { return log(k[n] + 1.0); }), "delta", true);*/
+	g->add(sasa.delta.to_matrix(), "delta", true);*/
 
 /*	_nervous_oracle2 rr;
 	i64 nn = 0;

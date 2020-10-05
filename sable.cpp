@@ -1344,7 +1344,7 @@ void _bit_stream::pushn(u64 a, uchar n)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _sable_stat::add0(const _prices2& c, _bit_stream& bs)
+bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 {
 	offer_pr = offer0 = c.buy[roffer - 1].value;
 	i64 offermax = c.sale[roffer - 1].value;
@@ -1363,10 +1363,11 @@ void _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 		{290, 4}, {306, 4}, {322, 4}, {338, 4}, {349, 2}, {353, 4}, {369, 4}, {381, 3}, {389, 5}, {412, 4}, {428, 5}, {460, 5},
 		{492, 5}, {524, 5}, {556, 6}, {619, 4}, {635, 6}, {699, 6}, {763, 6}, {827, 6}, {891, 6}, {955, 7}, {1083, 7}, {1188, 6},
 		{1252, 9}, {1764, 9}, {2276, 11}, {4324, 13}, {12516, 16}, {78052, 30}, {1000000000, 0} });
+	static const _cdf1 nnd({ {1, 0}, {2, 0}, {3, 0}, {4, 0}, {5, 1}, {7, 1}, {9, 2}, {13, 13}, {7000, 0} });
 
 	for (i64 i = roffer - 1; i >= 0; i--)
 	{
-		nno.coding(c.buy[i].number, bs);
+		if (!nno.coding(c.buy[i].number, bs)) return false;
 		if (i == roffer - 1) continue;
 		i64 delta = c.buy[i].value - c.buy[i + 1].value;
 		if (delta <= 8)
@@ -1377,17 +1378,10 @@ void _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 			bs.pushn(delta, 13); // *
 		}
 	}
-	i64 d2 = c.sale[0].value - c.buy[0].value;
-	if (d2 <= 7)
-		bs.pushn(d2, 3);
-	else
-	{
-		bs.pushn(0, 3);
-		bs.pushn(d2, 13); // *
-	}
+	if (!nnd.coding(c.sale[0].value - c.buy[0].value, bs)) return false;
 	for (i64 i = 0; i < roffer; i++)
 	{
-		nno.coding(c.sale[i].number, bs);
+		if (!nno.coding(c.sale[i].number, bs)) return false;
 		if (i == 0) continue;
 		i64 delta = c.sale[i].value - c.sale[i - 1].value;
 		if (delta <= 8)
@@ -1398,6 +1392,7 @@ void _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 			bs.pushn(delta, 13); // *
 		}
 	}
+	return true;
 }
 
 void _sable_stat::add1(const _prices2& c, _bit_stream& bs)
@@ -3687,6 +3682,17 @@ double _statistics::arithmetic_size(_it be, _it en)
 	return -s / log(2.0);
 }
 
+_matrix _statistics::to_matrix()
+{
+	_matrix res(data.size(), 2);
+	for (i64 i = 0; i < (i64)data.size(); i++)
+	{
+		res[i][0] = data[i].value;
+		res[i][1] = data[i].number;
+	}
+	return res;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 double _up_statistics::arithmetic_size(_iinterval o)
@@ -3888,22 +3894,6 @@ void test_ss3(std::vector<i64>& k)
 	}
 }
 
-void test_ss5(std::vector<i64>& k)
-{
-	k.clear();
-	_prices pr;
-	_prices prpr = cena_zero_;
-	for (i64 i = 0; i < ss.size; i++)
-	{
-		ss.read(i, pr);
-		if (pr == prpr) continue; // игнор одинаковых
-		i64 o = pr.pro[0].c - pr.pok[0].c;
-		if (o >= (i64)k.size()) k.resize(o + 1, 0);
-		k[o]++;
-		prpr = pr;
-	}
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void _basic_statistics::push(i64 x)
@@ -3931,6 +3921,7 @@ i64 _basic_statistics::operator[](i64 x) const noexcept
 
 void _sable_statistics::clear()
 {
+	delta.clear();
 	buy_number.clear();
 	sale_number.clear();
 	number.clear();
@@ -3946,6 +3937,7 @@ void _sable_statistics::calc()
 	clear();
 	_basic_statistics buy[roffer];
 	_basic_statistics sale[roffer];
+	_basic_statistics d;
 	_prices pr;
 	_prices prpr = cena_zero_;
 	for (i64 i = 0; i < ss.size; i++)
@@ -3957,6 +3949,7 @@ void _sable_statistics::calc()
 			buy[n].push(pr.pok[n].k);
 			sale[n].push(pr.pro[n].k);
 		}
+		d.push(pr.pro[0].c - pr.pok[0].c);
 		prpr = pr;
 	}
 	for (i64 n = 0; n < roffer; n++)
@@ -3966,8 +3959,9 @@ void _sable_statistics::calc()
 		buy_number += buyn_number[n];
 		sale_number += salen_number[n];
 	}
-	number += buy_number;
+	number = buy_number;
 	number += sale_number;
+	delta = d;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

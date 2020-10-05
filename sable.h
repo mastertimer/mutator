@@ -132,7 +132,7 @@ private:
 	i64 offer_pr = 0; // с какой цены начинался предыдущий набор
 	static constexpr i64 step_pak_cc = 100; // период ключевых цен
 
-	void add0(const _prices2& c, _bit_stream& bs); // не дельта!
+	bool add0(const _prices2& c, _bit_stream& bs); // не дельта!
 	void add1(const _prices2& c, _bit_stream& bs); // дельта
 };
 
@@ -454,6 +454,8 @@ struct _statistics // сжатая статистика
 	void operator=(const _basic_statistics &a);
 	void operator+=(const _statistics& a);
 	bool operator==(const _statistics& a) const noexcept;
+
+	_matrix to_matrix(); // два столбца - x и y
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -481,6 +483,7 @@ struct _sable_statistics
 	_statistics buy_number;           // общая статистика для покупки
 	_statistics sale_number;          // общая статистика для продажи
 	_statistics number;               // общая статистика
+	_statistics delta;                // разница цен на границе раздела
 
 	void calc();                      // вычислить всю статистику
 	void clear();                     // очистить все данные
@@ -511,6 +514,5 @@ struct _cdf1 // структура частот для сжатия чисел
 void calc_all_prediction(_basic_curve &o, i64& nn, double& kk);
 void test_ss3(std::vector<i64>& k);
 double test_ss4();
-void test_ss5(std::vector<i64>& k);
 
 inline _basic_statistics bbb2;

@@ -4055,10 +4055,10 @@ _matrix::_matrix(i64 ry, const std::function<double(i64)>& fun)  noexcept : size
 	if (ry_) data_ = new double[ry_];
 }*/
 
-/*matrix::matrix(size_t ry, size_t rx)  noexcept : ry_(ry), rx_(rx)
+_matrix::_matrix(i64 ry, i64 rx)  noexcept : size{ rx,ry }
 {
-	if (ry_ * rx_) data_ = new double[ry_ * rx_];
-}*/
+	if (!size.empty()) data = new double[size.square()];
+}
 
 void _matrix::resize(_isize r)
 {

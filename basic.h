@@ -907,7 +907,7 @@ struct _matrix
 	_matrix() = default;
 	_matrix(const _matrix& a) noexcept;
 	_matrix(_matrix&& a) noexcept;
-//	matrix(size_t ry, size_t rx) noexcept;
+	_matrix(i64 ry, i64 rx) noexcept;
 //	matrix(size_t ry, size_t rx, double z) noexcept;// заполнить числом z
 //	matrix(size_t ry, size_t rx, const std::function<double(size_t, size_t)>& fun) noexcept; // задать из функции fun
 //	matrix(size_t ry) noexcept; // вектор
