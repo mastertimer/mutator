@@ -122,6 +122,7 @@ struct _sable_stat // статистика цен, сжатая
 	i64 size = 0; // количество записей
 	_prices2 last_cc{}; // последние цены
 	std::vector<uchar> data;
+	static constexpr time_t old_dtime = 160; // разность времени, после которого цены считаются устаревшими
 
 	void add(const _prices2& c); // добавить цены (сжать)
 
@@ -456,6 +457,7 @@ struct _statistics // сжатая статистика
 	bool operator==(const _statistics& a) const noexcept;
 
 	_matrix to_matrix(); // два столбца - x и y
+	_matrix to_matrix(i64 mi, i64 ma); // два столбца - x и y
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -484,6 +486,7 @@ struct _sable_statistics
 	_statistics sale_number;          // общая статистика для продажи
 	_statistics number;               // общая статистика
 	_statistics delta;                // разница цен на границе раздела
+	_statistics delta_begin;          // разность минимальных цен текущей и предыдущей
 
 	void calc();                      // вычислить всю статистику
 	void clear();                     // очистить все данные
@@ -514,5 +517,3 @@ struct _cdf1 // структура частот для сжатия чисел
 void calc_all_prediction(_basic_curve &o, i64& nn, double& kk);
 void test_ss3(std::vector<i64>& k);
 double test_ss4();
-
-inline _basic_statistics bbb2;

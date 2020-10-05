@@ -1397,8 +1397,7 @@ bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 
 void _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 {
-	i64 delta_start = c.buy[roffer - 1].value - offer_pr;
-	bbb2.push(delta_start);
+//	i64 delta_start = c.buy[roffer - 1].value - offer_pr;
 	offer_pr = c.buy[roffer - 1].value;
 }
 
@@ -1416,7 +1415,7 @@ void _sable_stat::add(const _prices2& c) // 53.14 на 40  50.9 - арифм.
 		time_t dt = c.time - last_cc.time;
 		if (dt < 0) dt = 0; // время может идти назад!
 		if (dt == 1) bs.push1(0); else { bs.push1(1); bs.pushn(dt, 31); }
-		if (dt > 180) add0(c, bs); else add1(c, bs);
+		if (dt > old_dtime) add0(c, bs); else add1(c, bs);
 	}
 	size++;
 	last_cc = c;
@@ -3388,6 +3387,7 @@ void _g_graph::ris2(_trans tr, bool final)
 		double min, max;
 		if (c->size.x == 2)
 			c->column(0).min_max(&min, &max);
+		else
 		{
 			min = 0;
 			max = c->size.y - 1;
@@ -3663,7 +3663,7 @@ void _statistics::operator=(const _basic_statistics& a)
 	data.clear();
 	data.reserve(k);
 	for (i64 i = 0; i < (i64)a.data.size(); i++)
-		if (a[i]) data.push_back({ a.start + i, a[i] });
+		if (a.data[i]) data.push_back({ a.start + i, a.data[i] });
 }
 
 i64 _statistics::first_zero()
@@ -3689,6 +3689,22 @@ _matrix _statistics::to_matrix()
 	{
 		res[i][0] = data[i].value;
 		res[i][1] = data[i].number;
+	}
+	return res;
+}
+
+_matrix _statistics::to_matrix(i64 mi, i64 ma)
+{
+	i64 n;
+	i64 k = data.size() - 1;
+	for (n = 0; n <= k; n++) if (data[n].value >= mi) break;
+	for (; k >= 0; k--) if (data[k].value <= ma) break;
+	if (k < n) return {};
+	_matrix res(k - n + 1, 2);
+	for (i64 i = n; i <= k; i++)
+	{
+		res[i - n][0] = data[i].value;
+		res[i - n][1] = data[i].number;
 	}
 	return res;
 }
@@ -3921,6 +3937,7 @@ i64 _basic_statistics::operator[](i64 x) const noexcept
 
 void _sable_statistics::clear()
 {
+	delta_begin.clear();
 	delta.clear();
 	buy_number.clear();
 	sale_number.clear();
@@ -3938,6 +3955,7 @@ void _sable_statistics::calc()
 	_basic_statistics buy[roffer];
 	_basic_statistics sale[roffer];
 	_basic_statistics d;
+	_basic_statistics d_begin;
 	_prices pr;
 	_prices prpr = cena_zero_;
 	for (i64 i = 0; i < ss.size; i++)
@@ -3950,6 +3968,8 @@ void _sable_statistics::calc()
 			sale[n].push(pr.pro[n].k);
 		}
 		d.push(pr.pro[0].c - pr.pok[0].c);
+		if ((i64)pr.time - (i64)prpr.time <= _sable_stat::old_dtime)
+			d_begin.push((i64)pr.pok[roffer - 1].c - (i64)prpr.pok[roffer - 1].c);
 		prpr = pr;
 	}
 	for (i64 n = 0; n < roffer; n++)
@@ -3962,6 +3982,7 @@ void _sable_statistics::calc()
 	number = buy_number;
 	number += sale_number;
 	delta = d;
+	delta_begin = d_begin;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
