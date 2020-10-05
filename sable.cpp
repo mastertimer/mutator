@@ -3636,6 +3636,14 @@ i64 _statistics::number(_it be, _it en) noexcept
 	return s;
 }
 
+bool _statistics::operator==(const _statistics& a) const noexcept
+{
+	if (data.size() != a.data.size()) return false;
+	for (i64 i = 0; i < (i64)data.size(); i++)
+		if (data[i] != a.data[i]) return false;
+	return true;
+}
+
 void _statistics::set(std::vector<i64>& a)
 {
 	i64 k = 0;
@@ -3644,6 +3652,44 @@ void _statistics::set(std::vector<i64>& a)
 	data.reserve(k);
 	for (i64 i = 0; i < (i64)a.size(); i++)
 		if (a[i]) data.push_back({ i, a[i] });
+}
+
+void _statistics::operator+=(const _statistics& a)
+{
+	_statistics res;
+	auto i = data.begin();
+	auto ai = a.data.begin();
+	while ((i != data.end()) && (ai != a.data.end()))
+	{
+		if (i->value < ai->value)
+		{
+			res.data.push_back(*i);
+			++i;
+			continue;
+		}
+		if (ai->value < i->value)
+		{
+			res.data.push_back(*ai);
+			++ai;
+			continue;
+		}
+		res.data.push_back({ i->value, i->number + ai->number });
+		++i;
+		++ai;
+	}
+	for (; i != data.end(); ++i) res.data.push_back(*i);
+	for (; ai != a.data.end(); ++ai) res.data.push_back(*ai);
+	*this = res;
+}
+
+void _statistics::operator=(const _basic_statistics& a)
+{
+	i64 k = 0;
+	for (auto i : a.data) if (i) k++;
+	data.clear();
+	data.reserve(k);
+	for (i64 i = 0; i < (i64)a.data.size(); i++)
+		if (a[i]) data.push_back({ a.start + i, a[i] });
 }
 
 i64 _statistics::first_zero()
@@ -3979,6 +4025,49 @@ i64 _basic_statistics::operator[](i64 x) const noexcept
 	if (x - start >= (i64)data.size()) return 0;
 	if (x < start) return 0;
 	return data[x - start];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void _sable_statistics::clear()
+{
+	buy_number.clear();
+	sale_number.clear();
+	number.clear();
+	for (i64 i = 0; i < roffer; i++)
+	{
+		buyn_number[i].clear();
+		salen_number[i].clear();
+	}
+}
+
+void _sable_statistics::calc()
+{
+	clear();
+	_basic_statistics buy[roffer];
+	_basic_statistics sale[roffer];
+	_prices pr;
+	_prices prpr = cena_zero_;
+	for (i64 i = 0; i < ss.size; i++)
+	{
+		ss.read(i, pr);
+		if (pr == prpr) continue; // игнор одинаковых
+		for (i64 n = 0; n < roffer; n++)
+		{
+			buy[n].push(pr.pok[n].k);
+			sale[n].push(pr.pro[n].k);
+		}
+		prpr = pr;
+	}
+	for (i64 n = 0; n < roffer; n++)
+	{
+		buyn_number[n] = buy[n];
+		salen_number[n] = sale[n];
+		buy_number += buyn_number[n];
+		sale_number += salen_number[n];
+	}
+	number += buy_number;
+	number += sale_number;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

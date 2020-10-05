@@ -22,6 +22,7 @@ struct _one_stat // единица статистики
 	i64 number;  // количество
 
 	void operator=(_offer a) noexcept { value = a.c; number = a.k; }
+	bool operator!=(_one_stat a) const noexcept { return ((value != a.value) || (number != a.number)); }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -427,6 +428,7 @@ struct _statistics // сжатая статистика
 	std::vector<_one_stat> data;
 	typedef std::vector<_one_stat>::iterator _it;
 
+	void clear() { data.clear(); }
 	i64 min_value() const noexcept { return (data.empty()) ? 0 : data.front().value; }
 	i64 max_value() const noexcept { return (data.empty()) ? 0 : data.back().value; }
 	i64 number(_it be, _it en) noexcept; // общее количество
@@ -444,6 +446,9 @@ struct _statistics // сжатая статистика
 	double arithmetic_size() { return arithmetic_size(data.begin(), data.end()); }
 
 	void set(std::vector<i64>& a);
+	void operator=(const _basic_statistics &a);
+	void operator+=(const _statistics& a);
+	bool operator==(const _statistics& a) const noexcept;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -460,6 +465,20 @@ struct _up_statistics // для удобства поиска количеств
 private:
 	std::vector<_one_stat>::iterator li;
 	i64 last_value;
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct _sable_statistics
+{
+	_statistics buyn_number[roffer];  // статистика для каждого расстояния
+	_statistics salen_number[roffer]; // статистика для каждого расстояния
+	_statistics buy_number;           // общая статистика для покупки
+	_statistics sale_number;          // общая статистика для продажи
+	_statistics number;               // общая статистика
+
+	void calc();                      // вычислить всю статистику
+	void clear();                     // очистить все данные
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

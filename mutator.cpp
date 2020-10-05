@@ -20,6 +20,11 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void show_message(std::string_view s)
+{
+	MessageBoxA(0, s.data(), "информация", MB_OK | MB_TASKMODAL);
+}
+
 void show_message(i64 s)
 {
 	MessageBox(0, (std::to_wstring(s)).c_str(), L"целое число", MB_OK | MB_TASKMODAL);
@@ -682,14 +687,26 @@ void ToClipboard(astr text)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	show_message(test_ss4());
+	_sable_statistics sasa;
+	sasa.calc();
+	_cdf1 ee;
+	ee.calc(sasa.number, 6, 1000000000);
+	std::stringstream ss;
+
+	for (i64 i = 0; i <= 64; i++)
+	{
+		ss << "{" << ee.fr[i].first << ", " << (int)ee.fr[i].bit << "}, ";
+	}
+	ToClipboard(ss.str().c_str());
+
+/*	show_message(test_ss4());
 
 	show_message(bbb2.number(), bbb2[0]);
 
 	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go* ()->set_t_trans(g, flag_sub_go + flag_part);
 
-	g->add(_matrix(bbb2.data.size(), [&](i64 n) { return bbb2.data[n]; }), "граница", true);
+	g->add(_matrix(bbb2.data.size(), [&](i64 n) { return bbb2.data[n]; }), "граница", true);*/
 
 	/*_statistics s;
 	s.sable_number();
