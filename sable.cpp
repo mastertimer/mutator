@@ -1344,17 +1344,6 @@ void _bit_stream::pushn(u64 a, uchar n)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _frequency
-{
-	i64 first = 0; // первое число кодируемое
-	uchar bit = 0; // количество дополнительных бит
-};
-
-inline bool operator<(i64 a, _frequency b) noexcept
-{
-	return (a < b.first);
-}
-
 void _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 {
 	offer_pr = offer0 = c.buy[roffer - 1].value;
@@ -1375,19 +1364,9 @@ void _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 		{492, 5}, {524, 5}, {556, 6}, {619, 4}, {635, 6}, {699, 6}, {763, 6}, {827, 6}, {891, 6}, {955, 7}, {1083, 7}, {1188, 6},
 		{1252, 9}, {1764, 9}, {2276, 11}, {4324, 13}, {12516, 16}, {78052, 30}, {1000000000, 0} });
 
-	static const std::array<_frequency, 65> fr = { {{1, 0}, {2, 0}, {3, 3}, {11, 4}, {23, 3}, {31, 5}, {50, 0}, {51, 0}, {52, 2},
-		{56, 3}, {64, 4}, {80, 5}, {100, 0}, {101, 4}, {116, 3}, {124, 4}, {140, 3}, {148, 3}, {156, 3}, {164, 4}, {177, 3}, {185, 4},
-		{200, 0}, {201, 2}, {205, 3}, {213, 2}, {217, 3}, {224, 2}, {228, 3}, {236, 4}, {250, 0}, {251, 4}, {267, 4}, {282, 3},
-		{290, 4}, {306, 4}, {322, 4}, {338, 4}, {349, 2}, {353, 4}, {369, 4}, {381, 3}, {389, 5}, {412, 4}, {428, 5}, {460, 5},
-		{492, 5}, {524, 5}, {556, 6}, {619, 4}, {635, 6}, {699, 6}, {763, 6}, {827, 6}, {891, 6}, {955, 7}, {1083, 7}, {1188, 6},
-		{1252, 9}, {1764, 9}, {2276, 11}, {4324, 13}, {12516, 16}, {78052, 30}, {1000000000, 0}} }; // *
-
 	for (i64 i = roffer - 1; i >= 0; i--)
 	{
-		i64 a = c.buy[i].number;
-		i64 n = (std::upper_bound(fr.begin(), fr.end(), a) - fr.begin()) - 1;
-		bs.pushn(n, 6);
-		bs.pushn(a - fr[n].first, fr[n].bit);
+		nno.coding(c.buy[i].number, bs);
 		if (i == roffer - 1) continue;
 		i64 delta = c.buy[i].value - c.buy[i + 1].value;
 		if (delta <= 8)
@@ -1408,10 +1387,7 @@ void _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 	}
 	for (i64 i = 0; i < roffer; i++)
 	{
-		i64 a = c.sale[i].number;
-		i64 n = (std::upper_bound(fr.begin(), fr.end(), a) - fr.begin()) - 1;
-		bs.pushn(n, 6);
-		bs.pushn(a - fr[n].first, fr[n].bit);
+		nno.coding(c.sale[i].number, bs);
 		if (i == 0) continue;
 		i64 delta = c.sale[i].value - c.sale[i - 1].value;
 		if (delta <= 8)
@@ -3862,6 +3838,16 @@ void _cdf1::calc(_statistics& st, uchar b0, i64 max_value)
 			continue;
 		}
 	}
+}
+
+bool _cdf1::coding(i64 a, _bit_stream& bs) const noexcept
+{
+	i64 n = (std::upper_bound(fr.begin(), fr.end(), a, [](i64 a, _frequency b) {return (a < b.first); }) - fr.begin())
+		- 1;
+	if ((n < 0) || (n >= (1ll << bit0))) return false;
+	bs.pushn(n, bit0);
+	bs.pushn(a - fr[n].first, fr[n].bit);
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
