@@ -1313,7 +1313,12 @@ _super_stat::_super_stat()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _sable_stat::push1(uchar a)
+_bit_stream::~_bit_stream()
+{
+	pushn(0, (8 - bit) % 8); // заполнить последний байт
+}
+
+void _bit_stream::push1(uchar a)
 {
 	byte |= (a << bit++);
 	if (bit == 8)
@@ -1323,7 +1328,7 @@ void _sable_stat::push1(uchar a)
 	}
 }
 
-void _sable_stat::pushn(u64 a, uchar n)
+void _bit_stream::pushn(u64 a, uchar n)
 {
 	for (; n; n--)
 	{
@@ -1337,6 +1342,8 @@ void _sable_stat::pushn(u64 a, uchar n)
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct _frequency
 {
 	i64 first = 0; // первое число кодируемое
@@ -1348,7 +1355,7 @@ inline bool operator<(i64 a, _frequency b) noexcept
 	return (a < b.first);
 }
 
-void _sable_stat::add0(const _prices2& c)
+void _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 {
 	offer_pr = offer0 = c.buy[roffer - 1].value;
 	i64 offermax = c.sale[roffer - 1].value;
@@ -1359,7 +1366,14 @@ void _sable_stat::add0(const _prices2& c)
 		baza[c.buy[i].value - offer0] = c.buy[i].number;
 		baza[c.sale[i].value - offer0] = -c.sale[i].number;
 	}
-	pushn(offer0, 16);
+	bs.pushn(offer0, 16);
+
+	static const _cdf1 nno({ {1, 0}, {2, 0}, {3, 3}, {11, 4}, {23, 3}, {31, 5}, {50, 0}, {51, 0}, {52, 2},
+		{56, 3}, {64, 4}, {80, 5}, {100, 0}, {101, 4}, {116, 3}, {124, 4}, {140, 3}, {148, 3}, {156, 3}, {164, 4}, {177, 3}, {185, 4},
+		{200, 0}, {201, 2}, {205, 3}, {213, 2}, {217, 3}, {224, 2}, {228, 3}, {236, 4}, {250, 0}, {251, 4}, {267, 4}, {282, 3},
+		{290, 4}, {306, 4}, {322, 4}, {338, 4}, {349, 2}, {353, 4}, {369, 4}, {381, 3}, {389, 5}, {412, 4}, {428, 5}, {460, 5},
+		{492, 5}, {524, 5}, {556, 6}, {619, 4}, {635, 6}, {699, 6}, {763, 6}, {827, 6}, {891, 6}, {955, 7}, {1083, 7}, {1188, 6},
+		{1252, 9}, {1764, 9}, {2276, 11}, {4324, 13}, {12516, 16}, {78052, 30}, {1000000000, 0} });
 
 	static const std::array<_frequency, 65> fr = { {{1, 0}, {2, 0}, {3, 3}, {11, 4}, {23, 3}, {31, 5}, {50, 0}, {51, 0}, {52, 2},
 		{56, 3}, {64, 4}, {80, 5}, {100, 0}, {101, 4}, {116, 3}, {124, 4}, {140, 3}, {148, 3}, {156, 3}, {164, 4}, {177, 3}, {185, 4},
@@ -1372,45 +1386,45 @@ void _sable_stat::add0(const _prices2& c)
 	{
 		i64 a = c.buy[i].number;
 		i64 n = (std::upper_bound(fr.begin(), fr.end(), a) - fr.begin()) - 1;
-		pushn(n, 6);
-		pushn(a - fr[n].first, fr[n].bit);
+		bs.pushn(n, 6);
+		bs.pushn(a - fr[n].first, fr[n].bit);
 		if (i == roffer - 1) continue;
 		i64 delta = c.buy[i].value - c.buy[i + 1].value;
 		if (delta <= 8)
-			pushn(1i64 << (delta - 1), delta);
+			bs.pushn(1i64 << (delta - 1), delta);
 		else
 		{
-			pushn(0, 8);
-			pushn(delta, 13); // *
+			bs.pushn(0, 8);
+			bs.pushn(delta, 13); // *
 		}
 	}
 	i64 d2 = c.sale[0].value - c.buy[0].value;
 	if (d2 <= 7)
-		pushn(d2, 3);
+		bs.pushn(d2, 3);
 	else
 	{
-		pushn(0, 3);
-		pushn(d2, 13); // *
+		bs.pushn(0, 3);
+		bs.pushn(d2, 13); // *
 	}
 	for (i64 i = 0; i < roffer; i++)
 	{
 		i64 a = c.sale[i].number;
 		i64 n = (std::upper_bound(fr.begin(), fr.end(), a) - fr.begin()) - 1;
-		pushn(n, 6);
-		pushn(a - fr[n].first, fr[n].bit);
+		bs.pushn(n, 6);
+		bs.pushn(a - fr[n].first, fr[n].bit);
 		if (i == 0) continue;
 		i64 delta = c.sale[i].value - c.sale[i - 1].value;
 		if (delta <= 8)
-			pushn(1i64 << (delta - 1), delta);
+			bs.pushn(1i64 << (delta - 1), delta);
 		else
 		{
-			pushn(0, 8);
-			pushn(delta, 13); // *
+			bs.pushn(0, 8);
+			bs.pushn(delta, 13); // *
 		}
 	}
 }
 
-void _sable_stat::add1(const _prices2& c)
+void _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 {
 	i64 delta_start = c.buy[roffer - 1].value - offer_pr;
 	bbb2.push(delta_start);
@@ -1419,21 +1433,20 @@ void _sable_stat::add1(const _prices2& c)
 
 void _sable_stat::add(const _prices2& c) // 53.14 на 40  50.9 - арифм.
 {
-	byte = bit = 0;
+	_bit_stream bs(data);
 	if ((size % step_pak_cc == 0)||true)
 	{
-		pushn(c.time, 31);
+		bs.pushn(c.time, 31);
 		udata.push_back(data.size());
-		add0(c);
+		add0(c, bs);
 	}
 	else
 	{
 		time_t dt = c.time - last_cc.time;
 		if (dt < 0) dt = 0; // время может идти назад!
-		if (dt == 1) push1(0); else { push1(1); pushn(dt, 31); }
-		if (dt > 180) add0(c); else add1(c);
+		if (dt == 1) bs.push1(0); else { bs.push1(1); bs.pushn(dt, 31); }
+		if (dt > 180) add0(c, bs); else add1(c, bs);
 	}
-	pushn(0, (8 - bit) % 8); // заполнить последний байт
 	size++;
 	last_cc = c;
 }
@@ -3737,7 +3750,7 @@ i64 _up_statistics::number_from(i64 start) noexcept
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-i64 bit_for_value(i64 k)
+i64 bit_for_value(i64 k) // k - количество чисел. (1) = 0, (2) = 1, (4) = 2
 {
 	k--;
 	if (k <= 0) return 0;
@@ -3748,6 +3761,16 @@ i64 bit_for_value(i64 k)
 		k >>= 1;
 	}
 	return n;
+}
+
+_cdf1::_cdf1(const std::vector<_frequency>& a) : fr(a)
+{
+	bit0 = bit_for_value(fr.size() - 1);
+	if ((i64)fr.size() != (1ll << bit0) + 1)
+	{
+		fr.clear();
+		bit0 = 0;
+	}
 }
 
 void _cdf1::calc(_statistics& st, uchar b0, i64 max_value)
