@@ -434,18 +434,11 @@ struct _statistics // сжатая статистика
 	i64 number(_it be, _it en) noexcept; // общее количество
 	i64 number() noexcept { return number(data.begin(), data.end()); }
 
-	void sable_number_buy(i64 n);  // статистика количеств n-й покупки
-	void sable_number_sale(i64 n); // статистика количеств n-й продажи
-	void sable_number_buy();       // статистика количеств покупки
-	void sable_number_sale();      // статистика количеств продажи
-	void sable_number();           // статистика количеств
-
 	i64 first_zero();              // номер первого нулевого элемента начиная со start (-1 если не нашлось)
 	i64 number_not_zero() { return data.size(); } // количество значений с ненулевым количеством
 	double arithmetic_size(_it be, _it en); // арифметический размер в битах
 	double arithmetic_size() { return arithmetic_size(data.begin(), data.end()); }
 
-	void set(std::vector<i64>& a);
 	void operator=(const _basic_statistics &a);
 	void operator+=(const _statistics& a);
 	bool operator==(const _statistics& a) const noexcept;

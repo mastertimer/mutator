@@ -1420,7 +1420,7 @@ void _sable_stat::add1(const _prices2& c)
 void _sable_stat::add(const _prices2& c) // 53.14 на 40  50.9 - арифм.
 {
 	byte = bit = 0;
-	if ((size % step_pak_cc == 0))
+	if ((size % step_pak_cc == 0)||true)
 	{
 		pushn(c.time, 31);
 		udata.push_back(data.size());
@@ -3644,16 +3644,6 @@ bool _statistics::operator==(const _statistics& a) const noexcept
 	return true;
 }
 
-void _statistics::set(std::vector<i64>& a)
-{
-	i64 k = 0;
-	for (auto i : a) if (i) k++;
-	data.clear();
-	data.reserve(k);
-	for (i64 i = 0; i < (i64)a.size(); i++)
-		if (a[i]) data.push_back({ i, a[i] });
-}
-
 void _statistics::operator+=(const _statistics& a)
 {
 	_statistics res;
@@ -3706,105 +3696,6 @@ double _statistics::arithmetic_size(_it be, _it en)
 	double n = 1.0 / number(be, en);
 	for (auto i = be; i != en; ++i) s += i->number * log(i->number * n);
 	return -s / log(2.0);
-}
-
-void _statistics::sable_number_sale(i64 n)
-{
-	if ((n < 0) || (n >= roffer)) { data.clear(); return; }
-	std::vector<i64> a;
-	_prices pr;
-	_prices prpr = cena_zero_;
-	for (i64 i = 0; i < ss.size; i++)
-	{
-		ss.read(i, pr);
-		if (pr == prpr) continue; // игнор одинаковых
-		i64 o = pr.pro[n].k;
-		if (o >= (i64)a.size()) a.resize(o + 1, 0);
-		a[o]++;
-		prpr = pr;
-	}
-	set(a);
-}
-
-void _statistics::sable_number_buy(i64 n)
-{
-	if ((n < 0) || (n >= roffer)) { data.clear(); return; }
-	std::vector<i64> a;
-	_prices pr;
-	_prices prpr = cena_zero_;
-	for (i64 i = 0; i < ss.size; i++)
-	{
-		ss.read(i, pr);
-		if (pr == prpr) continue; // игнор одинаковых
-		i64 o = pr.pok[n].k;
-		if (o >= (i64)a.size()) a.resize(o + 1, 0);
-		a[o]++;
-		prpr = pr;
-	}
-	set(a);
-}
-
-void _statistics::sable_number_buy()
-{
-	std::vector<i64> a;
-	_prices pr;
-	_prices prpr = cena_zero_;
-	for (i64 i = 0; i < ss.size; i++)
-	{
-		ss.read(i, pr);
-		if (pr == prpr) continue; // игнор одинаковых
-		for (i64 n = 0; n < roffer; n++)
-		{
-			i64 o = pr.pok[n].k;
-			if (o >= (i64)a.size()) a.resize(o + 1, 0);
-			a[o]++;
-		}
-		prpr = pr;
-	}
-	set(a);
-}
-
-void _statistics::sable_number_sale()
-{
-	std::vector<i64> a;
-	_prices pr;
-	_prices prpr = cena_zero_;
-	for (i64 i = 0; i < ss.size; i++)
-	{
-		ss.read(i, pr);
-		if (pr == prpr) continue; // игнор одинаковых
-		for (i64 n = 0; n < roffer; n++)
-		{
-			i64 o = pr.pro[n].k;
-			if (o >= (i64)a.size()) a.resize(o + 1, 0);
-			a[o]++;
-		}
-		prpr = pr;
-	}
-	set(a);
-}
-
-void _statistics::sable_number()
-{
-	std::vector<i64> a;
-	_prices pr;
-	_prices prpr = cena_zero_;
-	for (i64 i = 0; i < ss.size; i++)
-	{
-		ss.read(i, pr);
-		if (pr == prpr) continue; // игнор одинаковых
-		for (i64 n = 0; n < roffer; n++)
-		{
-			i64 o = pr.pro[n].k;
-			if (o >= (i64)a.size()) a.resize(o + 1, 0);
-			a[o]++;
-			o = pr.pok[n].k;
-			if (o >= (i64)a.size()) a.resize(o + 1, 0);
-			a[o]++;
-		}
-		prpr = pr;
-	}
-	set(a);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
