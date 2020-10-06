@@ -558,7 +558,13 @@ struct _iinterval // [...)
 		if ((max_ > 0) || (max == max_)) max++;
 	}
 
-	void  operator=(i64 b) noexcept { min = b; max = b + 1; }
+	bool operator==(_iinterval b) const noexcept
+	{
+		if ((max <= min) && (b.max <= b.min)) return true;
+		return ((min == b.min) && (max == b.max));
+	}
+
+	void operator=(i64 b) noexcept { min = b; max = b + 1; }
 
 	void operator&=(const _iinterval& b) noexcept { if (b.min > min) min = b.min; if (b.max < max) max = b.max; }
 

@@ -690,16 +690,16 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 /*	_sable_statistics sasa;
 	sasa.calc();
 	_cdf1 ee;
-	ee.calc(sasa.delta, 3, 7000);
+	ee.calc(sasa.number, 6, 1000000000);
 	std::stringstream ss;
 
-	for (i64 i = 0; i <= 8; i++)
+	for (i64 i = 0; i <= 64; i++)
 	{
 		ss << "{" << ee.fr[i].first << ", " << (int)ee.fr[i].bit << "}, ";
 	}
 	ToClipboard(ss.str().c_str());*/
 
-//	show_message(test_ss4());
+	show_message(test_ss4());
 
 /*	show_message(bbb2.number(), bbb2[0]);
 
@@ -722,11 +722,11 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 	for (i64 i = 1; i <= 7; i++) ss += k[i];
 	MessageBox(0, std::to_wstring(ss * 8.0 / s).c_str(), L"упс", MB_OK | MB_TASKMODAL); // ss*64.0/s*/
 
-	_sable_statistics sasa;
+/*	_sable_statistics sasa;
 	sasa.calc();
 	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
-	g->add(sasa.delta_begin.to_matrix(-100, 100), "delta", true);
+	g->add(sasa.delta_begin.to_matrix(-100, 100), "delta", true);*/
 
 /*	_nervous_oracle2 rr;
 	i64 nn = 0;
