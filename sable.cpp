@@ -3907,7 +3907,7 @@ void _cdf1::calc2(_statistics& st, uchar b0, i64 max_value)
 	struct _2uuu
 	{
 		_uuu u1, u2;
-		i64 left, right; // потери левой и правой пар
+		i64 left = -1, right = -1; // потери левой и правой пар
 	};
 
 	std::multimap<i64, _2uuu> xxx;
@@ -3931,13 +3931,13 @@ void _cdf1::calc2(_statistics& st, uchar b0, i64 max_value)
 	pr_a.right = -1;
 	xxx.insert({ pr_rr0, pr_a });
 
-	while (xxx.size() > n)
+	while ((i64)xxx.size() > n)
 	{
-		auto a = xxx.begin(); // минимальная пара
-		auto aa = a->second;
-		auto pr = xxx.equal_range(aa.left);
-		auto i = pr.first; // левая пара
-		for (; i != pr.second; ++i)
+		auto a_ = xxx.begin(); // минимальная пара
+		auto aa = a_->second;
+		auto pr_ = xxx.equal_range(aa.left);
+		auto i = pr_.first; // левая пара
+		for (; i != pr_.second; ++i)
 			if (i->second.u2 == aa.u1)
 				break;
 		auto po = xxx.equal_range(aa.right);
@@ -3951,7 +3951,7 @@ void _cdf1::calc2(_statistics& st, uchar b0, i64 max_value)
 		i64 pot_i = -1;
 		i64 pot_j = -1;
 		_2uuu ii, jj;
-		if (i != pr.second)
+		if (i != pr_.second)
 		{
 			ii = i->second;
 			ii.u2 = aa.u1;
@@ -3965,7 +3965,7 @@ void _cdf1::calc2(_statistics& st, uchar b0, i64 max_value)
 		}
 		ii.right = pot_j;
 		jj.left = pot_i;
-		xxx.erase(a);
+		xxx.erase(a_);
 		if (pot_i >= 0)
 		{
 			xxx.erase(i);
@@ -3977,36 +3977,17 @@ void _cdf1::calc2(_statistics& st, uchar b0, i64 max_value)
 			xxx.insert({ pot_j, jj });
 		}
 	}
-
-	while ((i64)ee.size() > n)
+	std::map<i64, _uuu> xxx2;
+	for (auto& i : xxx)
 	{
-		auto best_ii = ee.begin();
-		i64 min_delta = 0xfffffffffffffff;
-		auto ii = ee.begin();
-		for (auto i = ee.begin(); i != ee.end(); ++i)
-		{
-			if (i == ii) continue;
-			i64 r0 = i->k * i->bit + ii->k * ii->bit;
-			i64 r = (i->k + ii->k) * bit_for_value(i->o.max - ii->o.min);
-			if (r - r0 < min_delta)
-			{
-				min_delta = r - r0;
-				best_ii = ii;
-			}
-			ii = i;
-		}
-		auto i = best_ii;
-		++i;
-		best_ii->k += i->k;
-		best_ii->o.max = i->o.max;
-		best_ii->bit = bit_for_value(best_ii->o.size());
-		ee.erase(i);
+		xxx2[i.second.u1.o.min] = i.second.u1;
+		xxx2[i.second.u2.o.min] = i.second.u2;
 	}
-	auto ii = ee.begin();
+	auto ii = xxx2.begin();
 	for (i64 i = 0; i < n; i++)
 	{
-		fr[i].first = ii->o.min;
-		fr[i].bit = ii->bit;
+		fr[i].first = ii->second.o.min;
+		fr[i].bit = ii->second.bit;
 		++ii;
 	}
 	fr[n].first = max_value;
