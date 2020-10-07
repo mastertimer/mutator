@@ -3911,7 +3911,7 @@ void _cdf1::calc2(_statistics& st, uchar b0, i64 max_value)
 	};
 
 	std::multimap<i64, _2uuu> xxx;
-
+	i64 kkk = 0;
 	i64 pr_rr0 = -1;
 	_2uuu pr_a;
 	for (auto i = ee.begin(), ii = ee.begin(); i != ee.end(); ii = i++)
@@ -3924,6 +3924,10 @@ void _cdf1::calc2(_statistics& st, uchar b0, i64 max_value)
 			xxx.insert({ pr_rr0, pr_a });
 		}
 		pr_a.u1 = *ii;
+/*		if (pr_a.u1.o.min == 28092ll)
+		{
+			kkk++;
+		}*/
 		pr_a.u2 = *i;
 		pr_a.left = pr_rr0;
 		pr_rr0 = rr0;
@@ -3931,8 +3935,28 @@ void _cdf1::calc2(_statistics& st, uchar b0, i64 max_value)
 	pr_a.right = -1;
 	xxx.insert({ pr_rr0, pr_a });
 
+	auto test_xxx = [&xxx]() {
+		std::map<i64, _uuu> xxx2;
+		for (auto& i : xxx)
+		{
+			xxx2[i.second.u1.o.min] = i.second.u1;
+			xxx2[i.second.u2.o.min] = i.second.u2;
+		}
+		i64 oo = 1;
+		for (auto& i : xxx2)
+		{
+			if (oo != i.second.o.min) return false;
+			oo = i.second.o.max;
+		}
+		return true;
+	};
 	while ((i64)xxx.size() > n)
 	{
+		kkk++;
+		if (kkk == 1758)
+		{
+			kkk++;
+		}
 		auto a_ = xxx.begin(); // минимальная пара
 		auto aa = a_->second;
 		auto pr_ = xxx.equal_range(aa.left);
@@ -3947,6 +3971,10 @@ void _cdf1::calc2(_statistics& st, uchar b0, i64 max_value)
 				break;
 		aa.u1.k += aa.u2.k;
 		aa.u1.o.max = aa.u2.o.max;
+		if (aa.u1.o.min == 28092ll)
+		{
+			kkk++;
+		}
 		aa.u1.bit = bit_for_value(aa.u1.o.size());
 		i64 pot_i = -1;
 		i64 pot_j = -1;
@@ -3965,16 +3993,33 @@ void _cdf1::calc2(_statistics& st, uchar b0, i64 max_value)
 		}
 		ii.right = pot_j;
 		jj.left = pot_i;
+		if (a_->second.u1.o.min == 28092ll)
+		{
+			kkk++;
+		}
 		xxx.erase(a_);
 		if (pot_i >= 0)
 		{
+			if (i->second.u1.o.min == 28092ll)
+			{
+				kkk++;
+			}
 			xxx.erase(i);
 			xxx.insert({ pot_i, ii });
 		}
 		if (pot_j >= 0)
 		{
+			if (j->second.u1.o.min == 28092ll)
+			{
+				kkk++;
+			}
 			xxx.erase(j);
 			xxx.insert({ pot_j, jj });
+		}
+		if ((kkk == 1758)|| (kkk == 1757))
+		if (!test_xxx())
+		{
+			return;
 		}
 	}
 	std::map<i64, _uuu> xxx2;
