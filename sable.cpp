@@ -3759,7 +3759,8 @@ i64 _up_statistics::number_from(i64 start) noexcept
 
 i64 bit_for_value(u64 k) // k - количество чисел. (1) = 0, (2) = 1, (4) = 2
 {
-	k--; // если k == 0 будет ошибка
+	if (k == 0) return 0;
+	k--;
 	i64 n = 0;
 	while (k)
 	{
@@ -3952,6 +3953,21 @@ bool _cdf1::coding(i64 a, _bit_stream& bs) const noexcept
 	if ((n < 0) || (n >= (1ll << bit0))) return false;
 	bs.pushn(n, bit0);
 	bs.pushn(a - fr[n].first, fr[n].bit);
+	return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool _cdf2::coding(i64 a, _bit_stream& bs) const noexcept
+{
+/*	auto n = std::upper_bound(fr.begin(), fr.end(), a, [](i64 a, _frequency b) {return (a < b.first); });
+	if ((n == fr.begin()) || (n >= fr.end() - 1)) return false;
+	n--;
+	i64 n = (std::upper_bound(fr.begin(), fr.end(), a, [](i64 a, _frequency b) {return (a < b.first); }) - fr.begin())
+		- 1;
+	if ((n < 0) || (n >= fr.size() - 1)) return false;
+	bs.pushn(n, bit0);
+	bs.pushn(a - fr[n].first, fr[n].bit);*/
 	return true;
 }
 
