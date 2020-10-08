@@ -1357,13 +1357,21 @@ bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 	}
 	bs.pushn(offer0, 16);
 
-	static const _cdf1 nno({ {1, 0}, {2, 3}, {10, 4}, {23, 3}, {31, 5}, {50, 0}, {51, 0}, {52, 2}, {56, 3}, {64, 4},
+/*	static const _cdf1 nno({ {1, 0}, {2, 3}, {10, 4}, {23, 3}, {31, 5}, {50, 0}, {51, 0}, {52, 2}, {56, 3}, {64, 4},
 		{80, 5}, {100, 0}, {101, 4}, {116, 3}, {124, 4}, {140, 3}, {148, 3}, {156, 3}, {164, 4}, {177, 3}, {185, 4},
 		{200, 0}, {201, 2}, {205, 3}, {213, 2}, {217, 3}, {224, 2}, {228, 3}, {236, 4}, {250, 0}, {251, 4}, {267, 4},
 		{282, 3}, {290, 4}, {306, 4}, {322, 4}, {338, 4}, {349, 2}, {353, 4}, {369, 4}, {381, 3}, {389, 5}, {412, 4},
 		{428, 5}, {460, 5}, {492, 5}, {524, 5}, {556, 6}, {619, 4}, {635, 6}, {699, 6}, {763, 6}, {827, 6}, {891, 6},
 		{955, 7}, {1083, 7}, {1188, 6}, {1252, 9}, {1764, 9}, {2276, 11}, {4324, 11}, {6372, 12}, {10468, 16},
-		{76004, 30}, {1000000000, 0} });
+		{76004, 30}, {1000000000, 0} });*/
+
+	static const _cdf1 nno({ {1, 0}, {2, 3}, {10, 4}, {23, 3}, {31, 5}, {50, 0}, {51, 0}, {52, 2}, {56, 3}, {64, 4},
+		{80, 5}, {100, 0}, {101, 0}, {102, 3}, {110, 4}, {126, 4}, {140, 3}, {148, 3}, {156, 3}, {164, 4}, {177, 3},
+		{185, 4}, {200, 0}, {201, 2}, {205, 3}, {213, 2}, {217, 3}, {224, 2}, {228, 3}, {236, 4}, {250, 0}, {251, 1},
+		{253, 3}, {261, 4}, {277, 4}, {293, 4}, {309, 4}, {325, 4}, {341, 3}, {349, 2}, {353, 4}, {369, 4}, {381, 3},
+		{389, 5}, {412, 4}, {428, 5}, {460, 5}, {492, 5}, {524, 5}, {556, 6}, {619, 4}, {635, 6}, {699, 6}, {763, 6},
+		{827, 6}, {891, 6}, {955, 7}, {1083, 7}, {1188, 6}, {1252, 9}, {1764, 9}, {2276, 11}, {4324, 11}, {6372, 30},
+		{1000000000, 0} });
 
 	static const _cdf1 nnd({ {1, 0}, {2, 0}, {3, 0}, {4, 0}, {5, 1}, {7, 1}, {9, 2}, {13, 13}, {7000, 0} });
 
@@ -3907,120 +3915,72 @@ void _cdf1::calc2(_statistics& st, uchar b0, i64 max_value)
 	struct _2uuu
 	{
 		_uuu u1, u2;
-		i64 left = -1, right = -1; // потери левой и правой пар
+		std::multimap<i64, _2uuu>::iterator left, right;
 	};
 
 	std::multimap<i64, _2uuu> xxx;
-	i64 kkk = 0;
-	i64 pr_rr0 = -1;
-	_2uuu pr_a;
-	for (auto i = ee.begin(), ii = ee.begin(); i != ee.end(); ii = i++)
+	std::multimap<i64, _2uuu>::iterator pr_it;
+	for (i64 i = 1; i < (i64)ee.size(); i++)
 	{
-		if (i == ii) continue;
-		i64 rr0 = calc_poteri(*ii, *i);
-		if (pr_rr0 >= 0)
+		_2uuu aa;
+		aa.u1 = ee[i-1];
+		aa.u2 = ee[i];
+		std::multimap<i64, _2uuu>::iterator it = xxx.insert({ calc_poteri(aa.u1, aa.u2), aa });
+		if (i == 1)
+			it->second.left = it;
+		else
 		{
-			pr_a.right = rr0;
-			xxx.insert({ pr_rr0, pr_a });
+			pr_it->second.right = it;
+			it->second.left = pr_it;
 		}
-		pr_a.u1 = *ii;
-/*		if (pr_a.u1.o.min == 28092ll)
-		{
-			kkk++;
-		}*/
-		pr_a.u2 = *i;
-		pr_a.left = pr_rr0;
-		pr_rr0 = rr0;
+		pr_it = it;
 	}
-	pr_a.right = -1;
-	xxx.insert({ pr_rr0, pr_a });
-
-	auto test_xxx = [&xxx]() {
-		std::map<i64, _uuu> xxx2;
-		for (auto& i : xxx)
-		{
-			xxx2[i.second.u1.o.min] = i.second.u1;
-			xxx2[i.second.u2.o.min] = i.second.u2;
-		}
-		i64 oo = 1;
-		for (auto& i : xxx2)
-		{
-			if (oo != i.second.o.min) return false;
-			oo = i.second.o.max;
-		}
-		return true;
-	};
+	pr_it->second.right = pr_it;
 	while ((i64)xxx.size() > n)
 	{
-		kkk++;
-		if (kkk == 1758)
-		{
-			kkk++;
-		}
 		auto a_ = xxx.begin(); // минимальная пара
+		for (auto i = xxx.begin(); i != xxx.end(); ++i)
+		{
+			if (i->first != a_->first) break;
+			if (i->second.u1.o.min < a_->second.u1.o.min) a_ = i;
+		}
 		auto aa = a_->second;
-		auto pr_ = xxx.equal_range(aa.left);
-		auto i = pr_.first; // левая пара
-		for (; i != pr_.second; ++i)
-			if (i->second.u2 == aa.u1)
-				break;
-		auto po = xxx.equal_range(aa.right);
-		auto j = po.first; // правая пара
-		for (; j != po.second; ++j)
-			if (j->second.u1 == aa.u2)
-				break;
+		auto i = aa.left; // левая пара
+		auto j = aa.right; // правая пара
 		aa.u1.k += aa.u2.k;
 		aa.u1.o.max = aa.u2.o.max;
-		if (aa.u1.o.min == 28092ll)
-		{
-			kkk++;
-		}
 		aa.u1.bit = bit_for_value(aa.u1.o.size());
-		i64 pot_i = -1;
-		i64 pot_j = -1;
 		_2uuu ii, jj;
-		if (i != pr_.second)
+		bool ina = (i != a_);
+		bool jna = (j != a_);
+		if (ina)
 		{
 			ii = i->second;
 			ii.u2 = aa.u1;
-			pot_i = calc_poteri(ii.u1, ii.u2);
+			bool gran = (ii.left == i);
+			xxx.erase(i);
+			i = xxx.insert({ calc_poteri(ii.u1, ii.u2), ii });
+			if (gran)
+				i->second.left = i;
+			else
+				i->second.left->second.right = i;
 		}
-		if (j != po.second)
+		if (jna)
 		{
 			jj = j->second;
 			jj.u1 = aa.u1;
-			pot_j = calc_poteri(jj.u1, jj.u2);
-		}
-		ii.right = pot_j;
-		jj.left = pot_i;
-		if (a_->second.u1.o.min == 28092ll)
-		{
-			kkk++;
-		}
-		xxx.erase(a_);
-		if (pot_i >= 0)
-		{
-			if (i->second.u1.o.min == 28092ll)
-			{
-				kkk++;
-			}
-			xxx.erase(i);
-			xxx.insert({ pot_i, ii });
-		}
-		if (pot_j >= 0)
-		{
-			if (j->second.u1.o.min == 28092ll)
-			{
-				kkk++;
-			}
+			bool gran = (jj.right == j);
 			xxx.erase(j);
-			xxx.insert({ pot_j, jj });
+			j = xxx.insert({ calc_poteri(jj.u1, jj.u2), jj });
+			j->second.left = (ina) ? i : j;
+			if (gran)
+				j->second.right = j;
+			else
+				j->second.right->second.left = j;
 		}
-		if ((kkk == 1758)|| (kkk == 1757))
-		if (!test_xxx())
-		{
-			return;
-		}
+		if (ina)
+			i->second.right = (jna) ? j : i;
+		xxx.erase(a_);
 	}
 	std::map<i64, _uuu> xxx2;
 	for (auto& i : xxx)
