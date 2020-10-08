@@ -687,9 +687,10 @@ void ToClipboard(astr text)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	_sable_statistics sasa;
+/*	_sable_statistics sasa;
 	sasa.calc();
 	_cdf1 ee;
+//	ee.calc(sasa.number, 6, 1000000000);
 	ee.calc2(sasa.number, 6, 1000000000);
 	std::stringstream ss;
 
@@ -697,9 +698,23 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 	{
 		ss << "{" << ee.fr[i].first << ", " << (int)ee.fr[i].bit << "}, ";
 	}
-	ToClipboard(ss.str().c_str());
+	ToClipboard(ss.str().c_str());*/
 
-//	show_message(test_ss4());
+/*	_sable_statistics sasa;
+	sasa.calc();
+	_cdf1 ee;
+//	ee.calc(sasa.delta, 3, 7000);
+	ee.calc2(sasa.delta, 3, 7000);
+	std::stringstream ss;
+
+	for (i64 i = 0; i <= 8; i++)
+	{
+		ss << "{" << ee.fr[i].first << ", " << (int)ee.fr[i].bit << "}, ";
+	}
+	ToClipboard(ss.str().c_str());*/
+
+
+	show_message(test_ss4());
 
 /*	show_message(bbb2.number(), bbb2[0]);
 
