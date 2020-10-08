@@ -456,6 +456,8 @@ struct _statistics // сжатая статистика
 	void operator+=(const _statistics& a);
 	bool operator==(const _statistics& a) const noexcept;
 
+	i64 operator[](i64 n) const noexcept;
+
 	_matrix to_matrix(); // два столбца - x и y
 	_matrix to_matrix(i64 mi, i64 ma); // два столбца - x и y
 };
@@ -508,7 +510,9 @@ struct _cdf1 // структура частот для сжатия чисел
 	_cdf1() = default;
 	_cdf1(const std::vector<_frequency>& a);
 
-	void calc(_statistics& st, uchar b0, i64 max_value);
+	void clear();
+
+	void calc(_statistics& st, uchar b0, i64 min_value, i64 max_value);
 
 	bool coding(i64 a, _bit_stream& bs) const noexcept; // закодировать число в битовый поток (return false если ошибка)
 };

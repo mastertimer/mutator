@@ -1363,9 +1363,9 @@ bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 		{282, 3}, {290, 4}, {306, 4}, {322, 4}, {338, 4}, {349, 2}, {353, 4}, {369, 4}, {381, 3}, {389, 5}, {412, 4},
 		{428, 5}, {460, 5}, {492, 5}, {524, 5}, {556, 6}, {619, 4}, {635, 6}, {699, 6}, {763, 6}, {827, 6}, {891, 6},
 		{955, 7}, {1083, 7}, {1188, 6}, {1252, 9}, {1764, 9}, {2276, 11}, {4324, 11}, {6372, 12}, {10468, 16},
-		{76004, 30}, {1000000000, 0} });
+		{76004, 24}, {10000000, 0} }); // max - 670 000
 
-	static const _cdf1 nnd({ {1, 0}, {2, 0}, {3, 0}, {4, 0}, {5, 1}, {7, 1}, {9, 2}, {13, 13}, {7000, 0} });
+	static const _cdf1 nnd({ {1, 1}, {3, 0}, {4, 0}, {5, 0}, {6, 0}, {7, 1}, {9, 2}, {13, 10}, {1000, 0} }); // max=210
 
 	for (i64 i = roffer - 1; i >= 0; i--)
 	{
@@ -3711,6 +3711,13 @@ _matrix _statistics::to_matrix(i64 mi, i64 ma)
 	return res;
 }
 
+i64 _statistics::operator[](i64 n) const noexcept
+{
+	auto li = std::lower_bound(data.begin(), data.end(), n, [](_one_stat a, i64 b) { return (a.value < b); });
+	if (li == data.end()) return 0;
+	return (li->value == n) ? li->number : 0;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 double _up_statistics::arithmetic_size(_iinterval o)
@@ -3750,10 +3757,9 @@ i64 _up_statistics::number_from(i64 start) noexcept
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-i64 bit_for_value(i64 k) // k - количество чисел. (1) = 0, (2) = 1, (4) = 2
+i64 bit_for_value(u64 k) // k - количество чисел. (1) = 0, (2) = 1, (4) = 2
 {
-	k--;
-	if (k <= 0) return 0;
+	k--; // если k == 0 будет ошибка
 	i64 n = 0;
 	while (k)
 	{
@@ -3773,8 +3779,19 @@ _cdf1::_cdf1(const std::vector<_frequency>& a) : fr(a)
 	}
 }
 
-void _cdf1::calc(_statistics& st, uchar b0, i64 max_value)
+void _cdf1::clear()
 {
+	bit0 = 0;
+	fr.clear();
+}
+
+void _cdf1::calc(_statistics& st, uchar b0, i64 min_value, i64 max_value)
+{
+	if ((st.min_value() < min_value) || (st.max_value() > max_value))
+	{ // с такими параметрами нельзя!
+		clear();
+		return;
+	}
 	bit0 = b0;
 	i64 n = (1ll << b0);
 	fr.resize(n + 1);
@@ -3795,13 +3812,20 @@ void _cdf1::calc(_statistics& st, uchar b0, i64 max_value)
 	};
 
 	std::vector<_uuu> ee;
-	i64 pr = st.min_value() - 1;
 	_uuu a;
+	i64 pr = st.min_value();
+	if (min_value < pr)
+	{
+		a.o = { min_value, pr };
+		a.k = 0;
+		a.bit = bit_for_value(a.o.size());
+		ee.push_back(a);
+	}
 	for (auto i : st.data)
 	{
-		if (i.value > pr + 1)
+		if (i.value > pr)
 		{
-			a.o = { pr + 1, i.value };
+			a.o = { pr, i.value };
 			a.k = 0;
 			a.bit = bit_for_value(a.o.size());
 			ee.push_back(a);
@@ -3810,12 +3834,15 @@ void _cdf1::calc(_statistics& st, uchar b0, i64 max_value)
 		a.k = i.number;
 		a.bit = 0;
 		ee.push_back(a);
-		pr = i.value;
+		pr = i.value + 1;
 	}
-	a.o = { pr + 1, max_value };
-	a.k = 0;
-	a.bit = bit_for_value(a.o.size());
-	ee.push_back(a);
+	if (max_value > st.min_value())
+	{
+		a.o = { pr + 1, max_value };
+		a.k = 0;
+		a.bit = bit_for_value(a.o.size());
+		ee.push_back(a);
+	}
 
 	struct _2uuu
 	{
@@ -3828,7 +3855,7 @@ void _cdf1::calc(_statistics& st, uchar b0, i64 max_value)
 	for (i64 i = 1; i < (i64)ee.size(); i++)
 	{
 		_2uuu aa;
-		aa.u1 = ee[i-1];
+		aa.u1 = ee[i - 1];
 		aa.u2 = ee[i];
 		std::multimap<i64, _2uuu>::iterator it = xxx.insert({ calc_poteri(aa.u1, aa.u2), aa });
 		if (i == 1)
@@ -3844,11 +3871,6 @@ void _cdf1::calc(_statistics& st, uchar b0, i64 max_value)
 	while ((i64)xxx.size() >= n)
 	{
 		auto a_ = xxx.begin(); // минимальная пара
-		for (auto i = xxx.begin(); i != xxx.end(); ++i)
-		{
-			if (i->first != a_->first) break;
-			if (i->second.u1.o.min < a_->second.u1.o.min) a_ = i; // для знаковых - выбирать около нуля??
-		}
 		auto aa = a_->second;
 		auto i = aa.left; // левая пара
 		auto j = aa.right; // правая пара
