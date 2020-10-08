@@ -509,7 +509,6 @@ struct _cdf1 // структура частот для сжатия чисел
 	_cdf1(const std::vector<_frequency>& a);
 
 	void calc(_statistics& st, uchar b0, i64 max_value);
-	void calc2(_statistics& st, uchar b0, i64 max_value);
 
 	bool coding(i64 a, _bit_stream& bs) const noexcept; // закодировать число в битовый поток (return false если ошибка)
 };
