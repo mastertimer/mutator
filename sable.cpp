@@ -3960,15 +3960,177 @@ bool _cdf1::coding(i64 a, _bit_stream& bs) const noexcept
 
 bool _cdf2::coding(i64 a, _bit_stream& bs) const noexcept
 {
-/*	auto n = std::upper_bound(fr.begin(), fr.end(), a, [](i64 a, _frequency b) {return (a < b.first); });
-	if ((n == fr.begin()) || (n >= fr.end() - 1)) return false;
+	auto n = std::upper_bound(fr.begin(), fr.end(), a, [](i64 a, _frequency b) {return (a < b.first); });
+	if ((n == fr.begin()) || (n == fr.end())) return false;
 	n--;
-	i64 n = (std::upper_bound(fr.begin(), fr.end(), a, [](i64 a, _frequency b) {return (a < b.first); }) - fr.begin())
-		- 1;
-	if ((n < 0) || (n >= fr.size() - 1)) return false;
-	bs.pushn(n, bit0);
-	bs.pushn(a - fr[n].first, fr[n].bit);*/
+	bs.pushn(n->prefix, n->bit0);
+	bs.pushn(a - n->first, n->bit);
 	return true;
+}
+
+void _cdf2::calc(_statistics& st, i64 k_i, i64 min_value, i64 max_value)
+{
+	if ((st.min_value() < min_value) || (st.max_value() > max_value))
+	{ // с такими параметрами нельзя!
+		clear();
+		return;
+	}
+	i64 n = (1ll << k_i);
+	fr.resize(n + 1);
+
+	struct _uuu
+	{
+		_iinterval o;
+		i64 k = 0;
+		uchar bit = 0;
+		bool operator==(const _uuu& a) const noexcept { return (o == a.o); }
+	};
+
+	auto calc_poteri = [](const _uuu& left, const _uuu& right)
+	{
+		i64 r0 = right.k * right.bit + left.k * left.bit;
+		i64 r = (right.k + left.k) * bit_for_value(right.o.max - left.o.min);
+		return r - r0;
+	};
+	// uu - простые интервалы длиной 1, или с количеством 0
+	std::vector<_uuu> ee;
+	_uuu a;
+	i64 pr = st.min_value();
+	if (min_value < pr)
+	{
+		a.o = { min_value, pr };
+		a.k = 0;
+		a.bit = bit_for_value(a.o.size());
+		ee.push_back(a);
+	}
+	for (auto i : st.data)
+	{
+		if (i.value > pr)
+		{
+			a.o = { pr, i.value };
+			a.k = 0;
+			a.bit = bit_for_value(a.o.size());
+			ee.push_back(a);
+		}
+		a.o = i.value;
+		a.k = i.number;
+		a.bit = 0;
+		ee.push_back(a);
+		pr = i.value + 1;
+	}
+	if (max_value > st.min_value())
+	{
+		a.o = { pr + 1, max_value };
+		a.k = 0;
+		a.bit = bit_for_value(a.o.size());
+		ee.push_back(a);
+	}
+
+	struct _2uuu
+	{
+		_uuu u1, u2;
+		std::multimap<i64, _2uuu>::iterator left, right;
+	};
+
+	std::multimap<i64, _2uuu> xxx;
+	// подготовка стартовых пар интервалов отсортированных по минимум потерь при объединении
+	std::multimap<i64, _2uuu>::iterator pr_it;
+	for (i64 i = 1; i < (i64)ee.size(); i++)
+	{
+		_2uuu aa;
+		aa.u1 = ee[i - 1];
+		aa.u2 = ee[i];
+		std::multimap<i64, _2uuu>::iterator it = xxx.insert({ calc_poteri(aa.u1, aa.u2), aa });
+		if (i == 1)
+			it->second.left = it;
+		else
+		{
+			pr_it->second.right = it;
+			it->second.left = pr_it;
+		}
+		pr_it = it;
+	}
+	pr_it->second.right = pr_it;
+	// схлопывание пар интервалов, пока их не останется n-1
+	while ((i64)xxx.size() >= n)
+	{
+		auto a_ = xxx.begin(); // минимальная пара
+		auto aa = a_->second;
+		auto i = aa.left; // левая пара
+		auto j = aa.right; // правая пара
+		aa.u1.k += aa.u2.k;
+		aa.u1.o.max = aa.u2.o.max;
+		aa.u1.bit = bit_for_value(aa.u1.o.size());
+		_2uuu ii, jj;
+		bool ina = (i != a_);
+		bool jna = (j != a_);
+		if (ina)
+		{
+			ii = i->second;
+			ii.u2 = aa.u1;
+			bool gran = (ii.left == i);
+			xxx.erase(i);
+			i = xxx.insert({ calc_poteri(ii.u1, ii.u2), ii });
+			if (gran)
+				i->second.left = i;
+			else
+				i->second.left->second.right = i;
+		}
+		if (jna)
+		{
+			jj = j->second;
+			jj.u1 = aa.u1;
+			bool gran = (jj.right == j);
+			xxx.erase(j);
+			j = xxx.insert({ calc_poteri(jj.u1, jj.u2), jj });
+			j->second.left = (ina) ? i : j;
+			if (gran)
+				j->second.right = j;
+			else
+				j->second.right->second.left = j;
+		}
+		if (ina)
+			i->second.right = (jna) ? j : i;
+		xxx.erase(a_);
+	}
+	// подкотовка отсортированных интервалов
+	std::map<i64, _uuu> xxx2;
+	for (auto& i : xxx)
+	{
+		xxx2[i.second.u1.o.min] = i.second.u1;
+		xxx2[i.second.u2.o.min] = i.second.u2;
+	}
+	// заполнение массива частот
+	auto ii = xxx2.begin();
+	for (i64 i = 0; i < n; i++)
+	{
+		fr[i].first = ii->second.o.min;
+		fr[i].bit = ii->second.bit;
+		++ii;
+	}
+	fr[n].first = max_value;
+	fr[n].bit = 0;
+	// коррекция - дозаполнение маленьких интервалов, за счет больших соседей
+	for (i64 i = 0; i < n - 1; i++)
+	{
+		i64 delta = (1ll << fr[i].bit) - (fr[i + 1].first - fr[i].first);
+		if (delta == 0) continue;
+		if (i > 0)
+			if (fr[i].bit < fr[i - 1].bit)
+			{
+				fr[i].first -= delta;
+				fr[i - 1].bit = bit_for_value(fr[i].first - fr[i - 1].first); // вдруг уменьшилось??
+				continue;
+			}
+		if (fr[i].bit <= fr[i + 1].bit)
+		{
+			fr[i + 1].first += delta;
+			fr[i + 1].bit = bit_for_value(fr[i + 2].first - fr[i + 1].first); // вдруг уменьшилось??
+			continue;
+		}
+	}
+	// вычисление префикса
+	std::map<i64, _iinterval> xxx3;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
