@@ -3615,6 +3615,13 @@ void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+i64 _statistics::number(i64 be, i64 en) noexcept
+{
+	auto li1 = std::lower_bound(data.begin(), data.end(), be, [](_one_stat a, i64 b) { return (a.value < b); });
+	auto li2 = std::lower_bound(data.begin(), data.end(), en, [](_one_stat a, i64 b) { return (a.value < b); });
+	return number(li1, li2);
+}
+
 i64 _statistics::number(_it be, _it en) noexcept
 {
 	i64 s = 0;
@@ -3968,14 +3975,13 @@ bool _cdf2::coding(i64 a, _bit_stream& bs) const noexcept
 	return true;
 }
 
-void _cdf2::calc(_statistics& st, i64 k_i, i64 min_value, i64 max_value)
+void _cdf2::calc(_statistics& st, i64 n, i64 min_value, i64 max_value)
 {
 	if ((st.min_value() < min_value) || (st.max_value() > max_value))
 	{ // с такими параметрами нельзя!
 		clear();
 		return;
 	}
-	i64 n = (1ll << k_i);
 	fr.resize(n + 1);
 
 	struct _uuu
@@ -4106,10 +4112,14 @@ void _cdf2::calc(_statistics& st, i64 k_i, i64 min_value, i64 max_value)
 	{
 		fr[i].first = ii->second.o.min;
 		fr[i].bit = ii->second.bit;
+		fr[i].bit0 = 0;
+		fr[i].prefix = 0;
 		++ii;
 	}
 	fr[n].first = max_value;
 	fr[n].bit = 0;
+	fr[n].bit0 = 0;
+	fr[n].prefix = 0;
 	// коррекция - дозаполнение маленьких интервалов, за счет больших соседей
 	for (i64 i = 0; i < n - 1; i++)
 	{
@@ -4130,7 +4140,30 @@ void _cdf2::calc(_statistics& st, i64 k_i, i64 min_value, i64 max_value)
 		}
 	}
 	// вычисление префикса
-	std::map<i64, _iinterval> xxx3;
+	std::multimap<i64, std::vector<i64>> xxx3;
+	for (i64 i = 0; i < n; i++) xxx3.insert({ st.number(fr[i].first, fr[i + 1].first), {i} });
+	while (xxx3.size() > 1)
+	{
+		auto p1 = xxx3.begin();
+		for (auto i : p1->second)
+		{
+			fr[i].prefix <<= 1;
+			fr[i].bit0++;
+		}
+		i64 s = p1->first;
+		std::vector<i64> v = p1->second;
+		xxx3.erase(p1);
+		p1 = xxx3.begin();
+		for (auto i : p1->second)
+		{
+			fr[i].prefix = (fr[i].prefix << 1) + 1;
+			fr[i].bit0++;
+		}
+		s += p1->first;
+		v.insert(v.end(), p1->second.begin(), p1->second.end());
+		xxx3.erase(p1);
+		xxx3.insert({ s, v });
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
