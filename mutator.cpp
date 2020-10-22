@@ -691,16 +691,15 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 	sasa.calc();
 	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
-//	g->add(sasa.delta_begin.to_matrix(-100, 100), "delta", true);
-	g->add(sasa.delta_all.to_matrix(), "delta", true);
-	show_message(sasa.delta_all.max_value());*/
+	g->add(sasa.delta_begin.to_matrix(-100, 100), "delta", true);*/
+//	show_message(sasa.delta_begin.min_value());
+//	show_message(sasa.delta_begin.max_value());
 
 /*	_sable_statistics sasa;
 	sasa.calc();
 	_cdf2 ee;
-	i64 ki = 9;
-//	ee.calc(sasa.delta_begin, 32, -5000, 5000);
-	ee.calc(sasa.delta_all, ki, 1, 1000);
+	i64 ki = 19;
+	ee.calc(sasa.delta_begin, ki, -2000, 2000);
 	std::stringstream ss;
 
 	for (i64 i = 0; i <= ki; i++)

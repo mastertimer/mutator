@@ -1362,13 +1362,13 @@ bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 		{148, 5, 4, 4}, {180, 5, 5, 25}, {205, 3, 6, 53}, {213, 4, 5, 5}, {229, 5, 5, 30}, {250, 0, 6, 14},
 		{251, 5, 4, 8}, {283, 5, 5, 27}, {315, 5, 5, 11}, {347, 5, 5, 29}, {379, 6, 4, 6}, {443, 6, 5, 7},
 		{507, 7, 4, 1}, {630, 6, 5, 2}, {694, 7, 5, 3}, {822, 8, 4, 10}, {1078, 8, 5, 9}, {1334, 10, 5, 15},
-		{2358, 13, 5, 13}, {10550, 16, 8, 179}, {76086, 24, 8, 51}, {10000000, 0, 0, 0} }); // max = 670 000
+		{2358, 13, 5, 13}, {10550, 16, 8, 179}, {76086, 24, 8, 51}, {10000000, 0, 0, 0} }); // 1...670 000
 
 	static const _cdf2 nnd({ {1, 1, 2, 0}, {3, 0, 3, 5}, {4, 0, 3, 7}, {5, 0, 3, 1}, {6, 0, 3, 6}, {7, 1, 3, 3},
-		{9, 2, 4, 10}, {13, 10, 4, 2}, {1000, 0, 0, 0} }); // max = 210
+		{9, 2, 4, 10}, {13, 10, 4, 2}, {1000, 0, 0, 0} }); // 1...210
 
 	static const _cdf2 nnda({ {1, 0, 1, 1}, {2, 0, 2, 2}, {3, 0, 3, 4}, {4, 0, 4, 8}, {5, 0, 5, 16}, {6, 0, 6, 32},
-		{7, 0, 8, 192}, {8, 2, 7, 0}, {12, 10, 8, 64}, {1000, 0, 0, 0} }); // max = 345
+		{7, 0, 8, 192}, {8, 2, 7, 0}, {12, 10, 8, 64}, {1000, 0, 0, 0} }); // 1...345
 
 	for (i64 i = roffer - 1; i >= 0; i--)
 	{
@@ -1388,30 +1388,53 @@ bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 	return true;
 }
 
-void _sable_stat::add1(const _prices2& c, _bit_stream& bs)
+bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 {
-//	i64 delta_start = c.buy[roffer - 1].value - offer_pr;
+	static const _cdf2 nnds({ {-2000, 11, 10, 751}, {-19, 3, 8, 111}, {-11, 2, 7, 119}, {-7, 1, 7, 47}, {-5, 0, 7, 15},
+		{-4, 0, 6, 49}, {-3, 0, 5, 1}, {-2, 0, 5, 31}, {-1, 0, 3, 5}, {0, 0, 1, 0}, {1, 0, 3, 3}, {2, 0, 4, 9},
+		{3, 0, 5, 7}, {4, 0, 6, 23}, {5, 0, 7, 79}, {6, 1, 6, 17}, {8, 2, 7, 55}, {12, 4, 9, 495}, {28, 11, 10, 239},
+		{2000, 0, 0, 0} }); // -479...299
+
+	i64 delta_start = c.buy[roffer - 1].value - offer_pr;
+	if (!nnds.coding(delta_start, bs)) return false;
 	offer_pr = c.buy[roffer - 1].value;
+	return true;
 }
 
-void _sable_stat::add(const _prices2& c) // 53.14 на 40  50.9 - арифм.
+bool _sable_stat::add(const _prices2& c)
 {
+	auto s_data = data.size();
 	_bit_stream bs(data);
-	if ((size % step_pak_cc == 0)||true)
+	if (size % step_pak_cc == 0)
 	{
 		bs.pushn(c.time, 31);
 		udata.push_back(data.size());
-		add0(c, bs);
+		if (!add0(c, bs))
+		{
+			udata.pop_back();
+			goto err;
+		}
 	}
 	else
 	{
 		time_t dt = c.time - last_cc.time;
 		if (dt < 0) dt = 0; // время может идти назад!
 		if (dt == 1) bs.push1(0); else { bs.push1(1); bs.pushn(dt, 31); }
-		if (dt > old_dtime) add0(c, bs); else add1(c, bs);
+		if (dt > old_dtime)
+		{
+			if (!add0(c, bs)) goto err;
+		}
+		else
+		{
+			if (!add1(c, bs)) goto err;
+		}
 	}
 	size++;
 	last_cc = c;
+	return true;
+err:
+	data.resize(s_data);
+	return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

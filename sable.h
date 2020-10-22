@@ -124,7 +124,7 @@ struct _sable_stat // статистика цен, сжатая
 	std::vector<uchar> data;
 	static constexpr time_t old_dtime = 160; // разность времени, после которого цены считаются устаревшими
 
-	void add(const _prices2& c); // добавить цены (сжать)
+	bool add(const _prices2& c); // добавить цены (сжать)
 
 private:
 	std::vector<i64> udata; // указатель на место сжатых данных кратных step_pak_cc
@@ -134,7 +134,7 @@ private:
 	static constexpr i64 step_pak_cc = 100; // период ключевых цен
 
 	bool add0(const _prices2& c, _bit_stream& bs); // не дельта!
-	void add1(const _prices2& c, _bit_stream& bs); // дельта
+	bool add1(const _prices2& c, _bit_stream& bs); // дельта
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
