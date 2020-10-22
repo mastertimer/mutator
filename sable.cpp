@@ -1362,23 +1362,20 @@ bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 		{148, 5, 4, 4}, {180, 5, 5, 25}, {205, 3, 6, 53}, {213, 4, 5, 5}, {229, 5, 5, 30}, {250, 0, 6, 14},
 		{251, 5, 4, 8}, {283, 5, 5, 27}, {315, 5, 5, 11}, {347, 5, 5, 29}, {379, 6, 4, 6}, {443, 6, 5, 7},
 		{507, 7, 4, 1}, {630, 6, 5, 2}, {694, 7, 5, 3}, {822, 8, 4, 10}, {1078, 8, 5, 9}, {1334, 10, 5, 15},
-		{2358, 13, 5, 13}, {10550, 16, 8, 179}, {76086, 24, 8, 51}, {10000000, 0, 0, 0} }); // max - 670 000
+		{2358, 13, 5, 13}, {10550, 16, 8, 179}, {76086, 24, 8, 51}, {10000000, 0, 0, 0} }); // max = 670 000
 
 	static const _cdf2 nnd({ {1, 1, 2, 0}, {3, 0, 3, 5}, {4, 0, 3, 7}, {5, 0, 3, 1}, {6, 0, 3, 6}, {7, 1, 3, 3},
-		{9, 2, 4, 10}, {13, 10, 4, 2}, {1000, 0, 0, 0} }); // max=210
+		{9, 2, 4, 10}, {13, 10, 4, 2}, {1000, 0, 0, 0} }); // max = 210
+
+	static const _cdf2 nnda({ {1, 0, 1, 1}, {2, 0, 2, 2}, {3, 0, 3, 4}, {4, 0, 4, 8}, {5, 0, 5, 16}, {6, 0, 6, 32},
+		{7, 0, 8, 192}, {8, 2, 7, 0}, {12, 10, 8, 64}, {1000, 0, 0, 0} }); // max = 345
 
 	for (i64 i = roffer - 1; i >= 0; i--)
 	{
 		if (!nno.coding(c.buy[i].number, bs)) return false;
 		if (i == roffer - 1) continue;
 		i64 delta = c.buy[i].value - c.buy[i + 1].value;
-		if (delta <= 8)
-			bs.pushn(1i64 << (delta - 1), delta);
-		else
-		{
-			bs.pushn(0, 8);
-			bs.pushn(delta, 13); // *
-		}
+		if (!nnda.coding(delta, bs)) return false;
 	}
 	if (!nnd.coding(c.sale[0].value - c.buy[0].value, bs)) return false;
 	for (i64 i = 0; i < roffer; i++)
@@ -1386,13 +1383,7 @@ bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 		if (!nno.coding(c.sale[i].number, bs)) return false;
 		if (i == 0) continue;
 		i64 delta = c.sale[i].value - c.sale[i - 1].value;
-		if (delta <= 8)
-			bs.pushn(1i64 << (delta - 1), delta);
-		else
-		{
-			bs.pushn(0, 8);
-			bs.pushn(delta, 13); // *
-		}
+		if (!nnda.coding(delta, bs)) return false;
 	}
 	return true;
 }
@@ -3998,28 +3989,6 @@ double test_ss4()
 	return (double)sss.data.size() / sss.size;
 }
 
-void test_ss3(std::vector<i64>& k)
-{
-	k.clear();
-	_prices pr;
-	_prices prpr = cena_zero_;
-	for (i64 i = 0; i < ss.size; i++)
-	{
-		ss.read(i, pr);
-		if (pr == prpr) continue; // игнор одинаковых
-		for (i64 j = 0; j < roffer-1; j++)
-		{
-			i64 o = pr.pro[j + 1].c - pr.pro[j].c;
-			if (o >= (i64)k.size()) k.resize(o + 1, 0);
-			k[o]++;
-			o = pr.pok[j].c - pr.pok[j + 1].c;
-			if (o >= (i64)k.size()) k.resize(o + 1, 0);
-			k[o]++;
-		}
-		prpr = pr;
-	}
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void _basic_statistics::push(i64 x)
@@ -4065,6 +4034,7 @@ void _sable_statistics::calc()
 	_basic_statistics buy[roffer];
 	_basic_statistics sale[roffer];
 	_basic_statistics d;
+	_basic_statistics d_all;
 	_basic_statistics d_begin;
 	_prices pr;
 	_prices prpr = cena_zero_;
@@ -4076,6 +4046,11 @@ void _sable_statistics::calc()
 		{
 			buy[n].push(pr.pok[n].k);
 			sale[n].push(pr.pro[n].k);
+			if (n < roffer - 1)
+			{
+				d_all.push(pr.pro[n + 1].c - pr.pro[n].c);
+				d_all.push(pr.pok[n].c - pr.pok[n + 1].c);
+			}
 		}
 		d.push(pr.pro[0].c - pr.pok[0].c);
 		if ((i64)pr.time - (i64)prpr.time <= _sable_stat::old_dtime)
@@ -4093,6 +4068,7 @@ void _sable_statistics::calc()
 	number += sale_number;
 	delta = d;
 	delta_begin = d_begin;
+	delta_all = d_all;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

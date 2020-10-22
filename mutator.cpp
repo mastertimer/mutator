@@ -691,30 +691,21 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 	sasa.calc();
 	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
-	g->add(sasa.delta_begin.to_matrix(-100, 100), "delta", true);*/
+//	g->add(sasa.delta_begin.to_matrix(-100, 100), "delta", true);
+	g->add(sasa.delta_all.to_matrix(), "delta", true);
+	show_message(sasa.delta_all.max_value());*/
 
 /*	_sable_statistics sasa;
 	sasa.calc();
 	_cdf2 ee;
-	i64 ki = 8;
-	ee.calc(sasa.delta, ki, 1, 1000);
+	i64 ki = 9;
+//	ee.calc(sasa.delta_begin, 32, -5000, 5000);
+	ee.calc(sasa.delta_all, ki, 1, 1000);
 	std::stringstream ss;
 
 	for (i64 i = 0; i <= ki; i++)
 	{
 		ss << "{" << ee.fr[i].first << ", " << (int)ee.fr[i].bit << ", " << (int)ee.fr[i].bit0 << ", " << ee.fr[i].prefix << "}, ";
-	}
-	ToClipboard(ss.str().c_str());*/
-
-/*	_sable_statistics sasa;
-	sasa.calc();
-	_cdf1 ee;
-	ee.calc(sasa.delta_begin, 5, -5000, 5000);
-	std::stringstream ss;
-
-	for (i64 i = 0; i <= 32; i++)
-	{
-		ss << "{" << ee.fr[i].first << ", " << (int)ee.fr[i].bit << "}, ";
 	}
 	ToClipboard(ss.str().c_str());*/
 
