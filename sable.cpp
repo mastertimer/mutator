@@ -1344,25 +1344,28 @@ void _bit_stream::pushn(u64 a, uchar n)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+namespace
+{
+	_cdf2 f_number({ {1, 0, 7, 115}, {2, 3, 6, 19}, {10, 4, 5, 16}, {26, 5, 6, 31}, {50, 1, 5, 18}, {52, 4, 5, 23},
+		{68, 4, 5, 0}, {84, 4, 6, 21}, {100, 0, 6, 63}, {101, 5, 4, 12}, {132, 4, 6, 46}, {148, 5, 4, 4},
+		{180, 5, 5, 25}, {205, 3, 6, 53}, {213, 4, 5, 5}, {229, 5, 5, 30}, {250, 0, 6, 14},	{251, 5, 4, 8},
+		{283, 5, 5, 27}, {315, 5, 5, 11}, {347, 5, 5, 29}, {379, 6, 4, 6}, {443, 6, 5, 7}, {507, 7, 4, 1},
+		{630, 6, 5, 2}, {694, 7, 5, 3}, {822, 8, 4, 10}, {1078, 8, 5, 9}, {1334, 10, 5, 15}, {2358, 13, 5, 13},
+		{10550, 16, 8, 179}, {76086, 24, 8, 51}, {10000000, 0, 0, 0} }); // 1...670 000
+}
+
 bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 {
 	offer_pr = offer0 = c.buy[roffer - 1].value;
 	i64 offermax = c.sale[roffer - 1].value;
-	baza.clear();
-	baza.resize(offermax - offer0 + 1, 0);
+	base.clear();
+	base.resize(offermax - offer0 + 1, 0);
 	for (i64 i = 0; i < roffer; i++)
 	{
-		baza[c.buy[i].value - offer0] = c.buy[i].number;
-		baza[c.sale[i].value - offer0] = -c.sale[i].number;
+		base[c.buy[i].value - offer0] = c.buy[i].number;
+		base[c.sale[i].value - offer0] = -c.sale[i].number;
 	}
 	bs.pushn(offer0, 16);
-
-	static const _cdf2 nno({ {1, 0, 7, 115}, {2, 3, 6, 19}, {10, 4, 5, 16}, {26, 5, 6, 31}, {50, 1, 5, 18},
-		{52, 4, 5, 23}, {68, 4, 5, 0}, {84, 4, 6, 21}, {100, 0, 6, 63}, {101, 5, 4, 12}, {132, 4, 6, 46},
-		{148, 5, 4, 4}, {180, 5, 5, 25}, {205, 3, 6, 53}, {213, 4, 5, 5}, {229, 5, 5, 30}, {250, 0, 6, 14},
-		{251, 5, 4, 8}, {283, 5, 5, 27}, {315, 5, 5, 11}, {347, 5, 5, 29}, {379, 6, 4, 6}, {443, 6, 5, 7},
-		{507, 7, 4, 1}, {630, 6, 5, 2}, {694, 7, 5, 3}, {822, 8, 4, 10}, {1078, 8, 5, 9}, {1334, 10, 5, 15},
-		{2358, 13, 5, 13}, {10550, 16, 8, 179}, {76086, 24, 8, 51}, {10000000, 0, 0, 0} }); // 1...670 000
 
 	static const _cdf2 nnd({ {1, 1, 2, 0}, {3, 0, 3, 5}, {4, 0, 3, 7}, {5, 0, 3, 1}, {6, 0, 3, 6}, {7, 1, 3, 3},
 		{9, 2, 4, 10}, {13, 10, 4, 2}, {1000, 0, 0, 0} }); // 1...210
@@ -1372,18 +1375,22 @@ bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 
 	for (i64 i = roffer - 1; i >= 0; i--)
 	{
-		if (!nno.coding(c.buy[i].number, bs)) return false;
-		if (i == roffer - 1) continue;
-		i64 delta = c.buy[i].value - c.buy[i + 1].value;
-		if (!nnda.coding(delta, bs)) return false;
+		if (i != roffer - 1)
+		{
+			i64 delta = c.buy[i].value - c.buy[i + 1].value;
+			if (!nnda.coding(delta, bs)) return false;
+		}
+		if (!f_number.coding(c.buy[i].number, bs)) return false;
 	}
 	if (!nnd.coding(c.sale[0].value - c.buy[0].value, bs)) return false;
 	for (i64 i = 0; i < roffer; i++)
 	{
-		if (!nno.coding(c.sale[i].number, bs)) return false;
-		if (i == 0) continue;
-		i64 delta = c.sale[i].value - c.sale[i - 1].value;
-		if (!nnda.coding(delta, bs)) return false;
+		if (i != 0)
+		{
+			i64 delta = c.sale[i].value - c.sale[i - 1].value;
+			if (!nnda.coding(delta, bs)) return false;
+		}
+		if (!f_number.coding(c.sale[i].number, bs)) return false;
 	}
 	return true;
 }
@@ -1395,9 +1402,44 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 		{3, 0, 5, 7}, {4, 0, 6, 23}, {5, 0, 7, 79}, {6, 1, 6, 17}, {8, 2, 7, 55}, {12, 4, 9, 495}, {28, 11, 10, 239},
 		{2000, 0, 0, 0} }); // -479...299
 
-	i64 delta_start = c.buy[roffer - 1].value - offer_pr;
+	i64 start = c.buy[roffer - 1].value;
+	i64 delta_start = start - offer_pr;
 	if (!nnds.coding(delta_start, bs)) return false;
-	offer_pr = c.buy[roffer - 1].value;
+	offer_pr = start;
+	// расширение базы
+	if (start < offer0)
+	{
+		base.insert(base.begin(), offer0 - start, 0);
+		offer0 = start;
+	}
+	start -= offer0;
+	i64 offermax = c.sale[roffer - 1].value - offer0;
+	if (offermax >= (i64)base.size()) base.resize(offermax + 1, 0);
+	// обнуление недействительных значений базы
+	i64 finish_buy = c.buy[0].value - offer0;
+	for (i64 i = 0; i < start; i++) if (base[i] < 0) base[i] = 0; // стали недействительны
+	i64 offer_min = c.sale[0].value - offer0;
+	for (i64 i = finish_buy + 1; i < offer_min; i++) base[i] = 0; // стали недействительны
+	for (i64 i = offermax + 1; i < (i64)base.size(); i++) if (base[i] > 0) base[i] = 0; // стали недействительны
+
+	for (i64 i = roffer - 1; i >= 0; i--)
+	{
+		auto a = c.buy[i];
+		if (i != roffer - 1)
+		{
+			for (i64 j = c.buy[i + 1].value + 1; j < a.value; j++) base[j - offer0] = 0; // промежуток обнуляется
+		}
+		if (base[a.value - offer0] <= 0)
+		{
+			if (!f_number.coding(a.number, bs)) return false;
+		}
+		else
+		{
+
+		}
+		base[a.value - offer0] = a.number;
+	}
+
 	return true;
 }
 
