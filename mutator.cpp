@@ -693,7 +693,20 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
 	g->add(sasa.delta_begin.to_matrix(-100, 100), "delta", true);*/
 
-	_sable_statistics sasa;
+/*	_sable_statistics sasa;
+	sasa.calc();
+	_cdf2 ee;
+	i64 ki = 8;
+	ee.calc(sasa.delta, ki, 1, 1000);
+	std::stringstream ss;
+
+	for (i64 i = 0; i <= ki; i++)
+	{
+		ss << "{" << ee.fr[i].first << ", " << (int)ee.fr[i].bit << ", " << (int)ee.fr[i].bit0 << ", " << ee.fr[i].prefix << "}, ";
+	}
+	ToClipboard(ss.str().c_str());*/
+
+/*	_sable_statistics sasa;
 	sasa.calc();
 	_cdf1 ee;
 	ee.calc(sasa.delta_begin, 5, -5000, 5000);
@@ -703,9 +716,9 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 	{
 		ss << "{" << ee.fr[i].first << ", " << (int)ee.fr[i].bit << "}, ";
 	}
-	ToClipboard(ss.str().c_str());
+	ToClipboard(ss.str().c_str());*/
 
-//	show_message(test_ss4());
+	show_message(test_ss4());
 
 /*	show_message(bbb2.number(), bbb2[0]);
 

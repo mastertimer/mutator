@@ -1357,15 +1357,15 @@ bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 	}
 	bs.pushn(offer0, 16);
 
-	static const _cdf1 nno({ {1, 0}, {2, 3}, {10, 4}, {23, 3}, {31, 5}, {50, 0}, {51, 0}, {52, 2}, {56, 3}, {64, 4},
-		{80, 5}, {100, 0}, {101, 4}, {116, 3}, {124, 4}, {140, 3}, {148, 3}, {156, 3}, {164, 4}, {177, 3}, {185, 4},
-		{200, 0}, {201, 2}, {205, 3}, {213, 2}, {217, 3}, {224, 2}, {228, 3}, {236, 4}, {250, 0}, {251, 4}, {267, 4},
-		{282, 3}, {290, 4}, {306, 4}, {322, 4}, {338, 4}, {349, 2}, {353, 4}, {369, 4}, {381, 3}, {389, 5}, {412, 4},
-		{428, 5}, {460, 5}, {492, 5}, {524, 5}, {556, 6}, {619, 4}, {635, 6}, {699, 6}, {763, 6}, {827, 6}, {891, 6},
-		{955, 7}, {1083, 7}, {1188, 6}, {1252, 9}, {1764, 9}, {2276, 11}, {4324, 11}, {6372, 12}, {10468, 16},
-		{76004, 24}, {10000000, 0} }); // max - 670 000
+	static const _cdf2 nno({ {1, 0, 7, 115}, {2, 3, 6, 19}, {10, 4, 5, 16}, {26, 5, 6, 31}, {50, 1, 5, 18},
+		{52, 4, 5, 23}, {68, 4, 5, 0}, {84, 4, 6, 21}, {100, 0, 6, 63}, {101, 5, 4, 12}, {132, 4, 6, 46},
+		{148, 5, 4, 4}, {180, 5, 5, 25}, {205, 3, 6, 53}, {213, 4, 5, 5}, {229, 5, 5, 30}, {250, 0, 6, 14},
+		{251, 5, 4, 8}, {283, 5, 5, 27}, {315, 5, 5, 11}, {347, 5, 5, 29}, {379, 6, 4, 6}, {443, 6, 5, 7},
+		{507, 7, 4, 1}, {630, 6, 5, 2}, {694, 7, 5, 3}, {822, 8, 4, 10}, {1078, 8, 5, 9}, {1334, 10, 5, 15},
+		{2358, 13, 5, 13}, {10550, 16, 8, 179}, {76086, 24, 8, 51}, {10000000, 0, 0, 0} }); // max - 670 000
 
-	static const _cdf1 nnd({ {1, 1}, {3, 0}, {4, 0}, {5, 0}, {6, 0}, {7, 1}, {9, 2}, {13, 10}, {1000, 0} }); // max=210
+	static const _cdf2 nnd({ {1, 1, 2, 0}, {3, 0, 3, 5}, {4, 0, 3, 7}, {5, 0, 3, 1}, {6, 0, 3, 6}, {7, 1, 3, 3},
+		{9, 2, 4, 10}, {13, 10, 4, 2}, {1000, 0, 0, 0} }); // max=210
 
 	for (i64 i = roffer - 1; i >= 0; i--)
 	{
@@ -3777,193 +3777,9 @@ i64 bit_for_value(u64 k) // k - количество чисел. (1) = 0, (2) = 
 	return n;
 }
 
-_cdf1::_cdf1(const std::vector<_frequency>& a) : fr(a)
+_cdf2::_cdf2(const std::vector<_frequency>& a) : fr(a)
 {
-	bit0 = bit_for_value(fr.size() - 1);
-	if ((i64)fr.size() != (1ll << bit0) + 1)
-	{
-		fr.clear();
-		bit0 = 0;
-	}
 }
-
-void _cdf1::clear()
-{
-	bit0 = 0;
-	fr.clear();
-}
-
-void _cdf1::calc(_statistics& st, uchar b0, i64 min_value, i64 max_value)
-{
-	if ((st.min_value() < min_value) || (st.max_value() > max_value))
-	{ // с такими параметрами нельзя!
-		clear();
-		return;
-	}
-	bit0 = b0;
-	i64 n = (1ll << b0);
-	fr.resize(n + 1);
-
-	struct _uuu
-	{
-		_iinterval o;
-		i64 k = 0;
-		uchar bit = 0;
-		bool operator==(const _uuu& a) const noexcept { return (o == a.o); }
-	};
-
-	auto calc_poteri = [](const _uuu& left, const _uuu& right)
-	{
-		i64 r0 = right.k * right.bit + left.k * left.bit;
-		i64 r = (right.k + left.k) * bit_for_value(right.o.max - left.o.min);
-		return r - r0;
-	};
-
-	std::vector<_uuu> ee;
-	_uuu a;
-	i64 pr = st.min_value();
-	if (min_value < pr)
-	{
-		a.o = { min_value, pr };
-		a.k = 0;
-		a.bit = bit_for_value(a.o.size());
-		ee.push_back(a);
-	}
-	for (auto i : st.data)
-	{
-		if (i.value > pr)
-		{
-			a.o = { pr, i.value };
-			a.k = 0;
-			a.bit = bit_for_value(a.o.size());
-			ee.push_back(a);
-		}
-		a.o = i.value;
-		a.k = i.number;
-		a.bit = 0;
-		ee.push_back(a);
-		pr = i.value + 1;
-	}
-	if (max_value > st.min_value())
-	{
-		a.o = { pr + 1, max_value };
-		a.k = 0;
-		a.bit = bit_for_value(a.o.size());
-		ee.push_back(a);
-	}
-
-	struct _2uuu
-	{
-		_uuu u1, u2;
-		std::multimap<i64, _2uuu>::iterator left, right;
-	};
-
-	std::multimap<i64, _2uuu> xxx;
-	std::multimap<i64, _2uuu>::iterator pr_it;
-	for (i64 i = 1; i < (i64)ee.size(); i++)
-	{
-		_2uuu aa;
-		aa.u1 = ee[i - 1];
-		aa.u2 = ee[i];
-		std::multimap<i64, _2uuu>::iterator it = xxx.insert({ calc_poteri(aa.u1, aa.u2), aa });
-		if (i == 1)
-			it->second.left = it;
-		else
-		{
-			pr_it->second.right = it;
-			it->second.left = pr_it;
-		}
-		pr_it = it;
-	}
-	pr_it->second.right = pr_it;
-	while ((i64)xxx.size() >= n)
-	{
-		auto a_ = xxx.begin(); // минимальная пара
-		auto aa = a_->second;
-		auto i = aa.left; // левая пара
-		auto j = aa.right; // правая пара
-		aa.u1.k += aa.u2.k;
-		aa.u1.o.max = aa.u2.o.max;
-		aa.u1.bit = bit_for_value(aa.u1.o.size());
-		_2uuu ii, jj;
-		bool ina = (i != a_);
-		bool jna = (j != a_);
-		if (ina)
-		{
-			ii = i->second;
-			ii.u2 = aa.u1;
-			bool gran = (ii.left == i);
-			xxx.erase(i);
-			i = xxx.insert({ calc_poteri(ii.u1, ii.u2), ii });
-			if (gran)
-				i->second.left = i;
-			else
-				i->second.left->second.right = i;
-		}
-		if (jna)
-		{
-			jj = j->second;
-			jj.u1 = aa.u1;
-			bool gran = (jj.right == j);
-			xxx.erase(j);
-			j = xxx.insert({ calc_poteri(jj.u1, jj.u2), jj });
-			j->second.left = (ina) ? i : j;
-			if (gran)
-				j->second.right = j;
-			else
-				j->second.right->second.left = j;
-		}
-		if (ina)
-			i->second.right = (jna) ? j : i;
-		xxx.erase(a_);
-	}
-	std::map<i64, _uuu> xxx2;
-	for (auto& i : xxx)
-	{
-		xxx2[i.second.u1.o.min] = i.second.u1;
-		xxx2[i.second.u2.o.min] = i.second.u2;
-	}
-	auto ii = xxx2.begin();
-	for (i64 i = 0; i < n; i++)
-	{
-		fr[i].first = ii->second.o.min;
-		fr[i].bit = ii->second.bit;
-		++ii;
-	}
-	fr[n].first = max_value;
-	fr[n].bit = 0;
-	// коррекция
-	for (i64 i = 0; i < n - 1; i++)
-	{
-		i64 delta = (1ll << fr[i].bit) - (fr[i + 1].first - fr[i].first);
-		if (delta == 0) continue;
-		if (i > 0)
-			if (fr[i].bit < fr[i - 1].bit)
-			{
-				fr[i].first -= delta;
-				fr[i - 1].bit = bit_for_value(fr[i].first - fr[i - 1].first); // вдруг уменьшилось??
-				continue;
-			}
-		if (fr[i].bit <= fr[i + 1].bit)
-		{
-			fr[i + 1].first += delta;
-			fr[i + 1].bit = bit_for_value(fr[i + 2].first - fr[i + 1].first); // вдруг уменьшилось??
-			continue;
-		}
-	}
-}
-
-bool _cdf1::coding(i64 a, _bit_stream& bs) const noexcept
-{
-	i64 n = (std::upper_bound(fr.begin(), fr.end(), a, [](i64 a, _frequency b) {return (a < b.first); }) - fr.begin())
-		- 1;
-	if ((n < 0) || (n >= (1ll << bit0))) return false;
-	bs.pushn(n, bit0);
-	bs.pushn(a - fr[n].first, fr[n].bit);
-	return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool _cdf2::coding(i64 a, _bit_stream& bs) const noexcept
 {
