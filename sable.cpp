@@ -1354,6 +1354,10 @@ namespace
 		{283, 5, 5, 27}, {315, 5, 5, 11}, {347, 5, 5, 29}, {379, 6, 4, 6}, {443, 6, 5, 7}, {507, 7, 4, 1},
 		{630, 6, 5, 2}, {694, 7, 5, 3}, {822, 8, 4, 10}, {1078, 8, 5, 9}, {1334, 10, 5, 15}, {2358, 13, 5, 13},
 		{10550, 16, 8, 179}, {76086, 24, 8, 51}, {10000000, 0, 0, 0} }); // 1...670 000
+
+	static const _cdf2 f_delta({ {1, 0, 1, 1}, {2, 0, 2, 2}, {3, 0, 3, 4}, {4, 0, 4, 8}, {5, 0, 5, 16}, {6, 0, 6, 32},
+		{7, 0, 8, 192}, {8, 2, 7, 0}, {12, 10, 8, 64}, {1000, 0, 0, 0} }); // 1...345
+
 }
 
 bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
@@ -1363,26 +1367,15 @@ bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 	static const _cdf2 nnd({ {1, 1, 2, 0}, {3, 0, 3, 5}, {4, 0, 3, 7}, {5, 0, 3, 1}, {6, 0, 3, 6}, {7, 1, 3, 3},
 		{9, 2, 4, 10}, {13, 10, 4, 2}, {1000, 0, 0, 0} }); // 1...210
 
-	static const _cdf2 nnda({ {1, 0, 1, 1}, {2, 0, 2, 2}, {3, 0, 3, 4}, {4, 0, 4, 8}, {5, 0, 5, 16}, {6, 0, 6, 32},
-		{7, 0, 8, 192}, {8, 2, 7, 0}, {12, 10, 8, 64}, {1000, 0, 0, 0} }); // 1...345
-
 	for (i64 i = roffer - 1; i >= 0; i--)
 	{
-		if (i != roffer - 1)
-		{
-			i64 delta = c.buy[i].value - c.buy[i + 1].value;
-			if (!nnda.coding(delta, bs)) return false;
-		}
+		if (i != roffer - 1) if (!f_delta.coding(c.buy[i].value - c.buy[i + 1].value, bs)) return false;
 		if (!f_number.coding(c.buy[i].number, bs)) return false;
 	}
 	if (!nnd.coding(c.sale[0].value - c.buy[0].value, bs)) return false;
 	for (i64 i = 0; i < roffer; i++)
 	{
-		if (i != 0)
-		{
-			i64 delta = c.sale[i].value - c.sale[i - 1].value;
-			if (!nnda.coding(delta, bs)) return false;
-		}
+		if (i != 0) if (!f_delta.coding(c.sale[i].value - c.sale[i - 1].value, bs)) return false;
 		if (!f_number.coding(c.sale[i].number, bs)) return false;
 	}
 	base_buy.resize(roffer);
@@ -1422,7 +1415,7 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 	i64 buy_izm = calc_delta_start(c.buy, base_buy);
 	i64 sale_izm = calc_delta_start(c.sale, base_sale);
 	research1.push(buy_izm);
-	research2.push(sale_izm);
+	research1.push(sale_izm);
 	if (std::max(abs(buy_izm), abs(sale_izm)) > 15) // ??? !!! влияет на частоты
 	{
 		bs.push1(0);
@@ -1437,6 +1430,30 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 		{3, 0, 5, 4}, {4, 0, 7, 116}, {5, 0, 7, 112}, {6, 1, 7, 48}, {8, 3, 8, 180}, {16, 0, 0, 0} }); // -20...20
 
 	if (!nnds.coding(buy_izm, bs)) return false;
+	if (!nnds.coding(sale_izm, bs)) return false; // явно коррелирует с предыдущим
+	
+	if (buy_izm < 0) bbuy.erase(bbuy.begin(), bbuy.begin() - buy_izm);
+	if (sale_izm < 0) bsale.erase(bsale.begin(), bsale.begin() - sale_izm);
+	if (buy_izm > 0)
+	{
+		bbuy.insert(bbuy.begin(), buy_izm, {});
+		for (i64 i = buy_izm - 1; i >= 0; i--) // кодируется как c add0
+		{
+			bbuy[i] = c.buy[i];
+			if (!f_delta.coding(c.buy[i].value - c.buy[i + 1].value, bs)) return false;
+			if (!f_number.coding(c.buy[i].number, bs)) return false;
+		}
+	}
+	if (sale_izm > 0)
+	{
+		bsale.insert(bsale.begin(), sale_izm, {});
+		for (i64 i = sale_izm - 1; i >= 0; i--) // кодируется как c add0
+		{
+			bsale[i] = c.sale[i];
+			if (!f_delta.coding(c.sale[i + 1].value - c.sale[i].value, bs)) return false;
+			if (!f_number.coding(c.sale[i].number, bs)) return false;
+		}
+	}
 
 	base_buy = std::move(bbuy);
 	base_sale = std::move(bsale);
@@ -1450,49 +1467,6 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 	}
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	return true;
-/*	static const _cdf2 nnds({ {-2000, 11, 10, 751}, {-19, 3, 8, 111}, {-11, 2, 7, 119}, {-7, 1, 7, 47}, {-5, 0, 7, 15},
-		{-4, 0, 6, 49}, {-3, 0, 5, 1}, {-2, 0, 5, 31}, {-1, 0, 3, 5}, {0, 0, 1, 0}, {1, 0, 3, 3}, {2, 0, 4, 9},
-		{3, 0, 5, 7}, {4, 0, 6, 23}, {5, 0, 7, 79}, {6, 1, 6, 17}, {8, 2, 7, 55}, {12, 4, 9, 495}, {28, 11, 10, 239},
-		{2000, 0, 0, 0} }); // -479...299
-
-	i64 start = c.buy[roffer - 1].value;
-	i64 delta_start = start - offer_pr;
-	if (!nnds.coding(delta_start, bs)) return false;
-	offer_pr = start;
-	// расширение базы
-	if (start < offer0)
-	{
-		base.insert(base.begin(), offer0 - start, 0);
-		offer0 = start;
-	}
-	start -= offer0;
-	i64 offermax = c.sale[roffer - 1].value - offer0;
-	if (offermax >= (i64)base.size()) base.resize(offermax + 1, 0);
-	// обнуление недействительных значений базы
-	i64 finish_buy = c.buy[0].value - offer0;
-	for (i64 i = 0; i < start; i++) if (base[i] < 0) base[i] = 0; // стали недействительны
-	i64 offer_min = c.sale[0].value - offer0;
-	for (i64 i = finish_buy + 1; i < offer_min; i++) base[i] = 0; // стали недействительны
-	for (i64 i = offermax + 1; i < (i64)base.size(); i++) if (base[i] > 0) base[i] = 0; // стали недействительны
-
-	for (i64 i = roffer - 1; i >= 0; i--)
-	{
-		auto a = c.buy[i];
-		if (i != roffer - 1)
-		{
-			for (i64 j = c.buy[i + 1].value + 1; j < a.value; j++) base[j - offer0] = 0; // промежуток обнуляется
-		}
-		if (base[a.value - offer0] <= 0)
-		{
-			if (!f_number.coding(a.number, bs)) return false;
-		}
-		else
-		{
-
-		}
-		base[a.value - offer0] = a.number;
-	}
-	return true;*/
 }
 
 bool _sable_stat::add(const _prices2& c)
@@ -3899,6 +3873,19 @@ _cdf2::_cdf2(const std::vector<_frequency>& a) : fr(a)
 {
 }
 
+double _cdf2::calc_size1(const _statistics& st)
+{
+	i64 s = 0;
+	for (auto i : st.data)
+	{
+		auto n = std::upper_bound(fr.begin(), fr.end(), i.value, [](i64 a, _frequency b) { return (a < b.first); });
+		if ((n == fr.begin()) || (n == fr.end())) continue; // return -1;
+		n--;
+		s += ((i64)n->bit0 + n->bit) * i.number;
+	}
+	return double(s)/st.number();
+}
+
 bool _cdf2::coding(i64 a, _bit_stream& bs) const noexcept
 {
 	auto n = std::upper_bound(fr.begin(), fr.end(), a, [](i64 a, _frequency b) { return (a < b.first); });
@@ -4154,7 +4141,6 @@ i64 _basic_statistics::operator[](i64 x) const noexcept
 
 void _sable_statistics::clear()
 {
-	delta_begin.clear();
 	delta.clear();
 	buy_number.clear();
 	sale_number.clear();
@@ -4173,7 +4159,6 @@ void _sable_statistics::calc()
 	_basic_statistics sale[roffer];
 	_basic_statistics d;
 	_basic_statistics d_all;
-	_basic_statistics d_begin;
 	_prices pr;
 	_prices prpr = cena_zero_;
 	for (i64 i = 0; i < ss.size; i++)
@@ -4191,8 +4176,6 @@ void _sable_statistics::calc()
 			}
 		}
 		d.push(pr.pro[0].c - pr.pok[0].c);
-		if ((i64)pr.time - (i64)prpr.time <= _sable_stat::old_dtime)
-			d_begin.push((i64)pr.pok[roffer - 1].c - (i64)prpr.pok[roffer - 1].c);
 		prpr = pr;
 	}
 	for (i64 n = 0; n < roffer; n++)
@@ -4205,7 +4188,6 @@ void _sable_statistics::calc()
 	number = buy_number;
 	number += sale_number;
 	delta = d;
-	delta_begin = d_begin;
 	delta_all = d_all;
 }
 
