@@ -1465,6 +1465,13 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 		_cdf2({{0, 0, 1, 0}, {1, 0, 4, 7}, {2, 1, 4, 15}, {4, 2, 3, 3}, {8, 4, 3, 1}, {20, 0, 3, 5}, {21, 0, 0, 0}})
 	};
 
+	static const _cdf2 ttrr({ {-10000000, 24, 10, 222}, {-5000, 12, 7, 30}, {-1074, 9, 6, 11}, {-607, 8, 5, 14},
+		{-388, 7, 6, 37}, {-263, 6, 4, 4}, {-199, 7, 5, 19}, {-100, 0, 3, 0}, {-99, 6, 5, 25}, {-50, 0, 7, 99},
+		{-49, 5, 6, 38}, {-30, 0, 6, 3}, {-29, 2, 8, 94}, {-25, 0, 4, 7}, {-24, 4, 5, 22}, {-9, 3, 5, 1},
+		{-1, 1, 6, 43}, {1, 1, 4, 12}, {3, 3, 5, 21}, {11, 4, 6, 62}, {25, 0, 3, 2}, {26, 2, 9, 478}, {30, 0, 6, 5},
+		{31, 5, 7, 35}, {50, 0, 6, 6}, {51, 6, 5, 9}, {100, 0, 4, 15}, {101, 7, 5, 29}, {197, 6, 5, 27},
+		{261, 8, 5, 13}, {517, 11, 5, 17}, {2565, 24, 10, 734}, {10000001, 0, 0, 0} });
+
 	if (!nnds.coding(buy_izm, bs)) return false;
 	if (!nnds.coding(sale_izm, bs)) return false; // явно коррелирует с предыдущим
 	
@@ -1480,7 +1487,8 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 			if (!nnse20[n - i].coding(ser, bs)) return false;
 			i += ser;
 			if (i >= n) break;
-			if (!f_number.coding(c.buy[i].number, bs)) return false;
+//			research1.push(c.buy[i].number - bbuy[i].number);
+			if (!ttrr.coding(c.buy[i].number - bbuy[i].number, bs)) return false;
 			i++;
 		}
 	}
