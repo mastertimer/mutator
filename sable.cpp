@@ -1356,16 +1356,7 @@ namespace
 
 bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 {
-	offer_pr = offer0 = c.buy[roffer - 1].value;
-	i64 offermax = c.sale[roffer - 1].value;
-	base.clear();
-	base.resize(offermax - offer0 + 1, 0);
-	for (i64 i = 0; i < roffer; i++)
-	{
-		base[c.buy[i].value - offer0] = c.buy[i].number;
-		base[c.sale[i].value - offer0] = -c.sale[i].number;
-	}
-	bs.pushn(offer0, 16);
+	bs.pushn(c.buy[roffer - 1].value, 16);
 
 	static const _cdf2 nnd({ {1, 1, 2, 0}, {3, 0, 3, 5}, {4, 0, 3, 7}, {5, 0, 3, 1}, {6, 0, 3, 6}, {7, 1, 3, 3},
 		{9, 2, 4, 10}, {13, 10, 4, 2}, {1000, 0, 0, 0} }); // 1...210
@@ -1392,12 +1383,66 @@ bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 		}
 		if (!f_number.coding(c.sale[i].number, bs)) return false;
 	}
+	base_buy.resize(roffer);
+	base_sale.resize(roffer);
+	for (i64 i = 0; i < roffer; i++)
+	{
+		base_buy[i] = c.buy[i];
+		base_sale[i] = c.sale[i];
+	}
 	return true;
+}
+
+i64 calc_delta_start(const _one_stat* c, const std::vector<_one_stat> &v)
+{
+	if (c[0].value == v[0].value) return 0;
+	if (c[1].value > c[0].value)
+	{
+		if (c[0].value < v[0].value)
+		{
+			for (i64 i = 1; i < roffer; i++) if (c[i].value >= v[0].value) return i;
+			return roffer;
+		}
+		for (i64 i = 1; i < roffer; i++) if (v[i].value >= c[0].value) return -i;
+		return -roffer;
+	}
+	if (c[0].value > v[0].value)
+	{
+		for (i64 i = 1; i < roffer; i++) if (c[i].value <= v[0].value) return i;
+		return roffer;
+	}
+	for (i64 i = 1; i < roffer; i++) if (v[i].value <= c[0].value) return -i;
+	return -roffer;
 }
 
 bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 {
-	static const _cdf2 nnds({ {-2000, 11, 10, 751}, {-19, 3, 8, 111}, {-11, 2, 7, 119}, {-7, 1, 7, 47}, {-5, 0, 7, 15},
+	i64 buy_izm = calc_delta_start(c.buy, base_buy);
+	i64 sale_izm = calc_delta_start(c.sale, base_sale);
+	research1.push(buy_izm);
+	research2.push(sale_izm);
+	if (std::max(abs(buy_izm), abs(sale_izm)) >= roffer - 5) // ???
+	{
+		bs.push1(0);
+		return add0(c, bs);
+	}
+	bs.push1(1);
+	std::vector<_one_stat> bbuy = base_buy;
+	std::vector<_one_stat> bsale = base_sale;
+
+	base_buy = std::move(bbuy);
+	base_sale = std::move(bsale);
+	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	base_buy.resize(roffer);
+	base_sale.resize(roffer);
+	for (i64 i = 0; i < roffer; i++)
+	{
+		base_buy[i] = c.buy[i];
+		base_sale[i] = c.sale[i];
+	}
+	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	return true;
+/*	static const _cdf2 nnds({ {-2000, 11, 10, 751}, {-19, 3, 8, 111}, {-11, 2, 7, 119}, {-7, 1, 7, 47}, {-5, 0, 7, 15},
 		{-4, 0, 6, 49}, {-3, 0, 5, 1}, {-2, 0, 5, 31}, {-1, 0, 3, 5}, {0, 0, 1, 0}, {1, 0, 3, 3}, {2, 0, 4, 9},
 		{3, 0, 5, 7}, {4, 0, 6, 23}, {5, 0, 7, 79}, {6, 1, 6, 17}, {8, 2, 7, 55}, {12, 4, 9, 495}, {28, 11, 10, 239},
 		{2000, 0, 0, 0} }); // -479...299
@@ -1439,8 +1484,7 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 		}
 		base[a.value - offer0] = a.number;
 	}
-
-	return true;
+	return true;*/
 }
 
 bool _sable_stat::add(const _prices2& c)

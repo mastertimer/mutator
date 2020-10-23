@@ -688,13 +688,20 @@ void ToClipboard(astr text)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
+	show_message(test_ss4());
+
+	_g_graph* g = new _g_graph;
+	n_ko->operator _t_basic_go* ()->set_t_trans(g, flag_sub_go + flag_part);
+	g->add(_statistics(research1).to_matrix(), "delta1");
+	g->add(_statistics(research2).to_matrix(), "delta2");
+
+	show_message((double)research1[0] / research1.number());
+
 /*	_sable_statistics sasa;
 	sasa.calc();
 	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
 	g->add(sasa.delta_begin.to_matrix(-100, 100), "delta", true);*/
-//	show_message(sasa.delta_begin.min_value());
-//	show_message(sasa.delta_begin.max_value());
 
 /*	_sable_statistics sasa;
 	sasa.calc();
@@ -708,8 +715,6 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 		ss << "{" << ee.fr[i].first << ", " << (int)ee.fr[i].bit << ", " << (int)ee.fr[i].bit0 << ", " << ee.fr[i].prefix << "}, ";
 	}
 	ToClipboard(ss.str().c_str());*/
-
-	show_message(test_ss4());
 
 /*	show_message(bbb2.number(), bbb2[0]);
 

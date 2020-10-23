@@ -128,9 +128,8 @@ struct _sable_stat // статистика цен, сжатая
 
 private:
 	std::vector<i64> udata; // указатель на место сжатых данных кратных step_pak_cc
-	std::vector<i64> base; // база, от которой считается дельта (+ покупка, - продажа)
-	i64 offer0 = 0; // какой цене соответствует baza[0]
-	i64 offer_pr = 0; // с какой цены начинался предыдущий набор
+	std::vector<_one_stat> base_buy; // база покупки
+	std::vector<_one_stat> base_sale; // база продажи
 	static constexpr i64 step_pak_cc = 100; // период ключевых цен
 
 	bool add0(const _prices2& c, _bit_stream& bs); // не дельта!
@@ -441,6 +440,9 @@ struct _statistics // сжатая статистика
 	std::vector<_one_stat> data;
 	typedef std::vector<_one_stat>::iterator _it;
 
+	_statistics() = default;
+	_statistics(const _basic_statistics& a) { *this = a; }
+
 	void clear() { data.clear(); }
 	i64 min_value() const noexcept { return (data.empty()) ? 0 : data.front().value; }
 	i64 max_value() const noexcept { return (data.empty()) ? 0 : data.back().value; }
@@ -448,7 +450,7 @@ struct _statistics // сжатая статистика
 	i64 number(i64 be, i64 en) noexcept; // количество в интервале [be,en)
 	i64 number() noexcept { return number(data.begin(), data.end()); } // общее количество
 
-	i64 first_zero();              // номер первого нулевого элемента начиная со start (-1 если не нашлось)
+	i64 first_zero(); // номер первого нулевого элемента начиная со start (-1 если не нашлось)
 	i64 number_not_zero() { return data.size(); } // количество значений с ненулевым количеством
 	double arithmetic_size(_it be, _it en); // арифметический размер в битах
 	double arithmetic_size() { return arithmetic_size(data.begin(), data.end()); }
@@ -517,7 +519,13 @@ struct _cdf2 // структура частот для сжатия чисел �
 	bool coding(i64 a, _bit_stream& bs) const noexcept; // закодировать число в битовый поток (return false если ошибка)
 	void calc(_statistics& st, i64 n, i64 min_value, i64 max_value); // n - количество интервалов
 };
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+inline _basic_statistics research1; // для исследования статистики
+inline _basic_statistics research2; // для исследования статистики
 
 void calc_all_prediction(_basic_curve &o, i64& nn, double& kk);
 double test_ss4();
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
