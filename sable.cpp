@@ -1442,7 +1442,7 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 	
 	static const _cdf2 nnse0({ {1, 0, 3, 6}, {2, 1, 2, 0}, {4, 1, 4, 2}, {6, 4, 4, 10}, {20, 0, 1, 1}, {21, 0, 0, 0} });
 
-	static const _cdf2 nnse20[21] = { _cdf2() ,
+	static const _cdf2 nnse20[21] = { _cdf2() , // исправить и сравнить с побитным
 		_cdf2({{0, 0, 1, 1}, {1, 0, 1, 0}, {2, 0, 0, 0}}),
 		_cdf2({{0, 0, 1, 1}, {1, 0, 2, 0}, {2, 0, 2, 2}, {3, 0, 0, 0}}),
 		_cdf2({{0, 0, 1, 1}, {1, 0, 3, 0}, {2, 0, 3, 4}, {3, 0, 2, 2}, {4, 0, 0, 0}}),
@@ -1473,11 +1473,15 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 	{
 		n = calc_series_value(c.buy, bbuy, 0);
 		if (!nnse0.coding(n, bs)) return false;
-		i64 ser = calc_series_number(c.buy, bbuy, 0, n);
-		if (n == 20) research1.push(ser);
-		for (i64 i = 0; i < n; i++)
+		for (i64 i = 0; i < n;)
 		{
-//			if (c.buy[i].number == bbuy[i].number)
+			i64 ser = calc_series_number(c.buy, bbuy, i, n);
+			//		if (n - i == 20) research1.push(ser);
+			if (!nnse20[n - i].coding(ser, bs)) return false;
+			i += ser;
+			if (i >= n) break;
+			if (!f_number.coding(c.buy[i].number, bs)) return false;
+			i++;
 		}
 	}
 	if (buy_izm < 0) bbuy.erase(bbuy.begin(), bbuy.begin() - buy_izm);
