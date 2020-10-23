@@ -668,20 +668,20 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	show_message(test_ss4());
 
-/*	_g_graph* g = new _g_graph;
+	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go* ()->set_t_trans(g, flag_sub_go + flag_part);
 	g->add(_statistics(research1).to_matrix(), "delta1", true);
 
-	_cdf2 nnds({ {-15, 2, 9, 212}, {-11, 2, 8, 52}, {-7, 0, 9, 468}, {-6, 0, 8, 84}, {-5, 0, 7, 20},
+/*	_cdf2 nnds({ {-15, 2, 9, 212}, {-11, 2, 8, 52}, {-7, 0, 9, 468}, {-6, 0, 8, 84}, {-5, 0, 7, 20},
 		{-4, 0, 6, 16}, {-3, 0, 5, 0}, {-2, 0, 4, 8}, {-1, 0, 3, 2}, {0, 0, 1, 1}, {1, 0, 3, 6}, {2, 0, 4, 12},
 		{3, 0, 5, 4}, {4, 0, 7, 116}, {5, 0, 7, 112}, {6, 1, 7, 48}, {8, 3, 8, 180}, {16, 0, 0, 0} }); // -20...20
 
 	show_message(nnds.calc_size1(research1));
 	show_message(nnds.calc_size1(research2));*/
 
-/*	_cdf2 ee;
-	ee.calc(research1, 17, -15, 15);
-	ee.to_clipboard();*/
+	_cdf2 ee;
+	ee.calc(research1, 6, 0, 20);
+	ee.to_clipboard();
 
 /*	_sable_statistics sasa;
 	sasa.calc();

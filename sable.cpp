@@ -1410,12 +1410,23 @@ i64 calc_delta_start(const _one_stat* c, const std::vector<_one_stat> &v)
 	return -roffer;
 }
 
+i64 calc_series_value(const _one_stat* c, const std::vector<_one_stat>& v, i64 n)
+{
+	i64 k = std::min(roffer, (i64)v.size());
+	for (i64 i = n; i < k; i++) if (c[i].value != v[i].value) return i - n;
+	return k - n;
+}
+
+int calc_series_number(const _one_stat* c, const std::vector<_one_stat>& v, i64 n, i64 k)
+{
+	for (i64 i = n; i < k; i++) if (c[i].number != v[i].number) return i - n;
+	return k - n;
+}
+
 bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 {
 	i64 buy_izm = calc_delta_start(c.buy, base_buy);
 	i64 sale_izm = calc_delta_start(c.sale, base_sale);
-	research1.push(buy_izm);
-	research1.push(sale_izm);
 	if (std::max(abs(buy_izm), abs(sale_izm)) > 15) // ??? !!! влияет на частоты
 	{
 		bs.push1(0);
@@ -1428,12 +1439,48 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 	static const _cdf2 nnds({ {-15, 2, 9, 212}, {-11, 2, 8, 52}, {-7, 0, 9, 468}, {-6, 0, 8, 84}, {-5, 0, 7, 20},
 		{-4, 0, 6, 16}, {-3, 0, 5, 0}, {-2, 0, 4, 8}, {-1, 0, 3, 2}, {0, 0, 1, 1}, {1, 0, 3, 6}, {2, 0, 4, 12},
 		{3, 0, 5, 4}, {4, 0, 7, 116}, {5, 0, 7, 112}, {6, 1, 7, 48}, {8, 3, 8, 180}, {16, 0, 0, 0} }); // -20...20
+	
+	static const _cdf2 nnse0({ {1, 0, 3, 6}, {2, 1, 2, 0}, {4, 1, 4, 2}, {6, 4, 4, 10}, {20, 0, 1, 1}, {21, 0, 0, 0} });
+
+	static const _cdf2 nnse20[21] = { _cdf2() ,
+		_cdf2({{0, 0, 1, 1}, {1, 0, 1, 0}, {2, 0, 0, 0}}),
+		_cdf2({{0, 0, 1, 1}, {1, 0, 2, 0}, {2, 0, 2, 2}, {3, 0, 0, 0}}),
+		_cdf2({{0, 0, 1, 1}, {1, 0, 3, 0}, {2, 0, 3, 4}, {3, 0, 2, 2}, {4, 0, 0, 0}}),
+		_cdf2({{0, 0, 1, 1}, {1, 0, 4, 12}, {2, 0, 4, 4}, {3, 0, 3, 0}, {4, 0, 2, 2}, {5, 0, 0, 0}}),
+		_cdf2({{0, 0, 1, 1}, {1, 0, 4, 6}, {2, 0, 4, 10}, {3, 0, 4, 2}, {4, 0, 4, 14}, {5, 0, 2, 0}, {6, 0, 0, 0}}),
+		_cdf2({{0, 0, 1, 1}, {1, 0, 4, 6}, {2, 1, 4, 14}, {4, 0, 4, 2}, {5, 0, 4, 10}, {6, 0, 2, 0}, {7, 0, 0, 0}}),
+		_cdf2({{0, 0, 1, 1}, {1, 0, 4, 2}, {2, 0, 4, 10}, {3, 1, 3, 4}, {5, 1, 3, 0}, {7, 0, 3, 6}, {8, 0, 0, 0}}),
+		_cdf2({{0, 0, 1, 1}, {1, 1, 3, 4}, {3, 1, 3, 0}, {5, 1, 4, 14}, {7, 0, 4, 6}, {8, 0, 3, 2}, {9, 0, 0, 0}}),
+		_cdf2({{0, 0, 1, 1}, {1, 0, 4, 6}, {2, 1, 3, 4}, {4, 1, 4, 14}, {6, 2, 3, 0}, {9, 0, 3, 2}, {10, 0, 0, 0}}),
+		_cdf2({{0, 0, 1, 1}, {1, 1, 3, 2}, {3, 1, 3, 0}, {5, 1, 4, 6}, {7, 2, 4, 14}, {10, 0, 3, 4}, {11, 0, 0, 0}}),
+		_cdf2({{0, 0, 1, 1}, {1, 1, 3, 4}, {3, 0, 3, 0}, {4, 2, 3, 2}, {8, 2, 4, 6}, {11, 0, 4, 14}, {12, 0, 0, 0}}),
+		_cdf2({{0, 0, 1, 1}, {1, 0, 4, 14}, {2, 1, 3, 2}, {4, 0, 4, 6}, {5, 2, 3, 0}, {9, 2, 3, 4}, {13, 0, 0, 0}}),
+		_cdf2({{0, 0, 1, 1}, {1, 1, 3, 2}, {3, 1, 3, 0}, {5, 0, 4, 6}, {6, 3, 3, 4}, {13, 0, 4, 14}, {14, 0, 0, 0}}),
+		_cdf2({{0, 0, 1, 1}, {1, 1, 3, 4}, {3, 1, 3, 0}, {5, 0, 4, 2}, {6, 3, 3, 6}, {14, 0, 4, 10}, {15, 0, 0, 0}}),
+		_cdf2({{0, 0, 1, 1}, {1, 0, 4, 14}, {2, 1, 3, 0}, {4, 1, 4, 6}, {6, 1, 3, 4}, {8, 3, 3, 2}, {16, 0, 0, 0}}),
+		_cdf2({{0, 0, 1, 1}, {1, 1, 3, 0}, {3, 1, 3, 4}, {5, 2, 3, 6}, {9, 3, 4, 10}, {16, 0, 4, 2}, {17, 0, 0, 0}}),
+		_cdf2({{0, 0, 1, 1}, {1, 0, 4, 6}, {2, 1, 3, 0}, {4, 1, 4, 14}, {6, 2, 3, 2}, {10, 3, 3, 4}, {18, 0, 0, 0}}),
+		_cdf2({{0, 0, 1, 1}, {1, 1, 3, 2}, {3, 1, 4, 14}, {5, 2, 3, 4}, {9, 1, 4, 6}, {11, 3, 3, 0}, {19, 0, 0, 0}}),
+		_cdf2({{0, 0, 1, 1}, {1, 1, 3, 4}, {3, 2, 3, 6}, {7, 2, 3, 0}, {11, 3, 4, 10}, {19, 0, 4, 2}, {20, 0, 0, 0}}),
+		_cdf2({{0, 0, 1, 0}, {1, 0, 4, 7}, {2, 1, 4, 15}, {4, 2, 3, 3}, {8, 4, 3, 1}, {20, 0, 3, 5}, {21, 0, 0, 0}})
+	};
 
 	if (!nnds.coding(buy_izm, bs)) return false;
 	if (!nnds.coding(sale_izm, bs)) return false; // явно коррелирует с предыдущим
 	
+	i64 n = 0;
+	if (buy_izm == 0)
+	{
+		n = calc_series_value(c.buy, bbuy, 0);
+		if (!nnse0.coding(n, bs)) return false;
+		i64 ser = calc_series_number(c.buy, bbuy, 0, n);
+		if (n == 20) research1.push(ser);
+		for (i64 i = 0; i < n; i++)
+		{
+//			if (c.buy[i].number == bbuy[i].number)
+		}
+	}
 	if (buy_izm < 0) bbuy.erase(bbuy.begin(), bbuy.begin() - buy_izm);
-	if (sale_izm < 0) bsale.erase(bsale.begin(), bsale.begin() - sale_izm);
 	if (buy_izm > 0)
 	{
 		bbuy.insert(bbuy.begin(), buy_izm, {});
@@ -1443,7 +1490,14 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 			if (!f_delta.coding(c.buy[i].value - c.buy[i + 1].value, bs)) return false;
 			if (!f_number.coding(c.buy[i].number, bs)) return false;
 		}
+		n = buy_izm;
 	}
+	while (n < roffer)
+	{
+		break;
+	}
+
+	if (sale_izm < 0) bsale.erase(bsale.begin(), bsale.begin() - sale_izm);
 	if (sale_izm > 0)
 	{
 		bsale.insert(bsale.begin(), sale_izm, {});
