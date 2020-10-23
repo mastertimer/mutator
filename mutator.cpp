@@ -14,7 +14,6 @@
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <ctime>
-#include <sstream>
 
 #include "sable.h"
 #include "mutator.h"
@@ -665,37 +664,16 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 {
 }
 
-void ToClipboard(astr text)
-{
-
-	if (OpenClipboard(0))//открываем буфер обмена
-	{
-		HGLOBAL hgBuffer;
-		char* chBuffer;
-		EmptyClipboard(); //очищаем буфер
-		size_t ll = strlen(text) + 1;
-		hgBuffer = GlobalAlloc(GMEM_DDESHARE, ll);//выделяем память
-		if (!hgBuffer) goto end;
-		chBuffer = (char*)GlobalLock(hgBuffer); //блокируем память
-		if (!chBuffer) goto end;
-		strcpy_s(chBuffer, ll, LPCSTR(text));
-		GlobalUnlock(hgBuffer);//разблокируем память
-		SetClipboardData(CF_TEXT, hgBuffer);//помещаем текст в буфер обмена
-	end:
-		CloseClipboard(); //закрываем буфер обмена
-	}
-}
-
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	show_message(test_ss4());
 
 	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go* ()->set_t_trans(g, flag_sub_go + flag_part);
-	g->add(_statistics(research1).to_matrix(), "delta1");
-	g->add(_statistics(research2).to_matrix(), "delta2");
-
-	show_message((double)research1[0] / research1.number());
+	g->add(_statistics(research1).to_matrix(), "delta1", true);
+	_cdf2 ee;
+	ee.calc(research1, 17, -15, 15);
+	ee.to_clipboard();
 
 /*	_sable_statistics sasa;
 	sasa.calc();
@@ -706,15 +684,8 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 /*	_sable_statistics sasa;
 	sasa.calc();
 	_cdf2 ee;
-	i64 ki = 19;
-	ee.calc(sasa.delta_begin, ki, -2000, 2000);
-	std::stringstream ss;
-
-	for (i64 i = 0; i <= ki; i++)
-	{
-		ss << "{" << ee.fr[i].first << ", " << (int)ee.fr[i].bit << ", " << (int)ee.fr[i].bit0 << ", " << ee.fr[i].prefix << "}, ";
-	}
-	ToClipboard(ss.str().c_str());*/
+	ee.calc(sasa.number, 32, 1, 10000000);
+	ee.to_clipboard();*/
 
 /*	show_message(bbb2.number(), bbb2[0]);
 

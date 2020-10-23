@@ -430,6 +430,7 @@ struct _basic_statistics // базовая разреженная статист
 
 	void push(i64 x); // добавить число в статистику
 	i64 number() const noexcept;
+	i64 number(i64 be, i64 en) const noexcept; // количество в интервале [be,en)
 	i64 operator[](i64 x) const noexcept;
 };
 
@@ -439,6 +440,7 @@ struct _statistics // сжатая статистика
 {
 	std::vector<_one_stat> data;
 	typedef std::vector<_one_stat>::iterator _it;
+	typedef std::vector<_one_stat>::const_iterator _cit;
 
 	_statistics() = default;
 	_statistics(const _basic_statistics& a) { *this = a; }
@@ -446,8 +448,8 @@ struct _statistics // сжатая статистика
 	void clear() { data.clear(); }
 	i64 min_value() const noexcept { return (data.empty()) ? 0 : data.front().value; }
 	i64 max_value() const noexcept { return (data.empty()) ? 0 : data.back().value; }
-	i64 number(_it be, _it en) noexcept; // количество в интервале [be,en)
-	i64 number(i64 be, i64 en) noexcept; // количество в интервале [be,en)
+	i64 number(_cit be, _cit en) const noexcept; // количество в интервале [be,en)
+	i64 number(i64 be, i64 en) const noexcept; // количество в интервале [be,en)
 	i64 number() noexcept { return number(data.begin(), data.end()); } // общее количество
 
 	i64 first_zero(); // номер первого нулевого элемента начиная со start (-1 если не нашлось)
@@ -517,7 +519,8 @@ struct _cdf2 // структура частот для сжатия чисел �
 
 	void clear() { fr.clear(); }
 	bool coding(i64 a, _bit_stream& bs) const noexcept; // закодировать число в битовый поток (return false если ошибка)
-	void calc(_statistics& st, i64 n, i64 min_value, i64 max_value); // n - количество интервалов
+	void calc(const _statistics& st, i64 n, i64 min_value, i64 max_value); // n - количество интервалов
+	void to_clipboard(); // скопировать в буффер обмена
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -4,6 +4,27 @@
 #include <sstream>
 #include <iomanip>
 
+void to_clipboard(astr text)
+{
+
+	if (OpenClipboard(0))//открываем буфер обмена
+	{
+		HGLOBAL hgBuffer;
+		char* chBuffer;
+		EmptyClipboard(); //очищаем буфер
+		size_t ll = strlen(text) + 1;
+		hgBuffer = GlobalAlloc(GMEM_DDESHARE, ll);//выделяем память
+		if (!hgBuffer) goto end;
+		chBuffer = (char*)GlobalLock(hgBuffer); //блокируем память
+		if (!chBuffer) goto end;
+		strcpy_s(chBuffer, ll, LPCSTR(text));
+		GlobalUnlock(hgBuffer);//разблокируем память
+		SetClipboardData(CF_TEXT, hgBuffer);//помещаем текст в буфер обмена
+	end:
+		CloseClipboard(); //закрываем буфер обмена
+	}
+}
+
 bool save_file(wstr fn, const char* data, i64 n)
 {
 	std::ofstream f(fn, std::ofstream::binary);

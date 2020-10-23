@@ -51,6 +51,8 @@ inline std::wstring exe_path; // путь к запущенному exe файл
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void to_clipboard(astr text);
+
 bool save_file(wstr fn, const char* data, i64 n);
 bool load_file(wstr fn, char** data, i64* n);
 

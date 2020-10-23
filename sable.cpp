@@ -14,6 +14,8 @@ max(rnd)  |   1.058        58       1.00097
 
 #include <array>
 #include <algorithm>
+#include <sstream>
+
 #include "sable.h"
 
 constexpr wchar_t ss_file[]  = L"..\\..\\baza.cen";
@@ -1421,7 +1423,7 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 	i64 sale_izm = calc_delta_start(c.sale, base_sale);
 	research1.push(buy_izm);
 	research2.push(sale_izm);
-	if (std::max(abs(buy_izm), abs(sale_izm)) >= roffer - 5) // ???
+	if (std::max(abs(buy_izm), abs(sale_izm)) > 15) // ??? !!! влияет на частоты
 	{
 		bs.push1(0);
 		return add0(c, bs);
@@ -1429,6 +1431,12 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 	bs.push1(1);
 	std::vector<_one_stat> bbuy = base_buy;
 	std::vector<_one_stat> bsale = base_sale;
+
+	static const _cdf2 nnds({ {-15, 2, 9, 212}, {-11, 2, 8, 52}, {-7, 0, 9, 468}, {-6, 0, 8, 84}, {-5, 0, 7, 20},
+		{-4, 0, 6, 16}, {-3, 0, 5, 0}, {-2, 0, 4, 8}, {-1, 0, 3, 2}, {0, 0, 1, 1}, {1, 0, 3, 6}, {2, 0, 4, 12},
+		{3, 0, 5, 4}, {4, 0, 7, 116}, {5, 0, 7, 112}, {6, 1, 7, 48}, {8, 3, 8, 180}, {16, 0, 0, 0} }); // -20...20
+
+	if (!nnds.coding(buy_izm, bs)) return false;
 
 	base_buy = std::move(bbuy);
 	base_sale = std::move(bsale);
@@ -3715,14 +3723,14 @@ void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-i64 _statistics::number(i64 be, i64 en) noexcept
+i64 _statistics::number(i64 be, i64 en) const noexcept
 {
 	auto li1 = std::lower_bound(data.begin(), data.end(), be, [](_one_stat a, i64 b) { return (a.value < b); });
 	auto li2 = std::lower_bound(data.begin(), data.end(), en, [](_one_stat a, i64 b) { return (a.value < b); });
 	return number(li1, li2);
 }
 
-i64 _statistics::number(_it be, _it en) noexcept
+i64 _statistics::number(_cit be, _cit en) const noexcept
 {
 	i64 s = 0;
 	for (auto i = be; i != en; ++i) s += i->number;
@@ -3877,13 +3885,23 @@ i64 bit_for_value(u64 k) // k - количество чисел. (1) = 0, (2) = 
 	return n;
 }
 
+void _cdf2::to_clipboard()
+{
+	std::stringstream a;
+	for (auto& i : fr)
+	{
+		a << "{" << i.first << ", " << (int)i.bit << ", " << (int)i.bit0 << ", " << i.prefix << "}, ";
+	}
+	::to_clipboard(a.str().c_str());
+}
+
 _cdf2::_cdf2(const std::vector<_frequency>& a) : fr(a)
 {
 }
 
 bool _cdf2::coding(i64 a, _bit_stream& bs) const noexcept
 {
-	auto n = std::upper_bound(fr.begin(), fr.end(), a, [](i64 a, _frequency b) {return (a < b.first); });
+	auto n = std::upper_bound(fr.begin(), fr.end(), a, [](i64 a, _frequency b) { return (a < b.first); });
 	if ((n == fr.begin()) || (n == fr.end())) return false;
 	n--;
 	bs.pushn(n->prefix, n->bit0);
@@ -3891,13 +3909,8 @@ bool _cdf2::coding(i64 a, _bit_stream& bs) const noexcept
 	return true;
 }
 
-void _cdf2::calc(_statistics& st, i64 n, i64 min_value, i64 max_value)
+void _cdf2::calc(const _statistics& st, i64 n, i64 min_value, i64 max_value)
 {
-	if ((st.min_value() < min_value) || (st.max_value() > max_value))
-	{ // с такими параметрами нельзя!
-		clear();
-		return;
-	}
 	fr.resize(n + 1);
 
 	struct _uuu
@@ -3917,17 +3930,22 @@ void _cdf2::calc(_statistics& st, i64 n, i64 min_value, i64 max_value)
 	// uu - простые интервалы длиной 1, или с количеством 0
 	std::vector<_uuu> ee;
 	_uuu a;
-	i64 pr = st.min_value();
-	if (min_value < pr)
+	i64 pr;
+	if (min_value < st.min_value())
 	{
+		pr = st.min_value();
 		a.o = { min_value, pr };
 		a.k = 0;
 		a.bit = bit_for_value(a.o.size());
 		ee.push_back(a);
 	}
+	else
+		pr = min_value;
 	for (auto i : st.data)
 	{
-		if (i.value > pr)
+		if (i.value > max_value) break;
+		if (i.value < min_value) continue;
+		if (i.value > pr) // нули
 		{
 			a.o = { pr, i.value };
 			a.k = 0;
@@ -3940,9 +3958,9 @@ void _cdf2::calc(_statistics& st, i64 n, i64 min_value, i64 max_value)
 		ee.push_back(a);
 		pr = i.value + 1;
 	}
-	if (max_value > st.min_value())
+	if (max_value >= pr)
 	{
-		a.o = { pr + 1, max_value };
+		a.o = { pr, max_value + 1 };
 		a.k = 0;
 		a.bit = bit_for_value(a.o.size());
 		ee.push_back(a);
@@ -4032,7 +4050,7 @@ void _cdf2::calc(_statistics& st, i64 n, i64 min_value, i64 max_value)
 		fr[i].prefix = 0;
 		++ii;
 	}
-	fr[n].first = max_value;
+	fr[n].first = max_value + 1;
 	fr[n].bit = 0;
 	fr[n].bit0 = 0;
 	fr[n].prefix = 0;
@@ -4111,6 +4129,17 @@ i64 _basic_statistics::number() const noexcept
 {
 	i64 s = 0;
 	for (auto i : data) s += i;
+	return s;
+}
+
+i64 _basic_statistics::number(i64 be, i64 en) const noexcept
+{
+	be -= start;
+	en -= start;
+	if (be < 0) be = 0;
+	if (en > (i64)data.size()) en = (i64)data.size();
+	i64 s = 0;
+	for (i64 i = be; i < en; i++) s += data[i];
 	return s;
 }
 
