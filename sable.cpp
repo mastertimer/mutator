@@ -1402,51 +1402,39 @@ bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 	return true;
 }
 
-i64 calc_delta_del_add(const _one_stat* c, const std::vector<_one_stat> &v, i64 n)
+i64 calc_delta_del_add(const _one_stat* c, const std::vector<_one_stat> &v)
 {
-	if (n >= (i64)v.size()) return (roffer - n);
-	if (c[n].value == v[n].value) return 0;
+	if (c[0].value == v[0].value) return 0;
 	if (c[1].value > c[0].value)
 	{
-		if (c[n].value < v[n].value)
+		if (c[0].value < v[0].value)
 		{
-			for (i64 i = n + 1; i < roffer; i++) if (c[i].value >= v[n].value) return (i - n);
-			return (roffer - n);
+			for (i64 i = 1; i < roffer; i++) if (c[i].value >= v[0].value) return i;
+			return roffer;
 		}
-		for (i64 i = n + 1; i < (i64)v.size(); i++) if (v[i].value >= c[n].value) return -(i - n);
-		return -((i64)v.size() - n);
+		for (i64 i = 1; i < (i64)v.size(); i++) if (v[i].value >= c[0].value) return -i;
+		return -((i64)v.size());
 	}
-	if (c[n].value > v[n].value)
+	if (c[0].value > v[0].value)
 	{
-		for (i64 i = n + 1; i < roffer; i++) if (c[i].value <= v[n].value) return (i - n);
-		return (roffer - n);
+		for (i64 i = 1; i < roffer; i++) if (c[i].value <= v[0].value) return i;
+		return roffer;
 	}
-	for (i64 i = n + 1; i < (i64)v.size(); i++) if (v[i].value <= c[n].value) return -(i - n);
-	return -((i64)v.size() - n);
+	for (i64 i = 1; i < (i64)v.size(); i++) if (v[i].value <= c[0].value) return -i;
+	return -((i64)v.size());
 }
 
-/*i64 calc_delta_del_add1(const _one_stat* c, const std::vector<_one_stat>& v, i64 n)
+i64 calc_delta_del_add1(const _one_stat* c, const std::vector<_one_stat>& v, i64 n)
 {
-	if (n >= (i64)v.size()) return (roffer - n);
 	if (c[n].value == v[n].value) return 0;
 	if (c[1].value > c[0].value)
 	{
-		if (c[n].value < v[n].value)
-		{
-			for (i64 i = n + 1; i < roffer; i++) if (c[i].value >= v[n].value) return (i - n);
-			return (roffer - n);
-		}
-		for (i64 i = n + 1; i < (i64)v.size(); i++) if (v[i].value >= c[n].value) return -(i - n);
-		return -((i64)v.size() - n);
+		if (c[n].value < v[n].value) return 1;
+		return -1;
 	}
-	if (c[n].value > v[n].value)
-	{
-		for (i64 i = n + 1; i < roffer; i++) if (c[i].value <= v[n].value) return (i - n);
-		return (roffer - n);
-	}
-	for (i64 i = n + 1; i < (i64)v.size(); i++) if (v[i].value <= c[n].value) return -(i - n);
-	return -((i64)v.size() - n);
-}*/
+	if (c[n].value > v[n].value) return 1;
+	return -1;
+}
 
 i64 calc_series_value(const _one_stat* c, const std::vector<_one_stat>& v, i64 n)
 {
@@ -1463,9 +1451,9 @@ i64 calc_series_number(const _one_stat* c, const std::vector<_one_stat>& v, i64 
 
 bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 {
-	i64 buy_izm = calc_delta_del_add(c.buy, base_buy, 0);
+	i64 buy_izm = calc_delta_del_add(c.buy, base_buy);
 //	research1.push(buy_izm);
-	i64 sale_izm = calc_delta_del_add(c.sale, base_sale, 0);
+	i64 sale_izm = calc_delta_del_add(c.sale, base_sale);
 	if (std::max(abs(buy_izm), abs(sale_izm)) > 15) // ??? !!! влияет на частоты
 	{
 		bs.push1(0);
@@ -1559,7 +1547,11 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 		bbuy.erase(bbuy.begin(), bbuy.begin() - buy_izm);
 		i64 n2 = calc_series_value(c.buy, bbuy, 0);
 		//		if (bbuy.size() == 4) research1.push(n2);
-		if (!nnsegg[bbuy.size()].coding(n2, bs)) return false;
+		if (!nnsegg[std::min((i64)bbuy.size(), roffer)].coding(n2, bs))
+		{
+			research1.push(n2);
+//			return false;
+		}
 		if (n2 == 0)
 		{
 			bbuy.insert(bbuy.begin(), c.buy[0]);
@@ -1595,6 +1587,7 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 		n = buy_izm;
 		i64 n2 = calc_series_value(c.buy, bbuy, n);
 //		if (roffer - n == 4) research1.push(n2);
+		if (!nnsegg[std::min((i64)bbuy.size(), roffer) - n].coding(n2, bs)) return false;
 		if (n2 == 0)
 		{
 			bbuy.erase(bbuy.begin() + n);
@@ -1619,13 +1612,51 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 	}
 	while (n < roffer)
 	{
+		if (n >= (i64)bbuy.size())
+		{
+			bbuy.resize(roffer);
+			for (; n < roffer; n++)
+			{
+				bbuy[n] = c.buy[n];
+				if (!f_delta.coding(c.buy[n - 1].value - c.buy[n].value, bs)) return false;
+				if (!f_number.coding(c.buy[n].number, bs)) return false;
+			}
+			break;
+		}
 		if (tip == 0)
 		{
-//			continue;
-//			i64 buy_izm2 = calc_delta_del_add(c.buy, base_buy, n);
-//			research1.push(buy_izm2);
+			i64 buy_izm2 = calc_delta_del_add1(c.buy, bbuy, n);
+			bs.push1(buy_izm2 > 0);
+			if (buy_izm2 < 0)
+				bbuy.erase(bbuy.begin() + n);
+			else
+			{
+				bbuy.insert(bbuy.begin() + n, c.buy[n]);
+				if (!f_delta.coding(c.buy[n - 1].value - c.buy[n].value, bs)) return false;
+				if (!f_number.coding(c.buy[n].number, bs)) return false;
+				n++;
+			}
+			tip = 1;
+			continue;
 		}
-		break;
+		i64 n2 = calc_series_value(c.buy, bbuy, n);
+		if (!nnsegg[std::min((i64)bbuy.size(), roffer) - n].coding(n2, bs)) return false;
+		if (n2 > 0)
+		{
+			n2 += n;
+			for (i64 i = n; i < n2;)
+			{
+				i64 ser = calc_series_number(c.buy, bbuy, i, n2);
+				//		if (n - i == 20) research1.push(ser);
+				if (!nnse20[n2 - i].coding(ser, bs)) return false;
+				i += ser;
+				if (i >= n2) break;
+				if (!ttrr.coding(c.buy[i].number - bbuy[i].number, bs)) return false;
+				i++;
+			}
+			n = n2;
+		}
+		tip = 0;
 	}
 
 	if (sale_izm < 0) bsale.erase(bsale.begin(), bsale.begin() - sale_izm);
@@ -1642,15 +1673,6 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 
 	base_buy = std::move(bbuy);
 	base_sale = std::move(bsale);
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	base_buy.resize(roffer);
-	base_sale.resize(roffer);
-	for (i64 i = 0; i < roffer; i++)
-	{
-		base_buy[i] = c.buy[i];
-		base_sale[i] = c.sale[i];
-	}
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	return true;
 }
 
