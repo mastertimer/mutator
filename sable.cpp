@@ -1513,17 +1513,19 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 		_cdf3(0, {5, 4, 10, 62, 54, 78, 174, 134, 486, 294, 326, 750, 870, 678, 710, 966, 934, 614, 1006, 366, 7})
 	};
 
-	static const _cdf2 ttrr({ {-10000000, 24, 10, 222}, {-5000, 12, 7, 30}, {-1074, 9, 6, 11}, {-607, 8, 5, 14},
-		{-388, 7, 6, 37}, {-263, 6, 4, 4}, {-199, 7, 5, 19}, {-100, 0, 3, 0}, {-99, 6, 5, 25}, {-50, 0, 7, 99},
-		{-49, 5, 6, 38}, {-30, 0, 6, 3}, {-29, 2, 8, 94}, {-25, 0, 4, 7}, {-24, 4, 5, 22}, {-9, 3, 5, 1},
-		{-1, 1, 6, 43}, {1, 1, 4, 12}, {3, 3, 5, 21}, {11, 4, 6, 62}, {25, 0, 3, 2}, {26, 2, 9, 478}, {30, 0, 6, 5},
-		{31, 5, 7, 35}, {50, 0, 6, 6}, {51, 6, 5, 9}, {100, 0, 4, 15}, {101, 7, 5, 29}, {197, 6, 5, 27},
-		{261, 8, 5, 13}, {517, 11, 5, 17}, {2565, 24, 10, 734}, {10000001, 0, 0, 0} });
+	static const _cdf ttrr({ {-10000000, 24, 1189}, {-5299, 12, 293}, {-1270, 9, 94}, {-815, 8, 69}, {-563, 6, 245},
+		{-499, 7, 109}, {-371, 7, 34}, {-260, 0, 141}, {-259, 5, 90}, {-232, 4, 229}, {-216, 4, 205}, {-200, 0, 114},
+		{-199, 5, 116}, {-167, 5, 76}, {-141, 4, 246}, {-125, 0, 221}, {-124, 5, 126}, {-100, 0, 27}, {-99, 4, 110},
+		{-83, 3, 311}, {-75, 0, 250}, {-74, 4, 106}, {-58, 3, 247}, {-50, 0, 215}, {-49, 5, 70}, {-30, 0, 74},
+		{-29, 2, 933}, {-25, 0, 31}, {-24, 4, 113}, {-9, 3, 81}, {-1, 1, 231}, {1, 0, 73}, {2, 2, 89}, {6, 2, 385},
+		{10, 0, 509}, {11, 4, 151}, {25, 0, 8}, {26, 2, 257}, {30, 0, 124}, {31, 5, 84}, {50, 1, 97}, {52, 3, 108},
+		{60, 4, 102}, {75, 0, 193}, {76, 5, 71}, {100, 0, 19}, {101, 5, 78}, {125, 0, 189}, {126, 5, 86}, {158, 5, 157},
+		{184, 4, 439}, {200, 0, 82}, {201, 5, 85}, {233, 5, 68}, {260, 0, 181}, {261, 5, 182}, {293, 6, 92},
+		{357, 7, 121}, {474, 6, 100}, {538, 7, 167}, {666, 8, 105}, {922, 8, 186}, {1178, 10, 381}, {2202, 24, 1701},
+		{10000001, 0, 1} });
 
 	if (!nnds.coding(buy_izm, bs)) return false;
 	if (!nnds.coding(sale_izm, bs)) return false; // явно коррелирует с предыдущим
-	research1.push(buy_izm);
-	research1.push(sale_izm);
 
 	i64 n = 0;
 	i64 tip = buy_izm;
@@ -1538,7 +1540,9 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 			if (!nnse20[n - i].coding(ser, bs)) return false;
 			i += ser;
 			if (i >= n) break;
+			research1.push(c.buy[i].number - bbuy[i].number);
 			if (!ttrr.coding(c.buy[i].number - bbuy[i].number, bs)) return false;
+			bbuy[i].number = c.buy[i].number;
 			i++;
 		}
 	}
@@ -1565,7 +1569,9 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 				if (!nnse20[n - i].coding(ser, bs)) return false;
 				i += ser;
 				if (i >= n) break;
+				research1.push(c.buy[i].number - bbuy[i].number);
 				if (!ttrr.coding(c.buy[i].number - bbuy[i].number, bs)) return false;
+				bbuy[i].number = c.buy[i].number;
 				i++;
 			}
 			tip = 0;
@@ -1587,7 +1593,6 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 		if (n2 == 0)
 		{
 			bbuy.erase(bbuy.begin() + n);
-			n++;
 		}
 		else
 		{
@@ -1599,7 +1604,9 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 				if (!nnse20[n2 - i].coding(ser, bs)) return false;
 				i += ser;
 				if (i >= n2) break;
+				research1.push(c.buy[i].number - bbuy[i].number);
 				if (!ttrr.coding(c.buy[i].number - bbuy[i].number, bs)) return false;
+				bbuy[i].number = c.buy[i].number;
 				i++;
 			}
 			n = n2;
@@ -1647,7 +1654,9 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 				if (!nnse20[n2 - i].coding(ser, bs)) return false;
 				i += ser;
 				if (i >= n2) break;
+				research1.push(c.buy[i].number - bbuy[i].number);
 				if (!ttrr.coding(c.buy[i].number - bbuy[i].number, bs)) return false;
+				bbuy[i].number = c.buy[i].number;
 				i++;
 			}
 			n = n2;
