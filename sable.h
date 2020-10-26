@@ -572,4 +572,6 @@ inline _basic_statistics research3; // для исследования стат�
 void calc_all_prediction(_basic_curve &o, i64& nn, double& kk);
 double test_ss4();
 
+constexpr i64 qwe = 1;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

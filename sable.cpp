@@ -1465,7 +1465,7 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 	static const _cdf3 nnds(-15, { 949, 444, 128, 132, 252, 197, 96, 120, 92, 85, 40, 44, 45, 22, 10, 7, 9, 30, 61, 52,
 		48, 101, 100, 88, 245, 133, 196, 192, 309, 316, 693}); // -20...20
 
-	static const _cdf2 nnse0({ {1, 0, 3, 6}, {2, 1, 2, 0}, {4, 1, 4, 2}, {6, 4, 4, 10}, {20, 0, 1, 1}, {21, 0, 0, 0} });
+	static const _cdf3 nnse0(1, {14, 12, 26, 16, 56, 114, 104, 146, 130, 200, 136, 338, 450, 290, 322, 354, 418, 482, 466, 3});
 
 	static const _cdf2 nnse20[21] = { _cdf2() , // исправить
 		_cdf2({{0, 0, 1, 1}, {1, 0, 1, 0}, {2, 0, 0, 0}}),
@@ -1488,6 +1488,29 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 		_cdf2({{0, 0, 1, 1}, {1, 1, 3, 2}, {3, 1, 4, 14}, {5, 2, 3, 4}, {9, 1, 4, 6}, {11, 3, 3, 0}, {19, 0, 0, 0}}),
 		_cdf2({{0, 0, 1, 1}, {1, 1, 3, 4}, {3, 2, 3, 6}, {7, 2, 3, 0}, {11, 3, 4, 10}, {19, 0, 4, 2}, {20, 0, 0, 0}}),
 		_cdf2({{0, 0, 1, 0}, {1, 0, 4, 7}, {2, 1, 4, 15}, {4, 2, 3, 3}, {8, 4, 3, 1}, {20, 0, 3, 5}, {21, 0, 0, 0}})
+	};
+
+	static const _cdf3 nnse200[21] = { _cdf3() , // исправить
+		_cdf3(0, {3, 2}),
+		_cdf3(0, {3, 4, 6}),
+		_cdf3(0, {2, 13, 9, 7}),
+		_cdf3(0, {2, 9, 29, 21, 7}),
+		_cdf3(0, {2, 9, 21, 61, 45, 7}),
+		_cdf3(0, {2, 31, 27, 19, 55, 39, 5}),
+		_cdf3(0, {2, 31, 27, 55, 39, 35, 51, 5}),
+		_cdf3(0, {2, 9, 19, 21, 43, 45, 61, 59, 15}),
+		_cdf3(0, {2, 9, 23, 21, 61, 127, 45, 47, 95, 11}),
+		_cdf3(0, {2, 9, 23, 19, 59, 127, 43, 47, 159, 223, 13}),
+		_cdf3(0, {2, 13, 23, 19, 59, 127, 43, 47, 159, 351, 479, 9}),
+		_cdf3(0, {2, 11, 23, 21, 47, 127, 45, 61, 479, 351, 287, 415, 9}),
+		_cdf3(0, {3, 10, 22, 20, 46, 126, 94, 60, 172, 204, 492, 364, 140, 8}),
+		_cdf3(0, {3, 10, 22, 20, 60, 126, 94, 44, 206, 142, 494, 366, 302, 430, 8}),
+		_cdf3(0, {3, 10, 22, 20, 60, 126, 94, 44, 206, 494, 366, 430, 398, 270, 302, 8}),
+		_cdf3(0, {2, 11, 31, 21, 61, 41, 49, 57, 97, 237, 205, 141, 193, 129, 429, 301, 23}),
+		_cdf3(0, {2, 11, 9, 21, 61, 127, 111, 79, 223, 237, 205, 415, 287, 429, 301, 269, 397, 23}),
+		_cdf3(0, {7, 13, 14, 8, 17, 57, 41, 44, 124, 116, 100, 220, 212, 148, 196, 412, 284, 132, 10}),
+		_cdf3(0, {6, 9, 8, 31, 29, 28, 55, 53, 52, 71, 101, 100, 231, 197, 133, 196, 132, 295, 423, 11}),
+		_cdf3(0, {2, 19, 25, 63, 47, 39, 43, 33, 87, 91, 81, 183, 187, 177, 503, 375, 507, 379, 369, 497, 13})
 	};
 
 	static const _cdf3 nnsegg[21] = { _cdf3() , // исправить
@@ -1536,11 +1559,10 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 		for (i64 i = 0; i < n;)
 		{
 			i64 ser = calc_series_number(c.buy, bbuy, i, n);
-			//		if (n - i == 20) research1.push(ser);
-			if (!nnse20[n - i].coding(ser, bs)) return false;
+			if (n - i == qwe) research1.push(ser);
+			if (!nnse200[n - i].coding(ser, bs)) return false;
 			i += ser;
 			if (i >= n) break;
-			research1.push(c.buy[i].number - bbuy[i].number);
 			if (!ttrr.coding(c.buy[i].number - bbuy[i].number, bs)) return false;
 			bbuy[i].number = c.buy[i].number;
 			i++;
@@ -1565,11 +1587,10 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 			for (i64 i = 0; i < n;)
 			{
 				i64 ser = calc_series_number(c.buy, bbuy, i, n);
-				//		if (n - i == 20) research1.push(ser);
-				if (!nnse20[n - i].coding(ser, bs)) return false;
+				if (n - i == qwe) research1.push(ser);
+				if (!nnse200[n - i].coding(ser, bs)) return false;
 				i += ser;
 				if (i >= n) break;
-				research1.push(c.buy[i].number - bbuy[i].number);
 				if (!ttrr.coding(c.buy[i].number - bbuy[i].number, bs)) return false;
 				bbuy[i].number = c.buy[i].number;
 				i++;
@@ -1600,11 +1621,10 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 			for (i64 i = n; i < n2;)
 			{
 				i64 ser = calc_series_number(c.buy, bbuy, i, n2);
-				//		if (n - i == 20) research1.push(ser);
-				if (!nnse20[n2 - i].coding(ser, bs)) return false;
+				if (n - i == qwe) research1.push(ser);
+				if (!nnse200[n2 - i].coding(ser, bs)) return false;
 				i += ser;
 				if (i >= n2) break;
-				research1.push(c.buy[i].number - bbuy[i].number);
 				if (!ttrr.coding(c.buy[i].number - bbuy[i].number, bs)) return false;
 				bbuy[i].number = c.buy[i].number;
 				i++;
@@ -1650,11 +1670,10 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 			for (i64 i = n; i < n2;)
 			{
 				i64 ser = calc_series_number(c.buy, bbuy, i, n2);
-				//		if (n - i == 20) research1.push(ser);
-				if (!nnse20[n2 - i].coding(ser, bs)) return false;
+				if (n - i == qwe) research1.push(ser);
+				if (!nnse200[n2 - i].coding(ser, bs)) return false;
 				i += ser;
 				if (i >= n2) break;
-				research1.push(c.buy[i].number - bbuy[i].number);
 				if (!ttrr.coding(c.buy[i].number - bbuy[i].number, bs)) return false;
 				bbuy[i].number = c.buy[i].number;
 				i++;

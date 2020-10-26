@@ -680,8 +680,8 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 	show_message(nnds.calc_size1(research1));
 	show_message(nnds.calc_size1(research2));*/
 
-	_cdf ee;
-	ee.calc(research1, 64, -10000000, 10000000);
+	_cdf3 ee;
+	ee.calc(research1, 0, qwe);
 	ee.to_clipboard();
 
 /*	_sable_statistics sasa;
