@@ -1386,8 +1386,9 @@ bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 {
 	bs.pushn(c.buy[roffer - 1].value, 16);
 
-	static const _cdf2 nnd({ {1, 1, 2, 0}, {3, 0, 3, 5}, {4, 0, 3, 7}, {5, 0, 3, 1}, {6, 0, 3, 6}, {7, 1, 3, 3},
-		{9, 2, 4, 10}, {13, 10, 4, 2}, {1000, 0, 0, 0} }); // 1...210
+	static const _cdf nnd({ {1, 0, 29}, {2, 0, 23}, {3, 0, 8}, {4, 0, 14}, {5, 0, 9}, {6, 0, 12}, {7, 0, 31},
+		{8, 0, 19}, {9, 0, 21}, {10, 0, 18}, {11, 0, 59}, {12, 0, 42}, {13, 0, 171}, {14, 1, 139}, {16, 0, 203},
+		{17, 0, 218}, {18, 1, 235}, {20, 3, 122}, {28, 4, 410}, {44, 10, 282}, {1001, 0, 1} }); // 1...210
 
 	for (i64 i = roffer - 1; i >= 0; i--)
 	{
@@ -1396,9 +1397,10 @@ bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 //			research1.push(c.buy[i].value - c.buy[i + 1].value);
 			if (!f_delta.coding(c.buy[i].value - c.buy[i + 1].value, bs)) return false;
 		}
-		research1.push(c.buy[i].number);
+//		research1.push(c.buy[i].number);
 		if (!f_number.coding(c.buy[i].number, bs)) return false;
 	}
+	research1.push(c.sale[0].value - c.buy[0].value);
 	if (!nnd.coding(c.sale[0].value - c.buy[0].value, bs)) return false;
 	for (i64 i = 0; i < roffer; i++)
 	{
@@ -1407,7 +1409,7 @@ bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 //			research1.push(c.sale[i].value - c.sale[i - 1].value);
 			if (!f_delta.coding(c.sale[i].value - c.sale[i - 1].value, bs)) return false;
 		}
-		research1.push(c.sale[i].number);
+//		research1.push(c.sale[i].number);
 		if (!f_number.coding(c.sale[i].number, bs)) return false;
 	}
 	base_buy.resize(roffer);
@@ -1471,7 +1473,7 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 {
 	i64 buy_izm = calc_delta_del_add(c.buy, base_buy);
 	i64 sale_izm = calc_delta_del_add(c.sale, base_sale);
-	if (std::max(abs(buy_izm), abs(sale_izm)) > 15) // ??? !!! влияет на частоты
+	if (std::max(abs(buy_izm), abs(sale_izm)) > 15) // ??? !!! влияет на частоты > 15
 	{
 		bs.push1(0);
 		return add0(c, bs);
@@ -1580,7 +1582,7 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 			bbuy.insert(bbuy.begin(), c.buy[0]);
 //			research1.push(c.buy[0].value - c.buy[1].value);
 			if (!f_delta.coding(c.buy[0].value - c.buy[1].value, bs)) return false;
-			research1.push(c.buy[0].number);
+//			research1.push(c.buy[0].number);
 			if (!f_number.coding(c.buy[0].number, bs)) return false;
 			n = 1;
 		}
@@ -1610,7 +1612,7 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 			bbuy[i] = c.buy[i];
 //			research1.push(c.buy[i].value - c.buy[i + 1].value);
 			if (!f_delta.coding(c.buy[i].value - c.buy[i + 1].value, bs)) return false;
-			research1.push(c.buy[i].number);
+//			research1.push(c.buy[i].number);
 			if (!f_number.coding(c.buy[i].number, bs)) return false;
 		}
 		n = buy_izm;
@@ -1650,7 +1652,7 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 				bbuy[n] = c.buy[n];
 //				research1.push(c.buy[n - 1].value - c.buy[n].value);
 				if (!f_delta.coding(c.buy[n - 1].value - c.buy[n].value, bs)) return false;
-				research1.push(c.buy[n].number);
+//				research1.push(c.buy[n].number);
 				if (!f_number.coding(c.buy[n].number, bs)) return false;
 			}
 			break;
@@ -1666,7 +1668,7 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 				bbuy.insert(bbuy.begin() + n, c.buy[n]);
 //				research1.push(c.buy[n - 1].value - c.buy[n].value);
 				if (!f_delta.coding(c.buy[n - 1].value - c.buy[n].value, bs)) return false;
-				research1.push(c.buy[n].number);
+//				research1.push(c.buy[n].number);
 				if (!f_number.coding(c.buy[n].number, bs)) return false;
 				n++;
 			}
@@ -4090,236 +4092,6 @@ i64 bit_for_value(u64 k) // k - количество чисел. (1) = 0, (2) = 
 	}
 	return n;
 }
-
-void _cdf2::to_clipboard()
-{
-	std::stringstream a;
-	for (auto& i : fr)
-	{
-		a << "{" << i.first << ", " << (int)i.bit << ", " << (int)i.bit0 << ", " << i.prefix << "}, ";
-	}
-	::to_clipboard(a.str().c_str());
-}
-
-_cdf2::_cdf2(const std::vector<_frequency>& a) : fr(a)
-{
-}
-
-double _cdf2::calc_size1(const _statistics& st)
-{
-	i64 s = 0;
-	for (auto i : st.data)
-	{
-		auto n = std::upper_bound(fr.begin(), fr.end(), i.value, [](i64 a, _frequency b) { return (a < b.first); });
-		if ((n == fr.begin()) || (n == fr.end())) continue; // return -1;
-		n--;
-		s += ((i64)n->bit0 + n->bit) * i.number;
-	}
-	return double(s)/st.number();
-}
-
-bool _cdf2::coding(i64 a, _bit_stream& bs) const noexcept
-{
-	auto n = std::upper_bound(fr.begin(), fr.end(), a, [](i64 a, _frequency b) { return (a < b.first); });
-	if ((n == fr.begin()) || (n == fr.end())) return false;
-	n--;
-	bs.pushn(n->prefix, n->bit0);
-	bs.pushn(a - n->first, n->bit);
-	return true;
-}
-
-void _cdf2::calc(const _statistics& st, i64 n, i64 min_value, i64 max_value)
-{
-	fr.resize(n + 1);
-
-	struct _uuu
-	{
-		_iinterval o;
-		i64 k = 0;
-		uchar bit = 0;
-		bool operator==(const _uuu& a) const noexcept { return (o == a.o); }
-	};
-
-	auto calc_poteri = [](const _uuu& left, const _uuu& right)
-	{
-		i64 r0 = right.k * right.bit + left.k * left.bit;
-		i64 r = (right.k + left.k) * bit_for_value(right.o.max - left.o.min);
-		return r - r0;
-	};
-	// uu - простые интервалы длиной 1, или с количеством 0
-	std::vector<_uuu> ee;
-	_uuu a;
-	i64 pr;
-	if (min_value < st.min_value())
-	{
-		pr = st.min_value();
-		a.o = { min_value, pr };
-		a.k = 0;
-		a.bit = bit_for_value(a.o.size());
-		ee.push_back(a);
-	}
-	else
-		pr = min_value;
-	for (auto i : st.data)
-	{
-		if (i.value > max_value) break;
-		if (i.value < min_value) continue;
-		if (i.value > pr) // нули
-		{
-			a.o = { pr, i.value };
-			a.k = 0;
-			a.bit = bit_for_value(a.o.size());
-			ee.push_back(a);
-		}
-		a.o = i.value;
-		a.k = i.number;
-		a.bit = 0;
-		ee.push_back(a);
-		pr = i.value + 1;
-	}
-	if (max_value >= pr)
-	{
-		a.o = { pr, max_value + 1 };
-		a.k = 0;
-		a.bit = bit_for_value(a.o.size());
-		ee.push_back(a);
-	}
-
-	struct _2uuu
-	{
-		_uuu u1, u2;
-		std::multimap<i64, _2uuu>::iterator left, right;
-	};
-
-	std::multimap<i64, _2uuu> xxx;
-	// подготовка стартовых пар интервалов отсортированных по минимум потерь при объединении
-	std::multimap<i64, _2uuu>::iterator pr_it;
-	for (i64 i = 1; i < (i64)ee.size(); i++)
-	{
-		_2uuu aa;
-		aa.u1 = ee[i - 1];
-		aa.u2 = ee[i];
-		std::multimap<i64, _2uuu>::iterator it = xxx.insert({ calc_poteri(aa.u1, aa.u2), aa });
-		if (i == 1)
-			it->second.left = it;
-		else
-		{
-			pr_it->second.right = it;
-			it->second.left = pr_it;
-		}
-		pr_it = it;
-	}
-	pr_it->second.right = pr_it;
-	// схлопывание пар интервалов, пока их не останется n-1
-	while ((i64)xxx.size() >= n)
-	{
-		auto a_ = xxx.begin(); // минимальная пара
-		auto aa = a_->second;
-		auto i = aa.left; // левая пара
-		auto j = aa.right; // правая пара
-		aa.u1.k += aa.u2.k;
-		aa.u1.o.max = aa.u2.o.max;
-		aa.u1.bit = bit_for_value(aa.u1.o.size());
-		_2uuu ii, jj;
-		bool ina = (i != a_);
-		bool jna = (j != a_);
-		if (ina)
-		{
-			ii = i->second;
-			ii.u2 = aa.u1;
-			bool gran = (ii.left == i);
-			xxx.erase(i);
-			i = xxx.insert({ calc_poteri(ii.u1, ii.u2), ii });
-			if (gran)
-				i->second.left = i;
-			else
-				i->second.left->second.right = i;
-		}
-		if (jna)
-		{
-			jj = j->second;
-			jj.u1 = aa.u1;
-			bool gran = (jj.right == j);
-			xxx.erase(j);
-			j = xxx.insert({ calc_poteri(jj.u1, jj.u2), jj });
-			j->second.left = (ina) ? i : j;
-			if (gran)
-				j->second.right = j;
-			else
-				j->second.right->second.left = j;
-		}
-		if (ina)
-			i->second.right = (jna) ? j : i;
-		xxx.erase(a_);
-	}
-	// подкотовка отсортированных интервалов
-	std::map<i64, _uuu> xxx2;
-	for (auto& i : xxx)
-	{
-		xxx2[i.second.u1.o.min] = i.second.u1;
-		xxx2[i.second.u2.o.min] = i.second.u2;
-	}
-	// заполнение массива частот
-	auto ii = xxx2.begin();
-	for (i64 i = 0; i < n; i++)
-	{
-		fr[i].first = ii->second.o.min;
-		fr[i].bit = ii->second.bit;
-		fr[i].bit0 = 0;
-		fr[i].prefix = 0;
-		++ii;
-	}
-	fr[n].first = max_value + 1;
-	fr[n].bit = 0;
-	fr[n].bit0 = 0;
-	fr[n].prefix = 0;
-	// коррекция - дозаполнение маленьких интервалов, за счет больших соседей
-	for (i64 i = 0; i < n - 1; i++)
-	{
-		i64 delta = (1ll << fr[i].bit) - (fr[i + 1].first - fr[i].first);
-		if (delta == 0) continue;
-		if (i > 0)
-			if (fr[i].bit < fr[i - 1].bit)
-			{
-				fr[i].first -= delta;
-				fr[i - 1].bit = bit_for_value(fr[i].first - fr[i - 1].first); // вдруг уменьшилось??
-				continue;
-			}
-		if (fr[i].bit <= fr[i + 1].bit)
-		{
-			fr[i + 1].first += delta;
-			fr[i + 1].bit = bit_for_value(fr[i + 2].first - fr[i + 1].first); // вдруг уменьшилось??
-			continue;
-		}
-	}
-	// вычисление префикса
-	std::multimap<i64, std::vector<i64>> xxx3;
-	for (i64 i = 0; i < n; i++) xxx3.insert({ st.number(fr[i].first, fr[i + 1].first), {i} });
-	while (xxx3.size() > 1)
-	{
-		auto p1 = xxx3.begin();
-		for (auto i : p1->second)
-		{
-			fr[i].prefix <<= 1;
-			fr[i].bit0++;
-		}
-		i64 s = p1->first;
-		std::vector<i64> v = p1->second;
-		xxx3.erase(p1);
-		p1 = xxx3.begin();
-		for (auto i : p1->second)
-		{
-			fr[i].prefix = (fr[i].prefix << 1) + 1;
-			fr[i].bit0++;
-		}
-		s += p1->first;
-		v.insert(v.end(), p1->second.begin(), p1->second.end());
-		xxx3.erase(p1);
-		xxx3.insert({ s, v });
-	}
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void _cdf3::to_clipboard()
 {
