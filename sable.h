@@ -135,6 +135,7 @@ private:
 
 	bool add0(const _prices2& c, _bit_stream& bs); // не дельта!
 	bool add1(const _prices2& c, _bit_stream& bs); // дельта
+	bool add12(_bit_stream& bs, const _one_stat* v1, std::vector<_one_stat>& v0, i64 izm);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
