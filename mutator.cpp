@@ -666,7 +666,6 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-//	unpak_cen();
 	show_message(test_ss4());
 
 	_g_graph* g = new _g_graph;
@@ -681,9 +680,9 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 	show_message(nnds.calc_size1(research1));
 	show_message(nnds.calc_size1(research2));*/
 
-/*	_cdf3 ee;
-	ee.calc(research1, 0, 4);
-	ee.to_clipboard();*/
+	_cdf3 ee;
+	ee.calc(research1, -15, 15);
+	ee.to_clipboard();
 
 /*	_sable_statistics sasa;
 	sasa.calc();

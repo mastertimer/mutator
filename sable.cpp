@@ -1452,7 +1452,6 @@ i64 calc_series_number(const _one_stat* c, const std::vector<_one_stat>& v, i64 
 bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 {
 	i64 buy_izm = calc_delta_del_add(c.buy, base_buy);
-//	research1.push(buy_izm);
 	i64 sale_izm = calc_delta_del_add(c.sale, base_sale);
 	if (std::max(abs(buy_izm), abs(sale_izm)) > 15) // ??? !!! влияет на частоты
 	{
@@ -1463,10 +1462,9 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 	std::vector<_one_stat> bbuy = base_buy;
 	std::vector<_one_stat> bsale = base_sale;
 
-	static const _cdf2 nnds({ {-15, 2, 9, 212}, {-11, 2, 8, 52}, {-7, 0, 9, 468}, {-6, 0, 8, 84}, {-5, 0, 7, 20},
-		{-4, 0, 6, 16}, {-3, 0, 5, 0}, {-2, 0, 4, 8}, {-1, 0, 3, 2}, {0, 0, 1, 1}, {1, 0, 3, 6}, {2, 0, 4, 12},
-		{3, 0, 5, 4}, {4, 0, 7, 116}, {5, 0, 7, 112}, {6, 1, 7, 48}, {8, 3, 8, 180}, {16, 0, 0, 0} }); // -20...20
-	
+	static const _cdf3 nnds(-15, { 949, 444, 128, 132, 252, 197, 96, 120, 92, 85, 40, 44, 45, 22, 10, 7, 9, 30, 61, 52,
+		48, 101, 100, 88, 245, 133, 196, 192, 309, 316, 693}); // -20...20
+
 	static const _cdf2 nnse0({ {1, 0, 3, 6}, {2, 1, 2, 0}, {4, 1, 4, 2}, {6, 4, 4, 10}, {20, 0, 1, 1}, {21, 0, 0, 0} });
 
 	static const _cdf2 nnse20[21] = { _cdf2() , // исправить
@@ -1493,10 +1491,10 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 	};
 
 	static const _cdf3 nnsegg[21] = { _cdf3() , // исправить
-		_cdf3(),
-		_cdf3(),
-		_cdf3(),
-		_cdf3(),
+		_cdf3(0, {29, 7, 4, 9, 21, 6}), // !!
+		_cdf3(0, {29, 7, 4, 9, 21, 6}), // !!
+		_cdf3(0, {29, 7, 4, 9, 21, 6}), // !!
+		_cdf3(0, {29, 7, 4, 9, 21, 6}), // !!
 		_cdf3(0, {29, 7, 4, 9, 21, 6}),
 		_cdf3(0, {21, 7, 6, 29, 25, 17, 4}),
 		_cdf3(0, {23, 2, 11, 31, 25, 49, 33, 13}),
@@ -1512,7 +1510,7 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 		_cdf3(0, {4, 6, 11, 63, 55, 79, 239, 167, 199, 487, 359, 391, 815, 943, 263, 559, 687, 5}),
 		_cdf3(0, {7, 4, 10, 62, 54, 78, 174, 166, 134, 358, 454, 326, 878, 998, 742, 622, 750, 1006, 5}),
 		_cdf3(0, {5, 11, 63, 55, 111, 71, 167, 399, 359, 847, 591, 999, 743, 1487, 1743, 1231, 1999, 527, 783, 2}),
-		_cdf3()
+		_cdf3(0, {5, 4, 10, 62, 54, 78, 174, 134, 486, 294, 326, 750, 870, 678, 710, 966, 934, 614, 1006, 366, 7})
 	};
 
 	static const _cdf2 ttrr({ {-10000000, 24, 10, 222}, {-5000, 12, 7, 30}, {-1074, 9, 6, 11}, {-607, 8, 5, 14},
@@ -1524,7 +1522,9 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 
 	if (!nnds.coding(buy_izm, bs)) return false;
 	if (!nnds.coding(sale_izm, bs)) return false; // явно коррелирует с предыдущим
-	
+	research1.push(buy_izm);
+	research1.push(sale_izm);
+
 	i64 n = 0;
 	i64 tip = buy_izm;
 	if (buy_izm == 0)
@@ -1547,11 +1547,7 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 		bbuy.erase(bbuy.begin(), bbuy.begin() - buy_izm);
 		i64 n2 = calc_series_value(c.buy, bbuy, 0);
 		//		if (bbuy.size() == 4) research1.push(n2);
-		if (!nnsegg[std::min((i64)bbuy.size(), roffer)].coding(n2, bs))
-		{
-			research1.push(n2);
-//			return false;
-		}
+		if (!nnsegg[std::min((i64)bbuy.size(), roffer)].coding(n2, bs)) return false;
 		if (n2 == 0)
 		{
 			bbuy.insert(bbuy.begin(), c.buy[0]);
@@ -1657,18 +1653,6 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 			n = n2;
 		}
 		tip = 0;
-	}
-
-	if (sale_izm < 0) bsale.erase(bsale.begin(), bsale.begin() - sale_izm);
-	if (sale_izm > 0)
-	{
-		bsale.insert(bsale.begin(), sale_izm, {});
-		for (i64 i = sale_izm - 1; i >= 0; i--) // кодируется как c add0
-		{
-			bsale[i] = c.sale[i];
-			if (!f_delta.coding(c.sale[i + 1].value - c.sale[i].value, bs)) return false;
-			if (!f_number.coding(c.sale[i].number, bs)) return false;
-		}
 	}
 
 	base_buy = std::move(bbuy);
@@ -4320,7 +4304,7 @@ void _cdf3::calc(const _statistics& st, i64 min_value, i64 max_value)
 	for (auto& i : prefix) i = 1;
 	// вычисление префикса
 	std::multimap<i64, std::vector<i64>> xxx3;
-	for (i64 i = 0; i < n; i++) xxx3.insert({ st[i], {i} });
+	for (i64 i = 0; i < n; i++) xxx3.insert({ st[start + i], {i} });
 	while (xxx3.size() > 1)
 	{
 		auto p1 = xxx3.begin();
@@ -4558,18 +4542,6 @@ void _cdf::calc(const _statistics& st, i64 n, i64 min_value, i64 max_value)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void unpak_cen()
-{
-	_stack ee;
-	_prices pr;
-	for (i64 i = 0; i < ss.size; i++)
-	{
-		ss.read(i, pr);
-		ee << pr;
-	}
-	ee.save_to_file(L"e:\\baza_up.dat");
-}
 
 double test_ss4()
 {
