@@ -1362,16 +1362,24 @@ void _bit_stream::pushn1(u64 a)
 
 namespace
 {
-	_cdf2 f_number({ {1, 0, 7, 115}, {2, 3, 6, 19}, {10, 4, 5, 16}, {26, 5, 6, 31}, {50, 1, 5, 18}, {52, 4, 5, 23},
-		{68, 4, 5, 0}, {84, 4, 6, 21}, {100, 0, 6, 63}, {101, 5, 4, 12}, {132, 4, 6, 46}, {148, 5, 4, 4},
-		{180, 5, 5, 25}, {205, 3, 6, 53}, {213, 4, 5, 5}, {229, 5, 5, 30}, {250, 0, 6, 14},	{251, 5, 4, 8},
-		{283, 5, 5, 27}, {315, 5, 5, 11}, {347, 5, 5, 29}, {379, 6, 4, 6}, {443, 6, 5, 7}, {507, 7, 4, 1},
-		{630, 6, 5, 2}, {694, 7, 5, 3}, {822, 8, 4, 10}, {1078, 8, 5, 9}, {1334, 10, 5, 15}, {2358, 13, 5, 13},
-		{10550, 16, 8, 179}, {76086, 24, 8, 51}, {10000000, 0, 0, 0} }); // 1...670 000
+	_cdf f_number({ {1, 0, 127}, {2, 0, 157}, {3, 1, 134}, {5, 0, 171}, {6, 2, 140}, {10, 0, 199}, {11, 4, 97},
+		{25, 0, 89}, {26, 2, 385}, {30, 0, 239}, {31, 4, 209}, {40, 3, 245}, {48, 1, 442}, {50, 0, 62}, {51, 0, 86},
+		{52, 1, 243}, {54, 1, 205}, {56, 1, 219}, {58, 1, 136}, {60, 0, 193}, {61, 2, 159}, {65, 2, 221}, {69, 1, 459},
+		{71, 3, 113}, {79, 3, 124}, {87, 3, 135}, {95, 3, 487}, {100, 0, 16}, {101, 1, 315}, {103, 0, 184},
+		{104, 3, 163}, {111, 2, 236}, {115, 3, 248}, {120, 2, 303}, {124, 1, 139}, {126, 4, 73}, {141, 3, 343},
+		{148, 2, 253}, {152, 3, 88}, {160, 4, 110}, {176, 4, 116}, {192, 3, 228}, {200, 0, 79}, {201, 2, 198},
+		{205, 0, 257}, {206, 2, 250}, {210, 2, 223}, {214, 2, 249}, {218, 2, 181}, {222, 2, 269}, {225, 0, 204},
+		{226, 1, 443}, {228, 3, 84}, {236, 3, 155}, {244, 3, 169}, {250, 0, 18}, {251, 2, 131}, {255, 0, 421},
+		{256, 2, 451}, {260, 0, 179}, {261, 1, 943}, {263, 3, 197}, {271, 4, 74}, {282, 3, 145}, {290, 4, 229},
+		{300, 0, 200}, {301, 3, 227}, {309, 4, 109}, {325, 4, 106}, {339, 3, 164}, {347, 4, 102}, {361, 2, 314},
+		{365, 4, 147}, {378, 3, 471}, {386, 4, 235}, {402, 5, 167}, {420, 4, 211}, {436, 5, 247}, {460, 4, 133},
+		{476, 5, 118}, {508, 4, 172}, {524, 5, 151}, {556, 5, 189}, {584, 4, 293}, {600, 5, 92}, {632, 5, 251},
+		{664, 5, 233}, {696, 6, 68}, {760, 6, 185}, {816, 5, 359}, {848, 5, 331}, {880, 7, 78}, {1008, 7, 183},
+		{1136, 8, 104}, {1347, 7, 323}, {1475, 10, 85}, {2499, 12, 90}, {6595, 13, 397}, {14787, 15, 1711},
+		{47555, 24, 1199}, {10000001, 0, 1} }); // 1...670 000
 
-	static const _cdf2 f_delta({ {1, 0, 1, 1}, {2, 0, 2, 2}, {3, 0, 3, 4}, {4, 0, 4, 8}, {5, 0, 5, 16}, {6, 0, 6, 32},
-		{7, 0, 8, 192}, {8, 2, 7, 0}, {12, 10, 8, 64}, {1000, 0, 0, 0} }); // 1...345
-
+	static const _cdf f_delta({ {1, 0, 3}, {2, 0, 6}, {3, 0, 12}, {4, 0, 16}, {5, 0, 40}, {6, 0, 88}, {7, 0, 440},
+		{8, 3, 248}, {16, 10, 312}, {1001, 0, 1} }); // 1...345
 }
 
 bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
@@ -1383,13 +1391,23 @@ bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 
 	for (i64 i = roffer - 1; i >= 0; i--)
 	{
-		if (i != roffer - 1) if (!f_delta.coding(c.buy[i].value - c.buy[i + 1].value, bs)) return false;
+		if (i != roffer - 1)
+		{
+//			research1.push(c.buy[i].value - c.buy[i + 1].value);
+			if (!f_delta.coding(c.buy[i].value - c.buy[i + 1].value, bs)) return false;
+		}
+		research1.push(c.buy[i].number);
 		if (!f_number.coding(c.buy[i].number, bs)) return false;
 	}
 	if (!nnd.coding(c.sale[0].value - c.buy[0].value, bs)) return false;
 	for (i64 i = 0; i < roffer; i++)
 	{
-		if (i != 0) if (!f_delta.coding(c.sale[i].value - c.sale[i - 1].value, bs)) return false;
+		if (i != 0)
+		{
+//			research1.push(c.sale[i].value - c.sale[i - 1].value);
+			if (!f_delta.coding(c.sale[i].value - c.sale[i - 1].value, bs)) return false;
+		}
+		research1.push(c.sale[i].number);
 		if (!f_number.coding(c.sale[i].number, bs)) return false;
 	}
 	base_buy.resize(roffer);
@@ -1513,16 +1531,21 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 		_cdf3(0, {5, 4, 10, 62, 54, 78, 174, 134, 486, 294, 326, 750, 870, 678, 710, 966, 934, 614, 1006, 366, 7}) // 20
 	};
 
-	static const _cdf ttrr({ {-10000000, 24, 1189}, {-5299, 12, 293}, {-1270, 9, 94}, {-815, 8, 69}, {-563, 6, 245},
-		{-499, 7, 109}, {-371, 7, 34}, {-260, 0, 141}, {-259, 5, 90}, {-232, 4, 229}, {-216, 4, 205}, {-200, 0, 114},
-		{-199, 5, 116}, {-167, 5, 76}, {-141, 4, 246}, {-125, 0, 221}, {-124, 5, 126}, {-100, 0, 27}, {-99, 4, 110},
-		{-83, 3, 311}, {-75, 0, 250}, {-74, 4, 106}, {-58, 3, 247}, {-50, 0, 215}, {-49, 5, 70}, {-30, 0, 74},
-		{-29, 2, 933}, {-25, 0, 31}, {-24, 4, 113}, {-9, 3, 81}, {-1, 1, 231}, {1, 0, 73}, {2, 2, 89}, {6, 2, 385},
-		{10, 0, 509}, {11, 4, 151}, {25, 0, 8}, {26, 2, 257}, {30, 0, 124}, {31, 5, 84}, {50, 1, 97}, {52, 3, 108},
-		{60, 4, 102}, {75, 0, 193}, {76, 5, 71}, {100, 0, 19}, {101, 5, 78}, {125, 0, 189}, {126, 5, 86}, {158, 5, 157},
-		{184, 4, 439}, {200, 0, 82}, {201, 5, 85}, {233, 5, 68}, {260, 0, 181}, {261, 5, 182}, {293, 6, 92},
-		{357, 7, 121}, {474, 6, 100}, {538, 7, 167}, {666, 8, 105}, {922, 8, 186}, {1178, 10, 381}, {2202, 24, 1701},
-		{10000001, 0, 1} });
+	static const _cdf ttrr({ {-10000000, 24, 2141}, {-5299, 12, 457}, {-1253, 8, 325}, {-997, 7, 469}, {-869, 7, 231},
+		{-741, 7, 246}, {-623, 6, 188}, {-559, 6, 141}, {-495, 6, 230}, {-452, 5, 393}, {-420, 6, 148}, {-383, 5, 164},
+		{-351, 6, 173}, {-300, 4, 391}, {-284, 5, 130}, {-260, 0, 229}, {-259, 4, 241}, {-243, 3, 268}, {-235, 4, 174},
+		{-224, 3, 321}, {-216, 4, 181}, {-200, 0, 74}, {-199, 5, 238}, {-178, 4, 204}, {-162, 4, 217}, {-146, 4, 313},
+		{-133, 3, 341}, {-125, 0, 237}, {-124, 3, 186}, {-116, 4, 129}, {-101, 0, 1629}, {-100, 0, 27}, {-99, 3, 161},
+		{-91, 2, 310}, {-87, 4, 205}, {-75, 0, 166}, {-74, 4, 245}, {-60, 2, 453}, {-56, 3, 189}, {-50, 0, 68},
+		{-49, 4, 183}, {-34, 2, 396}, {-30, 0, 90}, {-29, 2, 426}, {-25, 0, 31}, {-24, 3, 222}, {-16, 3, 477},
+		{-10, 0, 449}, {-9, 2, 329}, {-5, 2, 92}, {-1, 1, 215}, {1, 0, 81}, {2, 0, 252}, {3, 1, 441}, {5, 0, 210},
+		{6, 2, 510}, {10, 0, 423}, {11, 4, 247}, {25, 0, 8}, {26, 2, 438}, {30, 0, 98}, {31, 3, 381}, {39, 4, 234},
+		{50, 0, 70}, {51, 0, 861}, {52, 2, 146}, {56, 2, 228}, {60, 1, 212}, {62, 4, 233}, {75, 0, 225}, {76, 4, 172},
+		{85, 3, 250}, {93, 3, 142}, {100, 0, 19}, {101, 0, 638}, {102, 4, 158}, {117, 3, 236}, {125, 0, 157},
+		{126, 3, 265}, {134, 4, 509}, {150, 5, 86}, {182, 5, 194}, {200, 0, 114}, {201, 4, 149}, {217, 4, 249},
+		{233, 5, 116}, {260, 0, 165}, {261, 5, 206}, {293, 6, 151}, {348, 5, 295}, {380, 6, 177}, {444, 6, 153},
+		{500, 0, 894}, {501, 6, 190}, {565, 7, 133}, {680, 6, 298}, {744, 7, 199}, {872, 8, 169}, {1128, 10, 263},
+		{2152, 24, 3165}, {10000001, 0, 1} });
 
 	if (!nnds.coding(buy_izm, bs)) return false;
 	if (!nnds.coding(sale_izm, bs)) return false; // явно коррелирует с предыдущим
@@ -1540,6 +1563,7 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 			if (!nnse200[n - i].coding(ser, bs)) return false;
 			i += ser;
 			if (i >= n) break;
+//			research1.push(c.buy[i].number - bbuy[i].number);
 			if (!ttrr.coding(c.buy[i].number - bbuy[i].number, bs)) return false;
 			bbuy[i].number = c.buy[i].number;
 			i++;
@@ -1549,12 +1573,14 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 	{
 		bbuy.erase(bbuy.begin(), bbuy.begin() - buy_izm);
 		i64 n2 = calc_series_value(c.buy, bbuy, 0);
-		if (std::min((i64)bbuy.size(), roffer) == qwe) research1.push(n2);
+//		if (std::min((i64)bbuy.size(), roffer) == qwe) research1.push(n2);
 		if (!nnsegg[std::min((i64)bbuy.size(), roffer)].coding(n2, bs)) return false;
 		if (n2 == 0)
 		{
 			bbuy.insert(bbuy.begin(), c.buy[0]);
+//			research1.push(c.buy[0].value - c.buy[1].value);
 			if (!f_delta.coding(c.buy[0].value - c.buy[1].value, bs)) return false;
+			research1.push(c.buy[0].number);
 			if (!f_number.coding(c.buy[0].number, bs)) return false;
 			n = 1;
 		}
@@ -1568,6 +1594,7 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 				if (!nnse200[n - i].coding(ser, bs)) return false;
 				i += ser;
 				if (i >= n) break;
+//				research1.push(c.buy[i].number - bbuy[i].number);
 				if (!ttrr.coding(c.buy[i].number - bbuy[i].number, bs)) return false;
 				bbuy[i].number = c.buy[i].number;
 				i++;
@@ -1581,12 +1608,14 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 		for (i64 i = buy_izm - 1; i >= 0; i--) // кодируется как c add0
 		{
 			bbuy[i] = c.buy[i];
+//			research1.push(c.buy[i].value - c.buy[i + 1].value);
 			if (!f_delta.coding(c.buy[i].value - c.buy[i + 1].value, bs)) return false;
+			research1.push(c.buy[i].number);
 			if (!f_number.coding(c.buy[i].number, bs)) return false;
 		}
 		n = buy_izm;
 		i64 n2 = calc_series_value(c.buy, bbuy, n);
-		if (std::min((i64)bbuy.size(), roffer) - n == qwe) research1.push(n2);
+//		if (std::min((i64)bbuy.size(), roffer) - n == qwe) research1.push(n2);
 		if (!nnsegg[std::min((i64)bbuy.size(), roffer) - n].coding(n2, bs)) return false;
 		if (n2 == 0)
 		{
@@ -1602,6 +1631,7 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 				if (!nnse200[n2 - i].coding(ser, bs)) return false;
 				i += ser;
 				if (i >= n2) break;
+//				research1.push(c.buy[i].number - bbuy[i].number);
 				if (!ttrr.coding(c.buy[i].number - bbuy[i].number, bs)) return false;
 				bbuy[i].number = c.buy[i].number;
 				i++;
@@ -1618,7 +1648,9 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 			for (; n < roffer; n++)
 			{
 				bbuy[n] = c.buy[n];
+//				research1.push(c.buy[n - 1].value - c.buy[n].value);
 				if (!f_delta.coding(c.buy[n - 1].value - c.buy[n].value, bs)) return false;
+				research1.push(c.buy[n].number);
 				if (!f_number.coding(c.buy[n].number, bs)) return false;
 			}
 			break;
@@ -1632,7 +1664,9 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 			else
 			{
 				bbuy.insert(bbuy.begin() + n, c.buy[n]);
+//				research1.push(c.buy[n - 1].value - c.buy[n].value);
 				if (!f_delta.coding(c.buy[n - 1].value - c.buy[n].value, bs)) return false;
+				research1.push(c.buy[n].number);
 				if (!f_number.coding(c.buy[n].number, bs)) return false;
 				n++;
 			}
@@ -1640,7 +1674,7 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 			continue;
 		}
 		i64 n2 = calc_series_value(c.buy, bbuy, n);
-		if (std::min((i64)bbuy.size(), roffer) - n == qwe) research1.push(n2);
+//		if (std::min((i64)bbuy.size(), roffer) - n == qwe) research1.push(n2);
 		if (!nnsegg[std::min((i64)bbuy.size(), roffer) - n].coding(n2, bs)) return false;
 		if (n2 > 0)
 		{
@@ -1652,6 +1686,7 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 				if (!nnse200[n2 - i].coding(ser, bs)) return false;
 				i += ser;
 				if (i >= n2) break;
+//				research1.push(c.buy[i].number - bbuy[i].number);
 				if (!ttrr.coding(c.buy[i].number - bbuy[i].number, bs)) return false;
 				bbuy[i].number = c.buy[i].number;
 				i++;
