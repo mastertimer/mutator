@@ -671,51 +671,10 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 /*	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go* ()->set_t_trans(g, flag_sub_go + flag_part);
 	g->add(_statistics(research1).to_matrix(), "delta1", true);*/
-//	g->add(_statistics(research2).to_matrix(), "delta2", true);
-
-/*	_cdf2 nnds({ {-15, 2, 9, 212}, {-11, 2, 8, 52}, {-7, 0, 9, 468}, {-6, 0, 8, 84}, {-5, 0, 7, 20},
-		{-4, 0, 6, 16}, {-3, 0, 5, 0}, {-2, 0, 4, 8}, {-1, 0, 3, 2}, {0, 0, 1, 1}, {1, 0, 3, 6}, {2, 0, 4, 12},
-		{3, 0, 5, 4}, {4, 0, 7, 116}, {5, 0, 7, 112}, {6, 1, 7, 48}, {8, 3, 8, 180}, {16, 0, 0, 0} }); // -20...20
-
-	show_message(nnds.calc_size1(research1));
-	show_message(nnds.calc_size1(research2));*/
 
 /*	_cdf ee;
 	ee.calc(research1, 100, -10000000, 10000000);
 	ee.to_clipboard();*/
-
-/*	_sable_statistics sasa;
-	sasa.calc();
-	_g_graph* g = new _g_graph;
-	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
-	g->add(sasa.delta_begin.to_matrix(-100, 100), "delta", true);*/
-
-/*	_sable_statistics sasa;
-	sasa.calc();
-	_cdf2 ee;
-	ee.calc(sasa.number, 32, 1, 10000000);
-	ee.to_clipboard();*/
-
-/*	show_message(bbb2.number(), bbb2[0]);
-
-	_g_graph* g = new _g_graph;
-	n_ko->operator _t_basic_go* ()->set_t_trans(g, flag_sub_go + flag_part);
-
-	g->add(_matrix(bbb2.data.size(), [&](i64 n) { return bbb2.data[n]; }), "граница", true);*/
-
-	//	show_message(s.arithmetic_size1() * 40.0 / 8.0);
-/*	_g_graph* g = new _g_graph;
-	n_ko->operator _t_basic_go *()->set_t_trans(g, flag_sub_go + flag_part);
-	std::vector<i64> k;
-	test_ss5(k);
-	g->add(_matrix(k.size(), [&k](i64 n) { return log(k[n] + 1.0); }), "граница", true); // 266
-
-	i64 ee = 5; 
-	i64 s = 0;
-	for (i64 i = 0; i < (i64)k.size(); i++) s += k[i];
-	i64 ss = 0;
-	for (i64 i = 1; i <= 7; i++) ss += k[i];
-	MessageBox(0, std::to_wstring(ss * 8.0 / s).c_str(), L"упс", MB_OK | MB_TASKMODAL); // ss*64.0/s*/
 
 /*	_nervous_oracle2 rr;
 	i64 nn = 0;

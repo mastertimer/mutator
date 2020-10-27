@@ -4083,43 +4083,6 @@ i64 _statistics::operator[](i64 n) const noexcept
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-double _up_statistics::arithmetic_size(_iinterval o)
-{
-	(*this)[o.min]; // настроить li
-	return st->arithmetic_size(li, std::lower_bound(st->data.begin(), st->data.end(), o.max,
-		[](_one_stat a, i64 b) { return (a.value < b); }));
-}
-
-i64 _up_statistics::operator[](i64 n) noexcept
-{
-	if (n == last_value) goto end1;
-	if (n == last_value + 1)
-	{
-		last_value = n;
-		if (li == st->data.end()) return 0;
-		if (li->value < n)
-		{
-			li++;
-			goto end1;
-		}
-		goto end2;
-	}
-	last_value = n;
-	li = std::lower_bound(st->data.begin(), st->data.end(), n, [](_one_stat a, i64 b) { return (a.value < b); });
-end1:
-	if (li == st->data.end()) return 0;
-end2:
-	return (li->value == n) ? li->number : 0;
-}
-
-i64 _up_statistics::number_from(i64 start) noexcept
-{
-	(*this)[start]; // настроить li
-	return st->number(li, st->data.end());
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 i64 bit_for_value(u64 k) // k - количество чисел. (1) = 0, (2) = 1, (4) = 2
 {
 	if (k == 0) return 0;
@@ -4440,60 +4403,6 @@ i64 _basic_statistics::operator[](i64 x) const noexcept
 	if (x - start >= (i64)data.size()) return 0;
 	if (x < start) return 0;
 	return data[x - start];
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void _sable_statistics::clear()
-{
-	delta.clear();
-	buy_number.clear();
-	sale_number.clear();
-	number.clear();
-	for (i64 i = 0; i < roffer; i++)
-	{
-		buyn_number[i].clear();
-		salen_number[i].clear();
-	}
-}
-
-void _sable_statistics::calc()
-{
-	clear();
-	_basic_statistics buy[roffer];
-	_basic_statistics sale[roffer];
-	_basic_statistics d;
-	_basic_statistics d_all;
-	_prices pr;
-	_prices prpr = cena_zero_;
-	for (i64 i = 0; i < ss.size; i++)
-	{
-		ss.read(i, pr);
-		if (pr == prpr) continue; // игнор одинаковых
-		for (i64 n = 0; n < roffer; n++)
-		{
-			buy[n].push(pr.pok[n].k);
-			sale[n].push(pr.pro[n].k);
-			if (n < roffer - 1)
-			{
-				d_all.push(pr.pro[n + 1].c - pr.pro[n].c);
-				d_all.push(pr.pok[n].c - pr.pok[n + 1].c);
-			}
-		}
-		d.push(pr.pro[0].c - pr.pok[0].c);
-		prpr = pr;
-	}
-	for (i64 n = 0; n < roffer; n++)
-	{
-		buyn_number[n] = buy[n];
-		salen_number[n] = sale[n];
-		buy_number += buyn_number[n];
-		sale_number += salen_number[n];
-	}
-	number = buy_number;
-	number += sale_number;
-	delta = d;
-	delta_all = d_all;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -118,7 +118,7 @@ private:
 	void otgruzka(int rez, int Vrez, int* deko); // вспомогательная Pak()
 };
 
-struct _sable_stat // статистика цен, сжатая  *** 23.9 байт *** 40.1 байт ***
+struct _sable_stat // статистика цен, сжатая  *** 23.9 байт *** 40.1 байт *** !! 21.9 !!
 {
 	i64 size = 0; // количество записей
 	_prices2 last_cc{}; // последние цены
@@ -468,38 +468,6 @@ struct _statistics // сжатая статистика
 
 	_matrix to_matrix(); // два столбца - x и y
 	_matrix to_matrix(i64 mi, i64 ma); // два столбца - x и y
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct _up_statistics // для удобства поиска количества по значению при обходе по возрастанию
-{
-	_statistics* st;
-
-	_up_statistics(_statistics& s) : st(&s), li(s.data.begin()), last_value(s.min_value()) {}
-	i64 operator[](i64 n) noexcept;
-	i64 number_from(i64 start = 0) noexcept; // общее количество (начиная со start)
-	double arithmetic_size(_iinterval o); // арифметический размер в битах
-
-private:
-	std::vector<_one_stat>::iterator li;
-	i64 last_value;
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct _sable_statistics
-{
-	_statistics buyn_number[roffer];  // статистика для каждого расстояния
-	_statistics salen_number[roffer]; // статистика для каждого расстояния
-	_statistics buy_number;           // общая статистика для покупки
-	_statistics sale_number;          // общая статистика для продажи
-	_statistics number;               // общая статистика
-	_statistics delta;                // разница цен на границе раздела
-	_statistics delta_all;            // вся разница цен в списках (кроме границы раздела)
-
-	void calc();                      // вычислить всю статистику
-	void clear();                     // очистить все данные
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
