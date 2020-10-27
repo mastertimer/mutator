@@ -668,9 +668,9 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	show_message(test_ss4());
 
-	_g_graph* g = new _g_graph;
+/*	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go* ()->set_t_trans(g, flag_sub_go + flag_part);
-	g->add(_statistics(research1).to_matrix(), "delta1", true);
+	g->add(_statistics(research1).to_matrix(), "delta1", true);*/
 //	g->add(_statistics(research2).to_matrix(), "delta2", true);
 
 /*	_cdf2 nnds({ {-15, 2, 9, 212}, {-11, 2, 8, 52}, {-7, 0, 9, 468}, {-6, 0, 8, 84}, {-5, 0, 7, 20},
