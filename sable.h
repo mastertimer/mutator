@@ -513,9 +513,10 @@ struct _cdf // структура частот для сжатия чисел с
 	};
 
 	std::vector<_frequency> fr; // распредление интервалов
+	_basic_statistics* bst = nullptr; // для переподбора
 
 	_cdf() = default;
-	_cdf(const std::vector<_frequency>& a);
+	_cdf(const std::vector<_frequency>& a, _basic_statistics* b = nullptr) : fr(a), bst(b) {}
 
 	void clear() { fr.clear(); }
 	bool coding(i64 a, _bit_stream& bs) const noexcept; // закодировать число в битовый поток (return false если ошибка)
@@ -530,9 +531,10 @@ struct _cdf3 // структура частот для сжатия малого
 {
 	i64 start = 0;
 	std::vector<u64> prefix; // нужный префикс
+	_basic_statistics* bst = nullptr; // для переподбора
 
 	_cdf3() = default;
-	_cdf3(i64 start_, const std::vector<u64> & a) : start(start_), prefix(a) {}
+	_cdf3(i64 start_, const std::vector<u64> & a, _basic_statistics *b = nullptr) : start(start_), prefix(a), bst(b) {}
 
 	void clear() { prefix.clear(); }
 	bool coding(i64 a, _bit_stream & bs) const noexcept; // закодировать число в битовый поток (return false если ошибка)
