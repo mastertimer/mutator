@@ -1745,6 +1745,7 @@ bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
 
 bool _sable_stat::add(const _prices2& c)
 {
+//	if (c == last_cc) return false; // с большой вероятностью данные устарелые
 	auto s_data = data.size();
 	_bit_stream bs(data);
 	if (size % step_pak_cc == 0)
@@ -1777,6 +1778,50 @@ bool _sable_stat::add(const _prices2& c)
 err:
 	data.resize(s_data);
 	return false;
+}
+
+void _sable_stat::read0()
+{
+
+}
+
+void _sable_stat::read1()
+{
+
+}
+
+bool _sable_stat::read(i64 n, _prices2& c)
+{
+	if ((n < 0) || (n >= size)) return false;
+	if (n == read_n)
+	{
+		c = read_cc;
+		return true;
+	}
+	if (n == size - 1)
+	{
+		c = last_cc;
+		return true;
+	}
+	if (read_n + 1 != n)
+	{
+		i64 k = n / step_pak_cc;
+		if ((read_n > n) || (read_n <= k * step_pak_cc - 1))
+		{
+			adata = udata[k];
+			read_n = k * step_pak_cc - 1;
+		}
+		bool r;
+		while (read_n < n) r = read(read_n + 1, c);
+		return r;
+	}
+	if (n % step_pak_cc == 0)
+		read0();
+	else
+		read1();
+	read_cc = c;
+	read_n = n;
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3922,6 +3967,13 @@ _prices2::_prices2(const _prices& a)
 	}
 }
 
+bool _prices2::operator==(const _prices2& p) const noexcept
+{
+	for (i64 i = 0; i < roffer; i++)
+		if ((buy[i] != p.buy[i]) || (sale[i] != p.sale[i])) return false;
+	return true;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
@@ -4360,12 +4412,9 @@ void _cdf::calc(const _statistics& st, i64 n, i64 min_value, i64 max_value)
 double test_ss4()
 {
 	_prices pr;
-	_prices prpr = cena_zero_;
 	for (i64 i = 0; i < ss.size; i++)
 	{
 		ss.read(i, pr);
-		if (pr == prpr) continue; // игнор одинаковых
-		prpr = pr;
 		sss.add(pr);
 	}
 	return (double)sss.data.size() / sss.size;
