@@ -1315,7 +1315,28 @@ _super_stat::_super_stat()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _bit_vector::push1(u64 a)
+void _bit_vector::resize(i64 v)
+{
+	i64 rp = (i64)data.size();
+	i64 r = v / 64;
+	bit = v - r * 64;
+	if (rp == r)
+	{
+		byte &= (1ui64 << bit) - 1;
+		return;
+	}
+	if (r > rp)
+	{
+		data.resize(r);
+		data[rp] = byte;
+		byte = 0;
+		return;
+	}
+	byte = data[r] & ((1ui64 << bit) - 1);
+	data.resize(r);
+}
+
+void _bit_vector::push1(u64 a) noexcept
 {
 	byte |= ((a & 1) << bit);
 	if (bit < 63) { bit++; return; }
@@ -1323,7 +1344,7 @@ void _bit_vector::push1(u64 a)
 	byte = bit = 0;
 }
 
-void _bit_vector::pushn(u64 a, uchar n)
+void _bit_vector::pushn(u64 a, uchar n) noexcept
 {
 	for (; n; n--)
 	{
@@ -1338,7 +1359,7 @@ void _bit_vector::pushn(u64 a, uchar n)
 	}
 }
 
-void _bit_vector::pushn1(u64 a)
+void _bit_vector::pushn1(u64 a) noexcept
 {
 	while (a > 1)
 	{
@@ -1353,50 +1374,10 @@ void _bit_vector::pushn1(u64 a)
 	}
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-_bit_stream::~_bit_stream()
+/*_bit_stream::~_bit_stream()
 {
 	pushn(0, (8 - bit) % 8); // заполнить последний байт
-}
-
-void _bit_stream::push1(uchar a)
-{
-	byte |= (a << bit++);
-	if (bit == 8)
-	{
-		data.push_back(byte);
-		byte = bit = 0;
-	}
-}
-
-void _bit_stream::pushn(u64 a, uchar n)
-{
-	for (; n; n--)
-	{
-		byte |= ((a & 1) << bit++);
-		if (bit == 8)
-		{
-			data.push_back(byte);
-			byte = bit = 0;
-		}
-		a >>= 1;
-	}
-}
-
-void _bit_stream::pushn1(u64 a)
-{
-	while (a > 1)
-	{
-		byte |= ((a & 1) << bit++);
-		if (bit == 8)
-		{
-			data.push_back(byte);
-			byte = bit = 0;
-		}
-		a >>= 1;
-	}
-}
+}*/
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1422,9 +1403,9 @@ namespace
 		{8, 3, 248}, {16, 10, 312}, {1001, 0, 1} }); // 1...345
 }
 
-bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
+bool _sable_stat::add0(const _prices2& c)
 {
-	bs.pushn(c.buy[roffer - 1].value, 16);
+	data.pushn(c.buy[roffer - 1].value, 16);
 
 	static const _cdf nnd({ {1, 0, 27}, {2, 0, 23}, {3, 0, 10}, {4, 0, 9}, {5, 0, 14}, {6, 0, 31}, {7, 1, 13},
 		{9, 1, 8}, {11, 1, 19}, {13, 2, 52}, {17, 4, 28}, {33, 10, 36}, {1001, 0, 1} }); // 1...210
@@ -1433,18 +1414,18 @@ bool _sable_stat::add0(const _prices2& c, _bit_stream& bs)
 	{
 		if (i != roffer - 1)
 		{
-			if (!f_delta.coding(c.buy[i].value - c.buy[i + 1].value, bs)) return false;
+			if (!f_delta.coding(c.buy[i].value - c.buy[i + 1].value, data)) return false;
 		}
-		if (!f_number.coding(c.buy[i].number, bs)) return false;
+		if (!f_number.coding(c.buy[i].number, data)) return false;
 	}
-	if (!nnd.coding(c.sale[0].value - c.buy[0].value, bs)) return false;
+	if (!nnd.coding(c.sale[0].value - c.buy[0].value, data)) return false;
 	for (i64 i = 0; i < roffer; i++)
 	{
 		if (i != 0)
 		{
-			if (!f_delta.coding(c.sale[i].value - c.sale[i - 1].value, bs)) return false;
+			if (!f_delta.coding(c.sale[i].value - c.sale[i - 1].value, data)) return false;
 		}
-		if (!f_number.coding(c.sale[i].number, bs)) return false;
+		if (!f_number.coding(c.sale[i].number, data)) return false;
 	}
 	base_buy.resize(roffer);
 	base_sale.resize(roffer);
@@ -1503,7 +1484,7 @@ i64 calc_series_number(const _one_stat* c, const std::vector<_one_stat>& v, i64 
 	return k - n;
 }
 
-bool _sable_stat::delta_number(_bit_stream& bs, i64 a, i64 b)
+bool _sable_stat::delta_number(i64 a, i64 b)
 {
 	static const _cdf ttrr1({ {-65, 4, 251}, {-51, 1, 141}, {-49, 4, 447}, {-38, 3, 443}, {-30, 0, 205}, {-29, 2, 476},
 		{-25, 0, 43}, {-24, 3, 153}, {-16, 3, 196}, {-10, 0, 228}, {-9, 2, 209}, {-5, 0, 147}, {-4, 1, 129},
@@ -1569,13 +1550,13 @@ bool _sable_stat::delta_number(_bit_stream& bs, i64 a, i64 b)
 		{260, 0, 214}, {261, 6, 233}, {325, 6, 136}, {389, 7, 120}, {500, 0, 925}, {501, 7, 139}, {629, 8, 122},
 		{885, 8, 182}, {1141, 10, 502}, {2165, 24, 3741}, {10000001, 0, 1} });
 
-	if (a <= 66) return ttrr1.coding(b - a, bs); // 25 %
-	if (a <= 200) return ttrr2.coding(b - a, bs); // 25 %
-	if (a <= 318) return ttrr3.coding(b - a, bs); // 25 %
-	return ttrr4.coding(b - a, bs); // 25 %
+	if (a <= 66) return ttrr1.coding(b - a, data); // 25 %
+	if (a <= 200) return ttrr2.coding(b - a, data); // 25 %
+	if (a <= 318) return ttrr3.coding(b - a, data); // 25 %
+	return ttrr4.coding(b - a, data); // 25 %
 }
 
-bool _sable_stat::add12(_bit_stream& bs, const _one_stat* v1, std::vector<_one_stat>& v0, i64 izm)
+bool _sable_stat::add12(const _one_stat* v1, std::vector<_one_stat>& v0, i64 izm)
 {
 	static const _cdf3 nnds(-12, { 2484, 4020, 2004, 688, 724, 304, 308, 148, 80, 32, 24, 10, 3, 14, 28, 36, 244, 240,
 		340, 692, 944, 1492, 3508, 7092, 5044}); // -20...20
@@ -1630,21 +1611,21 @@ bool _sable_stat::add12(_bit_stream& bs, const _one_stat* v1, std::vector<_one_s
 
 	i64 kk = (v1[1].value > v1[0].value) ? -1 : 1;
 
-	if (!nnds.coding(izm, bs)) return false;
+	if (!nnds.coding(izm, data)) return false;
 
 	i64 n = 0;
 	i64 tip = izm;
 	if (izm == 0)
 	{
 		n = calc_series_value(v1, v0, 0);
-		if (!nnse0.coding(n, bs)) return false;
+		if (!nnse0.coding(n, data)) return false;
 		for (i64 i = 0; i < n;)
 		{
 			i64 ser = calc_series_number(v1, v0, i, n);
-			if (!nnse200[n - i].coding(ser, bs)) return false;
+			if (!nnse200[n - i].coding(ser, data)) return false;
 			i += ser;
 			if (i >= n) break;
-			if (!delta_number(bs, v0[i].number, v1[i].number)) return false;
+			if (!delta_number(v0[i].number, v1[i].number)) return false;
 			v0[i].number = v1[i].number;
 			i++;
 		}
@@ -1653,12 +1634,12 @@ bool _sable_stat::add12(_bit_stream& bs, const _one_stat* v1, std::vector<_one_s
 	{
 		v0.erase(v0.begin(), v0.begin() - izm);
 		i64 n2 = calc_series_value(v1, v0, 0);
-		if (!nnsegg[std::min((i64)v0.size(), roffer)].coding(n2, bs)) return false;
+		if (!nnsegg[std::min((i64)v0.size(), roffer)].coding(n2, data)) return false;
 		if (n2 == 0)
 		{
 			v0.insert(v0.begin(), v1[0]);
-			if (!f_delta.coding((v1[0].value - v1[1].value) * kk, bs)) return false;
-			if (!f_number.coding(v1[0].number, bs)) return false;
+			if (!f_delta.coding((v1[0].value - v1[1].value) * kk, data)) return false;
+			if (!f_number.coding(v1[0].number, data)) return false;
 			n = 1;
 		}
 		else
@@ -1667,10 +1648,10 @@ bool _sable_stat::add12(_bit_stream& bs, const _one_stat* v1, std::vector<_one_s
 			for (i64 i = 0; i < n;)
 			{
 				i64 ser = calc_series_number(v1, v0, i, n);
-				if (!nnse200[n - i].coding(ser, bs)) return false;
+				if (!nnse200[n - i].coding(ser, data)) return false;
 				i += ser;
 				if (i >= n) break;
-				if (!delta_number(bs, v0[i].number, v1[i].number)) return false;
+				if (!delta_number(v0[i].number, v1[i].number)) return false;
 				v0[i].number = v1[i].number;
 				i++;
 			}
@@ -1683,12 +1664,12 @@ bool _sable_stat::add12(_bit_stream& bs, const _one_stat* v1, std::vector<_one_s
 		for (i64 i = izm - 1; i >= 0; i--) // кодируется как c add0
 		{
 			v0[i] = v1[i];
-			if (!f_delta.coding((v1[i].value - v1[i + 1].value) * kk, bs)) return false;
-			if (!f_number.coding(v1[i].number, bs)) return false;
+			if (!f_delta.coding((v1[i].value - v1[i + 1].value) * kk, data)) return false;
+			if (!f_number.coding(v1[i].number, data)) return false;
 		}
 		n = izm;
 		i64 n2 = calc_series_value(v1, v0, n);
-		if (!nnsegg[std::min((i64)v0.size(), roffer) - n].coding(n2, bs)) return false;
+		if (!nnsegg[std::min((i64)v0.size(), roffer) - n].coding(n2, data)) return false;
 		if (n2 == 0)
 		{
 			v0.erase(v0.begin() + n);
@@ -1699,10 +1680,10 @@ bool _sable_stat::add12(_bit_stream& bs, const _one_stat* v1, std::vector<_one_s
 			for (i64 i = n; i < n2;)
 			{
 				i64 ser = calc_series_number(v1, v0, i, n2);
-				if (!nnse200[n2 - i].coding(ser, bs)) return false;
+				if (!nnse200[n2 - i].coding(ser, data)) return false;
 				i += ser;
 				if (i >= n2) break;
-				if (!delta_number(bs, v0[i].number, v1[i].number)) return false;
+				if (!delta_number(v0[i].number, v1[i].number)) return false;
 				v0[i].number = v1[i].number;
 				i++;
 			}
@@ -1718,39 +1699,39 @@ bool _sable_stat::add12(_bit_stream& bs, const _one_stat* v1, std::vector<_one_s
 			for (; n < roffer; n++)
 			{
 				v0[n] = v1[n];
-				if (!f_delta.coding((v1[n - 1].value - v1[n].value) * kk, bs)) return false;
-				if (!f_number.coding(v1[n].number, bs)) return false;
+				if (!f_delta.coding((v1[n - 1].value - v1[n].value) * kk, data)) return false;
+				if (!f_number.coding(v1[n].number, data)) return false;
 			}
 			break;
 		}
 		if (tip == 0)
 		{
 			i64 buy_izm2 = calc_delta_del_add1(v1, v0, n);
-			bs.push1(buy_izm2 > 0);
+			data.push1(buy_izm2 > 0);
 			if (buy_izm2 < 0)
 				v0.erase(v0.begin() + n);
 			else
 			{
 				v0.insert(v0.begin() + n, v1[n]);
-				if (!f_delta.coding((v1[n - 1].value - v1[n].value) * kk, bs)) return false;
-				if (!f_number.coding(v1[n].number, bs)) return false;
+				if (!f_delta.coding((v1[n - 1].value - v1[n].value) * kk, data)) return false;
+				if (!f_number.coding(v1[n].number, data)) return false;
 				n++;
 			}
 			tip = 1;
 			continue;
 		}
 		i64 n2 = calc_series_value(v1, v0, n);
-		if (!nnsegg[std::min((i64)v0.size(), roffer) - n].coding(n2, bs)) return false;
+		if (!nnsegg[std::min((i64)v0.size(), roffer) - n].coding(n2, data)) return false;
 		if (n2 > 0)
 		{
 			n2 += n;
 			for (i64 i = n; i < n2;)
 			{
 				i64 ser = calc_series_number(v1, v0, i, n2);
-				if (!nnse200[n2 - i].coding(ser, bs)) return false;
+				if (!nnse200[n2 - i].coding(ser, data)) return false;
 				i += ser;
 				if (i >= n2) break;
-				if (!delta_number(bs, v0[i].number, v1[i].number)) return false;
+				if (!delta_number(v0[i].number, v1[i].number)) return false;
 				v0[i].number = v1[i].number;
 				i++;
 			}
@@ -1761,22 +1742,22 @@ bool _sable_stat::add12(_bit_stream& bs, const _one_stat* v1, std::vector<_one_s
 	return true;
 }
 
-bool _sable_stat::add1(const _prices2& c, _bit_stream& bs)
+bool _sable_stat::add1(const _prices2& c)
 {
 	i64 buy_izm = calc_delta_del_add(c.buy, base_buy);
 	i64 sale_izm = calc_delta_del_add(c.sale, base_sale);
 	if (std::max(abs(buy_izm), abs(sale_izm)) > 12)
 	{
-		bs.push1(0);
-		return add0(c, bs);
+		data.push1(0);
+		return add0(c);
 	}
-	bs.push1(1);
+	data.push1(1);
 
 	std::vector<_one_stat> bbuy = base_buy;
 	std::vector<_one_stat> bsale = base_sale;
 
-	if (!add12(bs, c.buy, bbuy, buy_izm)) return false;
-	if (!add12(bs, c.sale, bsale, sale_izm)) return false;
+	if (!add12(c.buy, bbuy, buy_izm)) return false;
+	if (!add12(c.sale, bsale, sale_izm)) return false;
 
 	base_buy = std::move(bbuy);
 	base_sale = std::move(bsale);
@@ -1787,12 +1768,11 @@ bool _sable_stat::add(const _prices2& c)
 {
 //	if (c == last_cc) return false; // с большой вероятностью данные устарелые
 	auto s_data = data.size();
-	_bit_stream bs(data);
 	if (size % step_pak_cc == 0)
 	{
-		bs.pushn(c.time, 31);
+		data.pushn(c.time, 31);
 		udata.push_back(data.size());
-		if (!add0(c, bs))
+		if (!add0(c))
 		{
 			udata.pop_back();
 			goto err;
@@ -1802,14 +1782,14 @@ bool _sable_stat::add(const _prices2& c)
 	{
 		time_t dt = c.time - last_cc.time;
 		if (dt < 0) dt = 0; // время может идти назад!
-		if (dt == 1) bs.push1(0); else { bs.push1(1); bs.pushn(dt, 31); }
+		if (dt == 1) data.push1(0); else { data.push1(1); data.pushn(dt, 31); }
 		if (dt > old_dtime)
 		{
-			if (!add0(c, bs)) goto err;
+			if (!add0(c)) goto err;
 		}
 		else
 		{
-			if (!add1(c, bs)) goto err;
+			if (!add1(c)) goto err;
 		}
 	}
 	size++;
@@ -4197,7 +4177,7 @@ void _cdf3::to_clipboard()
 	::to_clipboard(a.str().c_str());
 }
 
-bool _cdf3::coding(i64 a, _bit_stream& bs) const noexcept
+bool _cdf3::coding(i64 a, _bit_vector& bs) const noexcept
 {
 	if ((a < start) || (a - start >= (i64)prefix.size())) return false;
 	if (bst) bst->push(a); // для переподбора
@@ -4255,7 +4235,7 @@ void _cdf::to_clipboard()
 	return double(s) / st.number();
 }*/
 
-bool _cdf::coding(i64 a, _bit_stream& bs) const noexcept
+bool _cdf::coding(i64 a, _bit_vector& bs) const noexcept
 {
 	auto n = std::upper_bound(fr.begin(), fr.end(), a, [](i64 a, _frequency b) { return (a < b.first); });
 	if ((n == fr.begin()) || (n == fr.end())) return false;
@@ -4457,7 +4437,7 @@ double test_ss4()
 		ss.read(i, pr);
 		sss.add(pr);
 	}
-	return (double)sss.data.size() / sss.size;
+	return (double)sss.data.size() / (sss.size * 8);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

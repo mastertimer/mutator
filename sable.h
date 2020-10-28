@@ -68,31 +68,16 @@ struct _prices2 // массив спроса предложения с удоб�
 
 struct _bit_vector // вектор с побитовой записью / чтением
 {
-	void push1(u64 a); // добавить 1 бит
-	void pushn(u64 a, uchar n); // добавить n бит
-	void pushn1(u64 a); // добавить ограниченное количество бит, 1?????
+	void push1(u64 a) noexcept; // добавить 1 бит
+	void pushn(u64 a, uchar n) noexcept; // добавить n бит
+	void pushn1(u64 a) noexcept; // добавить ограниченное количество бит, 1?????
+	i64 size() const noexcept { return (i64)data.size() * 64 + bit; }
+	void resize(i64 v);
 
 private:
 	std::vector<u64> data;
 	u64   byte = 0; // текущее число
 	uchar bit  = 0; // сколько бит заполнено в текущем числе
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct _bit_stream // для побитовой записи в вектор
-{
-	_bit_stream(std::vector<uchar>& da) : data(da) {}
-	~_bit_stream();
-
-	void push1(uchar a); // добавить 1 бит
-	void pushn(u64 a, uchar n); // добавить n бит
-	void pushn1(u64 a); // добавить ограниченное количество бит, 1?????
-
-private:
-	std::vector<uchar>& data;
-	uchar byte = 0; // текущий байт
-	uchar bit = 0;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -138,7 +123,7 @@ struct _sable_stat // статистика цен, сжатая  *** 23.9 бай
 {
 	i64 size = 0; // количество записей
 	_prices2 last_cc{}; // последние цены
-	std::vector<uchar> data;
+	_bit_vector data; // сжатые данные
 	static constexpr time_t old_dtime = 160; // разность времени, после которого цены считаются устаревшими
 
 	bool add(const _prices2& c); // добавить цены (сжать)
@@ -153,10 +138,10 @@ private:
 	i64 read_n = -666; // номер последних прочитанных цен
 	i64 adata = 0; // указатель на байт активный
 
-	bool add0(const _prices2& c, _bit_stream& bs); // не дельта!
-	bool add1(const _prices2& c, _bit_stream& bs); // дельта
-	bool add12(_bit_stream& bs, const _one_stat* v1, std::vector<_one_stat>& v0, i64 izm);
-	bool delta_number(_bit_stream& bs, i64 a, i64 d);
+	bool add0(const _prices2& c); // не дельта!
+	bool add1(const _prices2& c); // дельта
+	bool add12(const _one_stat* v1, std::vector<_one_stat>& v0, i64 izm);
+	bool delta_number(i64 a, i64 d);
 	void read0();
 	void read1();
 };
@@ -510,7 +495,7 @@ struct _cdf // структура частот для сжатия чисел с
 	_cdf(const std::vector<_frequency>& a, _basic_statistics* b = nullptr) : fr(a), bst(b) {}
 
 	void clear() { fr.clear(); }
-	bool coding(i64 a, _bit_stream& bs) const noexcept; // закодировать число в битовый поток (return false если ошибка)
+	bool coding(i64 a, _bit_vector& bs) const noexcept; // закодировать число в битовый поток (return false если ошибка)
 	void calc(const _statistics& st, i64 n, i64 min_value, i64 max_value); // n - количество интервалов
 	void to_clipboard(); // скопировать в буффер обмена
 //	double calc_size1(const _statistics& st); // сколько в битах (в среднем) будет весить одно число
@@ -528,8 +513,8 @@ struct _cdf3 // структура частот для сжатия малого
 	_cdf3(i64 start_, const std::vector<u64> & a, _basic_statistics *b = nullptr) : start(start_), prefix(a), bst(b) {}
 
 	void clear() { prefix.clear(); }
-	bool coding(i64 a, _bit_stream & bs) const noexcept; // закодировать число в битовый поток (return false если ошибка)
-	void calc(const _statistics & st, i64 min_value, i64 max_value); // построить дерево хаффмана
+	bool coding(i64 a, _bit_vector& bs) const noexcept; // закодировать число в битовый поток (return false если ошибка)
+	void calc(const _statistics& st, i64 min_value, i64 max_value); // построить дерево хаффмана
 	void to_clipboard(); // скопировать в буффер обмена
 };
 
