@@ -1315,16 +1315,6 @@ _super_stat::_super_stat()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool _bit_vector::set_position_read(i64 n)
-{
-	if ((n < 0) || (n >= size())) return false;
-	pos_read = (n + 63) >> 6;
-	if ((pos_read > 0) && (pos_read <= (i64)data.size())) byte_read = data[pos_read - 1];
-	bit_read = n & 63;
-	if (bit_read == 0) bit_read = 64;
-	return true;
-}
-
 void _bit_vector::resize(i64 v)
 {
 	i64 rp = (i64)data.size();
@@ -1376,46 +1366,39 @@ u64 _bit_vector::popn(uchar n) noexcept
 
 void _bit_vector::push1(u64 a) noexcept
 {
-	byte |= ((a & 1) << bit);
-	if (bit < 63) { bit++; return; }
-	data.push_back(byte);
-	byte = bit = 0;
+	a &= 1;
+	if (bit == 64)
+	{
+		data.push_back(a);
+		bit = 1;
+		return;
+	}
+	data.back() |= (a << bit++);
 }
 
 void _bit_vector::pushn(u64 a, uchar n) noexcept
 {
-	for (; n; n--)
+	a &= ((1ui64 << n) - 1);
+	if (bit == 64)
 	{
-		byte |= ((a & 1) << bit);
-		if (bit < 63) bit++;
-		else
-		{
-			data.push_back(byte);
-			byte = bit = 0;
-		}
-		a >>= 1;
+		if (n == 0) return;
+		data.push_back(a);
+		bit = n;
+		return;
 	}
+	data.back() |= (a << bit);
+	bit += n;
+	if (bit <= 64) return;
+	bit -= 64;
+	data.push_back(a >> (n - bit));
 }
 
 void _bit_vector::pushn1(u64 a) noexcept
 {
-	while (a > 1)
-	{
-		byte |= ((a & 1) << bit);
-		if (bit < 63) bit++;
-		else
-		{
-			data.push_back(byte);
-			byte = bit = 0;
-		}
-		a >>= 1;
-	}
+	uchar n = 0;
+	while ((a >> n) > 1) n++;
+	pushn(a, n);
 }
-
-/*_bit_stream::~_bit_stream()
-{
-	pushn(0, (8 - bit) % 8); // заполнить последний байт
-}*/
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
