@@ -1315,11 +1315,21 @@ _super_stat::_super_stat()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+bool _bit_vector::set_position_read(i64 n)
+{
+	if ((n < 0) || (n >= size())) return false;
+	pos_read = (n + 63) >> 6;
+	if ((pos_read > 0) && (pos_read <= (i64)data.size())) byte_read = data[pos_read - 1];
+	bit_read = n & 63;
+	if (bit_read == 0) bit_read = 64;
+	return true;
+}
+
 void _bit_vector::resize(i64 v)
 {
 	i64 rp = (i64)data.size();
-	i64 r = v / 64;
-	bit = v - r * 64;
+	i64 r = v >> 6;
+	bit = v & 63;
 	if (rp == r)
 	{
 		byte &= (1ui64 << bit) - 1;
@@ -1334,6 +1344,34 @@ void _bit_vector::resize(i64 v)
 	}
 	byte = data[r] & ((1ui64 << bit) - 1);
 	data.resize(r);
+}
+
+u64 _bit_vector::pop1() noexcept
+{
+	i64 l = (i64)data.size();
+	if (pos_read > l) return (byte >> bit_read++) & 1;
+	if (bit_read < 64) return (byte_read >> bit_read++) & 1;
+	pos_read++;
+	byte_read = (pos_read <= l) ? data[pos_read - 1] : byte;
+	bit_read = 1;
+	return byte_read & 1;
+}
+
+u64 _bit_vector::popn(uchar n) noexcept
+{
+	u64 res = 0;
+	for (uchar i = 0; i < n; i++)
+	{
+		u64 b;
+		if (bit_read < 64) b = (byte_read >> bit_read++);
+		else
+		{
+			b = byte_read = data[pos_read++];
+			bit_read = 1;
+		}
+		res |= ((b & 1) << i);
+	}
+	return res;
 }
 
 void _bit_vector::push1(u64 a) noexcept
@@ -1766,7 +1804,7 @@ bool _sable_stat::add1(const _prices2& c)
 
 bool _sable_stat::add(const _prices2& c)
 {
-//	if (c == last_cc) return false; // с большой вероятностью данные устарелые
+//	if (c == last_cc) return false; // с большой вероятностью данные устарели
 	auto s_data = data.size();
 	if (size % step_pak_cc == 0)
 	{
@@ -1828,10 +1866,10 @@ bool _sable_stat::read(i64 n, _prices2& c)
 		i64 k = n / step_pak_cc;
 		if ((read_n > n) || (read_n <= k * step_pak_cc - 1))
 		{
-			adata = udata[k];
+			data.set_position_read(udata[k]);
 			read_n = k * step_pak_cc - 1;
 		}
-		bool r;
+		bool r = false;
 		while (read_n < n) r = read(read_n + 1, c);
 		return r;
 	}

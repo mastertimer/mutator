@@ -667,11 +667,25 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	show_message(test_ss4());
+	std::vector<u64> ff;
+	_bit_vector ee;
+	for (i64 i = 0; i < 83; i++)
+	{
+		auto a = rnd(2);
+		ff.push_back(a);
+		ee.push1(a);
+	}
+	for (i64 i = 0; i < 83; i++)
+	{
+		if (ee.pop1() != ff[i]) show_message(i);
+	}
+
+
+/*	show_message(test_ss4());
 
 	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go* ()->set_t_trans(g, flag_sub_go + flag_part);
-	g->add(_statistics(research1).to_matrix(), "delta1", true);
+	g->add(_statistics(research1).to_matrix(), "delta1", true);*/
 
 /*	_cdf ee;
 	ee.calc(research1, 100, -10000000, 10000000);

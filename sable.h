@@ -70,14 +70,20 @@ struct _bit_vector // вектор с побитовой записью / чте
 {
 	void push1(u64 a) noexcept; // добавить 1 бит
 	void pushn(u64 a, uchar n) noexcept; // добавить n бит
-	void pushn1(u64 a) noexcept; // добавить ограниченное количество бит, 1?????
+	void pushn1(u64 a) noexcept; // добавить ограниченное количество бит, 1xxxxxxxx
+	u64 pop1() noexcept; // прочитать 1 бит
+	u64 popn(uchar n) noexcept; // прочитать n бит
 	i64 size() const noexcept { return (i64)data.size() * 64 + bit; }
 	void resize(i64 v);
+	bool set_position_read(i64 n); // установить позицию для чтения
 
 private:
 	std::vector<u64> data;
-	u64   byte = 0; // текущее число
-	uchar bit  = 0; // сколько бит заполнено в текущем числе
+	u64   byte = 0; // текущее число для записи
+	uchar bit  = 0; // сколько бит заполнено в текущем числе для записи
+	u64   byte_read = 0; // текущее читаемое число
+	uchar bit_read = 64; // позиция бита для чтения
+	i64   pos_read = 0; // следующее читаемое число
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -136,7 +142,6 @@ private:
 	static constexpr i64 step_pak_cc = 100; // период ключевых цен
 	_prices2 read_cc; // последние прочитанные цены
 	i64 read_n = -666; // номер последних прочитанных цен
-	i64 adata = 0; // указатель на байт активный
 
 	bool add0(const _prices2& c); // не дельта!
 	bool add1(const _prices2& c); // дельта
