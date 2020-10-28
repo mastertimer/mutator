@@ -1317,10 +1317,40 @@ _super_stat::_super_stat()
 
 void _bit_vector::push1(u64 a)
 {
-	byte |= (a << bit);
+	byte |= ((a & 1) << bit);
 	if (bit < 63) { bit++; return; }
 	data.push_back(byte);
 	byte = bit = 0;
+}
+
+void _bit_vector::pushn(u64 a, uchar n)
+{
+	for (; n; n--)
+	{
+		byte |= ((a & 1) << bit);
+		if (bit < 63) bit++;
+		else
+		{
+			data.push_back(byte);
+			byte = bit = 0;
+		}
+		a >>= 1;
+	}
+}
+
+void _bit_vector::pushn1(u64 a)
+{
+	while (a > 1)
+	{
+		byte |= ((a & 1) << bit);
+		if (bit < 63) bit++;
+		else
+		{
+			data.push_back(byte);
+			byte = bit = 0;
+		}
+		a >>= 1;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
