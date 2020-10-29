@@ -70,14 +70,14 @@ struct _bit_vector // вектор с побитовой записью / чте
 {
 	std::vector<u64> data;
 	uchar bit = 64; // сколько бит заполнено в последнем числе
-	uchar bit_read = 0; // позиция бита для чтения
+	i64 bit_read = 0; // позиция бита для чтения
 
 	void push1(u64 a) noexcept; // добавить 1 бит
 	void pushn(u64 a, uchar n) noexcept; // добавить n бит
 	void pushn1(u64 a) noexcept; // добавить ограниченное количество бит, 1xxxxxxxx
 	u64 pop1() noexcept; // прочитать 1 бит
 	u64 popn(uchar n) noexcept; // прочитать n бит
-	i64 size() const noexcept { return (i64)data.size() * 64 + bit; }
+	i64 size() const noexcept { return (i64)data.size() * 64 - (64 - bit); }
 	void resize(i64 v);
 };
 

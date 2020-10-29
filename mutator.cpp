@@ -665,19 +665,37 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 {
 }
 
+struct p8
+{
+	i64 pos;
+	u64 a;
+	uchar bi;
+};
+
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	std::vector<u64> ff;
+	std::vector<p8> ff;
 	_bit_vector ee;
-	for (i64 i = 0; i < 83; i++)
+	int eee = 0;
+	for (i64 i = 0; i < 883; i++)
 	{
-		auto a = rnd(2);
+		if (i == 34)
+		{
+			eee = 7;
+		}
+		p8 a;
+		a.pos = ee.size();
+		a.bi = rnd(65);
+		a.a = rnd() & (0xffffffffffffffff >> (64ui8 - a.bi));
 		ff.push_back(a);
-		ee.push1(a);
+		ee.pushn(a.a, a.bi);
 	}
-	for (i64 i = 0; i < 83; i++)
+	for (i64 i = 0; i < 883; i++)
 	{
-		if (ee.pop1() != ff[i]) show_message(i);
+		u64 a = ee.popn(ff[i].bi);
+		u64 b = ff[i].a;
+//		if (ee.popn(ff[i].bi) != ff[i].a) show_message(i);
+		if (a != b) show_message(i);
 	}
 
 

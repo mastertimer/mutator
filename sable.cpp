@@ -1318,50 +1318,33 @@ _super_stat::_super_stat()
 void _bit_vector::resize(i64 v)
 {
 	i64 rp = (i64)data.size();
-	i64 r = v >> 6;
+	i64 r = (v + 63) >> 6;
 	bit = v & 63;
+	if (bit == 0) bit = 64;
 	if (rp == r)
 	{
-		byte &= (1ui64 << bit) - 1;
+		if (r > 0) data.back() &= (1ui64 << bit) - 1;
 		return;
 	}
-	if (r > rp)
-	{
-		data.resize(r);
-		data[rp] = byte;
-		byte = 0;
-		return;
-	}
-	byte = data[r] & ((1ui64 << bit) - 1);
 	data.resize(r);
 }
 
 u64 _bit_vector::pop1() noexcept
 {
-	i64 l = (i64)data.size();
-	if (pos_read > l) return (byte >> bit_read++) & 1;
-	if (bit_read < 64) return (byte_read >> bit_read++) & 1;
-	pos_read++;
-	byte_read = (pos_read <= l) ? data[pos_read - 1] : byte;
-	bit_read = 1;
-	return byte_read & 1;
+	i64 r = bit_read >> 6;
+	uchar bi = bit_read & 63;
+	bit_read++;
+	return ((data[r] >> bi) & 1);
 }
 
 u64 _bit_vector::popn(uchar n) noexcept
 {
-	u64 res = 0;
-	for (uchar i = 0; i < n; i++)
-	{
-		u64 b;
-		if (bit_read < 64) b = (byte_read >> bit_read++);
-		else
-		{
-			b = byte_read = data[pos_read++];
-			bit_read = 1;
-		}
-		res |= ((b & 1) << i);
-	}
-	return res;
+	if (n == 0) return 0;
+	i64 r = bit_read >> 6;
+	uchar bi = bit_read & 63;
+	bit_read += n;
+	if (bi + n <= 64) return (data[r] >> bi) & ((1ui64 << n) - 1);
+	return ((data[r] >> bi) | (data[r + 1] << (64ui8 - bi))) & ((1ui64 << n) - 1);
 }
 
 void _bit_vector::push1(u64 a) noexcept
@@ -1378,7 +1361,7 @@ void _bit_vector::push1(u64 a) noexcept
 
 void _bit_vector::pushn(u64 a, uchar n) noexcept
 {
-	a &= ((1ui64 << n) - 1);
+	a &= ((1ui64 << (u64)n) - 1);
 	if (bit == 64)
 	{
 		if (n == 0) return;
@@ -1849,7 +1832,7 @@ bool _sable_stat::read(i64 n, _prices2& c)
 		i64 k = n / step_pak_cc;
 		if ((read_n > n) || (read_n <= k * step_pak_cc - 1))
 		{
-			data.set_position_read(udata[k]);
+			data.bit_read = udata[k];
 			read_n = k * step_pak_cc - 1;
 		}
 		bool r = false;
