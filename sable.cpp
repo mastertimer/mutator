@@ -1804,14 +1804,29 @@ err:
 	return false;
 }
 
-void _sable_stat::read0()
+bool _sable_stat::read0(_prices2& c)
 {
+	c.buy[roffer - 1].value = data.popn(16);
+	for (i64 i = roffer - 1; i >= 0; i--)
+	{
+		if (i != roffer - 1) c.buy[i].value = c.buy[i + 1].value + f_delta.decoding(data);
+//		if (!f_number.coding(c.buy[i].number, data)) return false;
+	}
 
+
+	base_buy_r.resize(roffer);
+	base_sale_r.resize(roffer);
+	for (i64 i = 0; i < roffer; i++)
+	{
+		base_buy_r[i] = c.buy[i];
+		base_sale_r[i] = c.sale[i];
+	}
+	return true;
 }
 
-void _sable_stat::read1()
+bool _sable_stat::read1(_prices2& c)
 {
-
+	return true;
 }
 
 bool _sable_stat::read(i64 n, _prices2& c)
@@ -1840,9 +1855,27 @@ bool _sable_stat::read(i64 n, _prices2& c)
 		return r;
 	}
 	if (n % step_pak_cc == 0)
-		read0();
+	{
+		c.time = data.popn(31);
+		if (!read0(c)) return false;
+	}
 	else
-		read1();
+	{
+		time_t dt;
+		if (data.pop1() == 0)
+			dt = 1;
+		else
+			dt = data.popn(31);
+		c.time = read_cc.time + dt;
+		if (dt > old_dtime)
+		{
+			if (!read0(c)) return false;
+		}
+		else
+		{
+			if (!read1(c)) return false;
+		}
+	}
 	read_cc = c;
 	read_n = n;
 	return true;
@@ -4248,6 +4281,11 @@ bool _cdf::coding(i64 a, _bit_vector& bs) const noexcept
 	bs.pushn1(n->prefix);
 	bs.pushn(a - n->first, n->bit);
 	return true;
+}
+
+i64 _cdf::decoding(_bit_vector& bs) const noexcept
+{
+	return 0;
 }
 
 void _cdf::calc(const _statistics& st, i64 n, i64 min_value, i64 max_value)

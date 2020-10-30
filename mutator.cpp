@@ -9,8 +9,9 @@
 рисование ломанной линии
 выделить нулевые оси у графика
 не подписывать сетку < 0, если все данные > 0 (и наоборот)
+у стека вернуть push/pop чтобы не путать со сдвигом
 !! сравнить скорости кодирования/декодирования старой и новой статистики
-!! протестировать на случайные ошибочные вставки
+!! протестировать на случайные add ошибочных цен
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -670,23 +671,16 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 {
 }
 
-struct p8
-{
-	i64 pos;
-	u64 a;
-	uchar bi;
-};
-
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-/*	show_message(test_ss4());
+	show_message(test_ss4());
 
 	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go* ()->set_t_trans(g, flag_sub_go + flag_part);
-	g->add(_statistics(research1).to_matrix(), "delta1", true);*/
+	g->add(_statistics(research1).to_matrix(), "delta1", true);
 
 /*	_cdf ee;
-	ee.calc(research1, 100, -10000000, 10000000);
+	ee.calc(research1, 8, 15000, 50000);
 	ee.to_clipboard();*/
 
 /*	_nervous_oracle2 rr;
