@@ -34,6 +34,8 @@ constexpr i64 bit8[256] = {
 
 #define bit16(x) (bit8[(x)&255]+bit8[((x)>>8)&255]) // количество 1-бит в 16-битном числе
 
+#define mask1(b) (((b) >= 64) ? 0xffffffffffffffff : ((1ui64 << (b)) - 1)) // маска u64 из b бит
+
 constexpr uint color_set[32] = { // набор разных цветов одной яркости
 	0xFF0080FD, 0xFFEF0000, 0xFF9E3BFF, 0xFF938700, 0xFF12AA00, 0xFFD34E0D, 0xFF7470DC, 0xFF4D9682,
 	0xFFC80FCE, 0xFFB06381,	0xFFE22653, 0xFF009D93, 0xFFC4439D, 0xFF258ECB, 0xFF659B00, 0xFF3F77FF,
