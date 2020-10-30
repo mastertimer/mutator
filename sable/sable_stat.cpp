@@ -469,7 +469,7 @@ bool _sable_stat::add12(const _one_stat* v1, std::vector<_one_stat>& v0, i64 izm
 		if (tip == 0)
 		{
 			i64 buy_izm2 = calc_delta_del_add1(v1, v0, n);
-			data.push1(buy_izm2 > 0);
+			data.push1(buy_izm2 < 0);
 			if (buy_izm2 < 0)
 				v0.erase(v0.begin() + n);
 			else
@@ -660,6 +660,50 @@ bool _sable_stat::read12(_one_stat* v1, std::vector<_one_stat>& v0)
 			n = n2;
 			tip = 0;
 		}
+	}
+	while (n < roffer)
+	{
+		if (n >= (i64)v0.size())
+		{
+			v0.resize(roffer);
+			for (; n < roffer; n++)
+			{
+				v1[n].value = v1[n - 1].value - kk * f_delta.decoding(data);
+				v1[n].number = f_number.decoding(data);
+				v0[n] = v1[n];
+			}
+			break;
+		}
+		if (tip == 0)
+		{
+			if (data.pop1())
+				v0.erase(v0.begin() + n);
+			else
+			{
+				v1[n].value = v1[n - 1].value - kk * f_delta.decoding(data);
+				v1[n].number = f_number.decoding(data);
+				v0.insert(v0.begin() + n, v1[n]);
+				n++;
+			}
+			tip = 1;
+			continue;
+		}
+		i64 n2 = nnsegg[std::min((i64)v0.size(), roffer) - n].decoding(data);
+		if (n2 > 0)
+		{
+			n2 += n;
+			for (i64 i = n; i < n2;)
+			{
+				i64 ser = nnse200[n2 - i].decoding(data);
+				i += ser;
+				if (i >= n2) break;
+				v1[i].number = decoding_delta_number(v0[i].number);
+				v0[i].number = v1[i].number;
+				i++;
+			}
+			n = n2;
+		}
+		tip = 0;
 	}
 	return true;
 }
