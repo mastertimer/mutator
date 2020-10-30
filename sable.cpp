@@ -1405,15 +1405,18 @@ namespace
 
 	static const _cdf f_delta({ {1, 0, 3}, {2, 0, 6}, {3, 0, 12}, {4, 0, 16}, {5, 0, 40}, {6, 0, 88}, {7, 0, 440},
 		{8, 3, 248}, {16, 10, 312}, {1001, 0, 1} }); // 1...345
+
+	static const _cdf nnd({ {1, 0, 27}, {2, 0, 23}, {3, 0, 10}, {4, 0, 9}, {5, 0, 14}, {6, 0, 31}, {7, 1, 13},
+		{9, 1, 8}, {11, 1, 19}, {13, 2, 52}, {17, 4, 28}, {33, 10, 36}, {1001, 0, 1} }); // 1...210
+
+	static const _cdf3 nnds(-12, { 2484, 4020, 2004, 688, 724, 304, 308, 148, 80, 32, 24, 10, 3, 14, 28, 36, 244, 240,
+		340, 692, 944, 1492, 3508, 7092, 5044 }); // -20...20
+
 }
 
 bool _sable_stat::add0(const _prices2& c)
 {
 	data.pushn(c.buy[roffer - 1].value, 16);
-
-	static const _cdf nnd({ {1, 0, 27}, {2, 0, 23}, {3, 0, 10}, {4, 0, 9}, {5, 0, 14}, {6, 0, 31}, {7, 1, 13},
-		{9, 1, 8}, {11, 1, 19}, {13, 2, 52}, {17, 4, 28}, {33, 10, 36}, {1001, 0, 1} }); // 1...210
-
 	for (i64 i = roffer - 1; i >= 0; i--)
 	{
 		if (i != roffer - 1)
@@ -1562,9 +1565,6 @@ bool _sable_stat::delta_number(i64 a, i64 b)
 
 bool _sable_stat::add12(const _one_stat* v1, std::vector<_one_stat>& v0, i64 izm)
 {
-	static const _cdf3 nnds(-12, { 2484, 4020, 2004, 688, 724, 304, 308, 148, 80, 32, 24, 10, 3, 14, 28, 36, 244, 240,
-		340, 692, 944, 1492, 3508, 7092, 5044}); // -20...20
-
 	static const _cdf3 nnse0(1, {14, 12, 26, 16, 34, 114, 104, 146, 152, 200, 136, 338, 440, 472, 344, 312, 376, 504, 466, 3});
 
 	static const _cdf3 nnse200[21] = { _cdf3() , // исправить
@@ -1810,10 +1810,14 @@ bool _sable_stat::read0(_prices2& c)
 	for (i64 i = roffer - 1; i >= 0; i--)
 	{
 		if (i != roffer - 1) c.buy[i].value = c.buy[i + 1].value + f_delta.decoding(data);
-//		if (!f_number.coding(c.buy[i].number, data)) return false;
+		c.buy[i].number = f_number.decoding(data);
 	}
-
-
+	c.sale[0].value = c.buy[0].value + nnd.decoding(data);
+	for (i64 i = 0; i < roffer; i++)
+	{
+		if (i != 0) c.sale[i].value = c.sale[i - 1].value + f_delta.decoding(data);
+		c.sale[i].number = f_number.decoding(data);
+	}
 	base_buy_r.resize(roffer);
 	base_sale_r.resize(roffer);
 	for (i64 i = 0; i < roffer; i++)
@@ -1824,8 +1828,17 @@ bool _sable_stat::read0(_prices2& c)
 	return true;
 }
 
+bool _sable_stat::read12(_one_stat* v1, std::vector<_one_stat>& v0)
+{
+	i64 izm = nnds.decoding(data);
+	return true;
+}
+
 bool _sable_stat::read1(_prices2& c)
 {
+	if (data.pop1() == 0) return read0(c);
+	if (!read12(c.buy, base_buy_r)) return false;
+	if (!read12(c.sale, base_sale_r)) return false;
 	return true;
 }
 
@@ -4205,6 +4218,23 @@ i64 bit_for_value(u64 k) // k - количество чисел. (1) = 0, (2) = 
 	return n;
 }
 
+_cdf3::_cdf3(i64 start_, const std::vector<u64>& a, _basic_statistics* b) : start(start_), prefix(a), bst(b)
+{
+	for (i64 i = 0; i < (i64)prefix.size(); i++)
+	{
+		u64 f = prefix[i];
+		_mapf* d = &frd;
+		while (f > 1)
+		{
+			u64 n = f & 1;
+			f >>= 1;
+			if (!d->next[n]) d->next[n] = new _mapf;
+			d = d->next[n];
+		}
+		d->first = start + i;
+	}
+}
+
 void _cdf3::to_clipboard()
 {
 	std::stringstream a;
@@ -4220,6 +4250,13 @@ bool _cdf3::coding(i64 a, _bit_vector& bs) const noexcept
 	if (bst) bst->push(a); // для переподбора
 	bs.pushn1(prefix[a - start]);
 	return true;
+}
+
+i64 _cdf3::decoding(_bit_vector& bs) const noexcept
+{
+	const _mapf* d = &frd;
+	while (d->next[0]) d = d->next[bs.pop1()];
+	return d->first;
 }
 
 void _cdf3::calc(const _statistics& st, i64 min_value, i64 max_value)
@@ -4285,7 +4322,27 @@ bool _cdf::coding(i64 a, _bit_vector& bs) const noexcept
 
 i64 _cdf::decoding(_bit_vector& bs) const noexcept
 {
-	return 0;
+	const _mapf* d = &frd;
+	while (d->next[0]) d = d->next[bs.pop1()];
+	return d->first + bs.popn(d->bit);
+}
+
+_cdf::_cdf(const std::vector<_frequency>& a, _basic_statistics* b) : fr(a), bst(b)
+{
+	for (i64 i = 0; i < (i64)fr.size() - 1; i++)
+	{
+		_frequency f = fr[i];
+		_mapf* d = &frd;
+		while (f.prefix > 1)
+		{
+			u64 n = f.prefix & 1;
+			f.prefix >>= 1;
+			if (!d->next[n]) d->next[n] = new _mapf;
+			d = d->next[n];
+		}
+		d->first = f.first;
+		d->bit = f.bit;
+	}
 }
 
 void _cdf::calc(const _statistics& st, i64 n, i64 min_value, i64 max_value)

@@ -139,7 +139,7 @@ private:
 	std::vector<_one_stat> base_buy_r; // база покупки для чтения (первых 20 - последние цены)
 	std::vector<_one_stat> base_sale_r; // база продажи для чтения (первых 20 - последние цены)
 	static constexpr i64 step_pak_cc = 100; // период ключевых цен
-	_prices2 read_cc; // последние прочитанные цены
+	_prices2 read_cc{}; // последние прочитанные цены
 	i64 read_n = -666; // номер последних прочитанных цен
 
 	bool add0(const _prices2& c); // не дельта!
@@ -148,6 +148,7 @@ private:
 	bool delta_number(i64 a, i64 d);
 	bool read0(_prices2& c);
 	bool read1(_prices2& c);
+	bool read12(_one_stat* v1, std::vector<_one_stat>& v0);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -487,16 +488,26 @@ struct _cdf // структура частот для сжатия чисел с
 {
 	struct _frequency
 	{
-		i64   first = 0; // первое число кодируемое
-		uchar bit = 0; // количество дополнительных бит
+		i64   first  = 0; // первое число кодируемое
+		uchar bit    = 0; // количество дополнительных бит
 		u64   prefix = 0; // обязательные биты (ограничены 1)
 	};
 
+	struct _mapf
+	{
+		i64    first   = 0;  // первое число кодируемое
+		uchar  bit     = 0;  // количество дополнительных бит
+		_mapf* next[2] = {}; // следующие ветви
+
+		~_mapf() { delete next[0]; delete next[1]; }
+	};
+
 	std::vector<_frequency> fr; // распредление интервалов
+	_mapf frd; // дерево декодирования
 	_basic_statistics* bst = nullptr; // для переподбора
 
 	_cdf() = default;
-	_cdf(const std::vector<_frequency>& a, _basic_statistics* b = nullptr) : fr(a), bst(b) {}
+	_cdf(const std::vector<_frequency>& a, _basic_statistics* b = nullptr);
 
 	void clear() { fr.clear(); }
 	bool coding(i64 a, _bit_vector& bs) const noexcept; // закодировать число в битовый поток (return false если ошибка)
@@ -510,15 +521,25 @@ struct _cdf // структура частот для сжатия чисел с
 
 struct _cdf3 // структура частот для сжатия малого количества чисел с переменным количеством бит
 {
+	struct _mapf
+	{
+		i64    first   = 0;  // число кодируемое
+		_mapf* next[2] = {}; // следующие ветви
+
+		~_mapf() { delete next[0]; delete next[1]; }
+	};
+
 	i64 start = 0;
 	std::vector<u64> prefix; // нужный префикс
+	_mapf frd; // дерево декодирования
 	_basic_statistics* bst = nullptr; // для переподбора
 
 	_cdf3() = default;
-	_cdf3(i64 start_, const std::vector<u64> & a, _basic_statistics *b = nullptr) : start(start_), prefix(a), bst(b) {}
+	_cdf3(i64 start_, const std::vector<u64>& a, _basic_statistics* b = nullptr);
 
 	void clear() { prefix.clear(); }
 	bool coding(i64 a, _bit_vector& bs) const noexcept; // закодировать число в битовый поток (return false если ошибка)
+	i64  decoding(_bit_vector& bs) const noexcept; // декодировать число из битового потока
 	void calc(const _statistics& st, i64 min_value, i64 max_value); // построить дерево хаффмана
 	void to_clipboard(); // скопировать в буффер обмена
 };
