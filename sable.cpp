@@ -1323,7 +1323,7 @@ void _bit_vector::resize(i64 v)
 	if (bit == 0) bit = 64;
 	if (rp == r)
 	{
-		if (r > 0) data.back() &= (1ui64 << bit) - 1;
+		if (r > 0) data.back() &= mask1(bit);
 		return;
 	}
 	data.resize(r);
@@ -1343,8 +1343,8 @@ u64 _bit_vector::popn(uchar n) noexcept
 	i64 r = bit_read >> 6;
 	uchar bi = bit_read & 63;
 	bit_read += n;
-	if (bi + n <= 64) return (data[r] >> bi) & ((1ui64 << n) - 1);
-	return ((data[r] >> bi) | (data[r + 1] << (64ui8 - bi))) & ((1ui64 << n) - 1);
+	if (bi + n <= 64) return (data[r] >> bi) & mask1(n);
+	return ((data[r] >> bi) | (data[r + 1] << (64ui8 - bi))) & mask1(n);
 }
 
 void _bit_vector::push1(u64 a) noexcept
@@ -1361,7 +1361,7 @@ void _bit_vector::push1(u64 a) noexcept
 
 void _bit_vector::pushn(u64 a, uchar n) noexcept
 {
-	a &= ((1ui64 << (u64)n) - 1);
+	a &= mask1(n);
 	if (bit == 64)
 	{
 		if (n == 0) return;
