@@ -81,6 +81,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <SourcePath>$(VC_SourcePath);</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -106,7 +107,7 @@
       <BrowseInformation>false</BrowseInformation>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);sable</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4100;4244</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -148,8 +149,10 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);sable</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4100;4244</DisableSpecificWarnings>
+      <AdditionalUsingDirectories>
+      </AdditionalUsingDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -163,7 +166,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mult.cpp" />
     <ClCompile Include="mutator.cpp" />
-    <ClCompile Include="sable.cpp" />
+    <ClCompile Include="sable\sable.cpp" />
     <ClCompile Include="tetron.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -171,7 +174,7 @@
     <ClInclude Include="mult.h" />
     <ClInclude Include="mutator.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="sable.h" />
+    <ClInclude Include="sable\sable.h" />
     <ClInclude Include="tetron.h" />
   </ItemGroup>
   <ItemGroup>
