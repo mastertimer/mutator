@@ -395,14 +395,15 @@ bool _sable_stat::add12(const _one_stat* v1, std::vector<_one_stat>& v0, i64 izm
 	}
 	if (izm < 0)
 	{
+		i64 lv = (v0.begin() - (izm + 1))->value;
 		v0.erase(v0.begin(), v0.begin() - izm);
 		i64 n2 = calc_series_value(v1, v0, 0);
 		if (!nnsegg[std::min((i64)v0.size(), roffer)].coding(n2, data)) return false;
 		if (n2 == 0)
 		{
-			v0.insert(v0.begin(), v1[0]);
-			if (!f_delta.coding((v1[0].value - v1[1].value) * kk, data)) return false;
+			if (!f_delta.coding((lv - v1[0].value) * kk, data))	return false;
 			if (!f_number.coding(v1[0].number, data)) return false;
+			v0.insert(v0.begin(), v1[0]);
 			n = 1;
 		}
 		else
@@ -426,17 +427,15 @@ bool _sable_stat::add12(const _one_stat* v1, std::vector<_one_stat>& v0, i64 izm
 		v0.insert(v0.begin(), izm, {});
 		for (i64 i = izm - 1; i >= 0; i--) // кодируется как c add0
 		{
-			v0[i] = v1[i];
-			if (!f_delta.coding((v1[i].value - v1[i + 1].value) * kk, data)) return false;
+			if (!f_delta.coding((v1[i].value - v0[i + 1].value) * kk, data)) return false;
 			if (!f_number.coding(v1[i].number, data)) return false;
+			v0[i] = v1[i];
 		}
 		n = izm;
 		i64 n2 = calc_series_value(v1, v0, n);
 		if (!nnsegg[std::min((i64)v0.size(), roffer) - n].coding(n2, data)) return false;
 		if (n2 == 0)
-		{
 			v0.erase(v0.begin() + n);
-		}
 		else
 		{
 			n2 += n;
@@ -608,13 +607,12 @@ bool _sable_stat::read12(_one_stat* v1, std::vector<_one_stat>& v0)
 	}
 	if (izm < 0)
 	{
+		i64 lv = (v0.begin() - (izm + 1))->value;
 		v0.erase(v0.begin(), v0.begin() - izm);
 		i64 n2 = nnsegg[std::min((i64)v0.size(), roffer)].decoding(data);
 		if (n2 == 0)
 		{
-//			_one_stat x;
-
-			if (!f_delta.coding((v1[0].value - v1[1].value) * kk, data)) return false;
+			v1[0].value = lv - kk * f_delta.decoding(data);
 			v1[0].number = f_number.decoding(data);
 			v0.insert(v0.begin(), v1[0]);
 			n = 1;
@@ -624,14 +622,42 @@ bool _sable_stat::read12(_one_stat* v1, std::vector<_one_stat>& v0)
 			n = n2;
 			for (i64 i = 0; i < n;)
 			{
-				i64 ser = calc_series_number(v1, v0, i, n);
-				if (!nnse200[n - i].coding(ser, data)) return false;
+				i64 ser = nnse200[n - i].decoding(data);
 				i += ser;
 				if (i >= n) break;
-				if (!coding_delta_number(v0[i].number, v1[i].number)) return false;
+				v1[i].number = decoding_delta_number(v0[i].number);
 				v0[i].number = v1[i].number;
 				i++;
 			}
+			tip = 0;
+		}
+	}
+	if (izm > 0)
+	{
+		v0.insert(v0.begin(), izm, {});
+		for (i64 i = izm - 1; i >= 0; i--) // кодируется как c add0
+		{
+			v1[i].value = v0[i + 1].value + kk * f_delta.decoding(data);
+			v1[i].number = f_number.decoding(data);
+			v0[i] = v1[i];
+		}
+		n = izm;
+		i64 n2 = nnsegg[std::min((i64)v0.size(), roffer) - n].decoding(data);
+		if (n2 == 0)
+			v0.erase(v0.begin() + n);
+		else
+		{
+			n2 += n;
+			for (i64 i = n; i < n2;)
+			{
+				i64 ser = nnse200[n2 - i].decoding(data);
+				i += ser;
+				if (i >= n2) break;
+				v1[i].number = decoding_delta_number(v0[i].number);
+				v0[i].number = v1[i].number;
+				i++;
+			}
+			n = n2;
 			tip = 0;
 		}
 	}
