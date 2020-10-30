@@ -145,7 +145,8 @@ private:
 	bool add0(const _prices2& c); // не дельта!
 	bool add1(const _prices2& c); // дельта
 	bool add12(const _one_stat* v1, std::vector<_one_stat>& v0, i64 izm);
-	bool delta_number(i64 a, i64 d);
+	bool coding_delta_number(i64 a, i64 b);
+	i64  decoding_delta_number(i64 a);
 	bool read0(_prices2& c);
 	bool read1(_prices2& c);
 	bool read12(_one_stat* v1, std::vector<_one_stat>& v0);
