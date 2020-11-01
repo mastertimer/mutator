@@ -15,6 +15,7 @@ max(rnd)  |   1.058        58       1.00097
 #include "sable.h"
 
 constexpr wchar_t ss_file[]  = L"..\\..\\baza.cen";
+constexpr wchar_t sss_file[] = L"..\\..\\base.c2";
 constexpr wchar_t mmm_file[] = L"..\\..\\mmm.txt";
 constexpr _prices cena_zero_ = { {}, {}, { 1,1,1,1,1 } };
 
@@ -49,6 +50,7 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	static bool first = true; if (!first) return; first = false;
 	ss.load_from_file((exe_path + ss_file).c_str());
+	sss.load_from_file((exe_path + sss_file).c_str());
 	if (!graph) return;
 	if (!graph->find1<_g_scrollbar>(flag_part))
 	{
@@ -3446,6 +3448,26 @@ void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+bool test_sss()
+{
+	_prices pr;
+	_prices prpr;
+	_prices2 aa;
+	i64 ii = 0;
+	for (i64 i = 0; i < ss.size; i++)
+	{
+		ss.read(i, pr);
+		if (pr == prpr) continue;
+		sss.read(ii++, aa);
+		if (aa != pr)
+		{
+			return false;
+		}
+		prpr = pr;
+	}
+	return true;
+}
+
 double test_ss4()
 {
 	_prices pr;
@@ -3455,6 +3477,17 @@ double test_ss4()
 		sss.add(pr);
 	}
 	return (double)sss.data.size() / (sss.size * 8);
+}
+
+void eeee()
+{
+	_prices pr;
+	for (i64 i = 0; i < ss.size; i++)
+	{
+		ss.read(i, pr);
+		sss.add(pr);
+	}
+	sss.save_to_file(L"e:\\pak.eee");
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

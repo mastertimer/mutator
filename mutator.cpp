@@ -673,11 +673,16 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	show_message(test_ss4());
+	if (test_sss())
+		show_message("ура! тест пройдет!");
+	else
+		show_message("несовпадение..");
+//	eeee();
+/*	show_message(test_ss4());
 
 	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go* ()->set_t_trans(g, flag_sub_go + flag_part);
-	g->add(_statistics(research1).to_matrix(), "delta1", true);
+	g->add(_statistics(research1).to_matrix(), "delta1", true);*/
 
 /*	_cdf ee;
 	ee.calc(research1, 8, 15000, 50000);

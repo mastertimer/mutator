@@ -23,6 +23,7 @@ struct _one_stat // единица статистики
 
 	void operator=(_offer a) noexcept { value = a.c; number = a.k; }
 	bool operator!=(_one_stat a) const noexcept { return ((value != a.value) || (number != a.number)); }
+	bool operator!=(_offer a) const noexcept { return ((value != a.c) || (number != a.k)); }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,6 +65,7 @@ struct _prices2 // массив спроса предложения с удобными типами
 	void clear()       noexcept { time = 0; } // метка пустого прайса
 	bool empty() const noexcept { return (time == 0); } // проверка на пустоту 
 	bool operator==(const _prices2& p) const noexcept; // время не учитывается при сравнении
+	bool operator!=(const _prices& p) const noexcept;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,6 +83,9 @@ struct _bit_vector // вектор с побитовой записью / чтением
 	u64 popn(uchar n) noexcept; // прочитать n бит
 	i64 size() const noexcept { return (i64)data.size() * 64 - (64 - bit); }
 	void resize(i64 v);
+
+	void save(_stack &mem);
+	void load(_stack &mem);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,6 +99,8 @@ struct _sable_stat // статистика цен, сжатая  *** 23.9 байт *** 40.1 байт *** !!
 
 	bool add(const _prices2& c); // добавить цены (сжать)
 	bool read(i64 n, _prices2& c); // прочитать цены (расжать)
+	void save_to_file(wstr fn);
+	void load_from_file(wstr fn);
 
 private:
 	std::vector<i64> udata; // указатель на место сжатых данных кратных step_pak_cc

@@ -66,7 +66,25 @@ bool _prices2::operator==(const _prices2& p) const noexcept
 	return true;
 }
 
+bool _prices2::operator!=(const _prices& p) const noexcept
+{
+	for (i64 i = 0; i < roffer; i++)
+		if ((buy[i] != p.pok[i]) || (sale[i] != p.pro[i])) return true;
+	return false;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void _bit_vector::save(_stack& mem)
+{
+	mem << data << bit;
+}
+
+void _bit_vector::load(_stack& mem)
+{
+	mem >> data >> bit;
+	bit_read = 0;
+}
 
 void _bit_vector::resize(i64 v)
 {
@@ -528,12 +546,12 @@ bool _sable_stat::add1(const _prices2& c)
 
 bool _sable_stat::add(const _prices2& c)
 {
-	//	if (c == last_cc) return false; // с большой вероятностью данные устарели
+	if (c == last_cc) return true; // с большой вероятностью данные устарели
 	auto s_data = data.size();
 	if (size % step_pak_cc == 0)
 	{
-		data.pushn(c.time, 31);
 		udata.push_back(data.size());
+		data.pushn(c.time, 31);
 		if (!add0(c))
 		{
 			udata.pop_back();
@@ -598,8 +616,10 @@ bool _sable_stat::read12(_one_stat* v1, std::vector<_one_stat>& v0)
 		for (i64 i = 0; i < n;)
 		{
 			i64 ser = nnse200[n - i].decoding(data);
+			for (i64 j = i; j < i + ser; j++) v1[j] = v0[j];
 			i += ser;
 			if (i >= n) break;
+			v1[i].value = v0[i].value;
 			v1[i].number = decoding_delta_number(v0[i].number);
 			v0[i].number = v1[i].number;
 			i++;
@@ -623,8 +643,10 @@ bool _sable_stat::read12(_one_stat* v1, std::vector<_one_stat>& v0)
 			for (i64 i = 0; i < n;)
 			{
 				i64 ser = nnse200[n - i].decoding(data);
+				for (i64 j = i; j < i + ser; j++) v1[j] = v0[j];
 				i += ser;
 				if (i >= n) break;
+				v1[i].value = v0[i].value;
 				v1[i].number = decoding_delta_number(v0[i].number);
 				v0[i].number = v1[i].number;
 				i++;
@@ -651,8 +673,10 @@ bool _sable_stat::read12(_one_stat* v1, std::vector<_one_stat>& v0)
 			for (i64 i = n; i < n2;)
 			{
 				i64 ser = nnse200[n2 - i].decoding(data);
+				for (i64 j = i; j < i + ser; j++) v1[j] = v0[j];
 				i += ser;
 				if (i >= n2) break;
+				v1[i].value = v0[i].value;
 				v1[i].number = decoding_delta_number(v0[i].number);
 				v0[i].number = v1[i].number;
 				i++;
@@ -695,8 +719,10 @@ bool _sable_stat::read12(_one_stat* v1, std::vector<_one_stat>& v0)
 			for (i64 i = n; i < n2;)
 			{
 				i64 ser = nnse200[n2 - i].decoding(data);
+				for (i64 j = i; j < i + ser; j++) v1[j] = v0[j];
 				i += ser;
 				if (i >= n2) break;
+				v1[i].value = v0[i].value;
 				v1[i].number = decoding_delta_number(v0[i].number);
 				v0[i].number = v1[i].number;
 				i++;
@@ -766,6 +792,31 @@ bool _sable_stat::read(i64 n, _prices2& c)
 	read_cc = c;
 	read_n = n;
 	return true;
+}
+
+void _sable_stat::save_to_file(wstr fn)
+{
+	_stack mem;
+	data.save(mem);
+	mem << size;
+	mem.push_data(&last_cc, sizeof(last_cc));
+	mem << udata;
+	mem << base_buy;
+	mem << base_sale;
+	mem.save_to_file(fn);
+}
+
+void _sable_stat::load_from_file(wstr fn)
+{
+	_stack mem;
+	if (!mem.load_from_file(fn)) return;
+	data.load(mem);
+	mem >> size;
+	mem >> last_cc;
+	mem >> udata;
+	mem >> base_buy;
+	mem >> base_sale;
+	read_n = -666;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
