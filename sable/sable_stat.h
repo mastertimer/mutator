@@ -66,6 +66,10 @@ struct _prices2 // массив спроса предложения с удобными типами
 	bool empty() const noexcept { return (time == 0); } // проверка на пустоту 
 	bool operator==(const _prices2& p) const noexcept; // время не учитывается при сравнении
 	bool operator!=(const _prices& p) const noexcept;
+
+	time_t time_to_minute() { return time - (time % 60); } // обнулить секунды
+	i64 time_hour();
+	i64 time_minute();
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,6 +87,7 @@ struct _bit_vector // вектор с побитовой записью / чтением
 	u64 popn(uchar n) noexcept; // прочитать n бит
 	i64 size() const noexcept { return (i64)data.size() * 64 - (64 - bit); }
 	void resize(i64 v);
+	void clear() { data.clear(); bit = 64; bit_read = 0; }
 
 	void save(_stack &mem);
 	void load(_stack &mem);
@@ -110,6 +115,7 @@ struct _sable_stat // статистика цен, сжатая  (в 2 раза меньше, в 3 раза медленн
 	bool read(i64 n, _prices2& c, _info_pak* inf = nullptr); // прочитать цены (расжать)
 	void save_to_file(wstr fn);
 	void load_from_file(wstr fn);
+	void clear(); // удалить все данные
 
 private:
 	std::vector<i64> udata; // указатель на место сжатых данных кратных step_pak_cc

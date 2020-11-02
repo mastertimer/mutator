@@ -89,6 +89,20 @@ bool _prices2::operator!=(const _prices& p) const noexcept
 	return false;
 }
 
+i64 _prices2::time_hour()
+{
+	tm t3;
+	localtime_s(&t3, &time);
+	return t3.tm_hour;
+}
+
+i64 _prices2::time_minute()
+{
+	tm t3;
+	localtime_s(&t3, &time);
+	return t3.tm_min;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void _bit_vector::save(_stack& mem)
@@ -851,6 +865,17 @@ void _sable_stat::load_from_file(wstr fn)
 	mem >> udata;
 	mem >> base_buy;
 	mem >> base_sale;
+	read_n = -666;
+	ip_last.ok = false;
+	ip_n.ok = false;
+}
+
+void _sable_stat::clear()
+{
+	data.clear();
+	udata.clear();
+	last_cc = {};
+	size = 0;
 	read_n = -666;
 	ip_last.ok = false;
 	ip_n.ok = false;

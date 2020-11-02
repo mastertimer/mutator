@@ -16,13 +16,13 @@ max(rnd)  |   1.058        58       1.00097
 
 #include "sable.h"
 
-constexpr wchar_t ss_file[]  = L"..\\..\\baza.cen";
+//constexpr wchar_t ss_file[]  = L"..\\..\\baza.cen";
 constexpr wchar_t sss_file[] = L"..\\..\\base.c2";
 constexpr wchar_t mmm_file[] = L"..\\..\\mmm.txt";
 constexpr _prices cena_zero_ = { {}, {}, { 1,1,1,1,1 } };
 
-_super_stat      ss;               // сжатые цены
-_sable_stat      sss;              // сжатые цены
+//_super_stat      ss;               // сжатые цены
+_sable_stat      ss;              // сжатые цены
 _sable_graph    *graph  = nullptr; // график
 
 _nervous_oracle *oracle = nullptr; // оракул
@@ -51,8 +51,8 @@ void load_mmm(wstr file_name)
 void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	static bool first = true; if (!first) return; first = false;
-	ss.load_from_file((exe_path + ss_file).c_str());
-	sss.load_from_file((exe_path + sss_file).c_str());
+//	ss.load_from_file((exe_path + ss_file).c_str());
+	ss.load_from_file((exe_path + sss_file).c_str());
 	if (!graph) return;
 	if (!graph->find1<_g_scrollbar>(flag_part))
 	{
@@ -97,7 +97,7 @@ int vrema_prodat   = 0;     // время когда нужно продать
 void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (zamok_pokupki) return;
-	_prices a;
+	_prices2 a;
 	int ok = recognize.read_prices_from_screen(&a);
 	if (ok != 0)
 	{
@@ -123,12 +123,12 @@ void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 
 	if (!can_trade) return;
 	if (oracle->zn.size() < 10) return;
-	if (oracle->zn.back().time + 60 != a.time.to_minute()) return;
+	if (oracle->zn.back().time + 60 != a.time_to_minute()) return;
 
 
 	if (gotovo_prodaz & 1) // была покупка, но небыло продажи
 	{
-		if ((a.time >= vrema_prodat) || ((a.time.hour == 18) && (a.time.minute > 30)) || oracle->get_latest_events(oracle->zn.size() - 1).stop())
+		if ((a.time >= vrema_prodat) || ((a.time_hour() == 18) && (a.time_minute() > 30)) || oracle->get_latest_events(oracle->zn.size() - 1).stop())
 		{
 			/*			int b;
 						recognize.ReadTablicaZayavok(0, b);
@@ -147,7 +147,7 @@ void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 	}
 
 	if (popitok_prodaz < 1) return;
-	if (a.time.hour >= 18) return; // слишком поздно
+	if (a.time_hour() >= 18) return; // слишком поздно
 	int ti = oracle->get_latest_events(oracle->zn.size() - 1).start();
 
 
@@ -1356,17 +1356,17 @@ end:
 	}
 }
 
-std::string date_to_ansi_string(int time)
+std::string date_to_ansi_string(time_t time)
 {
 	std::string res = "22.12.20";
-	_date_time a;
-	a = time;
-	res[0] = (a.day / 10) + '0';
-	res[1] = (a.day % 10) + '0';
-	int m = ((a.month - 1) % 12) + 1;
+	tm a;
+	localtime_s(&a, &time);
+	res[0] = (a.tm_mday / 10) + '0';
+	res[1] = (a.tm_mday % 10) + '0';
+	int m = a.tm_mon + 1;
 	res[3] = (m / 10) + '0';
 	res[4] = (m % 10) + '0';
-	int g = ((a.month - 1) / 12) + 17;
+	int g = (a.tm_year + 1900) % 100;
 	res[6] = (g / 10) + '0';
 	res[7] = (g % 10) + '0';
 	return res;
@@ -1609,7 +1609,7 @@ void _view_stat::recovery()
 	if (ssvcc == vcc) return; // ничего не изменилось
 	if (vcc < ssvcc) // добавились несколько цен
 	{
-		_prices cc;
+		_prices2 cc;
 		int t = 0;
 		_cen_pak* cp = 0;
 		if (cen1m.size())
@@ -1620,7 +1620,7 @@ void _view_stat::recovery()
 		for (i64 i = vcc; i < ssvcc; i++)
 		{
 			ss.read(i, cc);
-			int t2 = cc.time.to_minute();
+			int t2 = cc.time_to_minute();
 			if (t2 != t)
 			{
 				t = t2;
@@ -1628,32 +1628,32 @@ void _view_stat::recovery()
 				we.time = t;
 				we.ncc.min = i;
 				we.ncc.max = i + 1;
-				we.min = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
+				we.min = ((int)cc.buy[0].value + (int)cc.sale[0].value) / 2;
 				we.max = we.min;
-				we.k = (cc.pro[1].k == 570);
+				we.k = (cc.sale[1].number == 570);
 				cen1m.push_back(we);
 				cp = &cen1m.back();
 			}
 			else
 			{
 				if (cp == 0) continue; // для паранойи компилятора
-				int aa = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
+				int aa = ((int)cc.buy[0].value + (int)cc.sale[0].value) / 2;
 				if (aa < cp->min) cp->min = aa;
 				if (aa > cp->max) cp->max = aa;
-				if (cc.pro[1].k == 570) cp->k++;
+				if (cc.sale[1].number == 570) cp->k++;
 				cp->ncc.max++;
 			}
 		}
 		return;
 	}
-	_prices cc; // уменьшились цены, полный пересчет
+	_prices2 cc; // уменьшились цены, полный пересчет
 	cen1m.clear();
 	int t = 0;
 	_cen_pak* cp = 0;
 	for (i64 i = 0; i < ssvcc; i++)
 	{
 		ss.read(i, cc);
-		int t2 = cc.time.to_minute();
+		int t2 = cc.time_to_minute();
 		if (t2 != t)
 		{
 			t = t2;
@@ -1661,19 +1661,19 @@ void _view_stat::recovery()
 			we.time = t;
 			we.ncc.min = i;
 			we.ncc.max = i + 1;
-			we.min = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
+			we.min = ((int)cc.buy[0].value + (int)cc.sale[0].value) / 2;
 			we.max = we.min;
-			we.k = (cc.pro[1].k == 570);
+			we.k = (cc.sale[1].number == 570);
 			cen1m.push_back(we);
 			cp = &cen1m.back();
 		}
 		else
 		{
 			if (cp == 0) continue; // для паранойи компилятора
-			int aa = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
+			int aa = ((int)cc.buy[0].value + (int)cc.sale[0].value) / 2;
 			if (aa < cp->min) cp->min = aa;
 			if (aa > cp->max) cp->max = aa;
-			if (cc.pro[1].k == 570) cp->k++;
+			if (cc.sale[1].number == 570) cp->k++;
 			cp->ncc.max++;
 		}
 	}
@@ -1753,7 +1753,7 @@ void _mctds_candle::recovery()
 	if (ssvcc == vcc) return; // ничего не изменилось
 	if (vcc < ssvcc) // добавились несколько цен
 	{
-		_prices cc;
+		_prices2 cc;
 		int t = 0;
 		_cen_pak* cp = 0;
 		if (cen1m.size())
@@ -1765,7 +1765,7 @@ void _mctds_candle::recovery()
 		for (i64 i = vcc; i < ssvcc; i++)
 		{
 			ss.read(i, cc);
-			int t2 = cc.time.to_minute();
+			int t2 = cc.time_to_minute();
 			if (t2 != t)
 			{
 				t = t2;
@@ -1774,7 +1774,7 @@ void _mctds_candle::recovery()
 				we.time = t;
 				we.ncc.min = i;
 				we.ncc.max = i + 1;
-				we.first = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
+				we.first = ((int)cc.buy[0].value + (int)cc.sale[0].value) / 2;
 				we.last = we.first;
 				we.min = we.first;
 				we.max = we.first;
@@ -1785,7 +1785,7 @@ void _mctds_candle::recovery()
 			else
 			{
 				if (cp == 0) continue; // для паранойи компилятора
-				int aa = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
+				int aa = ((int)cc.buy[0].value + (int)cc.sale[0].value) / 2;
 				cp->cc += aa;
 				if (aa < cp->min) cp->min = aa;
 				if (aa > cp->max) cp->max = aa;
@@ -1796,14 +1796,14 @@ void _mctds_candle::recovery()
 		if (cp)	cp->cc /= ((double)cp->ncc.max - cp->ncc.min);
 		return;
 	}
-	_prices cc; // уменьшились цены, полный пересчет
+	_prices2 cc; // уменьшились цены, полный пересчет
 	cen1m.clear();
 	int t = 0;
 	_cen_pak* cp = 0;
 	for (i64 i = 0; i < ssvcc; i++)
 	{
 		ss.read(i, cc);
-		int t2 = cc.time.to_minute();
+		int t2 = cc.time_to_minute();
 		if (t2 != t)
 		{
 			t = t2;
@@ -1812,7 +1812,7 @@ void _mctds_candle::recovery()
 			we.time = t;
 			we.ncc.min = i;
 			we.ncc.max = i + 1;
-			we.first = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
+			we.first = ((int)cc.buy[0].value + (int)cc.sale[0].value) / 2;
 			we.last = we.first;
 			we.min = we.first;
 			we.max = we.first;
@@ -1823,7 +1823,7 @@ void _mctds_candle::recovery()
 		else
 		{
 			if (cp == 0) continue; // для паранойи компилятора
-			int aa = ((int)cc.pok[0].c + (int)cc.pro[0].c) / 2;
+			int aa = ((int)cc.buy[0].value + (int)cc.sale[0].value) / 2;
 			cp->cc += aa;
 			if (aa < cp->min) cp->min = aa;
 			if (aa > cp->max) cp->max = aa;
@@ -1875,7 +1875,7 @@ bool _latest_events::stop()
 i64 _nervous_oracle::prediction()
 {
 	if (zn.size() < 10) return 0;
-	if (zn.back().time + 60 != ss.last_cc.time.to_minute()) return 0;
+	if (zn.back().time + 60 != ss.last_cc.time_to_minute()) return 0;
 	return get_latest_events(zn.size() - 1).start();
 }
 
@@ -2003,8 +2003,8 @@ void _nervous_oracle::recovery()
 	if (ssvcc == vcc) return; // ничего не изменилось
 	if (vcc < ssvcc) // добавились несколько цен
 	{
-		_prices cc;
-		_super_stat::_info_pak inf;
+		_prices2 cc;
+		_sable_stat::_info_pak inf;
 		int t = 0;
 		_element_nervous* cp = 0;
 		if (zn.size())
@@ -2021,7 +2021,7 @@ void _nervous_oracle::recovery()
 		for (i64 i = vcc; i < ssvcc; i++)
 		{
 			ss.read(i, cc, &inf);
-			int t2 = cc.time.to_minute();
+			int t2 = cc.time_to_minute();
 			if (t2 != t)
 			{
 				t = t2;
@@ -2038,8 +2038,8 @@ void _nervous_oracle::recovery()
 				we.time = t;
 				we.ncc.min = i;
 				we.ncc.max = i + 1;
-				we.max_pok = we.min_pok = cc.pok[0].c;
-				we.max_pro = we.min_pro = cc.pro[0].c;
+				we.max_pok = we.min_pok = cc.buy[0].value;
+				we.max_pro = we.min_pro = cc.sale[0].value;
 				if (inf.ok)
 				{
 					we.v_r = 1;
@@ -2055,10 +2055,10 @@ void _nervous_oracle::recovery()
 			else
 			{
 				if (cp == 0) continue; // для паранойи компилятора
-				if (cc.pok[0].c < cp->min_pok) cp->min_pok = cc.pok[0].c;
-				if (cc.pok[0].c > cp->max_pok) cp->max_pok = cc.pok[0].c;
-				if (cc.pro[0].c < cp->min_pro) cp->min_pro = cc.pro[0].c;
-				if (cc.pro[0].c > cp->max_pro) cp->max_pro = cc.pro[0].c;
+				if (cc.buy[0].value < cp->min_pok) cp->min_pok = cc.buy[0].value;
+				if (cc.buy[0].value > cp->max_pok) cp->max_pok = cc.buy[0].value;
+				if (cc.sale[0].value < cp->min_pro) cp->min_pro = cc.sale[0].value;
+				if (cc.sale[0].value > cp->max_pro) cp->max_pro = cc.sale[0].value;
 				cp->ncc.max++;
 				if (inf.ok)
 				{
@@ -2090,15 +2090,15 @@ void _nervous_oracle::recovery()
 		}
 		return;
 	}
-	_prices cc; // уменьшились цены, полный пересчет
-	_super_stat::_info_pak inf;
+	_prices2 cc; // уменьшились цены, полный пересчет
+	_sable_stat::_info_pak inf;
 	zn.clear();
 	int t = 0;
 	_element_nervous* cp = 0;
 	for (i64 i = 0; i < ssvcc; i++)
 	{
 		ss.read(i, cc, &inf);
-		int t2 = cc.time.to_minute();
+		int t2 = cc.time_to_minute();
 		if (t2 != t)
 		{
 			t = t2;
@@ -2115,8 +2115,8 @@ void _nervous_oracle::recovery()
 			we.time = t;
 			we.ncc.min = i;
 			we.ncc.max = i + 1;
-			we.max_pok = we.min_pok = cc.pok[0].c;
-			we.max_pro = we.min_pro = cc.pro[0].c;
+			we.max_pok = we.min_pok = cc.buy[0].value;
+			we.max_pro = we.min_pro = cc.sale[0].value;
 			if (inf.ok)
 			{
 				we.v_r = 1;
@@ -2132,10 +2132,10 @@ void _nervous_oracle::recovery()
 		else
 		{
 			if (cp == 0) continue; // для паранойи компилятора
-			if (cc.pok[0].c < cp->min_pok) cp->min_pok = cc.pok[0].c;
-			if (cc.pok[0].c > cp->max_pok) cp->max_pok = cc.pok[0].c;
-			if (cc.pro[0].c < cp->min_pro) cp->min_pro = cc.pro[0].c;
-			if (cc.pro[0].c > cp->max_pro) cp->max_pro = cc.pro[0].c;
+			if (cc.buy[0].value < cp->min_pok) cp->min_pok = cc.buy[0].value;
+			if (cc.buy[0].value > cp->max_pok) cp->max_pok = cc.buy[0].value;
+			if (cc.sale[0].value < cp->min_pro) cp->min_pro = cc.sale[0].value;
+			if (cc.sale[0].value > cp->max_pro) cp->max_pro = cc.sale[0].value;
 			cp->ncc.max++;
 			if (inf.ok)
 			{
@@ -2173,7 +2173,7 @@ i64 _nervous_oracle2::prediction()
 {
 	// return i64(rnd(15000) == 13) * 60; // случайный
 	if (zn.size() < 10) return 0;
-	if (zn.back().time + 60 != ss.last_cc.time.to_minute()) return 0;
+	if (zn.back().time + 60 != ss.last_cc.time_to_minute()) return 0;
 	return get_latest_events(zn.size() - 1).start();
 }
 
@@ -2301,8 +2301,8 @@ void _nervous_oracle2::recovery()
 	if (ssvcc == vcc) return; // ничего не изменилось
 	if (vcc < ssvcc) // добавились несколько цен
 	{
-		_prices cc;
-		_super_stat::_info_pak inf;
+		_prices2 cc;
+		_sable_stat::_info_pak inf;
 		int t = 0;
 		_element_nervous* cp = 0;
 		if (zn.size())
@@ -2319,7 +2319,7 @@ void _nervous_oracle2::recovery()
 		for (i64 i = vcc; i < ssvcc; i++)
 		{
 			ss.read(i, cc, &inf);
-			int t2 = cc.time.to_minute();
+			int t2 = cc.time_to_minute();
 			if (t2 != t)
 			{
 				t = t2;
@@ -2336,8 +2336,8 @@ void _nervous_oracle2::recovery()
 				we.time = t;
 				we.ncc.min = i;
 				we.ncc.max = i + 1;
-				we.max_pok = we.min_pok = cc.pok[0].c;
-				we.max_pro = we.min_pro = cc.pro[0].c;
+				we.max_pok = we.min_pok = cc.buy[0].value;
+				we.max_pro = we.min_pro = cc.sale[0].value;
 				if (inf.ok)
 				{
 					we.v_r = 1;
@@ -2353,10 +2353,10 @@ void _nervous_oracle2::recovery()
 			else
 			{
 				if (cp == 0) continue; // для паранойи компилятора
-				if (cc.pok[0].c < cp->min_pok) cp->min_pok = cc.pok[0].c;
-				if (cc.pok[0].c > cp->max_pok) cp->max_pok = cc.pok[0].c;
-				if (cc.pro[0].c < cp->min_pro) cp->min_pro = cc.pro[0].c;
-				if (cc.pro[0].c > cp->max_pro) cp->max_pro = cc.pro[0].c;
+				if (cc.buy[0].value < cp->min_pok) cp->min_pok = cc.buy[0].value;
+				if (cc.buy[0].value > cp->max_pok) cp->max_pok = cc.buy[0].value;
+				if (cc.sale[0].value < cp->min_pro) cp->min_pro = cc.sale[0].value;
+				if (cc.sale[0].value > cp->max_pro) cp->max_pro = cc.sale[0].value;
 				cp->ncc.max++;
 				if (inf.ok)
 				{
@@ -2388,15 +2388,15 @@ void _nervous_oracle2::recovery()
 		}
 		return;
 	}
-	_prices cc; // уменьшились цены, полный пересчет
-	_super_stat::_info_pak inf;
+	_prices2 cc; // уменьшились цены, полный пересчет
+	_sable_stat::_info_pak inf;
 	zn.clear();
 	int t = 0;
 	_element_nervous* cp = 0;
 	for (i64 i = 0; i < ssvcc; i++)
 	{
 		ss.read(i, cc, &inf);
-		int t2 = cc.time.to_minute();
+		int t2 = cc.time_to_minute();
 		if (t2 != t)
 		{
 			t = t2;
@@ -2413,8 +2413,8 @@ void _nervous_oracle2::recovery()
 			we.time = t;
 			we.ncc.min = i;
 			we.ncc.max = i + 1;
-			we.max_pok = we.min_pok = cc.pok[0].c;
-			we.max_pro = we.min_pro = cc.pro[0].c;
+			we.max_pok = we.min_pok = cc.buy[0].value;
+			we.max_pro = we.min_pro = cc.sale[0].value;
 			if (inf.ok)
 			{
 				we.v_r = 1;
@@ -2430,10 +2430,10 @@ void _nervous_oracle2::recovery()
 		else
 		{
 			if (cp == 0) continue; // для паранойи компилятора
-			if (cc.pok[0].c < cp->min_pok) cp->min_pok = cc.pok[0].c;
-			if (cc.pok[0].c > cp->max_pok) cp->max_pok = cc.pok[0].c;
-			if (cc.pro[0].c < cp->min_pro) cp->min_pro = cc.pro[0].c;
-			if (cc.pro[0].c > cp->max_pro) cp->max_pro = cc.pro[0].c;
+			if (cc.buy[0].value < cp->min_pok) cp->min_pok = cc.buy[0].value;
+			if (cc.buy[0].value > cp->max_pok) cp->max_pok = cc.buy[0].value;
+			if (cc.sale[0].value < cp->min_pro) cp->min_pro = cc.sale[0].value;
+			if (cc.sale[0].value > cp->max_pro) cp->max_pro = cc.sale[0].value;
 			cp->ncc.max++;
 			if (inf.ok)
 			{
@@ -2503,7 +2503,7 @@ void _oracle3::recovery()
 	if (ssvcc == vcc) return; // ничего не изменилось
 	if (vcc < ssvcc) // добавились несколько цен
 	{
-		_prices cc;
+		_prices2 cc;
 		int t = 0;
 		_element_oracle* cp = 0;
 		if (zn.size())
@@ -2514,7 +2514,7 @@ void _oracle3::recovery()
 		for (i64 i = vcc; i < ssvcc; i++)
 		{
 			ss.read(i, cc);
-			int t2 = cc.time.to_minute();
+			int t2 = cc.time_to_minute();
 			if (t2 != t)
 			{
 				t = t2;
@@ -2522,29 +2522,29 @@ void _oracle3::recovery()
 				we.time = t;
 				we.ncc.min = i;
 				we.ncc.max = i + 1;
-				we.max = cc.pro[roffer - 1].c;
-				we.min = cc.pok[roffer - 1].c;
+				we.max = cc.sale[roffer - 1].value;
+				we.min = cc.buy[roffer - 1].value;
 				zn.push_back(we);
 				cp = &zn.back();
 			}
 			else
 			{
 				if (cp == 0) continue; // для паранойи компилятора
-				if (cc.pok[roffer - 1].c < cp->min) cp->min = cc.pok[roffer - 1].c;
-				if (cc.pro[roffer - 1].c > cp->max) cp->max = cc.pro[roffer - 1].c;
+				if (cc.buy[roffer - 1].value < cp->min) cp->min = cc.buy[roffer - 1].value;
+				if (cc.sale[roffer - 1].value > cp->max) cp->max = cc.sale[roffer - 1].value;
 				cp->ncc.max++;
 			}
 		}
 		return;
 	}
-	_prices cc; // уменьшились цены, полный пересчет
+	_prices2 cc; // уменьшились цены, полный пересчет
 	zn.clear();
 	int t = 0;
 	_element_oracle* cp = 0;
 	for (i64 i = 0; i < ssvcc; i++)
 	{
 		ss.read(i, cc);
-		int t2 = cc.time.to_minute();
+		int t2 = cc.time_to_minute();
 		if (t2 != t)
 		{
 			t = t2;
@@ -2552,16 +2552,16 @@ void _oracle3::recovery()
 			we.time = t;
 			we.ncc.min = i;
 			we.ncc.max = i + 1;
-			we.max = cc.pro[roffer - 1].c;
-			we.min = cc.pok[roffer - 1].c;
+			we.max = cc.sale[roffer - 1].value;
+			we.min = cc.buy[roffer - 1].value;
 			zn.push_back(we);
 			cp = &zn.back();
 		}
 		else
 		{
 			if (cp == 0) continue; // для паранойи компилятора
-			if (cc.pok[roffer - 1].c < cp->min) cp->min = cc.pok[roffer - 1].c;
-			if (cc.pro[roffer - 1].c > cp->max) cp->max = cc.pro[roffer - 1].c;
+			if (cc.buy[roffer - 1].value < cp->min) cp->min = cc.buy[roffer - 1].value;
+			if (cc.sale[roffer - 1].value > cp->max) cp->max = cc.sale[roffer - 1].value;
 			cp->ncc.max++;
 		}
 	}
@@ -2569,7 +2569,7 @@ void _oracle3::recovery()
 
 void _oracle3::draw(i64 n, _area area)
 {
-	static _prices pri[61]; // цены
+	static _prices2 pri[61]; // цены
 	static i64 min, max; // разброс по y
 	min = 0;
 	max = 1;
@@ -2584,7 +2584,7 @@ void _oracle3::draw(i64 n, _area area)
 				part_ss.clear();
 			else
 			{
-				_prices w;
+				_prices2 w;
 				w.clear();
 				for (int i_ = 0; i_ < delta; i_++)
 				{
@@ -2596,7 +2596,7 @@ void _oracle3::draw(i64 n, _area area)
 		}
 		if (i >= begin_ss + (i64)part_ss.size())
 		{
-			_prices w;
+			_prices2 w;
 			w.clear();
 			i64 delta = i - (begin_ss + (int)part_ss.size()) + 1;
 			if (delta >= max_part)
@@ -2618,7 +2618,7 @@ void _oracle3::draw(i64 n, _area area)
 		}
 		i64 ii = i - begin_ss;
 		if (part_ss[ii].empty()) ss.read(i, part_ss[ii]);
-		pri[part_ss[ii].time.second] = part_ss[ii];
+		pri[part_ss[ii].time % 60] = part_ss[ii];
 		min = zn[n].min - 1;
 		max = zn[n].max;
 	}
@@ -2654,26 +2654,26 @@ void _oracle3::draw(i64 n, _area area)
 		i64 xx2 = xx.min + dx * (i + 1) / kol - 1;
 		for (int j = roffer - 1; j >= 0; j--)
 		{
-			i64 ce = pri[ss_].pro[j].c;
+			i64 ce = pri[ss_].sale[j].value;
 			_iinterval yy(area.y.min + (max - ce) * ddy / dd, area.y.min + (max - ce + 1) * ddy / dd);
 			yy.min++;
 			yy.max--;
 			if (yy.empty()) continue;
-			uint q = (uint)sqrt(pri[ss_].pro[j].k) + 32;
+			uint q = (uint)sqrt(pri[ss_].sale[j].number) + 32;
 			if (q > 255) q = 255;
 			uint cc = (q << 8) + (q << 16) + 0x60000000;
-			if ((pri[ss_].pro[j].k == 250)) cc = 0xffff00ff;
-			if ((pri[ss_].pro[j].k == 250) && (j == 0)) cc = 0xffffffff;
+			if ((pri[ss_].sale[j].number == 250)) cc = 0xffff00ff;
+			if ((pri[ss_].sale[j].number == 250) && (j == 0)) cc = 0xffffffff;
 			master_bm.fill_rectangle({ {xx1, xx2}, yy}, cc);
 		}
 		for (int j = 0; j < roffer; j++)
 		{
-			i64 ce = pri[ss_].pok[j].c;
+			i64 ce = pri[ss_].buy[j].value;
 			_iinterval yy(area.y.min + (max - ce) * ddy / dd, area.y.min + (max - ce + 1) * ddy / dd);
 			yy.min++;
 			yy.max--;
 			if (yy.empty()) continue;
-			uint q = (uint)sqrt(pri[ss_].pok[j].k) + 32;
+			uint q = (uint)sqrt(pri[ss_].buy[j].number) + 32;
 			if (q > 255) q = 255;
 			uint cc = q + (q << 8) + 0x60000000;
 			master_bm.fill_rectangle({ {xx1, xx2}, yy }, cc);
@@ -2872,7 +2872,7 @@ i64 to_int(const std::wstring& s) // преобразование в число 
 	return r;
 }
 
-int _recognize::test_image(_prices* pr)
+int _recognize::test_image(_prices2* pr)
 {
 	find_text13(0xFF0000FF); // синим цветом покупки
 	if (elem.size() != roffer * 2) return 3;
@@ -2883,10 +2883,10 @@ int _recognize::test_image(_prices* pr)
 		if (a <= pre) return 4;
 		pre = a;
 		if ((a < 1) || (a > 65000)) return 5;
-		pr->pok[roffer - 1 - i].c = static_cast<ushort>(a);
+		pr->buy[roffer - 1 - i].value = static_cast<ushort>(a);
 		a = to_int(elem[i * 2i64 + 1i64].s);
 		if ((a < 1) || (a > 2000000000)) return 6;
-		pr->pok[roffer - 1 - i].k = static_cast<int>(a);
+		pr->buy[roffer - 1 - i].number = static_cast<int>(a);
 	}
 	find_red_text13(24); // красным цветом продажи
 	if (elem.size() != roffer * 2) return 7;
@@ -2896,22 +2896,22 @@ int _recognize::test_image(_prices* pr)
 		if (a <= pre) return 8;
 		pre = a;
 		if ((a < 1) || (a > 65000)) return 9;
-		pr->pro[i].c = static_cast<ushort>(a);
+		pr->sale[i].value = static_cast<ushort>(a);
 		a = to_int(elem[i * 2i64 + 1i64].s);
 		if ((a < 1) || (a > 2000000000)) return 10;
-		pr->pro[i].k = static_cast<int>(a);
+		pr->sale[i].number = static_cast<int>(a);
 	}
 	return 0;
 }
 
-int _recognize::read_prices_from_screen(_prices* pr)
+int _recognize::read_prices_from_screen(_prices2* pr)
 {
 	HWND w = FindWindow(0, mmm3.c_str());
 	if (!w) return 1;
 	HWND w2 = FindSubWindow(w, L"InfoPriceTable", L"Сбербанк [МБ ФР: Т+ Акции и ДР] Котировки"); // InfoPriceTable HostWindow
 	if (!w2) return 2;
 	image.clear(0xFFFFFFFF); // т.к. если окно свернуто, то не грабится
-	pr->time.now();
+	pr->time = time(0);
 	image.grab_ecran_oo2(w2);
 	find_text13(0xFF0000FF); // синим цветом покупки
 	if (elem.size() != roffer * 2) return 3;
@@ -2923,10 +2923,10 @@ int _recognize::read_prices_from_screen(_prices* pr)
 		if (a <= pre) return 4;
 		pre = a;
 		if ((a < 1) || (a > 65000)) return 5;
-		pr->pok[roffer - 1 - i].c = static_cast<ushort>(a);
+		pr->buy[roffer - 1 - i].value = static_cast<ushort>(a);
 		a = to_int(elem[i * 2 + 1].s);
 		if ((a < 1) || (a > 2000000000)) return 6;
-		pr->pok[roffer - 1 - i].k = static_cast<int>(a);
+		pr->buy[roffer - 1 - i].number = static_cast<int>(a);
 	}
 	find_red_text13(24); // красным цветом продажи
 	if (elem.size() != roffer * 2) return 7;
@@ -2936,10 +2936,10 @@ int _recognize::read_prices_from_screen(_prices* pr)
 		if (a <= pre) return 8;
 		pre = a;
 		if ((a < 1) || (a > 65000)) return 9;
-		pr->pro[i].c = static_cast<ushort>(a);
+		pr->sale[i].value = static_cast<ushort>(a);
 		a = to_int(elem[i * 2 + 1].s);
 		if ((a < 1) || (a > 2000000000)) return 10;
-		pr->pro[i].k = static_cast<int>(a);
+		pr->sale[i].number = static_cast<int>(a);
 	}
 	return 0;
 }
@@ -3405,9 +3405,9 @@ void _g_graph::ris2(_trans tr, bool final)
 
 void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 {
-	_super_stat ss_old = ss;
+	_sable_stat ss_old = ss;
 	ss.clear();
-	_prices pr;
+	_prices2 pr;
 	i64 rez = 0; // 0 - ожидание, 1 - покупка, 2 - продажа
 	i64 t_start = 0;
 	i64 t_end   = 0;
@@ -3425,14 +3425,14 @@ void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 			if (pr.time < t_start + 2) continue; // 2 секунды пауза между решением и действием
 			if (pr.time > t_start + 60) { rez = 0; continue; } // что-то не так
 			rez = 2;
-			cena = pr.pro[0].c;
+			cena = pr.sale[0].value;
 			continue;
 		}
 		if (rez == 2)
 		{
 			if (pr.time < t_end) continue; // еще не время
 			if (pr.time > t_end + 60) { rez = 0; continue; }; // что-то не так
-			cena2 = pr.pok[0].c;
+			cena2 = pr.buy[0].value;
 			rez = 0;
 			vv++;
 			k *= (cena2 * 0.999) / cena;
