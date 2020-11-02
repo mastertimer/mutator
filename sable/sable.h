@@ -337,6 +337,7 @@ inline _basic_statistics research3; // для исследования стат�
 
 void calc_all_prediction(_basic_curve &o, i64& nn, double& kk);
 double test_ss4();
+double test_ss2();
 void eeee();
 bool test_sss();
 

@@ -12,6 +12,8 @@ max(rnd)  |   1.058        58       1.00097
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#include <chrono>
+
 #include "sable.h"
 
 constexpr wchar_t ss_file[]  = L"..\\..\\baza.cen";
@@ -3472,6 +3474,21 @@ bool test_sss()
 		prpr = pr;
 	}
 	return true;
+}
+
+double test_ss2()
+{
+	_sable_stat ss7;
+	_prices pr;
+	auto t0 = std::chrono::high_resolution_clock::now();
+	for (i64 i = 0; i < ss.size; i++)
+	{
+		ss.read(i, pr);
+		ss7.add(pr);
+	}
+	auto t = std::chrono::high_resolution_clock::now() - t0;
+//	std::wstring s = double_to_string(t.count() / 1000000.0, 2);
+	return t.count() / 1000000.0;
 }
 
 double test_ss4()

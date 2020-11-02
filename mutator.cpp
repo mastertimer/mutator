@@ -11,7 +11,6 @@
 не подписывать сетку < 0, если все данные > 0 (и наоборот)
 у стека вернуть push/pop чтобы не путать со сдвигом
 !! сравнить скорости кодирования/декодирования старой и новой статистики
-!! протестировать на случайные add ошибочных цен
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -30,6 +29,11 @@ void show_message(std::string_view s, i64 b)
 void show_message(std::string_view s)
 {
 	MessageBoxA(0, s.data(), "информация", MB_OK | MB_TASKMODAL);
+}
+
+void show_message(std::wstring_view s)
+{
+	MessageBox(0, s.data(), L"информация", MB_OK | MB_TASKMODAL);
 }
 
 void show_message(i64 s)
@@ -678,40 +682,13 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-/*	SYSTEMTIME t;
-	GetLocalTime(&t);
-	time_t t2 = time(0);
-	show_message(t2);
-
-
-	tm b = {};
-	b.tm_year = 1950 - 1900;
-	t2 = mktime(&b);
-	show_message(t2);*/
-
-
-/*	show_message("год", t.wYear);
-	show_message("месяц", t.wMonth);
-	show_message("день", t.wDay);
-	show_message("час", t.wHour);
-	show_message("минута", t.wMinute);
-	show_message("секунда", t.wSecond);
-
-	tm t3;
-	localtime_s(&t3, &t2);
-	show_message("год", t3.tm_year + 1900);
-	show_message("месяц", t3.tm_mon + 1);
-	show_message("день", t3.tm_mday);
-	show_message("час", t3.tm_hour);
-	show_message("минута", t3.tm_min);
-	show_message("секунда", t3.tm_sec);*/
-
-
-
-	if (test_sss())
+	double dt = test_ss2();
+	std::wstring s = double_to_string(dt, 2);
+	show_message(s);
+/*	if (test_sss())
 		show_message("ура! тест пройдет!");
 	else
-		show_message("несовпадение..");
+		show_message("несовпадение..");*/
 //	eeee();
 /*	show_message(test_ss4());
 
