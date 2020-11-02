@@ -39,54 +39,11 @@ _date_time::operator int() const noexcept
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool _prices::operator==(const _prices& p) const noexcept
-{
-	for (i64 i = 0; i < roffer; i++)
-	{
-		if ((pok[i] != p.pok[i]) || (pro[i] != p.pro[i])) return false;
-	}
-	return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-_prices2::_prices2(const _prices& a)
-{
-	tm b = {};
-	b.tm_sec = a.time.second;
-	b.tm_min = a.time.minute;
-	b.tm_hour = a.time.hour;
-	b.tm_mday = a.time.day;
-	b.tm_mon = ((a.time.month - 1) % 12);
-	b.tm_year = ((a.time.month - 1) / 12) + 2017 - 1900;
-	time = mktime(&b);
-	for (i64 i = 0; i < roffer; i++)
-	{
-		buy[i] = a.pok[i];
-		sale[i] = a.pro[i];
-	}
-}
-
 bool _prices2::operator==(const _prices2& p) const noexcept
 {
 	for (i64 i = 0; i < roffer; i++)
 		if ((buy[i] != p.buy[i]) || (sale[i] != p.sale[i])) return false;
 	return true;
-}
-
-bool _prices2::operator!=(const _prices& p) const noexcept
-{
-	for (i64 i = 0; i < roffer; i++)
-		if ((buy[i] != p.pok[i]) || (sale[i] != p.pro[i])) return true;
-	tm t3;
-	localtime_s(&t3, &time);
-	if (t3.tm_sec != p.time.second) return true;
-	if (t3.tm_min != p.time.minute) return true;
-	if (t3.tm_hour != p.time.hour) return true;
-	if (t3.tm_mday != p.time.day) return true;
-	if (t3.tm_mon != ((p.time.month - 1) % 12)) return true;
-	if (t3.tm_year != ((p.time.month - 1) / 12) + 2017 - 1900) return true;
-	return false;
 }
 
 i64 _prices2::time_hour()

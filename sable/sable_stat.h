@@ -40,32 +40,15 @@ struct _date_time // дата и время
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _prices // массив спроса предложения
-{
-	_offer pok[roffer]; // предложение покупки (порядок с самого выгодного)
-	_offer pro[roffer]; // предложение продажи (порядок с самого выгодного)
-	_date_time time;    // время
-
-	void clear()       noexcept { time.second = 200; } // метка пустого прайса
-	bool empty() const noexcept { return (time.second == 200); } // проверка на пустоту
-	bool operator==(const _prices& p) const noexcept; // время не учитывается при сравнении
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 struct _prices2 // массив спроса предложения с удобными типами
 {
 	_one_stat buy[roffer];  // предложение покупки (порядок с самого выгодного)
 	_one_stat sale[roffer]; // предложение продажи (порядок с самого выгодного)
 	time_t    time;         // время
 
-	_prices2() = default;
-	_prices2(const _prices& a);
-
 	void clear()       noexcept { time = 0; } // метка пустого прайса
 	bool empty() const noexcept { return (time == 0); } // проверка на пустоту 
 	bool operator==(const _prices2& p) const noexcept; // время не учитывается при сравнении
-	bool operator!=(const _prices& p) const noexcept;
 
 	time_t time_to_minute() { return time - (time % 60); } // обнулить секунды
 	i64 time_hour();

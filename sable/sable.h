@@ -7,44 +7,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _super_stat // супер статистика цен
-{
-	struct _info_pak // дополнительная информация для упаковки
-	{
-		bool ok;   // есть данные
-		int r;     // общий размер
-		int r_pro; // размер продаж
-		int r_pok; // размер покупок
-	};
-
-	i64 size = 0; // количество записей
-	_prices last_cc{}; // последние цены
-	static constexpr double c_unpak = 0.01; // распаковка цен
-
-	_super_stat();
-
-	bool operator==(const _super_stat& b) const noexcept { return (size == b.size) && (data == b.data); }
-
-	void add(_prices& c); // добавить цены (сжать)
-	void read(i64 n, _prices& c, _info_pak* inf = 0); // прочитать цены (расжать)
-	void save_to_file(wstr fn);
-	void load_from_file(wstr fn);
-	void clear(); // удалить все данные
-
-private:
-	_stack data; // сжатые данные
-	std::vector<int> u_dd2; // указатель на место сжатых данных кратных StepPakCC
-
-	static const int step_pak_cc = 100;
-	_prices read_cc; // последние прочитанные цены
-	i64 read_n = -666; // номер последних прочитанных цен
-	_info_pak ip_last, ip_n; // дополнительная информация
-
-	void otgruzka(int rez, int Vrez, int* deko); // вспомогательная Pak()
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 struct _element_chart // краткая информация элемента графика
 {
 	int    n;    // порядковый номер элемента !!! -1 = нет элемента
