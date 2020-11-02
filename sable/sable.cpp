@@ -19,7 +19,6 @@ max(rnd)  |   1.058        58       1.00097
 constexpr wchar_t sss_file[] = L"..\\..\\base.c2";
 constexpr wchar_t mmm_file[] = L"..\\..\\mmm.txt";
 
-//_super_stat      ss;               // сжатые цены
 _sable_stat      ss;              // сжатые цены
 _sable_graph    *graph  = nullptr; // график
 
@@ -145,7 +144,7 @@ void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 
 	if (popitok_prodaz < 1) return;
 	if (a.time_hour() >= 18) return; // слишком поздно
-	int ti = oracle->get_latest_events(oracle->zn.size() - 1).start();
+	time_t ti = oracle->get_latest_events(oracle->zn.size() - 1).start();
 
 
 	if (ti == 0) return;
@@ -616,7 +615,7 @@ void _sable_graph::ris2(_trans tr, bool final)
 {
 	_area a = tr(local_area);
 	_interval y_; // диапазон у (grid)
-	static std::vector<int> time_; // отсчеты времени (grid)
+	static std::vector<time_t> time_; // отсчеты времени (grid)
 
 	double polzi_ = 0; // !! ползунок
 

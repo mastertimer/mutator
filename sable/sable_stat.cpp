@@ -7,38 +7,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _date_time::now()
-{
-	SYSTEMTIME t;
-	GetLocalTime(&t);
-	month = t.wMonth + (t.wYear - 2017) * 12;
-	day = (uchar)t.wDay;
-	hour = (uchar)t.wHour;
-	minute = (uchar)t.wMinute;
-	second = (uchar)t.wSecond;
-}
-
-void _date_time::operator =(int a)
-{
-	month  = (uchar)(a / 2764800L);
-	day    = (uchar)((a -= month * 2764800L) / 86400L);
-	hour   = (uchar)((a -= day * 86400L) / 3600L);
-	minute = (uchar)((a -= hour * 3600L) / 60L);
-	second = (uchar)(a - minute * 60L);
-}
-
-int _date_time::to_minute()
-{
-	return (((month * 32L + day) * 24L + hour) * 60L + minute) * 60L;
-}
-
-_date_time::operator int() const noexcept
-{
-	return (((month * 32L + day) * 24L + hour) * 60L + minute) * 60L + second;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 bool _prices2::operator==(const _prices2& p) const noexcept
 {
 	for (i64 i = 0; i < roffer; i++)
