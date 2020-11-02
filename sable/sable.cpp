@@ -778,12 +778,18 @@ void _sable_graph::ris2(_trans tr, bool final)
 			uint cl = (sca) ? (0x80FF0000) : col_setka;
 			master_bm.line({ i64(a.x.min + x), a.y.min }, { a.x.min + x, a.y.max }, cl);
 			if ((x - 13 <= dex) || (x + 13 >= a.x.length() - dex)) continue;
-			int ii = (time_[i] / dele[ido]) % ost[ido];
+			tm t3;
+			localtime_s(&t3, &time_[i]);
+			s[4] = '0' + (t3.tm_min % 10);
+			s[3] = '0' + (t3.tm_min / 10);
+			s[1] = '0' + (t3.tm_hour % 10);
+			s[0] = '0' + (t3.tm_hour / 10);
+/*			int ii = (time_[i] / dele[ido]) % ost[ido];
 			s[4] = '0' + (ii % 10);
 			s[3] = '0' + (ii / 10);
 			ii = (time_[i] / dele[ido + 1]) % ost[ido + 1];
 			s[1] = '0' + (ii % 10);
-			s[0] = '0' + (ii / 10);
+			s[0] = '0' + (ii / 10);*/
 			master_bm.text16(x - 11 + a.x.min, std::min((i64)a.y.max, master_bm.size.y) - 13, s, col_setka_font);
 			master_bm.text16(x - 11 + a.x.min, std::max(a.y.min, 0.0), s, col_setka_font);
 			continue;
