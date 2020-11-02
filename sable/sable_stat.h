@@ -90,15 +90,24 @@ struct _bit_vector // вектор с побитовой записью / чтением
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _sable_stat // статистика цен, сжатая  *** 23.9 байт *** 40.1 байт *** !! 20.8 !!
+struct _sable_stat // статистика цен, сжатая  (в 2 раза меньше, в 3 раза медленней предыдущей версии)
 {
+	struct _info_pak // дополнительная информация для упаковки
+	{
+		bool ok = false;   // есть данные
+		int r = 0;     // общий размер
+		int r_pro = 0; // размер продаж
+		int r_pok = 0; // размер покупок
+	};
+
 	i64 size = 0; // количество записей
 	_prices2 last_cc{}; // последние цены
 	_bit_vector data; // сжатые данные
 	static constexpr time_t old_dtime = 160; // разность времени, после которого цены считаются устаревшими
+	static constexpr double c_unpak = 0.01; // распаковка цен
 
 	bool add(const _prices2& c); // добавить цены (сжать)
-	bool read(i64 n, _prices2& c); // прочитать цены (расжать)
+	bool read(i64 n, _prices2& c, _info_pak* inf = nullptr); // прочитать цены (расжать)
 	void save_to_file(wstr fn);
 	void load_from_file(wstr fn);
 
@@ -111,6 +120,7 @@ private:
 	static constexpr i64 step_pak_cc = 100; // период ключевых цен
 	_prices2 read_cc{}; // последние прочитанные цены
 	i64 read_n = -666; // номер последних прочитанных цен
+	_info_pak ip_last, ip_n; // дополнительная информация
 
 	bool add0(const _prices2& c); // не дельта!
 	bool add1(const _prices2& c); // дельта

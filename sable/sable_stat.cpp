@@ -315,6 +315,7 @@ namespace
 
 bool _sable_stat::add0(const _prices2& c)
 {
+	ip_last.ok = false;
 	data.pushn(c.buy[roffer - 1].value, 16);
 	for (i64 i = roffer - 1; i >= 0; i--)
 	{
@@ -540,6 +541,7 @@ bool _sable_stat::add12(const _one_stat* v1, std::vector<_one_stat>& v0, i64 izm
 
 bool _sable_stat::add1(const _prices2& c)
 {
+	ip_last.ok = true;
 	i64 buy_izm = calc_delta_del_add(c.buy, base_buy);
 	i64 sale_izm = calc_delta_del_add(c.sale, base_sale);
 	if (std::max(abs(buy_izm), abs(sale_izm)) > 12)
@@ -552,8 +554,14 @@ bool _sable_stat::add1(const _prices2& c)
 	std::vector<_one_stat> bbuy = base_buy;
 	std::vector<_one_stat> bsale = base_sale;
 
+	i64 aa0 = data.size();
 	if (!add12(c.buy, bbuy, buy_izm)) return false;
+	i64 aa1 = data.size();
 	if (!add12(c.sale, bsale, sale_izm)) return false;
+
+	ip_last.r = int(data.size() - aa0);
+	ip_last.r_pok = int(aa1 - aa0);
+	ip_last.r_pro = int(data.size() - aa1);
 
 	base_buy = std::move(bbuy);
 	base_sale = std::move(bsale);
@@ -598,6 +606,7 @@ err:
 
 bool _sable_stat::read0(_prices2& c)
 {
+	ip_n.ok = false;
 	c.buy[roffer - 1].value = data.popn(16);
 	for (i64 i = roffer - 1; i >= 0; i--)
 	{
@@ -752,23 +761,32 @@ bool _sable_stat::read12(_one_stat* v1, std::vector<_one_stat>& v0)
 
 bool _sable_stat::read1(_prices2& c)
 {
+	ip_n.ok = true;
 	if (data.pop1() == 0) return read0(c);
+	auto aa0 = data.bit_read;
 	if (!read12(c.buy, base_buy_r)) return false;
+	auto aa1 = data.bit_read;
 	if (!read12(c.sale, base_sale_r)) return false;
+	ip_n.r = int(data.bit_read - aa0);
+	ip_n.r_pok = int(aa1 - aa0);
+	ip_n.r_pro = int(data.bit_read - aa1);
 	return true;
 }
 
-bool _sable_stat::read(i64 n, _prices2& c)
+bool _sable_stat::read(i64 n, _prices2& c, _info_pak* inf)
 {
+	if (inf) inf->ok = false;
 	if ((n < 0) || (n >= size)) return false;
 	if (n == read_n)
 	{
 		c = read_cc;
+		if (inf)*inf = ip_n;
 		return true;
 	}
 	if (n == size - 1)
 	{
 		c = last_cc;
+		if (inf)*inf = ip_last;
 		return true;
 	}
 	if (read_n + 1 != n)
@@ -780,7 +798,7 @@ bool _sable_stat::read(i64 n, _prices2& c)
 			read_n = k * step_pak_cc - 1;
 		}
 		bool r = false;
-		while (read_n < n) r = read(read_n + 1, c);
+		while (read_n < n) r = read(read_n + 1, c, inf);
 		return r;
 	}
 	if (n % step_pak_cc == 0)
@@ -807,6 +825,7 @@ bool _sable_stat::read(i64 n, _prices2& c)
 	}
 	read_cc = c;
 	read_n = n;
+	if (inf)*inf = ip_n;
 	return true;
 }
 
@@ -833,6 +852,8 @@ void _sable_stat::load_from_file(wstr fn)
 	mem >> base_buy;
 	mem >> base_sale;
 	read_n = -666;
+	ip_last.ok = false;
+	ip_n.ok = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
