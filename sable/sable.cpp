@@ -3451,17 +3451,26 @@ void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 bool test_sss()
 {
 	_prices pr;
-	_prices prpr;
+	_prices prpr{};
 	_prices2 aa;
 	i64 ii = 0;
 	for (i64 i = 0; i < ss.size; i++)
 	{
 		ss.read(i, pr);
+		if (pr.time < prpr.time)
+		{
+			if (ii == 17) return false;
+		}
 		if (pr == prpr) continue;
+		if (i == 493900)
+		{
+			if (ii == 17) return false;
+		}
 		sss.read(ii++, aa);
 		if (aa != pr)
 		{
-			return false;
+			if (ii == 17) return false;
+			//return false;
 		}
 		prpr = pr;
 	}
@@ -3485,9 +3494,13 @@ void eeee()
 	for (i64 i = 0; i < ss.size; i++)
 	{
 		ss.read(i, pr);
+		if (i == 493900)
+		{
+			if (ss.size == 17) return;
+		}
 		sss.add(pr);
 	}
-	sss.save_to_file(L"e:\\pak.eee");
+	sss.save_to_file(L"d:\\base.c2");
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -22,6 +22,11 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void show_message(std::string_view s, i64 b)
+{
+	MessageBoxA(0, ((std::string)s + " = "+ std::to_string(b)).c_str(), "информация", MB_OK | MB_TASKMODAL);
+}
+
 void show_message(std::string_view s)
 {
 	MessageBoxA(0, s.data(), "информация", MB_OK | MB_TASKMODAL);
@@ -673,6 +678,36 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
+/*	SYSTEMTIME t;
+	GetLocalTime(&t);
+	time_t t2 = time(0);
+	show_message(t2);
+
+
+	tm b = {};
+	b.tm_year = 1950 - 1900;
+	t2 = mktime(&b);
+	show_message(t2);*/
+
+
+/*	show_message("год", t.wYear);
+	show_message("месяц", t.wMonth);
+	show_message("день", t.wDay);
+	show_message("час", t.wHour);
+	show_message("минута", t.wMinute);
+	show_message("секунда", t.wSecond);
+
+	tm t3;
+	localtime_s(&t3, &t2);
+	show_message("год", t3.tm_year + 1900);
+	show_message("месяц", t3.tm_mon + 1);
+	show_message("день", t3.tm_mday);
+	show_message("час", t3.tm_hour);
+	show_message("минута", t3.tm_min);
+	show_message("секунда", t3.tm_sec);*/
+
+
+
 	if (test_sss())
 		show_message("ура! тест пройдет!");
 	else
@@ -1148,7 +1183,7 @@ _tetron* create_tetron(uchar tipt)
 	case  6: return new _g_test_graph;        // 0xF2
 	case  7: return new _t_double;            // 0x50
 	case  8: return new _g_link;              // 0x7A
-	case  9: return new _sable_graph;           // 0x71
+	case  9: return new _sable_graph;         // 0x71
 	case 10: return new _g_circle;            // 0x74
 	case 11: return new _g_line;              // 0x70
 	case 12: return new _g_rect;              // 0xF4
