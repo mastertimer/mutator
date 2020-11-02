@@ -563,6 +563,7 @@ bool _sable_stat::add1(const _prices2& c)
 bool _sable_stat::add(const _prices2& c)
 {
 	if (c == last_cc) return true; // с большой вероятностью данные устарели
+	if (c.time < last_cc.time) return true; // цены из прошлого не принимаются!
 	auto s_data = data.size();
 	if (size % step_pak_cc == 0)
 	{
@@ -577,7 +578,6 @@ bool _sable_stat::add(const _prices2& c)
 	else
 	{
 		time_t dt = c.time - last_cc.time;
-		if (dt < 0) dt = 0; // время может идти назад!
 		if (dt == 1) data.push1(0); else { data.push1(1); data.pushn(dt, 31); }
 		if (dt > old_dtime)
 		{
@@ -593,7 +593,7 @@ bool _sable_stat::add(const _prices2& c)
 	return true;
 err:
 	data.resize(s_data);
-	return false;
+	return false; // ошибка кодирования, нужно исправлять!!
 }
 
 bool _sable_stat::read0(_prices2& c)
