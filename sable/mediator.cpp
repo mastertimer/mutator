@@ -16,7 +16,9 @@ int kkk2 = 13; // количество продаваемых акций
 
 void load_mmm()
 {
-	if (mmm1 != L"1") return; // уже прочитан
+	static bool first = true;
+	if (!first) return;
+	first = false;
 	_rjson fs((exe_path + mmm_file).c_str());
 	fs.read("mmm1", mmm1);
 	fs.read("mmm2", mmm2);
@@ -107,6 +109,7 @@ _recognize::_recognize()
 
 int _recognize::read_okno_soobsenii()
 {
+	load_mmm();
 	HWND w = FindWindow(0, mmm2.c_str());
 	if (!w) return 1;
 	offset = { 0, 0 };
@@ -209,6 +212,7 @@ HWND FindSubWindow(HWND w, const wchar_t* classname, const wchar_t* windowname)
 
 int _recognize::read_tablica_zayavok(int a, int& b)
 {
+	load_mmm();
 	b = 0;
 	HWND w = FindWindow(0, mmm3.c_str());
 	if (!w) return 1;
@@ -230,6 +234,7 @@ int _recognize::read_tablica_zayavok(int a, int& b)
 
 bool _recognize::find_window_prices(RECT* rr)
 {
+	load_mmm();
 	HWND w = FindWindow(0, mmm3.c_str());
 	if (!w) return false;
 	HWND w2 = FindSubWindow(w, L"InfoPriceTable", L"Сбербанк [МБ ФР: Т+ Акции и ДР] Котировки"); // InfoPriceTable HostWindow
@@ -288,6 +293,7 @@ int _recognize::test_image(_prices* pr)
 
 int _recognize::read_prices_from_screen(_prices* pr)
 {
+	load_mmm();
 	HWND w = FindWindow(0, mmm3.c_str());
 	if (!w) return 1;
 	HWND w2 = FindSubWindow(w, L"InfoPriceTable", L"Сбербанк [МБ ФР: Т+ Акции и ДР] Котировки"); // InfoPriceTable HostWindow
@@ -594,6 +600,7 @@ int bad_string_to_int(std::wstring& s)
 
 void buy_stock(_tetron* tt, bool buy)
 {
+	load_mmm();
 	int otst_20 = 1; // 20 >= x >= 1, 1 - лучшая цена
 	static int KKK;
 	static bool win8 = false;

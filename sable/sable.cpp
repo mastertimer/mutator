@@ -53,7 +53,6 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 	if (o3) o3->recovery();
 	if (o_test) o_test->recovery();
 	graph->cha_area();
-	load_mmm();
 }
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)
@@ -157,7 +156,6 @@ void fun19(_tetron* tt0, _tetron* tt, u64 flags)
 void fun20(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (zamok_pokupki) return;
-	load_mmm();
 	zamok_pokupki = true;
 	_t_function* fu = new _t_function(35);
 	fu->run(0, fu, flag_run);
@@ -166,7 +164,6 @@ void fun20(_tetron* tt0, _tetron* tt, u64 flags)
 void fun21(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (zamok_pokupki) return;
-	load_mmm();
 	zamok_pokupki = true;
 	_t_function* fu = new _t_function(36);
 	fu->run(0, fu, flag_run);
