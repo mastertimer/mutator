@@ -48,6 +48,9 @@
     <ClCompile Include="library\basic.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
+    <ClCompile Include="library\mathematics.cpp">
+      <Filter>Исходные файлы\library</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -69,6 +72,9 @@
       <Filter>Файлы заголовков\sable</Filter>
     </ClInclude>
     <ClInclude Include="library\basic.h">
+      <Filter>Файлы заголовков\library</Filter>
+    </ClInclude>
+    <ClInclude Include="library\mathematics.h">
       <Filter>Файлы заголовков\library</Filter>
     </ClInclude>
   </ItemGroup>

@@ -163,6 +163,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="library\basic.cpp" />
+    <ClCompile Include="library\mathematics.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mult.cpp" />
     <ClCompile Include="mutator.cpp" />
@@ -172,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\basic.h" />
+    <ClInclude Include="library\mathematics.h" />
     <ClInclude Include="mult.h" />
     <ClInclude Include="mutator.h" />
     <ClInclude Include="resource.h" />
