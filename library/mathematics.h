@@ -4,6 +4,73 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+struct _matrix;
+
+struct matrix_column // столбец матрицы
+{
+	_matrix* m; // указатель на матрицу
+	i64 x; // номер столбца
+
+	bool min_max(double* mi, double* ma); // найти диапазон
+//	double Delta(size_t y = 1); // разница 2-х элементов [y] - [y-1]
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct _matrix
+{
+	double* data = nullptr;
+	_isize size;
+
+	_matrix() = default;
+	_matrix(const _matrix& a) noexcept;
+	_matrix(_matrix&& a) noexcept;
+	_matrix(i64 ry, i64 rx) noexcept;
+	//	matrix(size_t ry, size_t rx, double z) noexcept;// заполнить числом z
+	//	matrix(size_t ry, size_t rx, const std::function<double(size_t, size_t)>& fun) noexcept; // задать из функции fun
+	//	matrix(size_t ry) noexcept; // вектор
+	_matrix(i64 ry, const std::function<double(i64)>& fun) noexcept; // вектор задать из функции
+	~_matrix() { delete[] data; }
+
+	void operator=(const _matrix& a) noexcept;
+	void operator=(_matrix&& a) noexcept;
+	//	void operator+=(const matrix& a) noexcept;
+
+	//	void set_diagonal_matrix(size_t n, double dz) noexcept; // задать матрицу диагонального вида
+
+	double* operator[](i64 n) { return data + (n * size.x); } // нужна€ строчка
+	void resize(_isize r); // изменить размер матрицы ! данные не сохран€ютс€
+//	inline bool empty() const noexcept { return rx_ * ry_ == 0; } // проверка на нулевой размер
+//	inline size_t size_x() const noexcept { return rx_; } // размер по x
+//	inline size_t size_y() const noexcept { return ry_; } // размер по y
+//	inline size_t size() const noexcept { return ry_ * rx_; } // размер
+	matrix_column column(i64 x) { return { this, x }; } // столбец матрицы
+
+//	void MinMax(double* mi, double* ma); // найти диапазон
+
+//	matrix transpose() const noexcept; // транспонированна€ матрица
+//	matrix this_mul_transpose() const noexcept; // текуща€ матрица умножить на транспонированную себ€
+//	matrix pseudoinverse() const noexcept; // псевдообратна€ матрица
+
+//	void FindAllEigenVectors(matrix& R, matrix& A) const noexcept; // собственные вектора и собственные числа
+	 // линейное предсказание на основе коэффициентов
+//	matrix linear_prediction(const matrix& k, size_t start, size_t n, size_t ots = 0) const noexcept;
+//	double linear_prediction(const matrix& k) const noexcept; // линейное предсказание на основе коэффициентов
+
+//	matrix operator<<(const matrix& a) const noexcept; // склеить матрицы (количество строк должно быть одинаковым)
+//	matrix operator*(const matrix& a) const noexcept;
+//	matrix operator-(const matrix& a) const noexcept;
+
+//	void Push(_stack* mem); // сохранить в стек
+//	void Pop(_stack* mem); // извлечь из стека
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//matrix get_noise(size_t n, double k); // сгенерировать шум
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct _one_stat // единица статистики
 {
 	i64 value;   // значение / цена
