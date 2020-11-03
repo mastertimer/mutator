@@ -25,15 +25,18 @@
     <Filter Include="Файлы заголовков\library">
       <UniqueIdentifier>{7e07398e-40b3-4864-9144-5c3b9cf1c4fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\tetrons">
+      <UniqueIdentifier>{5d139b6f-a1b4-4d53-be87-17b3c598c452}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\tetrons">
+      <UniqueIdentifier>{a0b0da93-e50f-4672-8025-280cff6a1efd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="mutator.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="tetron.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="mult.cpp">
@@ -54,15 +57,15 @@
     <ClCompile Include="sable\mediator.cpp">
       <Filter>Исходные файлы\sable</Filter>
     </ClCompile>
+    <ClCompile Include="tetrons\tetron.cpp">
+      <Filter>Исходные файлы\tetrons</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="mutator.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="tetron.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="mult.h">
@@ -82,6 +85,9 @@
     </ClInclude>
     <ClInclude Include="sable\mediator.h">
       <Filter>Файлы заголовков\sable</Filter>
+    </ClInclude>
+    <ClInclude Include="tetrons\tetron.h">
+      <Filter>Файлы заголовков\tetrons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
