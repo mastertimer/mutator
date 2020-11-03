@@ -51,6 +51,9 @@
     <ClCompile Include="library\mathematics.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
+    <ClCompile Include="sable\mediator.cpp">
+      <Filter>Исходные файлы\sable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -76,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="library\mathematics.h">
       <Filter>Файлы заголовков\library</Filter>
+    </ClInclude>
+    <ClInclude Include="sable\mediator.h">
+      <Filter>Файлы заголовков\sable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

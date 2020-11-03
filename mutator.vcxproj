@@ -167,6 +167,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mult.cpp" />
     <ClCompile Include="mutator.cpp" />
+    <ClCompile Include="sable\mediator.cpp" />
     <ClCompile Include="sable\sable.cpp" />
     <ClCompile Include="sable\sable_stat.cpp" />
     <ClCompile Include="tetron.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="mult.h" />
     <ClInclude Include="mutator.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="sable\mediator.h" />
     <ClInclude Include="sable\sable.h" />
     <ClInclude Include="sable\sable_stat.h" />
     <ClInclude Include="tetron.h" />
