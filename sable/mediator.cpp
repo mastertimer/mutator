@@ -4,15 +4,18 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+constexpr wchar_t mmm_file[] = L"..\\..\\mmm.txt";
+
 std::wstring mmm1 = L"1";
 std::wstring mmm2 = L"2";
 std::wstring mmm3 = L"3";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void load_mmm(wstr file_name)
+void load_mmm()
 {
-	_rjson fs(file_name);
+	if (mmm1 != L"1") return; // уже прочитан
+	_rjson fs((exe_path + mmm_file).c_str());
 	fs.read("mmm1", mmm1);
 	fs.read("mmm2", mmm2);
 	fs.read("mmm3", mmm3);

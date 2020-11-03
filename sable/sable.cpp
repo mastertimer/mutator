@@ -18,7 +18,6 @@ max(rnd)  |   1.058        58       1.00097
 #include "sable.h"
 
 constexpr wchar_t sss_file[] = L"..\\..\\base.c2";
-constexpr wchar_t mmm_file[] = L"..\\..\\mmm.txt";
 
 _sable_stat      ss;               // сжатые цены
 _sable_graph    *graph  = nullptr; // график
@@ -34,7 +33,7 @@ int kkk2 = 13; // количество продаваемых акций
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void start_sable()
+void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	static bool first = true; if (!first) return; first = false;
 	ss.load_from_file((exe_path + sss_file).c_str());
@@ -58,7 +57,19 @@ void start_sable()
 	if (o3) o3->recovery();
 	if (o_test) o_test->recovery();
 	graph->cha_area();
-	load_mmm((exe_path + mmm_file).c_str());
+	load_mmm();
+}
+
+void fun15(_tetron* tt0, _tetron* tt, u64 flags)
+{
+	for (_frozen i(n_timer1000, flag_run); i; i++)
+	{
+		_t_function* f = *i;
+		if (!f) continue;
+		if (f->a == 16) delete f;
+	}
+	_g_button* b = *tt0;
+	if (b->checked) n_timer1000->add_flags(new _t_function(16), flag_run);
 }
 
 bool can_trade     = false; // разрешение на торговлю
@@ -67,7 +78,7 @@ int popitok_prodaz = 2;     // сколько раз можно купить/п�
 int gotovo_prodaz  = 0;     // сколько сделок
 int vrema_prodat   = 0;     // время когда нужно продать
 
-void sable_scan()
+void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (zamok_pokupki) return;
 	_prices a;
@@ -151,7 +162,7 @@ void fun19(_tetron* tt0, _tetron* tt, u64 flags)
 void fun20(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (zamok_pokupki) return;
-	if (mmm1 == L"1") load_mmm((exe_path + mmm_file).c_str());
+	load_mmm();
 	zamok_pokupki = true;
 	_t_function* fu = new _t_function(35);
 	fu->run(0, fu, flag_run);
@@ -160,7 +171,7 @@ void fun20(_tetron* tt0, _tetron* tt, u64 flags)
 void fun21(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (zamok_pokupki) return;
-	if (mmm1 == L"1") load_mmm((exe_path + mmm_file).c_str());
+	load_mmm();
 	zamok_pokupki = true;
 	_t_function* fu = new _t_function(36);
 	fu->run(0, fu, flag_run);
