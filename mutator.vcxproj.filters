@@ -19,6 +19,12 @@
     <Filter Include="Исходные файлы\sable">
       <UniqueIdentifier>{17abb00c-4115-4da7-a7a3-9233a2a332b2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\library">
+      <UniqueIdentifier>{3992fe31-edea-467d-9170-02cc008116be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\library">
+      <UniqueIdentifier>{7e07398e-40b3-4864-9144-5c3b9cf1c4fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -33,14 +39,14 @@
     <ClCompile Include="mult.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="basic.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="sable\sable.cpp">
       <Filter>Исходные файлы\sable</Filter>
     </ClCompile>
     <ClCompile Include="sable\sable_stat.cpp">
       <Filter>Исходные файлы\sable</Filter>
+    </ClCompile>
+    <ClCompile Include="library\basic.cpp">
+      <Filter>Исходные файлы\library</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -56,14 +62,14 @@
     <ClInclude Include="mult.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="basic.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="sable\sable.h">
       <Filter>Файлы заголовков\sable</Filter>
     </ClInclude>
     <ClInclude Include="sable\sable_stat.h">
       <Filter>Файлы заголовков\sable</Filter>
+    </ClInclude>
+    <ClInclude Include="library\basic.h">
+      <Filter>Файлы заголовков\library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
