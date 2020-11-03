@@ -34,7 +34,7 @@ int kkk2 = 13; // количество продаваемых акций
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void fun13(_tetron* tt0, _tetron* tt, u64 flags)
+void start_sable()
 {
 	static bool first = true; if (!first) return; first = false;
 	ss.load_from_file((exe_path + sss_file).c_str());
@@ -61,25 +61,13 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 	load_mmm((exe_path + mmm_file).c_str());
 }
 
-void fun15(_tetron* tt0, _tetron* tt, u64 flags)
-{
-	for (_frozen i(n_timer1000, flag_run); i; i++)
-	{
-		_t_function* f = *i;
-		if (!f) continue;
-		if (f->a == 16) delete f;
-	}
-	_g_button* b = *tt0;
-	if (b->checked) n_timer1000->add_flags(new _t_function(16), flag_run);
-}
-
 bool can_trade     = false; // разрешение на торговлю
 bool zamok_pokupki = false; // простой блокиратор
 int popitok_prodaz = 2;     // сколько раз можно купить/продать
 int gotovo_prodaz  = 0;     // сколько сделок
 int vrema_prodat   = 0;     // время когда нужно продать
 
-void fun16(_tetron* tt0, _tetron* tt, u64 flags)
+void sable_scan()
 {
 	if (zamok_pokupki) return;
 	_prices a;
