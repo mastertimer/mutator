@@ -7,21 +7,21 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool _prices2::operator==(const _prices2& p) const noexcept
+bool _prices::operator==(const _prices& p) const noexcept
 {
 	for (i64 i = 0; i < roffer; i++)
 		if ((buy[i] != p.buy[i]) || (sale[i] != p.sale[i])) return false;
 	return true;
 }
 
-i64 _prices2::time_hour()
+i64 _prices::time_hour()
 {
 	tm t3;
 	localtime_s(&t3, &time);
 	return t3.tm_hour;
 }
 
-i64 _prices2::time_minute()
+i64 _prices::time_minute()
 {
 	tm t3;
 	localtime_s(&t3, &time);
@@ -252,7 +252,7 @@ namespace
 
 }
 
-bool _sable_stat::add0(const _prices2& c)
+bool _sable_stat::add0(const _prices& c)
 {
 	ip_last.ok = false;
 	data.pushn(c.buy[roffer - 1].value, 16);
@@ -478,7 +478,7 @@ bool _sable_stat::add12(const _one_stat* v1, std::vector<_one_stat>& v0, i64 izm
 	return true;
 }
 
-bool _sable_stat::add1(const _prices2& c)
+bool _sable_stat::add1(const _prices& c)
 {
 	ip_last.ok = true;
 	i64 buy_izm = calc_delta_del_add(c.buy, base_buy);
@@ -507,7 +507,7 @@ bool _sable_stat::add1(const _prices2& c)
 	return true;
 }
 
-bool _sable_stat::add(const _prices2& c)
+bool _sable_stat::add(const _prices& c)
 {
 	if (c == last_cc) return true; // с большой вероятностью данные устарели
 	if (c.time < last_cc.time) return true; // цены из прошлого не принимаются!
@@ -543,7 +543,7 @@ err:
 	return false; // ошибка кодирования, нужно исправлять!!
 }
 
-bool _sable_stat::read0(_prices2& c)
+bool _sable_stat::read0(_prices& c)
 {
 	ip_n.ok = false;
 	c.buy[roffer - 1].value = data.popn(16);
@@ -698,7 +698,7 @@ bool _sable_stat::read12(_one_stat* v1, std::vector<_one_stat>& v0)
 	return true;
 }
 
-bool _sable_stat::read1(_prices2& c)
+bool _sable_stat::read1(_prices& c)
 {
 	ip_n.ok = true;
 	if (data.pop1() == 0) return read0(c);
@@ -712,7 +712,7 @@ bool _sable_stat::read1(_prices2& c)
 	return true;
 }
 
-bool _sable_stat::read(i64 n, _prices2& c, _info_pak* inf)
+bool _sable_stat::read(i64 n, _prices& c, _info_pak* inf)
 {
 	if (inf) inf->ok = false;
 	if ((n < 0) || (n >= size)) return false;

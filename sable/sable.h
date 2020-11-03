@@ -177,7 +177,7 @@ struct _oracle3 : public _basic_curve // оракул 3-я версия
 	};
 	static const int max_part = 22000; // максимально количество элементов ss
 
-	std::deque<_prices2> part_ss; // часть супер-статистики
+	std::deque<_prices> part_ss; // часть супер-статистики
 	i64 begin_ss = 0; // начало куска супер-статистики
 	std::vector<_element_oracle> zn; // данные
 
@@ -245,7 +245,7 @@ struct _recognize // распознавание с экрана
 	std::vector<_area_string> elem; // элементы
 
 	_recognize(); // конструктор
-	int read_prices_from_screen(_prices2* pr); // прочитать цены с экрана (0 - без ошибок)
+	int read_prices_from_screen(_prices* pr); // прочитать цены с экрана (0 - без ошибок)
 	int read_vvod_zaya(); // найти и распознать окно ввода заявки. возращает ошибку
 	int read_vnimanie_prodaza(); // найти и распознать окно подтвержения продажи. возращает ошибку
 	int read_vnimanie_pokupka(); // найти и распознать окно подтвержения продажи. возращает ошибку
@@ -257,7 +257,7 @@ struct _recognize // распознавание с экрана
 	bool find_window_prices(RECT* rr); // координаты окна цен
 	int find_elem(std::wstring_view s); // найти текст среди элементов
 	int find_elem_kusok(wstr s); // найти кусок текста среди элементов
-	int test_image(_prices2* pr); // тестовый поиск на готовой картинке
+	int test_image(_prices* pr); // тестовый поиск на готовой картинке
 
 private:
 	_kusok_bukva bu; // дерево алфавита для распознавания

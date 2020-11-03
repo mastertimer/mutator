@@ -8,27 +8,17 @@ constexpr i64 roffer = 20; // предложений продажи, предложений покупки ( ВСЕГО =
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _offer // предложение
-{
-	ushort c; // цена
-	int k; // количество
-
-	bool operator!=(_offer p) const noexcept { return (c != p.c) || (k != p.k); }
-};
-
 struct _one_stat // единица статистики
 {
 	i64 value;   // значение / цена
 	i64 number;  // количество
 
-	void operator=(_offer a) noexcept { value = a.c; number = a.k; }
 	bool operator!=(_one_stat a) const noexcept { return ((value != a.value) || (number != a.number)); }
-	bool operator!=(_offer a) const noexcept { return ((value != a.c) || (number != a.k)); }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _prices2 // массив спроса предложения с удобными типами
+struct _prices // массив спроса предложения с удобными типами
 {
 	_one_stat buy[roffer];  // предложение покупки (порядок с самого выгодного)
 	_one_stat sale[roffer]; // предложение продажи (порядок с самого выгодного)
@@ -36,7 +26,7 @@ struct _prices2 // массив спроса предложения с удобными типами
 
 	void clear()       noexcept { time = 0; } // метка пустого прайса
 	bool empty() const noexcept { return (time == 0); } // проверка на пустоту 
-	bool operator==(const _prices2& p) const noexcept; // время не учитывается при сравнении
+	bool operator==(const _prices& p) const noexcept; // время не учитывается при сравнении
 
 	time_t time_to_minute() { return time - (time % 60); } // обнулить секунды
 	i64 time_hour();
@@ -77,13 +67,13 @@ struct _sable_stat // статистика цен, сжатая  (в 2 раза меньше, в 3 раза медленн
 	};
 
 	i64 size = 0; // количество записей
-	_prices2 last_cc{}; // последние цены
+	_prices last_cc{}; // последние цены
 	_bit_vector data; // сжатые данные
 	static constexpr time_t old_dtime = 160; // разность времени, после которого цены считаются устаревшими
 	static constexpr double c_unpak = 0.01; // распаковка цен
 
-	bool add(const _prices2& c); // добавить цены (сжать)
-	bool read(i64 n, _prices2& c, _info_pak* inf = nullptr); // прочитать цены (расжать)
+	bool add(const _prices& c); // добавить цены (сжать)
+	bool read(i64 n, _prices& c, _info_pak* inf = nullptr); // прочитать цены (расжать)
 	void save_to_file(wstr fn);
 	void load_from_file(wstr fn);
 	void clear(); // удалить все данные
@@ -95,17 +85,17 @@ private:
 	std::vector<_one_stat> base_buy_r; // база покупки для чтения (первых 20 - последние цены)
 	std::vector<_one_stat> base_sale_r; // база продажи для чтения (первых 20 - последние цены)
 	static constexpr i64 step_pak_cc = 100; // период ключевых цен
-	_prices2 read_cc{}; // последние прочитанные цены
+	_prices read_cc{}; // последние прочитанные цены
 	i64 read_n = -666; // номер последних прочитанных цен
 	_info_pak ip_last, ip_n; // дополнительная информация
 
-	bool add0(const _prices2& c); // не дельта!
-	bool add1(const _prices2& c); // дельта
+	bool add0(const _prices& c); // не дельта!
+	bool add1(const _prices& c); // дельта
 	bool add12(const _one_stat* v1, std::vector<_one_stat>& v0, i64 izm);
 	bool coding_delta_number(i64 a, i64 b);
 	i64  decoding_delta_number(i64 a);
-	bool read0(_prices2& c);
-	bool read1(_prices2& c);
+	bool read0(_prices& c);
+	bool read1(_prices& c);
 	bool read12(_one_stat* v1, std::vector<_one_stat>& v0);
 };
 

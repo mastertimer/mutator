@@ -93,7 +93,7 @@ int vrema_prodat   = 0;     // время когда нужно продать
 void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (zamok_pokupki) return;
-	_prices2 a;
+	_prices a;
 	int ok = recognize.read_prices_from_screen(&a);
 	if (ok != 0)
 	{
@@ -854,7 +854,7 @@ void _view_stat::recovery()
 	if (ssvcc == vcc) return; // ничего не изменилось
 	if (vcc < ssvcc) // добавились несколько цен
 	{
-		_prices2 cc;
+		_prices cc;
 		int t = 0;
 		_cen_pak* cp = 0;
 		if (cen1m.size())
@@ -891,7 +891,7 @@ void _view_stat::recovery()
 		}
 		return;
 	}
-	_prices2 cc; // уменьшились цены, полный пересчет
+	_prices cc; // уменьшились цены, полный пересчет
 	cen1m.clear();
 	int t = 0;
 	_cen_pak* cp = 0;
@@ -998,7 +998,7 @@ void _mctds_candle::recovery()
 	if (ssvcc == vcc) return; // ничего не изменилось
 	if (vcc < ssvcc) // добавились несколько цен
 	{
-		_prices2 cc;
+		_prices cc;
 		int t = 0;
 		_cen_pak* cp = 0;
 		if (cen1m.size())
@@ -1041,7 +1041,7 @@ void _mctds_candle::recovery()
 		if (cp)	cp->cc /= ((double)cp->ncc.max - cp->ncc.min);
 		return;
 	}
-	_prices2 cc; // уменьшились цены, полный пересчет
+	_prices cc; // уменьшились цены, полный пересчет
 	cen1m.clear();
 	int t = 0;
 	_cen_pak* cp = 0;
@@ -1248,7 +1248,7 @@ void _nervous_oracle::recovery()
 	if (ssvcc == vcc) return; // ничего не изменилось
 	if (vcc < ssvcc) // добавились несколько цен
 	{
-		_prices2 cc;
+		_prices cc;
 		_sable_stat::_info_pak inf;
 		int t = 0;
 		_element_nervous* cp = 0;
@@ -1335,7 +1335,7 @@ void _nervous_oracle::recovery()
 		}
 		return;
 	}
-	_prices2 cc; // уменьшились цены, полный пересчет
+	_prices cc; // уменьшились цены, полный пересчет
 	_sable_stat::_info_pak inf;
 	zn.clear();
 	int t = 0;
@@ -1546,7 +1546,7 @@ void _nervous_oracle2::recovery()
 	if (ssvcc == vcc) return; // ничего не изменилось
 	if (vcc < ssvcc) // добавились несколько цен
 	{
-		_prices2 cc;
+		_prices cc;
 		_sable_stat::_info_pak inf;
 		int t = 0;
 		_element_nervous* cp = 0;
@@ -1633,7 +1633,7 @@ void _nervous_oracle2::recovery()
 		}
 		return;
 	}
-	_prices2 cc; // уменьшились цены, полный пересчет
+	_prices cc; // уменьшились цены, полный пересчет
 	_sable_stat::_info_pak inf;
 	zn.clear();
 	int t = 0;
@@ -1748,7 +1748,7 @@ void _oracle3::recovery()
 	if (ssvcc == vcc) return; // ничего не изменилось
 	if (vcc < ssvcc) // добавились несколько цен
 	{
-		_prices2 cc;
+		_prices cc;
 		int t = 0;
 		_element_oracle* cp = 0;
 		if (zn.size())
@@ -1782,7 +1782,7 @@ void _oracle3::recovery()
 		}
 		return;
 	}
-	_prices2 cc; // уменьшились цены, полный пересчет
+	_prices cc; // уменьшились цены, полный пересчет
 	zn.clear();
 	int t = 0;
 	_element_oracle* cp = 0;
@@ -1814,7 +1814,7 @@ void _oracle3::recovery()
 
 void _oracle3::draw(i64 n, _area area)
 {
-	static _prices2 pri[61]; // цены
+	static _prices pri[61]; // цены
 	static i64 min, max; // разброс по y
 	min = 0;
 	max = 1;
@@ -1829,7 +1829,7 @@ void _oracle3::draw(i64 n, _area area)
 				part_ss.clear();
 			else
 			{
-				_prices2 w;
+				_prices w;
 				w.clear();
 				for (int i_ = 0; i_ < delta; i_++)
 				{
@@ -1841,7 +1841,7 @@ void _oracle3::draw(i64 n, _area area)
 		}
 		if (i >= begin_ss + (i64)part_ss.size())
 		{
-			_prices2 w;
+			_prices w;
 			w.clear();
 			i64 delta = i - (begin_ss + (int)part_ss.size()) + 1;
 			if (delta >= max_part)
@@ -2117,7 +2117,7 @@ i64 to_int(const std::wstring& s) // преобразование в число 
 	return r;
 }
 
-int _recognize::test_image(_prices2* pr)
+int _recognize::test_image(_prices* pr)
 {
 	find_text13(0xFF0000FF); // синим цветом покупки
 	if (elem.size() != roffer * 2) return 3;
@@ -2149,7 +2149,7 @@ int _recognize::test_image(_prices2* pr)
 	return 0;
 }
 
-int _recognize::read_prices_from_screen(_prices2* pr)
+int _recognize::read_prices_from_screen(_prices* pr)
 {
 	HWND w = FindWindow(0, mmm3.c_str());
 	if (!w) return 1;
@@ -2652,7 +2652,7 @@ void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 {
 	_sable_stat ss_old = ss;
 	ss.clear();
-	_prices2 pr;
+	_prices pr;
 	i64 rez = 0; // 0 - ожидание, 1 - покупка, 2 - продажа
 	i64 t_start = 0;
 	i64 t_end   = 0;
