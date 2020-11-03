@@ -4,6 +4,45 @@
 #include <sstream>
 #include <iomanip>
 
+void os_pordis(double min, double max, i64 maxN, double& mi, double& step, double min_step)
+{
+	i64 n;
+	double step2;
+	if (maxN < 2) maxN = 2;
+	step = exp(round(log((max - min) / maxN) / log(10)) * log(10));
+	auto fun = [&]()
+	{
+		mi = (i64(min / step)) * step;
+		if (mi < min) mi += step;
+		n = (i64((max - mi) / step)) + 1;
+	};
+	do
+	{
+		fun();
+		if (n < maxN) step = step * 0.1; else break;
+	} while (true);
+	while (n > maxN)
+	{
+		step = step * 10;
+		fun();
+	}
+	step2 = step;
+	step = step2 * 0.2;
+	fun();
+	if (n <= maxN) goto end;
+	step = step2 * 0.5;
+	fun();
+	if (n <= maxN) goto end;
+	step = step2;
+	fun();
+end:
+	if (step < min_step)
+	{
+		step = min_step;
+		fun();
+	}
+}
+
 void to_clipboard(astr text)
 {
 

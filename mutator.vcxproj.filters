@@ -60,6 +60,9 @@
     <ClCompile Include="tetrons\tetron.cpp">
       <Filter>Исходные файлы\tetrons</Filter>
     </ClCompile>
+    <ClCompile Include="tetrons\tetron2.cpp">
+      <Filter>Исходные файлы\tetrons</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -87,6 +90,9 @@
       <Filter>Файлы заголовков\sable</Filter>
     </ClInclude>
     <ClInclude Include="tetrons\tetron.h">
+      <Filter>Файлы заголовков\tetrons</Filter>
+    </ClInclude>
+    <ClInclude Include="tetrons\tetron2.h">
       <Filter>Файлы заголовков\tetrons</Filter>
     </ClInclude>
   </ItemGroup>
