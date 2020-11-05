@@ -22,10 +22,23 @@ constexpr wchar_t sss_file[] = L"..\\..\\base.c2";
 _sable_stat      ss;               // сжатые цены
 _sable_graph    *graph  = nullptr; // график
 
-_nervous_oracle *oracle = nullptr; // оракул
-_mctds_candle   *sv     = nullptr;
+_nervous_oracle *noracle = nullptr; // оракул
 _oracle3        *o3     = nullptr;
 _view_stat      *o_test = nullptr; // тестовый график
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+std::vector<_basic_curve*> oracle; // все оракулы и графики
+
+_basic_curve* super_oracle = nullptr; // оракул для предсказания
+
+void add_oracle(_basic_curve* o, bool gr = true, bool sup = false)
+{
+	o->recovery();
+	oracle.push_back(o);
+	if (gr)	graph->curve.push_back(o);
+	if (sup) super_oracle = o;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -40,16 +53,15 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 		sb->vid = 2;
 		graph->add_flags(sb, flag_sub_go + flag_part + (flag_run << 32));
 	}
-	sv = new _mctds_candle;
-	oracle = new _nervous_oracle;
+	add_oracle(new _mctds_candle);
+
+	noracle = new _nervous_oracle;
 	o3 = new _oracle3;
 	o_test = new _view_stat;
-	graph->curve.push_back(std::unique_ptr<_basic_curve>(sv));
-//	graph->curve.push_back(std::unique_ptr<_basic_curve>(oracle));
-	if (o_test) graph->curve.push_back(std::unique_ptr<_basic_curve>(o_test));
-	if (o3) graph->curve.push_back(std::unique_ptr<_basic_curve>(o3));
-	sv->recovery();
-	oracle->recovery();
+//	graph->curve.push_back(oracle);
+	if (o_test) graph->curve.push_back(o_test);
+	if (o3) graph->curve.push_back(o3);
+	noracle->recovery();
 	if (o3) o3->recovery();
 	if (o_test) o_test->recovery();
 	graph->cha_area();
@@ -92,21 +104,21 @@ void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 		return;
 	}
 	ss.add(a);
-	sv->recovery();
-	oracle->recovery();
+	for (auto i : oracle) i->recovery();
+	noracle->recovery();
 	if (o3) o3->recovery();
 
 	graph->run(nullptr, graph, flag_run);
 	// всякие проверки на начало покупки !!!!
 
 	if (!can_trade) return;
-	if (oracle->zn.size() < 10) return;
-	if (oracle->zn.back().time + 60 != a.time_to_minute()) return;
+	if (noracle->zn.size() < 10) return;
+	if (noracle->zn.back().time + 60 != a.time_to_minute()) return;
 
 
 	if (gotovo_prodaz & 1) // была покупка, но небыло продажи
 	{
-		if ((a.time >= vrema_prodat) || ((a.time_hour() == 18) && (a.time_minute() > 30)) || oracle->get_latest_events(oracle->zn.size() - 1).stop())
+		if ((a.time >= vrema_prodat) || ((a.time_hour() == 18) && (a.time_minute() > 30)) || noracle->get_latest_events(noracle->zn.size() - 1).stop())
 		{
 			/*			int b;
 						recognize.ReadTablicaZayavok(0, b);
@@ -126,7 +138,7 @@ void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 
 	if (popitok_prodaz < 1) return;
 	if (a.time_hour() >= 18) return; // слишком поздно
-	time_t ti = oracle->get_latest_events(oracle->zn.size() - 1).start();
+	time_t ti = noracle->get_latest_events(noracle->zn.size() - 1).start();
 
 
 	if (ti == 0) return;
@@ -270,7 +282,7 @@ void _sable_graph::ris2(_trans tr, bool final)
 
 	int period = 60;
 	//	int pause_max = 3;
-	_element_chart* al = new _element_chart[ll]; // элементы линий
+	_basic_curve::_element_chart* al = new _basic_curve::_element_chart[ll]; // элементы линий
 	// 1-й проход - вычисление zmin, zmax
 	double zmin = 1E100;
 	double zmax = -1E100;
