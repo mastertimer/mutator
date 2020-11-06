@@ -17,12 +17,10 @@ max(rnd)  |   1.058        58       1.00097
 #include "mediator.h"
 #include "sable.h"
 
-constexpr wchar_t sss_file[] = L"..\\..\\base.c2";
+constexpr wchar_t sss_file[] = L"..\\..\\sable\\base.c2";
 
 _sable_stat      ss;               // сжатые цены
 _sable_graph    *graph  = nullptr; // график
-
-_nervous_oracle *noracle = nullptr; // оракул
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -58,7 +56,7 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 	add_oracle(new _mctds_candle);
 	add_oracle(new _oracle3);
 	add_oracle(new _view_stat);
-	add_oracle(noracle = new _nervous_oracle, false, true);
+	add_oracle(new _nervous_oracle, false, true);
 }
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)
@@ -101,16 +99,13 @@ void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 	for (auto i : oracle) i->recovery();
 
 	graph->run(nullptr, graph, flag_run);
+
 	// всякие проверки на начало покупки !!!!
-
 	if (!can_trade) return;
-	if (noracle->zn.size() < 10) return;
-	if (noracle->zn.back().time + 60 != a.time_to_minute()) return;
-
 
 	if (gotovo_prodaz & 1) // была покупка, но небыло продажи
 	{
-		if ((a.time >= vrema_prodat) || ((a.time_hour() == 18) && (a.time_minute() > 30)) || noracle->get_latest_events(noracle->zn.size() - 1).stop())
+		if ((a.time >= vrema_prodat) || ((a.time_hour() == 18) && (a.time_minute() > 30))/* || noracle->get_latest_events(noracle->zn.size() - 1).stop()*/)
 		{
 			/*			int b;
 						recognize.ReadTablicaZayavok(0, b);
@@ -130,7 +125,7 @@ void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 
 	if (popitok_prodaz < 1) return;
 	if (a.time_hour() >= 18) return; // слишком поздно
-	time_t ti = noracle->get_latest_events(noracle->zn.size() - 1).start();
+	time_t ti = super_oracle->prediction();
 
 
 	if (ti == 0) return;
