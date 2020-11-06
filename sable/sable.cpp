@@ -71,10 +71,8 @@ void fun15(_tetron* tt0, _tetron* tt, u64 flags)
 	if (b->checked) n_timer1000->add_flags(new _t_function(16), flag_run);
 }
 
-bool can_trade     = false; // разрешение на торговлю
-int popitok_prodaz = 2;     // сколько раз можно купить/продать
-int gotovo_prodaz  = 0;     // сколько сделок
-int vrema_prodat   = 0;     // время когда нужно продать
+i64 can_trade    = -4; // разрешенное количество сделок (купить-продать = 2 сделки), отрицательное - нельзя
+int vrema_prodat =  0; // время когда нужно продать
 
 void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 {
@@ -101,9 +99,9 @@ void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 	graph->run(nullptr, graph, flag_run);
 
 	// всякие проверки на начало покупки !!!!
-	if (!can_trade) return;
+	if (can_trade <= 0) return;
 
-	if (gotovo_prodaz & 1) // была покупка, но небыло продажи
+	if (can_trade & 1) // была покупка, но небыло продажи
 	{
 		if ((a.time >= vrema_prodat) || ((a.time_hour() == 18) && (a.time_minute() > 30))/* || noracle->get_latest_events(noracle->zn.size() - 1).stop()*/)
 		{
@@ -116,14 +114,13 @@ void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 							return;
 						}*/
 			zamok_pokupki = true;
-			gotovo_prodaz++;
+			can_trade--;
 			_t_function* fu = new _t_function(36);
 			fu->run(0, fu, flag_run);
 		}
 		return;
 	}
 
-	if (popitok_prodaz < 1) return;
 	if (a.time_hour() >= 18) return; // слишком поздно
 	time_t ti = super_oracle->prediction();
 
@@ -140,8 +137,7 @@ void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 	}*/
 	zamok_pokupki = true;
 	vrema_prodat = a.time + ti * 60;
-	popitok_prodaz--;
-	gotovo_prodaz++;
+	can_trade--;
 	_t_function* fu = new _t_function(35);
 	fu->run(0, fu, flag_run);
 }
@@ -149,7 +145,7 @@ void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 void fun19(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_g_button* b = *tt0;
-	can_trade = b->checked;
+	can_trade = (b->checked) ? abs(can_trade) : -abs(can_trade);
 }
 
 void fun20(_tetron* tt0, _tetron* tt, u64 flags)
