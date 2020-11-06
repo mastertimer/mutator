@@ -23,8 +23,6 @@ _sable_stat      ss;               // сжатые цены
 _sable_graph    *graph  = nullptr; // график
 
 _nervous_oracle *noracle = nullptr; // оракул
-_oracle3        *o3     = nullptr;
-_view_stat      *o_test = nullptr; // тестовый график
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -45,7 +43,9 @@ void add_oracle(_basic_curve* o, bool gr = true, bool sup = false)
 void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	static bool first = true; if (!first) return; first = false;
+
 	ss.load_from_file((exe_path + sss_file).c_str());
+
 	if (!graph) return;
 	if (!graph->find1<_g_scrollbar>(flag_part))
 	{
@@ -53,18 +53,12 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 		sb->vid = 2;
 		graph->add_flags(sb, flag_sub_go + flag_part + (flag_run << 32));
 	}
-	add_oracle(new _mctds_candle);
-
-	noracle = new _nervous_oracle;
-	o3 = new _oracle3;
-	o_test = new _view_stat;
-//	graph->curve.push_back(oracle);
-	if (o_test) graph->curve.push_back(o_test);
-	if (o3) graph->curve.push_back(o3);
-	noracle->recovery();
-	if (o3) o3->recovery();
-	if (o_test) o_test->recovery();
 	graph->cha_area();
+
+	add_oracle(new _mctds_candle);
+	add_oracle(new _oracle3);
+	add_oracle(new _view_stat);
+	add_oracle(noracle = new _nervous_oracle, false, true);
 }
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)
@@ -105,8 +99,6 @@ void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 	}
 	ss.add(a);
 	for (auto i : oracle) i->recovery();
-	noracle->recovery();
-	if (o3) o3->recovery();
 
 	graph->run(nullptr, graph, flag_run);
 	// всякие проверки на начало покупки !!!!
