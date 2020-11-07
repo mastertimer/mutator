@@ -72,6 +72,9 @@
     <ClCompile Include="sable\oracle1.cpp">
       <Filter>Исходные файлы\sable</Filter>
     </ClCompile>
+    <ClCompile Include="sable\oracle2.cpp">
+      <Filter>Исходные файлы\sable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -111,6 +114,9 @@
       <Filter>Файлы заголовков\sable</Filter>
     </ClInclude>
     <ClInclude Include="sable\oracle1.h">
+      <Filter>Файлы заголовков\sable</Filter>
+    </ClInclude>
+    <ClInclude Include="sable\oracle2.h">
       <Filter>Файлы заголовков\sable</Filter>
     </ClInclude>
   </ItemGroup>
