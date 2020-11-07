@@ -3,6 +3,10 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+constexpr wchar_t oracle3_file[] = L"..\\..\\sable\\oracle3.bin";
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void _oracle3::get_n_info(i64 n, _element_chart* e)
 {
 	if (n >= (i64)zn.size())
@@ -215,6 +219,20 @@ void _oracle3::draw(i64 n, _area area)
 			master_bm.fill_rectangle({ {xx1, xx2}, yy }, cc);
 		}
 	}
+}
+
+void _oracle3::save_to_file()
+{
+	_stack mem;
+	mem << zn;
+	mem.save_to_file(exe_path + oracle3_file);
+}
+
+void _oracle3::load_from_file()
+{
+	_stack mem;
+	if (!mem.load_from_file(exe_path + oracle3_file)) return;
+	mem >> zn;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

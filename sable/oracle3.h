@@ -15,13 +15,13 @@ struct _oracle3 : public _basic_curve
 {
 	struct _element_oracle
 	{
-		int time = 0; // время
+		time_t time = 0; // время
 		_iinterval ncc; // диапазон цен
 
 		ushort min = 0; // разброс по y
 		ushort max = 0; // разброс по y
 
-		bool operator < (int a) const noexcept { return (time < a); } // для алгоритма поиска по времени
+		bool operator < (time_t a) const noexcept { return (time < a); } // для алгоритма поиска по времени
 	};
 	static const int max_part = 22000; // максимально количество элементов ss
 
@@ -34,6 +34,8 @@ struct _oracle3 : public _basic_curve
 	void get_t_info(int t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
 	void draw(i64 n, _area area)              override; // нарисовать 1 элемент
 	void recovery()                           override; // выполнить
+	void save_to_file()                       override;
+	void load_from_file()                     override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
