@@ -10,15 +10,15 @@
 
 struct _view_stat : public _basic_curve // тестовое отображение статистических данных
 {
-	struct _cen_pak     // данные по минуте
+	struct _cen_pak      // данные по минуте
 	{
-		int time = 0; // общее время
-		_iinterval ncc; // диапазон цен
-		ushort min = 0; // минимальная цена
-		ushort max = 0; // макимальная цена
-		int k = 0;      // количество совпадений
+		time_t time = 0; // общее время
+		_iinterval ncc;  // диапазон цен
+		ushort min  = 0; // минимальная цена
+		ushort max  = 0; // макимальная цена
+		int k       = 0; // количество совпадений
 
-		bool operator < (int a) const noexcept { return (time < a); } // для алгоритма поиска по времени
+		bool operator < (time_t a) const noexcept { return (time < a); } // для алгоритма поиска по времени
 	};
 
 	std::vector<_cen_pak> cen1m; // упакованные цены по минутам
@@ -28,6 +28,8 @@ struct _view_stat : public _basic_curve // тестовое отображение статистических д
 	void get_t_info(int t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
 	void draw(i64 n, _area area)              override; // нарисовать 1 элемент
 	void recovery()                           override; // обновить
+	void save_to_file()                       override;
+	void load_from_file()                     override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

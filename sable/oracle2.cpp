@@ -4,22 +4,16 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+constexpr wchar_t oracle2_file[] = L"..\\..\\sable\\oracle2.bin";
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 i64 _nervous_oracle2::prediction()
 {
 	// return i64(rnd(15000) == 13) * 60; // случайный
 	if (zn.size() < 10) return 0;
 	if (zn.back().time + 60 != sss.last_cc.time_to_minute()) return 0;
 	return get_latest_events(zn.size() - 1).start();
-}
-
-void _nervous_oracle2::push(_stack* mem)
-{
-	*mem << zn;
-}
-
-void _nervous_oracle2::pop(_stack* mem)
-{
-	*mem >> zn;
 }
 
 void _nervous_oracle2::get_n_info(i64 n, _element_chart* e)
@@ -298,6 +292,20 @@ void _nervous_oracle2::recovery()
 			cp->r_pro /= cp->v_r;
 		}
 	}
+}
+
+void _nervous_oracle2::save_to_file()
+{
+	_stack mem;
+	mem << zn;
+	mem.save_to_file(exe_path + oracle2_file);
+}
+
+void _nervous_oracle2::load_from_file()
+{
+	_stack mem;
+	if (!mem.load_from_file(exe_path + oracle2_file)) return;
+	mem >> zn;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
