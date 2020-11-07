@@ -5,31 +5,21 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Файлы заголовков">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Исходные файлы">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Файлы заголовков\sable">
-      <UniqueIdentifier>{460da853-7471-46e1-b638-81518788fa05}</UniqueIdentifier>
+      <Extensions>
+      </Extensions>
     </Filter>
     <Filter Include="Исходные файлы\sable">
       <UniqueIdentifier>{17abb00c-4115-4da7-a7a3-9233a2a332b2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Исходные файлы\library">
       <UniqueIdentifier>{3992fe31-edea-467d-9170-02cc008116be}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Файлы заголовков\library">
-      <UniqueIdentifier>{7e07398e-40b3-4864-9144-5c3b9cf1c4fe}</UniqueIdentifier>
+      <Extensions>
+      </Extensions>
     </Filter>
     <Filter Include="Исходные файлы\tetrons">
       <UniqueIdentifier>{5d139b6f-a1b4-4d53-be87-17b3c598c452}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Файлы заголовков\tetrons">
-      <UniqueIdentifier>{a0b0da93-e50f-4672-8025-280cff6a1efd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -83,53 +73,53 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="resource.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="mutator.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="mult.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="sable\sable.h">
-      <Filter>Файлы заголовков\sable</Filter>
-    </ClInclude>
-    <ClInclude Include="sable\sable_stat.h">
-      <Filter>Файлы заголовков\sable</Filter>
-    </ClInclude>
     <ClInclude Include="library\basic.h">
-      <Filter>Файлы заголовков\library</Filter>
+      <Filter>Исходные файлы\library</Filter>
     </ClInclude>
     <ClInclude Include="library\mathematics.h">
-      <Filter>Файлы заголовков\library</Filter>
-    </ClInclude>
-    <ClInclude Include="sable\mediator.h">
-      <Filter>Файлы заголовков\sable</Filter>
-    </ClInclude>
-    <ClInclude Include="tetrons\tetron.h">
-      <Filter>Файлы заголовков\tetrons</Filter>
-    </ClInclude>
-    <ClInclude Include="tetrons\tetron2.h">
-      <Filter>Файлы заголовков\tetrons</Filter>
+      <Filter>Исходные файлы\library</Filter>
     </ClInclude>
     <ClInclude Include="sable\basic_oracle.h">
-      <Filter>Файлы заголовков\sable</Filter>
+      <Filter>Исходные файлы\sable</Filter>
+    </ClInclude>
+    <ClInclude Include="sable\mediator.h">
+      <Filter>Исходные файлы\sable</Filter>
     </ClInclude>
     <ClInclude Include="sable\oracle0.h">
-      <Filter>Файлы заголовков\sable</Filter>
+      <Filter>Исходные файлы\sable</Filter>
     </ClInclude>
     <ClInclude Include="sable\oracle1.h">
-      <Filter>Файлы заголовков\sable</Filter>
+      <Filter>Исходные файлы\sable</Filter>
     </ClInclude>
     <ClInclude Include="sable\oracle2.h">
-      <Filter>Файлы заголовков\sable</Filter>
+      <Filter>Исходные файлы\sable</Filter>
     </ClInclude>
     <ClInclude Include="sable\oracle3.h">
-      <Filter>Файлы заголовков\sable</Filter>
+      <Filter>Исходные файлы\sable</Filter>
     </ClInclude>
     <ClInclude Include="sable\oracle4.h">
-      <Filter>Файлы заголовков\sable</Filter>
+      <Filter>Исходные файлы\sable</Filter>
+    </ClInclude>
+    <ClInclude Include="sable\sable.h">
+      <Filter>Исходные файлы\sable</Filter>
+    </ClInclude>
+    <ClInclude Include="sable\sable_stat.h">
+      <Filter>Исходные файлы\sable</Filter>
+    </ClInclude>
+    <ClInclude Include="tetrons\tetron.h">
+      <Filter>Исходные файлы\tetrons</Filter>
+    </ClInclude>
+    <ClInclude Include="tetrons\tetron2.h">
+      <Filter>Исходные файлы\tetrons</Filter>
+    </ClInclude>
+    <ClInclude Include="mult.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="mutator.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

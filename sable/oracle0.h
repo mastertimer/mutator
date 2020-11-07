@@ -13,13 +13,13 @@ struct _mctds_candle : public _basic_curve // источник данных для временного гра
 {
 	struct _cen_pak // свечка
 	{
-		ushort min = 0; // минимальная цена
-		ushort max = 0; // макимальная цена
+		ushort min   = 0; // минимальная цена
+		ushort max   = 0; // макимальная цена
 		ushort first = 0; // первая цена
-		ushort last = 0; // последняя цена
-		double cc = 0; // средняя цена
+		ushort last  = 0; // последняя цена
+		double cc    = 0; // средняя цена
 		_iinterval ncc;   // диапазон цен
-		int time = 0; // общее время
+		int time     = 0; // общее время
 	};
 
 	std::vector<_cen_pak> cen1m; // упакованные цены по минутам

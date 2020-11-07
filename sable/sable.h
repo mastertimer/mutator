@@ -36,5 +36,6 @@ void calc_all_prediction(_basic_curve &o, i64& nn, double& kk);
 void fun13(_tetron* tt0, _tetron* tt, u64 flags);
 void fun15(_tetron* tt0, _tetron* tt, u64 flags);
 void fun16(_tetron* tt0, _tetron* tt, u64 flags);
+void fun31(_tetron* tt0, _tetron* tt, u64 flags);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

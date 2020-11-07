@@ -179,6 +179,11 @@ void fun30(_tetron* tt0, _tetron* tt, u64 flags)
 	graph->cha_area();
 }
 
+void fun31(_tetron* tt0, _tetron* tt, u64 flags)
+{
+	sss.save_to_file((exe_path + sss_file).c_str());
+}
+
 void fun35(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	buy_stock(tt, true);

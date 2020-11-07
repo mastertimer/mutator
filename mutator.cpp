@@ -667,10 +667,6 @@ void fun29(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun30(_tetron* tt0, _tetron* tt, u64 flags);
 
-void fun31(_tetron* tt0, _tetron* tt, u64 flags)
-{
-}
-
 void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 {
 }
@@ -1054,7 +1050,7 @@ void _t_function::run(_tetron* tt0, _tetron* tt, u64 flags)
 	case 28: fun28(tt0, tt, flags); return; // смена режима переноса
 	case 29: fun29(tt0, tt, flags); return; // смена режима отображения времени
 	case 30: fun30(tt0, tt, flags); return; // size_el--
-	case 31: fun31(tt0, tt, flags); return;
+	case 31: fun31(tt0, tt, flags); return; // сохраниние цен
 	case 32: fun32(tt0, tt, flags); return;
 	case 33: fun33(tt0, tt, flags); return; // РАЗНОЕ
 	case 34: fun34(tt0, tt, flags); return;
