@@ -19,8 +19,8 @@ max(rnd)  |   1.058        58       1.00097
 
 constexpr wchar_t sss_file[] = L"..\\..\\sable\\base.c2";
 
-_sable_stat      ss;               // сжатые цены
-_sable_graph    *graph  = nullptr; // график
+_sable_stat   ss;              // сжатые цены
+_sable_graph *graph = nullptr; // график
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
