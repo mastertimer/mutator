@@ -205,8 +205,6 @@ void _oracle3::draw(i64 n, _area area)
 			uint q = (uint)sqrt(pri[ss_].sale[j].number) + 32;
 			if (q > 255) q = 255;
 			uint cc = (q << 8) + (q << 16) + 0x60000000;
-			if ((pri[ss_].sale[j].number == 250)) cc = 0xffff00ff;
-			if ((pri[ss_].sale[j].number == 250) && (j == 0)) cc = 0xffffffff;
 			master_bm.fill_rectangle({ {xx1, xx2}, yy }, cc);
 		}
 		for (int j = 0; j < roffer; j++)

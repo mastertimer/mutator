@@ -17,6 +17,7 @@ struct _prices // массив спроса предложения с удобными типами
 	void clear()       noexcept { time = 0; } // метка пустого прайса
 	bool empty() const noexcept { return (time == 0); } // проверка на пустоту 
 	bool operator==(const _prices& p) const noexcept; // время не учитывается при сравнении
+	bool operator!=(const _prices& p) const noexcept; // время не учитывается при сравнении
 
 	time_t time_to_minute() { return time - (time % 60); } // обнулить секунды
 	i64 time_hour();

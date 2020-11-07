@@ -14,6 +14,13 @@ bool _prices::operator==(const _prices& p) const noexcept
 	return true;
 }
 
+bool _prices::operator!=(const _prices& p) const noexcept
+{
+	for (i64 i = 0; i < roffer; i++)
+		if ((buy[i] != p.buy[i]) || (sale[i] != p.sale[i])) return true;
+	return false;
+}
+
 i64 _prices::time_hour()
 {
 	tm t3;
@@ -569,7 +576,7 @@ bool _sable_stat::read0(_prices& c)
 
 bool _sable_stat::read12(_one_stat* v1, std::vector<_one_stat>& v0)
 {
-	i64 kk = (v1[1].value > v1[0].value) ? -1 : 1;
+	i64 kk = (v0[1].value > v0[0].value) ? -1 : 1;
 	i64 izm = nnds.decoding(data);
 	i64 n = 0;
 	i64 tip = izm;
