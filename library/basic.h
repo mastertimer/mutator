@@ -801,7 +801,7 @@ struct _hsva // цвет в формате hsv
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-extern _bitmap temp_bmp;
+inline _bitmap master_bm; // кусочный рисунок
 
 _stack& operator<<(_stack& o, _picture const& p);
 _stack& operator>>(_stack& o, _picture& p);

@@ -24,7 +24,6 @@ void set_cursorx(_cursor x);
 inline u64 id_tetron = 1; // глобальный счетчик id тетронов
 inline bool run_before_del_link = true; // вызывать ли спец функции перед удалением связи
 inline _area master_obl_izm; // область изменений
-inline _bitmap master_bm; // кусочный рисунок
 
 inline _xy mouse_xy; // координаты мышки
 inline _xy mouse_xy_pr; // предыдущие координаты мышки

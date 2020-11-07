@@ -32,7 +32,7 @@ struct _nervous_oracle : public _basic_curve // нервозный предсказатель старый
 
 	i64  get_n()                              override { return zn.size(); } // количество элементов
 	void get_n_info(i64 n, _element_chart* e) override; // получить краткую информацию n-го элемента
-	void get_t_info(int t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
+	void get_t_info(time_t t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
 	void draw(i64 n, _area area)              override; // нарисовать 1 элемент
 	void recovery()                           override; // выполнить
 	i64  prediction()                         override; // отрезок времени роста

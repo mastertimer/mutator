@@ -1,4 +1,3 @@
-#include "tetron.h"
 #include "oracle3.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,7 +19,7 @@ void _oracle3::get_n_info(i64 n, _element_chart* e)
 	e->max = zn[n].max * sss.c_unpak;
 }
 
-void _oracle3::get_t_info(int t, _element_chart* e)
+void _oracle3::get_t_info(time_t t, _element_chart* e)
 {
 	auto x = lower_bound(zn.begin(), zn.end(), t);
 	if (x == zn.end())

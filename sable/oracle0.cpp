@@ -1,4 +1,3 @@
-#include "tetron.h"
 #include "sable_stat.h"
 #include "oracle0.h"
 
@@ -21,7 +20,7 @@ void _mctds_candle::get_n_info(i64 n, _element_chart* e)
 	e->max = cen1m[n].max * sss.c_unpak;
 }
 
-void _mctds_candle::get_t_info(int t, _element_chart* e)
+void _mctds_candle::get_t_info(time_t t, _element_chart* e)
 {
 	e->n = -1; // !! написать, когда потребуется!!
 }

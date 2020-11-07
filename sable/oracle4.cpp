@@ -1,4 +1,3 @@
-#include "tetron.h"
 #include "sable_stat.h"
 #include "oracle4.h"
 
@@ -21,7 +20,7 @@ void _view_stat::get_n_info(i64 n, _element_chart* e)
 	e->max = cen1m[n].max * sss.c_unpak;
 }
 
-void _view_stat::get_t_info(int t, _element_chart* e)
+void _view_stat::get_t_info(time_t t, _element_chart* e)
 {
 	auto x = lower_bound(cen1m.begin(), cen1m.end(), t);
 	if (x == cen1m.end())

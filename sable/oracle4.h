@@ -25,7 +25,7 @@ struct _view_stat : public _basic_curve // тестовое отображение статистических д
 
 	i64 get_n()                               override { return cen1m.size(); } // количество элементов
 	void get_n_info(i64 n, _element_chart* e) override; // получить краткую информацию n-го элемента
-	void get_t_info(int t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
+	void get_t_info(time_t t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
 	void draw(i64 n, _area area)              override; // нарисовать 1 элемент
 	void recovery()                           override; // обновить
 	void save_to_file()                       override;

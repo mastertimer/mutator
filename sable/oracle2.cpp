@@ -1,4 +1,3 @@
-#include "tetron.h"
 #include "sable_stat.h"
 #include "oracle2.h"
 
@@ -28,7 +27,7 @@ void _nervous_oracle2::get_n_info(i64 n, _element_chart* e)
 	e->min = e->max = ((double)zn[n].max_pro + (double)zn[n].min_pok) * 0.5 * sss.c_unpak;
 }
 
-void _nervous_oracle2::get_t_info(int t, _element_chart* e)
+void _nervous_oracle2::get_t_info(time_t t, _element_chart* e)
 {
 	auto x = lower_bound(zn.begin(), zn.end(), t);
 	if (x == zn.end())

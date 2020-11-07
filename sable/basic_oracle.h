@@ -18,7 +18,7 @@ struct _basic_curve // база для кривых и оракулов
 
 	virtual i64  get_n() = 0; // количество элементов
 	virtual void get_n_info(i64 n, _element_chart* e) = 0; // получить краткую информацию n-го элемента
-	virtual void get_t_info(int t, _element_chart* e) = 0; // получить краткую информацию элемента со временем >= t
+	virtual void get_t_info(time_t t, _element_chart* e) = 0; // получить краткую информацию элемента со временем >= t
 	virtual void draw(i64 n, _area area) = 0; // нарисовать 1 элемент
 	virtual void recovery() = 0; // восстановить
 
