@@ -191,6 +191,10 @@ void _oracle3::draw(i64 n, _area area)
 		if (pri[ss_].empty()) continue;
 		i64 xx1 = xx.min + dx * i / kol;
 		i64 xx2 = xx.min + dx * (i + 1) / kol - 1;
+		if (pri[ss_].sale[3].value < pri[ss_].buy[3].value)
+		{
+	//		xx1++;
+		}
 		for (int j = roffer - 1; j >= 0; j--)
 		{
 			i64 ce = pri[ss_].sale[j].value;

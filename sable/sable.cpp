@@ -59,7 +59,6 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 
 	add_oracle(new _mctds_candle);
 	add_oracle(new _oracle3);
-	add_oracle(new _view_stat);
 	add_oracle(new _nervous_oracle, false, true);
 }
 
