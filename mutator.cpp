@@ -673,6 +673,10 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
+	_stack mem;
+	mem << 3;
+	mem.save_to_file(L"..\\..\\oracle0.bin");
+
 /*	show_message(test_ss4());
 
 	_g_graph* g = new _g_graph;

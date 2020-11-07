@@ -64,19 +64,19 @@ void to_clipboard(astr text)
 	}
 }
 
-bool save_file(wstr fn, const char* data, i64 n)
+bool save_file(std::wstring_view fn, const char* data, i64 n)
 {
-	std::ofstream f(fn, std::ofstream::binary);
+	std::ofstream f(fn.data(), std::ofstream::binary);
 	if (!f) return false;
 	f.write((char*)data, n);
 	return f.good();
 }
 
-bool load_file(wstr fn, char** data, i64* n)
+bool load_file(std::wstring_view fn, char** data, i64* n)
 {
 	*data = 0;
 	*n    = 0;
-	std::ifstream f(fn, std::ofstream::binary);
+	std::ifstream f(fn.data(), std::ofstream::binary);
 	if (!f) return false;
 	f.seekg(0, f.end);
 	auto siz = f.tellg();
@@ -94,25 +94,6 @@ bool load_file(wstr fn, char** data, i64* n)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void _stack::push_int24(int a)
-{
-	a += 0x800000;
-	if (size + 4 > capacity) set_capacity((size + 4) * 2);
-	*((int*)(data + size)) = a;
-	size += 3;
-}
-
-void _stack::pop_int24(int& a)
-{
-	if (adata + 3 > size) return;
-	char* x = (char*)(&a);
-	x[0] = data[adata++];
-	x[1] = data[adata++];
-	x[2] = data[adata++];
-	x[3] = 0;
-	a -= 0x800000;
-}
 
 bool _stack::operator==(const _stack& a) const noexcept
 {
@@ -159,12 +140,12 @@ void _stack::erase(i64 n, i64 k)
 	memmove(&data[n], &data[n + k], size - n);
 }
 
-bool _stack::save_to_file(wstr fn)
+bool _stack::save_to_file(std::wstring_view fn)
 { 
 	return save_file(fn, data, size);
 }
 
-bool _stack::load_from_file(wstr fn)
+bool _stack::load_from_file(std::wstring_view fn)
 {
 	if (data) delete[] data;
 	data     = 0;

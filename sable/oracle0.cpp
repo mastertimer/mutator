@@ -4,6 +4,10 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+constexpr wchar_t oracle0_file[] = L"..\\..\\sable\\oracle0.bin";
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void _mctds_candle::get_n_info(i64 n, _element_chart* e)
 {
 	if (n >= (i64)cen1m.size())
@@ -20,16 +24,6 @@ void _mctds_candle::get_n_info(i64 n, _element_chart* e)
 void _mctds_candle::get_t_info(int t, _element_chart* e)
 {
 	e->n = -1; // !! написать, когда потребуется!!
-}
-
-void _mctds_candle::push(_stack* mem)
-{
-	*mem << cen1m;
-}
-
-void _mctds_candle::pop(_stack* mem)
-{
-	*mem >> cen1m;
 }
 
 void _mctds_candle::draw(i64 n, _area area)
@@ -157,5 +151,18 @@ void _mctds_candle::recovery()
 	if (cp)	cp->cc /= ((double)cp->ncc.max - cp->ncc.min);
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void _mctds_candle::save_to_file()
+{
+	_stack mem;
+	mem << cen1m;
+	mem.save_to_file(exe_path + oracle0_file);
+}
 
+void _mctds_candle::load_from_file()
+{
+	_stack mem;
+	if (!mem.load_from_file(exe_path + oracle0_file)) return;
+	mem >> cen1m;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

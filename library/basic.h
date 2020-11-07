@@ -56,8 +56,8 @@ inline std::wstring exe_path; // путь к запущенному exe файл
 void to_clipboard(astr text);
 void os_pordis(double min, double max, i64 maxN, double& mi, double& step, double min_step = 0.0);
 
-bool save_file(wstr fn, const char* data, i64 n);
-bool load_file(wstr fn, char** data, i64* n);
+bool save_file(std::wstring_view fn, const char* data, i64 n);
+bool load_file(std::wstring_view fn, char** data, i64* n);
 
 std::wstring string_to_wstring(std::string_view s);
 wstr         uint64_to_wstr_hex(u64 a);
@@ -100,8 +100,8 @@ struct _stack
 
 	void clear() { size  = 0; adata = 0; }
 	void erase(i64 n, i64 k);
-	bool save_to_file(wstr fn);
-	bool load_from_file(wstr fn);
+	bool save_to_file(std::wstring_view fn);
+	bool load_from_file(std::wstring_view fn);
 
 	t_b _stack& operator<<(const std::vector<_b>& b) noexcept;
 	t_b _stack& operator<<(_b a) noexcept;
@@ -109,15 +109,12 @@ struct _stack
 	    _stack& operator<<(const std::wstring& a) noexcept;
 	    void    push_data(const void* data2, i64 vdata);
 	    void    push_fill(int vdata, char c); // занести кучу одинаковых символов
-	    void    push_int24(int a);            // записать 3 байта
 
 	    _stack& operator>>(_stack& a) noexcept;
 	    _stack& operator>>(std::wstring& s) noexcept;
 	t_b _stack& operator>>(std::vector<_b>& b) noexcept;
 	t_b _stack& operator>>(_b& a) noexcept;
 	    void    pop_data(void* data2, i64 vdata);
-	t_b void    pop_end(_b& a); // извлечь переменную из стека С КОНЦА
-	    void    pop_int24(int& a);
 
 	void revert(i64 bytes); // вернуть данные
 	void skip(i64 bytes);   // пропустить данные
@@ -156,13 +153,6 @@ t_b _stack& _stack::operator>>(_b& a) noexcept
 	a = *((_b*)(data + adata));
 	adata += sizeof(_b);
 	return *this;
-}
-
-t_b void _stack::pop_end(_b& a)
-{
-	if (sizeof(_b) > size) return;
-	size -= sizeof(_b);
-	a = *((_b*)(data + size));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

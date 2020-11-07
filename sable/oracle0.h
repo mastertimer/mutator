@@ -29,8 +29,8 @@ struct _mctds_candle : public _basic_curve // источник данных для временного гра
 	void get_t_info(int t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
 	void draw(i64 n, _area area)              override; // нарисовать 1 элемент
 	void recovery()                           override; // обновить
-	void push(_stack* mem);
-	void pop(_stack* mem);
+	void save_to_file()                       override;
+	void load_from_file()                     override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

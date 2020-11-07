@@ -33,6 +33,7 @@ _basic_curve* super_oracle = nullptr; // оракул для предсказа�
 
 void add_oracle(_basic_curve* o, bool gr = true, bool sup = false)
 {
+	o->load_from_file();
 	o->recovery();
 	oracle.push_back(o);
 	if (gr)	graph->curve.push_back(o);
@@ -182,6 +183,7 @@ void fun30(_tetron* tt0, _tetron* tt, u64 flags)
 void fun31(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	sss.save_to_file((exe_path + sss_file).c_str());
+	for (auto i : oracle) i->save_to_file();
 }
 
 void fun35(_tetron* tt0, _tetron* tt, u64 flags)
