@@ -1605,13 +1605,13 @@ void _picture::text16n(i64 x, i64 y, astr s, i64 n, uint c)
 			ushort mask = (ushort(1) << j);
 			for (i64 jj = 0; jj < n; jj++)
 			{
-				const ushort* sss = ss;
+				const ushort* ss2 = ss;
 				if (kk == 0)
 				{
 					uint* c2 = &data[(y + j * n + jj) * size.x + x + i0 * n];
 					for (i64 i = i0; i < i1_; i++)
 					{
-						if (*sss & mask)
+						if (*ss2 & mask)
 						{
 							for (int ii = 0; ii < n; ii++)
 							{
@@ -1621,7 +1621,7 @@ void _picture::text16n(i64 x, i64 y, astr s, i64 n, uint c)
 						}
 						else
 							c2 += n;
-						sss++;
+						ss2++;
 					}
 				}
 				else
@@ -1631,7 +1631,7 @@ void _picture::text16n(i64 x, i64 y, astr s, i64 n, uint c)
 					{
 						for (i64 i = i0; i < i1_; i++)
 						{
-							if (*sss & mask)
+							if (*ss2 & mask)
 							{
 								for (int ii = 0; ii < n; ii++)
 								{
@@ -1643,14 +1643,14 @@ void _picture::text16n(i64 x, i64 y, astr s, i64 n, uint c)
 							}
 							else
 								c2 += 4uLL * n;
-							sss++;
+							ss2++;
 						}
 					}
 					else
 					{
 						for (i64 i = i0; i < i1_; i++)
 						{
-							if (*sss & mask)
+							if (*ss2 & mask)
 							{
 								for (int ii = 0; ii < n; ii++)
 								{
@@ -1666,7 +1666,7 @@ void _picture::text16n(i64 x, i64 y, astr s, i64 n, uint c)
 							}
 							else
 								c2 += 4uLL * n;
-							sss++;
+							ss2++;
 						}
 					}
 				}
@@ -1717,13 +1717,13 @@ void _picture::text16(i64 x, i64 y, std::string_view st, uint c)
 		for (i64 j = j0; j < j1; j++)
 		{
 			ushort        mask = (ushort(1) << j);
-			const ushort* sss = ss;
+			const ushort* ss2 = ss;
 			if (kk == 0)
 			{
 				uint* c2 = &data[(y + j) * size.x + x + i0];
 				for (i64 i = i0; i < i1_; i++)
 				{
-					if (*sss++ & mask) *c2 = c;
+					if (*ss2++ & mask) *c2 = c;
 					c2++;
 				}
 			}
@@ -1734,7 +1734,7 @@ void _picture::text16(i64 x, i64 y, std::string_view st, uint c)
 				{
 					for (i64 i = i0; i < i1_; i++)
 					{
-						if (*sss++ & mask)
+						if (*ss2++ & mask)
 						{
 							c2[0] = (c2[0] * kk + d1) >> 8;
 							c2[1] = (c2[1] * kk + d2) >> 8;
@@ -1747,7 +1747,7 @@ void _picture::text16(i64 x, i64 y, std::string_view st, uint c)
 				{
 					for (i64 i = i0; i < i1_; i++)
 					{
-						if (*sss++ & mask)
+						if (*ss2++ & mask)
 						{
 							uint kk_ = 255 - c2[3];
 							uint k2_ = (256 - kk_) * kk;

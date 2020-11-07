@@ -66,6 +66,9 @@
     <ClCompile Include="sable\basic_oracle.cpp">
       <Filter>Исходные файлы\sable</Filter>
     </ClCompile>
+    <ClCompile Include="sable\oracle0.cpp">
+      <Filter>Исходные файлы\sable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -99,6 +102,9 @@
       <Filter>Файлы заголовков\tetrons</Filter>
     </ClInclude>
     <ClInclude Include="sable\basic_oracle.h">
+      <Filter>Файлы заголовков\sable</Filter>
+    </ClInclude>
+    <ClInclude Include="sable\oracle0.h">
       <Filter>Файлы заголовков\sable</Filter>
     </ClInclude>
   </ItemGroup>
