@@ -172,6 +172,7 @@
     <ClCompile Include="sable\oracle0.cpp" />
     <ClCompile Include="sable\oracle1.cpp" />
     <ClCompile Include="sable\oracle2.cpp" />
+    <ClCompile Include="sable\oracle3.cpp" />
     <ClCompile Include="sable\sable.cpp" />
     <ClCompile Include="sable\sable_stat.cpp" />
     <ClCompile Include="tetrons\tetron.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="sable\oracle0.h" />
     <ClInclude Include="sable\oracle1.h" />
     <ClInclude Include="sable\oracle2.h" />
+    <ClInclude Include="sable\oracle3.h" />
     <ClInclude Include="sable\sable.h" />
     <ClInclude Include="sable\sable_stat.h" />
     <ClInclude Include="tetrons\tetron.h" />
