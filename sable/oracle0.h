@@ -24,7 +24,7 @@ struct _mctds_candle : public _basic_curve // источник данных для временного гра
 
 	std::vector<_cen_pak> cen1m; // упакованные цены по минутам
 
-	i64 get_n()                               override { return cen1m.size(); } // количество элементов
+	i64  get_n()                              override { return cen1m.size(); } // количество элементов
 	void get_n_info(i64 n, _element_chart* e) override; // получить краткую информацию n-го элемента
 	void get_t_info(int t, _element_chart* e) override; // получить краткую информацию элемента со временем >= t
 	void draw(i64 n, _area area)              override; // нарисовать 1 элемент
