@@ -114,10 +114,18 @@ void _oracle5::draw(i64 n, _area area)
 		c = 0xFFFF0000;
 		r *= 2;
 	}
-	double ry = y_graph.length() * 0.5;
-	double y1 = y_graph(0.5);
-	area.y = { y1 - ry * zn[n].r * 0.002, y1 };
-	master_bm.fill_rectangle(area, 0x60FF0000);
+//	if ((zn[n].r_pro > zn[n].r_pok * 1.8) || (zn[n].r_pok > zn[n].r_pro * 1.8))
+	{
+		double ry = y_graph.length() * 0.5;
+		double y1 = y_graph(0.5);
+		_interval xx = area.x;
+		area.x = { xx.min, xx(0.5) };
+		area.y = { y1 - ry * zn[n].r_pro * 0.004, y1 };
+		master_bm.fill_rectangle(area, 0x60FF0000);
+		area.x = { xx(0.5), xx.max };
+		area.y = { y1 - ry * zn[n].r_pok * 0.004, y1 };
+		master_bm.fill_rectangle(area, 0x603030FF);
+	}
 }
 
 void _oracle5::recovery()

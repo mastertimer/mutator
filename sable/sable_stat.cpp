@@ -706,7 +706,6 @@ bool _sable_stat::read12(_one_stat* v1, std::vector<_one_stat>& v0)
 
 bool _sable_stat::read1(_prices& c)
 {
-	ip_n.ok = true;
 	if (data.pop1() == 0) return read0(c);
 	auto aa0 = data.bit_read;
 	if (!read12(c.buy, base_buy_r)) return false;
@@ -725,13 +724,13 @@ bool _sable_stat::read(i64 n, _prices& c, _info_pak* inf)
 	if (n == read_n)
 	{
 		c = read_cc;
-		if (inf)*inf = ip_n;
+		if (inf) *inf = ip_n;
 		return true;
 	}
 	if (n == size - 1)
 	{
 		c = last_cc;
-		if (inf)*inf = ip_last;
+		if (inf) *inf = ip_last;
 		return true;
 	}
 	if (read_n + 1 != n)
@@ -746,6 +745,7 @@ bool _sable_stat::read(i64 n, _prices& c, _info_pak* inf)
 		while (read_n < n) r = read(read_n + 1, c, inf);
 		return r;
 	}
+	ip_n.ok = false;
 	if (n % step_pak_cc == 0)
 	{
 		c.time = data.popn(31);
@@ -765,12 +765,13 @@ bool _sable_stat::read(i64 n, _prices& c, _info_pak* inf)
 		}
 		else
 		{
+			if (dt == 1) ip_n.ok = true;
 			if (!read1(c)) return false;
 		}
 	}
 	read_cc = c;
 	read_n = n;
-	if (inf)*inf = ip_n;
+	if (inf) *inf = ip_n;
 	return true;
 }
 
