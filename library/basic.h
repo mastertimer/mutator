@@ -72,6 +72,7 @@ struct _rnd
 	_rnd(i64 p = 0)       noexcept { init(p); }
 	u64 operator()()      noexcept { i = (i + 1) & 1023; return (d[i] = d[(i + 503) & 1023] ^ d[(i + 671) & 1023]); }
 	i64 operator()(i64 m) noexcept { i = (i + 1) & 1023; return (d[i] = d[(i + 503) & 1023] ^ d[(i + 671) & 1023]) % m;}
+	i64 operator()(double n, double k) noexcept { return ((*this)() & 0xFFFFFFFF) * (k - n) / 0xFFFFFFFF + n; }
 	void init(u64 p);
 
 private:

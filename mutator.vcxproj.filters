@@ -71,6 +71,9 @@
     <ClCompile Include="sable\oracle4.cpp">
       <Filter>Исходные файлы\sable</Filter>
     </ClCompile>
+    <ClCompile Include="sable\oracle5.cpp">
+      <Filter>Исходные файлы\sable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\basic.h">
@@ -120,6 +123,9 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="sable\oracle5.h">
+      <Filter>Исходные файлы\sable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

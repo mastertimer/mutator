@@ -19,6 +19,7 @@ max(rnd)  |   1.058        58       1.00097
 #include "oracle1.h"
 #include "oracle3.h"
 #include "oracle4.h"
+#include "oracle5.h"
 #include "sable.h"
 
 constexpr wchar_t sss_file[] = L"..\\..\\sable\\base.c2";
@@ -59,7 +60,7 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 
 	add_oracle(new _mctds_candle);
 	add_oracle(new _oracle3);
-	add_oracle(new _nervous_oracle, true, true);
+	add_oracle(new _oracle5);
 }
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)
@@ -250,6 +251,7 @@ std::string date_to_ansi_string(time_t time)
 void _sable_graph::ris2(_trans tr, bool final)
 {
 	_area a = tr(local_area);
+	y_graph = a.y;
 	_interval y_; // диапазон у (grid)
 	static std::vector<time_t> time_; // отсчеты времени (grid)
 
