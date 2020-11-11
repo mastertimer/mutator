@@ -9,9 +9,8 @@ constexpr wchar_t oracle5_file[] = L"..\\..\\sable\\oracle5.bin";
 
 i64 _oracle5::prediction()
 {
-	if (zn.size() < 10) return 0;
-	if (zn.back().time + 60 != sss.last_cc.time_to_minute()) return 0;
-	return get_latest_events(zn.size() - 1).start();
+	if (sss.last_cc.time_minute() % 5 == 0) return 3;
+	return 0;
 }
 
 void _oracle5::get_n_info(i64 n, _element_chart* e)

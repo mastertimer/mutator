@@ -60,7 +60,7 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 
 	add_oracle(new _mctds_candle);
 	add_oracle(new _oracle3);
-	add_oracle(new _oracle5);
+	add_oracle(new _oracle5, true, true);
 }
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)
@@ -75,7 +75,7 @@ void fun15(_tetron* tt0, _tetron* tt, u64 flags)
 	if (b->checked) n_timer1000->add_flags(new _t_function(16), flag_run);
 }
 
-i64 can_trade    = -4; // разрешенное количество сделок (купить-продать = 2 сделки), отрицательное - нельзя
+i64 can_trade    = -6; // разрешенное количество сделок (купить-продать = 2 сделки), отрицательное - нельзя
 int vrema_prodat =  0; // время когда нужно продать
 
 void fun16(_tetron* tt0, _tetron* tt, u64 flags)
