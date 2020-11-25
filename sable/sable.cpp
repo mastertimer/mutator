@@ -517,6 +517,38 @@ void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+i64 test_index()
+{
+	_sable_stat ss_old = sss;
+	_mctds_candle o;
+	_index_data oi;
+	sss.clear();
+	_prices pr;
+	for (i64 i = 0; i < ss_old.size; i++)
+	{
+		ss_old.read(i, pr);
+		sss.add(pr);
+		if (rnd(3) == 1)
+		{
+			o.recovery();
+			oi.update();
+		}
+	}
+	if (o.cen1m.size() != oi.data.size() + 1) return 1;
+	for (i64 i = 0; i < (i64)oi.data.size(); i++)
+	{
+		if (o.cen1m[i].ncc != oi.data[i].ncc) return 2;
+		if (o.cen1m[i].time != oi.data[i].time) return 3;
+		if (abs(o.cen1m[i].min * sss.c_unpak - oi.data[i].min) > 0.006) return 4;
+		if (abs(o.cen1m[i].max * sss.c_unpak - oi.data[i].max) > 0.006) return 5;
+		if (abs(o.cen1m[i].first * sss.c_unpak - oi.data[i].first) > 0.006) return 6;
+		if (abs(o.cen1m[i].last * sss.c_unpak - oi.data[i].last) > 0.006) return 7;
+	}
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool _index_data::update()
 {
 	i64 vcc = 0;
