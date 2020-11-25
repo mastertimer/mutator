@@ -22,7 +22,17 @@ void _mctds_candle::get_n_info(i64 n, _element_chart* e)
 
 void _mctds_candle::get_t_info(time_t t, _element_chart* e)
 {
-	e->n = -1; // !! написать, когда потребуется!!
+	auto x = lower_bound(cen1m.begin(), cen1m.end(), t);
+	if (x == cen1m.end())
+	{
+		e->n = -1;
+		return;
+	}
+	int xx = (int)(x - cen1m.begin());
+	e->n = xx;
+	e->time = cen1m[xx].time;
+	e->min = cen1m[xx].min * sss.c_unpak;
+	e->max = cen1m[xx].max * sss.c_unpak;
 }
 
 void _mctds_candle::draw(i64 n, _area area)

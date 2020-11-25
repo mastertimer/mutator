@@ -20,6 +20,8 @@ struct _mctds_candle : public _basic_curve // источник данных для временного гра
 		double cc    = 0; // средняя цена
 		_iinterval ncc;   // диапазон цен
 		int time     = 0; // общее время
+
+		bool operator < (time_t a) const noexcept { return (time < a); } // для алгоритма поиска по времени
 	};
 
 	std::vector<_cen_pak> cen1m; // упакованные цены по минутам

@@ -290,13 +290,12 @@ void _sable_graph::ris2(_trans tr, bool final)
 	if (sb)	polzi_ = sb->position;
 
 	int ll = (int)curve.size();
-	if (ll == 0) return;
 
 	i64 k_el = local_area.x.length() / size_el;
 	if (k_el < 1) return;
 	double r_el = a.x.length() / k_el;
 
-	int n = curve[0]->get_n();
+	i64 n = index.data.size();
 	if (n == 0) return;
 	//	v_vib_ = n - k_el;
 	v_vib = n - 1;
@@ -309,9 +308,8 @@ void _sable_graph::ris2(_trans tr, bool final)
 	// 1-й проход - вычисление zmin, zmax
 	double zmin = 1E100;
 	double zmax = -1E100;
-	curve[0]->get_n_info(vib, &al[0]);
-	int timelast = al[0].time;
-	for (int i = 1; i < ll; i++) curve[i]->get_t_info(timelast, &al[i]);
+	int timelast = index.data[vib].time;
+	for (int i = 0; i < ll; i++) curve[i]->get_t_info(timelast, &al[i]);
 	timelast -= period;
 	int ke = 0; // количество построенных элементов
 	while (ke < k_el)
@@ -343,9 +341,8 @@ void _sable_graph::ris2(_trans tr, bool final)
 	y_ = { zmin, zmax };
 	time_.clear();
 	// 2-й проход - рисование
-	curve[0]->get_n_info(vib, &al[0]);
-	timelast = al[0].time;
-	for (int i = 1; i < ll; i++) curve[i]->get_t_info(timelast, &al[i]);
+	timelast = index.data[vib].time;
+	for (int i = 0; i < ll; i++) curve[i]->get_t_info(timelast, &al[i]);
 	timelast -= period;
 	ke = 0; // количество построенных элементов
 	while (ke < k_el)
