@@ -52,6 +52,14 @@ struct _index_data // все коэффициенты
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+struct _candle2 : public _basic_curve2
+{
+	void draw(i64 n, _area area) override; // нарисовать 1 элемент
+	_interval get_y(i64 n) override; // дипазон рисования по y
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 _index_data index; // все расчетные данные
 
 std::vector<_basic_curve*> oracle; // все оракулы и графики
@@ -297,13 +305,11 @@ void _sable_graph::ris2(_trans tr, bool final)
 
 	i64 n = index.data.size();
 	if (n == 0) return;
-	//	v_vib_ = n - k_el;
 	v_vib = n - 1;
 	if (v_vib < 0) v_vib = 0;
 	int vib = (int)(polzi_ * v_vib + 0.5); // !! ползунок
 
 	int period = 60;
-	//	int pause_max = 3;
 	_basic_curve::_element_chart* al = new _basic_curve::_element_chart[ll]; // элементы линий
 	// 1-й проход - вычисление zmin, zmax
 	double zmin = 1E100;
@@ -319,10 +325,6 @@ void _sable_graph::ris2(_trans tr, bool final)
 			if (al[i].n >= 0)
 				if (al[i].time < timenext) timenext = al[i].time;
 		if (timenext == 2000000000) break;
-
-		//int dt = (timenext - timelast) / period;
-		//ke += (dt <= (pause_max + 1)) ? dt : 2;
-		//if (ke > k_el) break;
 		ke++;
 		timelast = timenext;
 
@@ -352,10 +354,6 @@ void _sable_graph::ris2(_trans tr, bool final)
 			if (al[i].n >= 0)
 				if (al[i].time < timenext) timenext = al[i].time;
 		if (timenext == 2000000000) break;
-
-		//int dt = (timenext - timelast) / period;
-		//ke += (dt <= (pause_max + 1)) ? dt : 2;
-		//if (ke > k_el) break;
 		ke++;
 		timelast = timenext;
 		time_.push_back(timelast);
@@ -583,6 +581,19 @@ bool _index_data::update()
 		cp.max = cp.min = cp.last = cp.first = (cc.buy[0].value + cc.sale[0].value) * (sss.c_unpak * 0.5);
 	}
 	return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void _candle2::draw(i64 n, _area area)
+{
+
+}
+
+_interval _candle2::get_y(i64 n)
+{
+	auto a = &index.data[n];
+	return { a->min, a->max };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
