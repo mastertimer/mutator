@@ -539,45 +539,30 @@ bool _index_data::update()
 		}
 	}
 	if (sss.size - vcc < 2) return false; // мало данных для обработки
-	_prices pr;
-	sss.read(vcc, pr);
-	if (back_minute == pr.time_to_minute()) return false;
-
-/*	int t = 0;
-	_cen_pak* cp = 0;
-	for (i64 i = 0; i < ssvcc; i++)
+	_prices cc;
+	time_t t = 0;
+	_index cp;
+	for (i64 i = vcc; i < sss.size; i++)
 	{
 		sss.read(i, cc);
-		int t2 = cc.time_to_minute();
-		if (t2 != t)
+		time_t t2 = cc.time_to_minute();
+		if (t2 == t)
 		{
-			t = t2;
-			if (cp)	cp->cc /= ((double)cp->ncc.max - cp->ncc.min);
-			_cen_pak we;
-			we.time = t;
-			we.ncc.min = i;
-			we.ncc.max = i + 1;
-			we.first = ((int)cc.buy[0].value + (int)cc.sale[0].value) / 2;
-			we.last = we.first;
-			we.min = we.first;
-			we.max = we.first;
-			we.cc = we.first;
-			cen1m.push_back(we);
-			cp = &cen1m.back();
+			double aa = (cc.buy[0].value + cc.sale[0].value) * (sss.c_unpak * 0.5);
+			if (aa < cp.min) cp.min = aa;
+			if (aa > cp.max) cp.max = aa;
+			cp.ncc.max++;
+			cp.last = aa;
+			continue;
 		}
-		else
-		{
-			if (cp == 0) continue; // для паранойи компилятора
-			int aa = ((int)cc.buy[0].value + (int)cc.sale[0].value) / 2;
-			cp->cc += aa;
-			if (aa < cp->min) cp->min = aa;
-			if (aa > cp->max) cp->max = aa;
-			cp->ncc.max++;
-			cp->last = aa;
-		}
+		if (t != 0) data.push_back(cp);
+		if (t2 == back_minute) break; // последнюю минуту пока не трогать
+		t = t2;
+		cp.time = t;
+		cp.ncc.min = i;
+		cp.ncc.max = i + 1;
+		cp.max = cp.min = cp.last = cp.first = (cc.buy[0].value + cc.sale[0].value) * (sss.c_unpak * 0.5);
 	}
-	if (cp)	cp->cc /= ((double)cp->ncc.max - cp->ncc.min);*/
-
 	return true;
 }
 
