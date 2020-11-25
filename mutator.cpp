@@ -675,7 +675,6 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	show_message(test_index());
 /*	show_message(test_ss4());
 
 	_g_graph* g = new _g_graph;

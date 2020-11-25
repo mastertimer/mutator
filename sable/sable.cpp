@@ -22,7 +22,8 @@ max(rnd)  |   1.058        58       1.00097
 #include "oracle5.h"
 #include "sable.h"
 
-constexpr wchar_t sss_file[] = L"..\\..\\sable\\base.c2";
+constexpr wchar_t sss_file[]   = L"..\\..\\sable\\base.c2";
+constexpr wchar_t index_file[] = L"..\\..\\sable\\index.bin";
 
 _sable_graph *graph = nullptr; // график
 
@@ -45,9 +46,13 @@ struct _index_data // все коэффициенты
 	std::vector<_index> data; // поминутный вектор
 
 	bool update(); // обновить ранные, вызывать после обновления sss
+	void start(); // начальная инициализация
+	void save_to_file();
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+_index_data index; // все расчетные данные
 
 std::vector<_basic_curve*> oracle; // все оракулы и графики
 
@@ -82,6 +87,7 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 	add_oracle(new _mctds_candle);
 	add_oracle(new _oracle3);
 	add_oracle(new _oracle5, true, true);
+	index.start();
 }
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)
@@ -120,6 +126,7 @@ void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 	}
 	sss.add(a);
 	for (auto i : oracle) i->recovery();
+	index.update();
 
 	graph->run(nullptr, graph, flag_run);
 
@@ -205,6 +212,7 @@ void fun31(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	sss.save_to_file((exe_path + sss_file).c_str());
 	for (auto i : oracle) i->save_to_file();
+	index.save_to_file();
 }
 
 void fun35(_tetron* tt0, _tetron* tt, u64 flags)
@@ -517,37 +525,19 @@ void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-i64 test_index()
+void _index_data::save_to_file()
 {
-	_sable_stat ss_old = sss;
-	_mctds_candle o;
-	_index_data oi;
-	sss.clear();
-	_prices pr;
-	for (i64 i = 0; i < ss_old.size; i++)
-	{
-		ss_old.read(i, pr);
-		sss.add(pr);
-		if (rnd(3) == 1)
-		{
-			o.recovery();
-			oi.update();
-		}
-	}
-	if (o.cen1m.size() != oi.data.size() + 1) return 1;
-	for (i64 i = 0; i < (i64)oi.data.size(); i++)
-	{
-		if (o.cen1m[i].ncc != oi.data[i].ncc) return 2;
-		if (o.cen1m[i].time != oi.data[i].time) return 3;
-		if (abs(o.cen1m[i].min * sss.c_unpak - oi.data[i].min) > 0.006) return 4;
-		if (abs(o.cen1m[i].max * sss.c_unpak - oi.data[i].max) > 0.006) return 5;
-		if (abs(o.cen1m[i].first * sss.c_unpak - oi.data[i].first) > 0.006) return 6;
-		if (abs(o.cen1m[i].last * sss.c_unpak - oi.data[i].last) > 0.006) return 7;
-	}
-	return 0;
+	_stack mem;
+	mem << data;
+	mem.save_to_file(exe_path + index_file);
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void _index_data::start()
+{
+	_stack mem;
+	if (mem.load_from_file(exe_path + index_file)) mem >> data;
+	update();
+}
 
 bool _index_data::update()
 {
