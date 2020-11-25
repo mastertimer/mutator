@@ -9,7 +9,7 @@ constexpr wchar_t oracle5_file[] = L"..\\..\\sable\\oracle5.bin";
 
 i64 _oracle5::prediction()
 {
-	if (sss.last_cc.time_minute() % 5 == 0) return 3;
+	if (sss.back.time_minute() % 5 == 0) return 3;
 	return 0;
 }
 

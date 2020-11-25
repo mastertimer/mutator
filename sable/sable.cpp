@@ -44,7 +44,7 @@ struct _index_data // все коэффициенты
 {
 	std::vector<_index> data; // поминутный вектор
 
-	void update(); // обновить ранные, вызывать после обновления sss
+	bool update(); // обновить ранные, вызывать после обновления sss
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -517,13 +517,68 @@ void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _index_data::update()
+bool _index_data::update()
 {
 	i64 vcc = 0;
 	if (!data.empty()) vcc = data.back().ncc.max;
-	i64 ssvcc = sss.size;
-	if (ssvcc == vcc) return; // ничего не изменилось
+	if (vcc == sss.size) return false; // ничего не изменилось
+	if (vcc > sss.size)
+	{
+		data.clear(); // обработанных данных больше, чем исходных, потому пусть будет полный перерасчет
+		vcc = 0;
+	}
+	if (sss.size < 2) return false; // мало данных для обработки
+	i64 back_minute = sss.back.time_to_minute();
+	if (!data.empty())
+	{
+		if (back_minute == data.back().time + 1) return false; // еще рано
+		if (back_minute <= data.back().time) // так быть не должно, полный перерасчет
+		{
+			data.clear();
+			vcc = 0;
+		}
+	}
+	if (sss.size - vcc < 2) return false; // мало данных для обработки
+	_prices pr;
+	sss.read(vcc, pr);
+	if (back_minute == pr.time_to_minute()) return false;
 
+/*	int t = 0;
+	_cen_pak* cp = 0;
+	for (i64 i = 0; i < ssvcc; i++)
+	{
+		sss.read(i, cc);
+		int t2 = cc.time_to_minute();
+		if (t2 != t)
+		{
+			t = t2;
+			if (cp)	cp->cc /= ((double)cp->ncc.max - cp->ncc.min);
+			_cen_pak we;
+			we.time = t;
+			we.ncc.min = i;
+			we.ncc.max = i + 1;
+			we.first = ((int)cc.buy[0].value + (int)cc.sale[0].value) / 2;
+			we.last = we.first;
+			we.min = we.first;
+			we.max = we.first;
+			we.cc = we.first;
+			cen1m.push_back(we);
+			cp = &cen1m.back();
+		}
+		else
+		{
+			if (cp == 0) continue; // для паранойи компилятора
+			int aa = ((int)cc.buy[0].value + (int)cc.sale[0].value) / 2;
+			cp->cc += aa;
+			if (aa < cp->min) cp->min = aa;
+			if (aa > cp->max) cp->max = aa;
+			cp->ncc.max++;
+			cp->last = aa;
+		}
+	}
+	if (cp)	cp->cc /= ((double)cp->ncc.max - cp->ncc.min);*/
+
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

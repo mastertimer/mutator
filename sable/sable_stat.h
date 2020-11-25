@@ -58,7 +58,7 @@ struct _sable_stat // статистика цен, сжатая  (в 2 раза меньше, в 3 раза медленн
 	};
 
 	i64 size = 0; // количество записей
-	_prices last_cc{}; // последние цены
+	_prices back{}; // последние цены
 	_bit_vector data; // сжатые данные
 	static constexpr time_t old_dtime = 160; // разность времени, после которого цены считаются устаревшими
 	static constexpr double c_unpak = 0.01; // распаковка цен

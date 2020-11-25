@@ -515,8 +515,8 @@ bool _sable_stat::add1(const _prices& c)
 
 bool _sable_stat::add(const _prices& c)
 {
-	if (c == last_cc) return true; // с большой вероятностью данные устарели
-	if (c.time < last_cc.time) return true; // цены из прошлого не принимаются!
+	if (c == back) return true; // с большой вероятностью данные устарели
+	if (c.time < back.time) return true; // цены из прошлого не принимаются!
 	auto s_data = data.size();
 	if (size % step_pak_cc == 0)
 	{
@@ -530,7 +530,7 @@ bool _sable_stat::add(const _prices& c)
 	}
 	else
 	{
-		time_t dt = c.time - last_cc.time;
+		time_t dt = c.time - back.time;
 		if (dt == 1) data.push1(0); else { data.push1(1); data.pushn(dt, 31); }
 		if (dt > old_dtime)
 		{
@@ -542,7 +542,7 @@ bool _sable_stat::add(const _prices& c)
 		}
 	}
 	size++;
-	last_cc = c;
+	back = c;
 	return true;
 err:
 	data.resize(s_data);
@@ -729,7 +729,7 @@ bool _sable_stat::read(i64 n, _prices& c, _info_pak* inf)
 	}
 	if (n == size - 1)
 	{
-		c = last_cc;
+		c = back;
 		if (inf) *inf = ip_last;
 		return true;
 	}
@@ -780,7 +780,7 @@ void _sable_stat::save_to_file(wstr fn)
 	_stack mem;
 	data.save(mem);
 	mem << size;
-	mem.push_data(&last_cc, sizeof(last_cc));
+	mem.push_data(&back, sizeof(back));
 	mem << udata;
 	mem << base_buy;
 	mem << base_sale;
@@ -793,7 +793,7 @@ void _sable_stat::load_from_file(wstr fn)
 	if (!mem.load_from_file(fn)) return;
 	data.load(mem);
 	mem >> size;
-	mem >> last_cc;
+	mem >> back;
 	mem >> udata;
 	mem >> base_buy;
 	mem >> base_sale;
@@ -806,7 +806,7 @@ void _sable_stat::clear()
 {
 	data.clear();
 	udata.clear();
-	last_cc = {};
+	back = {};
 	size = 0;
 	read_n = -666;
 	ip_last.ok = false;
