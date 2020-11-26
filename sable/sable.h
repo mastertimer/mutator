@@ -10,6 +10,7 @@ struct _basic_curve2 // база для кривых
 {
 	virtual void draw(i64 n, _area area) = 0; // нарисовать 1 элемент
 	virtual _interval get_y(i64 n) = 0; // дипазон рисования по y
+	virtual ~_basic_curve2() {}
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,10 +18,11 @@ struct _basic_curve2 // база для кривых
 struct _sable_graph : public _t_go
 {
 	std::vector<_basic_curve*> curve; // кривая
-	std::vector<_basic_curve2> curve2; // кривая 2-й версии
+	std::vector<_basic_curve2*> curve2; // кривая, 2я версия
 	i64 size_el = 6; // размер элемента
 
 	_sable_graph();
+	~_sable_graph();
 
 	uchar type()      override { return 9; }
 	int get_froglif() override { return 0x71; }

@@ -96,6 +96,7 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 	add_oracle(new _oracle3);
 	add_oracle(new _oracle5, true, true);
 	index.start();
+	graph->curve2.push_back(new _candle2);
 }
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)
@@ -235,6 +236,11 @@ void fun36(_tetron* tt0, _tetron* tt, u64 flags)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+_sable_graph::~_sable_graph()
+{
+	for (auto i : curve2) delete i;
+}
+
 bool _sable_graph::mouse_down_left2(_xy r)
 {
 	x_tani = (i64)r.x;
@@ -297,7 +303,8 @@ void _sable_graph::ris2(_trans tr, bool final)
 	_g_scrollbar* sb = find1<_g_scrollbar>(flag_part);
 	if (sb)	polzi_ = sb->position;
 
-	int ll = (int)curve.size();
+	i64 ll = curve.size();
+	i64 ll2 = curve2.size();
 
 	i64 k_el = local_area.x.length() / size_el;
 	if (k_el < 1) return;
@@ -337,6 +344,17 @@ void _sable_graph::ris2(_trans tr, bool final)
 				if (al[i].max > zmax) zmax = al[i].max;
 				curve[i]->get_n_info(al[i].n + 1i64, &al[i]);
 			}
+		}
+	}
+	for (i64 i = 0; i < k_el; i++)
+	{
+		i64 ii = i + vib;
+		if (ii >= (i64)index.data.size()) break;
+		for (i64 j = 0; j < ll2; j++)
+		{
+			_interval il = curve2[j]->get_y(ii);
+			if (il.min < zmin) zmin = il.min;
+			if (il.max > zmax) zmax = il.max;
 		}
 	}
 	if (zmin == zmax) zmax = zmin + 1.0;
@@ -587,7 +605,41 @@ bool _index_data::update()
 
 void _candle2::draw(i64 n, _area area)
 {
+	auto aa = &index.data[n];
+	double min_ = aa->min * sss.c_unpak;
+	double max_ = aa->max * sss.c_unpak;
+	double first_ = aa->first * sss.c_unpak;
+	double last_ = aa->last * sss.c_unpak;
 
+	_iinterval xx = area.x;
+	xx.min++;
+	xx.max--;
+	xx.min++;
+	xx.max--;
+	if (xx.empty()) return;
+
+	constexpr uint col_rost = 0xff0000ff;// 0xFF28A050; // цвет ростущей свечки
+	constexpr uint col_pade = 0xffff0000;// 0xFF186030; // цвет падающей свечки
+	double yfi, yla;
+	if (min_ < max_)
+	{
+		yfi = area.y.max - area.y.length() * (first_ - min_) / (max_ - min_);
+		yla = area.y.max - area.y.length() * (last_ - min_) / (max_ - min_);
+	}
+	else
+	{
+		yfi = yla = area.y.min;
+	}
+	if (first_ <= last_)
+	{
+		master_bm.fill_rectangle({ xx, {yla, yfi} }, col_rost);
+		master_bm.line({ xx.center(), area.y.max }, { xx.center(), area.y.min }, col_rost);
+	}
+	else
+	{
+		master_bm.fill_rectangle({ xx, {yfi, yla} }, col_pade);
+		master_bm.line({ xx.center(), area.y.max }, { xx.center(), area.y.min }, col_pade);
+	}
 }
 
 _interval _candle2::get_y(i64 n)
