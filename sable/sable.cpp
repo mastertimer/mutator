@@ -51,7 +51,13 @@ struct _index_data // все коэффициенты
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _candle2 : public _basic_curve2
+struct _candle_curve : public _basic_curve2 // классические свечи
+{
+	void draw(i64 n, _area area) override; // нарисовать 1 элемент
+	_interval get_y(i64 n) override; // дипазон рисования по y
+};
+
+struct _prices_curve : public _basic_curve2 // посекундный спрос/предложение
 {
 	void draw(i64 n, _area area) override; // нарисовать 1 элемент
 	_interval get_y(i64 n) override; // дипазон рисования по y
@@ -94,7 +100,7 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 	add_oracle(new _oracle3);
 	add_oracle(new _oracle5, true, true);
 	index.start();
-	graph->curve2.push_back(new _candle2);
+	graph->curve2.push_back(new _candle_curve);
 }
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)
@@ -615,7 +621,7 @@ bool _index_data::update()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _candle2::draw(i64 n, _area area)
+void _candle_curve::draw(i64 n, _area area)
 {
 	auto aa = &index.data[n];
 	double min_ = aa->min * sss.c_unpak;
@@ -652,10 +658,24 @@ void _candle2::draw(i64 n, _area area)
 	}
 }
 
-_interval _candle2::get_y(i64 n)
+_interval _candle_curve::get_y(i64 n)
 {
 	auto a = &index.data[n];
 	return { a->min, a->max };
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void _prices_curve::draw(i64 n, _area area)
+{
+
+}
+
+_interval _prices_curve::get_y(i64 n)
+{
+	auto a = &index.data[n];
+	return { a->min, a->max };
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
