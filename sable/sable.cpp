@@ -460,53 +460,6 @@ void _sable_graph::ris2(_trans tr, bool final)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
-{
-	_sable_stat ss_old = sss;
-	sss.clear();
-	_prices pr;
-	i64 rez = 0; // 0 - ожидание, 1 - покупка, 2 - продажа
-	i64 t_start = 0;
-	i64 t_end   = 0;
-	i64 cena = 0;
-	i64 cena2 = 0;
-	i64 vv = 0;
-	double k = 1;
-	for (i64 i = 0; i < ss_old.size; i++)
-	{
-		o.recovery();
-		ss_old.read(i, pr);
-		sss.add(pr);
-		if (rez == 1)
-		{
-			if (pr.time < t_start + 2) continue; // 2 секунды пауза между решением и действием
-			if (pr.time > t_start + 60) { rez = 0; continue; } // что-то не так
-			rez = 2;
-			cena = pr.sale[0].value;
-			continue;
-		}
-		if (rez == 2)
-		{
-			if (pr.time < t_end) continue; // еще не время
-			if (pr.time > t_end + 60) { rez = 0; continue; }; // что-то не так
-			cena2 = pr.buy[0].value;
-			rez = 0;
-			vv++;
-			k *= (cena2 * 0.999) / cena;
-			continue;
-		}
-		i64 t = o.prediction();
-		if (t <= 0) continue;
-		t_start = pr.time;
-		t_end = pr.time + t * 60;
-		rez = 1;
-	}
-	nn = vv;
-	kk = k;
-}*/
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 void _index_data::save_to_file()
 {
 	_stack mem;
@@ -900,13 +853,12 @@ _interval _nervous_curve::get_y(i64 n)
 	return { (a->first + a->last) * 0.5, (a->first + a->last) * 0.5 };
 }
 
-/*i64 _nervous_oracle::prediction()
+i64 prediction1(i64 n)
 {
 	// return i64(rnd(15000) == 13) * 60; // случайный
-	if (zn.size() < 10) return 0;
-	if (zn.back().time + 60 != sss.back.time_to_minute()) return 0;
-	return get_latest_events(zn.size() - 1).start();
-}*/
+	if (index.data.size() < 10) return 0;
+	return get_latest_events(n).start();
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -931,5 +883,79 @@ _interval _compression_curve::get_y(i64 n)
 	auto a = &index.data[n];
 	return { (a->first + a->last) * 0.5, (a->first + a->last) * 0.5 };
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void calc_all_prediction(std::function<i64(i64)> o, i64& vv, double& k)
+{
+	i64 rez = 0; // 0 - ожидание, 2 - продажа
+	i64 t_end = 0;
+	i64 cena = 0;
+	i64 cena2 = 0;
+	vv = 0;
+	k = 1;
+	for (i64 i = 1; i < (i64)index.data.size(); i++)
+	{
+		if (rez == 2)
+		{
+			if (index.data[i].time < t_end) continue; // еще не время
+			if (index.data[i].time > t_end) { rez = 0; continue; }; // что-то не так
+			cena2 = index.data[i].c3_buy;
+			rez = 0;
+			vv++;
+			k *= (cena2 * 0.999) / cena;
+		} // после продажи, возможна покупка в ту-же минуту
+		i64 t = o(i - 1);
+		if (t <= 0) continue;
+		t_end = index.data[i].time + t * 60;
+		rez = 2;
+		cena = index.data[i].c3_sale;
+	}
+}
+
+/*void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
+{
+	_sable_stat ss_old = sss;
+	sss.clear();
+	_prices pr;
+	i64 rez = 0; // 0 - ожидание, 1 - покупка, 2 - продажа
+	i64 t_start = 0;
+	i64 t_end   = 0;
+	i64 cena = 0;
+	i64 cena2 = 0;
+	i64 vv = 0;
+	double k = 1;
+	for (i64 i = 0; i < ss_old.size; i++)
+	{
+		o.recovery();
+		ss_old.read(i, pr);
+		sss.add(pr);
+		if (rez == 1)
+		{
+			if (pr.time < t_start + 2) continue; // 2 секунды пауза между решением и действием
+			if (pr.time > t_start + 60) { rez = 0; continue; } // что-то не так
+			rez = 2;
+			cena = pr.sale[0].value;
+			continue;
+		}
+		if (rez == 2)
+		{
+			if (pr.time < t_end) continue; // еще не время
+			if (pr.time > t_end + 60) { rez = 0; continue; }; // что-то не так
+			cena2 = pr.buy[0].value;
+			rez = 0;
+			vv++;
+			k *= (cena2 * 0.999) / cena;
+			continue;
+		}
+		i64 t = o.prediction();
+		if (t <= 0) continue;
+		t_start = pr.time;
+		t_end = pr.time + t * 60;
+		rez = 1;
+	}
+	nn = vv;
+	kk = k;
+}*/
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -41,7 +41,8 @@ inline _basic_statistics research1; // для исследования стат�
 inline _basic_statistics research2; // для исследования статистики
 inline _basic_statistics research3; // для исследования статистики
 
-//void calc_all_prediction(_basic_curve &o, i64& nn, double& kk);
+void calc_all_prediction(std::function<i64(i64)> o, i64& vv, double& k);
+
 void fun13(_tetron* tt0, _tetron* tt, u64 flags);
 void fun15(_tetron* tt0, _tetron* tt, u64 flags);
 void fun16(_tetron* tt0, _tetron* tt, u64 flags);
