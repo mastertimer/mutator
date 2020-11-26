@@ -15,7 +15,6 @@ max(rnd)  |   1.058        58       1.00097
 #include <chrono>
 
 #include "mediator.h"
-#include "oracle0.h"
 #include "oracle1.h"
 #include "oracle3.h"
 #include "oracle4.h"
@@ -92,7 +91,6 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 	}
 	graph->cha_area();
 
-	add_oracle(new _mctds_candle);
 	add_oracle(new _oracle3);
 	add_oracle(new _oracle5, true, true);
 	index.start();
