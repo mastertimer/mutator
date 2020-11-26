@@ -22,6 +22,7 @@ constexpr wchar_t sss_file[]   = L"..\\..\\sable\\base.c2";
 constexpr wchar_t index_file[] = L"..\\..\\sable\\index.bin";
 
 _sable_graph *graph = nullptr; // график
+_interval y_graph; // переместить в более подходящее место
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -53,13 +54,13 @@ struct _index_data // все коэффициенты
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _candle_curve : public _basic_curve2 // классические свечи
+struct _candle_curve : public _basic_curve // классические свечи
 {
 	void draw(i64 n, _area area) override; // нарисовать 1 элемент
 	_interval get_y(i64 n) override; // дипазон рисования по y
 };
 
-struct _prices_curve : public _basic_curve2 // посекундный спрос/предложение
+struct _prices_curve : public _basic_curve // посекундный спрос/предложение
 {
 	static const int max_part = 22000; // максимально количество элементов ss
 	std::deque<_prices> part_ss; // часть супер-статистики
@@ -69,13 +70,13 @@ struct _prices_curve : public _basic_curve2 // посекундный спрос
 	_interval get_y(i64 n) override; // дипазон рисования по y
 };
 
-struct _nervous_curve : public _basic_curve2 // нервозные шарики
+struct _nervous_curve : public _basic_curve // нервозные шарики
 {
 	void draw(i64 n, _area area) override; // нарисовать 1 элемент
 	_interval get_y(i64 n) override; // дипазон рисования по y
 };
 
-struct _compression_curve : public _basic_curve2 // гистограмма степени сжатия
+struct _compression_curve : public _basic_curve // гистограмма степени сжатия
 {
 	void draw(i64 n, _area area) override; // нарисовать 1 элемент
 	_interval get_y(i64 n) override; // дипазон рисования по y
@@ -85,18 +86,7 @@ struct _compression_curve : public _basic_curve2 // гистограмма ст�
 
 _index_data index; // все расчетные данные
 
-std::vector<_basic_curve*> oracle; // все оракулы и графики
-
-_basic_curve* super_oracle = nullptr; // оракул для предсказания
-
-void add_oracle(_basic_curve* o, bool gr = true, bool sup = false)
-{
-	o->load_from_file();
-	o->recovery();
-	oracle.push_back(o);
-	if (gr)	graph->curve.push_back(o);
-	if (sup) super_oracle = o;
-}
+//_basic_curve* super_oracle = nullptr; // оракул для предсказания
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -157,7 +147,6 @@ void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 		return;
 	}
 	sss.add(a);
-	for (auto i : oracle) i->recovery();
 	index.update();
 
 	graph->run(nullptr, graph, flag_run);
@@ -186,7 +175,7 @@ void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 	}
 
 	if (a.time_hour() >= 18) return; // слишком поздно
-	time_t ti = super_oracle->prediction();
+	time_t ti = 0;// super_oracle->prediction();
 
 
 	if (ti == 0) return;
@@ -243,7 +232,6 @@ void fun30(_tetron* tt0, _tetron* tt, u64 flags)
 void fun31(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	sss.save_to_file((exe_path + sss_file).c_str());
-	for (auto i : oracle) i->save_to_file();
 	index.save_to_file();
 }
 
@@ -326,7 +314,6 @@ void _sable_graph::ris2(_trans tr, bool final)
 	_g_scrollbar* sb = find1<_g_scrollbar>(flag_part);
 	if (sb)	polzi_ = sb->position;
 
-	i64 ll = curve.size();
 	i64 ll2 = curve2.size();
 
 	i64 k_el = local_area.x.length() / size_el;
@@ -340,35 +327,9 @@ void _sable_graph::ris2(_trans tr, bool final)
 	int vib = (int)(polzi_ * v_vib + 0.5); // !! ползунок
 
 	int period = 60;
-	_basic_curve::_element_chart* al = new _basic_curve::_element_chart[ll]; // элементы линий
 	// 1-й проход - вычисление zmin, zmax
 	double zmin = 1E100;
 	double zmax = -1E100;
-	int timelast = index.data[vib].time;
-	for (int i = 0; i < ll; i++) curve[i]->get_t_info(timelast, &al[i]);
-	timelast -= period;
-	int ke = 0; // количество построенных элементов
-	while (ke < k_el)
-	{
-		int timenext = 2000000000; // следующее время
-		for (int i = 0; i < ll; i++)
-			if (al[i].n >= 0)
-				if (al[i].time < timenext) timenext = al[i].time;
-		if (timenext == 2000000000) break;
-		ke++;
-		timelast = timenext;
-
-		for (int i = 0; i < ll; i++)
-		{
-			if (al[i].n < 0) continue;
-			if (al[i].time == timelast)
-			{ // сработало
-				if (al[i].min < zmin) zmin = al[i].min;
-				if (al[i].max > zmax) zmax = al[i].max;
-				curve[i]->get_n_info(al[i].n + 1i64, &al[i]);
-			}
-		}
-	}
 	for (i64 i = 0; i < k_el; i++)
 	{
 		i64 ii = i + vib;
@@ -384,35 +345,6 @@ void _sable_graph::ris2(_trans tr, bool final)
 	y_ = { zmin, zmax };
 	time_.clear();
 	// 2-й проход - рисование
-	timelast = index.data[vib].time;
-	for (int i = 0; i < ll; i++) curve[i]->get_t_info(timelast, &al[i]);
-	timelast -= period;
-	ke = 0; // количество построенных элементов
-	while (ke < k_el)
-	{
-		int timenext = 2000000000; // следующее время
-		for (int i = 0; i < ll; i++)
-			if (al[i].n >= 0)
-				if (al[i].time < timenext) timenext = al[i].time;
-		if (timenext == 2000000000) break;
-		ke++;
-		timelast = timenext;
-//		time_.push_back(timelast);
-
-		for (int i = 0; i < ll; i++)
-		{
-			if (al[i].n < 0) continue;
-			if (al[i].time == timelast)
-			{ // сработало
-				double ymi = a.y.max - (al[i].min - zmin) * a.y.length() / (zmax - zmin);
-				double yma = a.y.max - (al[i].max - zmin) * a.y.length() / (zmax - zmin);
-				double x = r_el * (ke - 1i64) + a.x.min;
-				curve[i]->draw(al[i].n, { {x, x + r_el}, {yma, ymi} });
-				curve[i]->get_n_info(al[i].n + 1i64, &al[i]);
-			}
-		}
-	}
-	delete[] al;
 	for (i64 i = 0; i < k_el; i++)
 	{
 		i64 ii = i + vib;
@@ -528,7 +460,7 @@ void _sable_graph::ris2(_trans tr, bool final)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
+/*void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 {
 	_sable_stat ss_old = sss;
 	sss.clear();
@@ -571,7 +503,7 @@ void calc_all_prediction(_basic_curve& o, i64 &nn, double &kk)
 	}
 	nn = vv;
 	kk = k;
-}
+}*/
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -837,6 +769,49 @@ _interval _prices_curve::get_y(i64 n)
 	auto a = &index.data[n];
 	return { a->minmin - sss.c_unpak, a->maxmax };
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct _latest_events // последние события !!! для нервозных предсказателей !!! удалить, если их уже нет !!!
+{
+	char event[4]; // [0] - последнее событие
+	int minute[4]; // на какой минуте случилось
+	double   x[4]; // значения
+
+	int start() // ща будет рост в X минут
+	{
+		if ((minute[2] == 2) && (event[0] == event[1]) && (event[0] == event[2])) // триплет
+		{
+			if (event[0] == 1) return 70;
+			if (event[0] == 2) // фиолетовый
+				if ((x[0] > x[1]) && (x[1] > x[2]))	return 13;
+			if (event[0] == 3)
+			{
+				if ((x[0] > x[1]) && (x[1] > x[2]))	return 40;
+				if ((x[0] < x[1]) && (x[1] < x[2]))	return 90;
+			}
+			//		if (event_[0] == 4) return 120;  //голубой
+			if (event[0] == 6) return 60;   //зеленый
+			return 0;
+		}
+		if ((minute[1] == 1) && (event[0] == event[1])) // дуплет
+		{
+			if (event[0] == 2) // фиолетовый
+			{
+				if (event[2] == 5) return 100; //песочный
+				if ((event[2] == 4) && (event[3] == 4)) return 40;
+			}
+			return 0;
+		}
+		return 0;
+	}
+
+	bool stop() // ща будет падение
+	{
+		if ((event[0] == 5) && (event[1] == 5) && (minute[1] == 1)) return true; // песочный
+		return false;
+	}
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

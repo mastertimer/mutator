@@ -53,9 +53,6 @@
     <ClCompile Include="tetrons\tetron2.cpp">
       <Filter>Исходные файлы\tetrons</Filter>
     </ClCompile>
-    <ClCompile Include="sable\basic_oracle.cpp">
-      <Filter>Исходные файлы\sable</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\basic.h">
@@ -63,9 +60,6 @@
     </ClInclude>
     <ClInclude Include="library\mathematics.h">
       <Filter>Исходные файлы\library</Filter>
-    </ClInclude>
-    <ClInclude Include="sable\basic_oracle.h">
-      <Filter>Исходные файлы\sable</Filter>
     </ClInclude>
     <ClInclude Include="sable\mediator.h">
       <Filter>Исходные файлы\sable</Filter>

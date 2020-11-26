@@ -2,23 +2,21 @@
 
 #include "tetron.h"
 #include "mathematics.h"
-#include "basic_oracle.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _basic_curve2 // база для кривых
+struct _basic_curve // база для кривых
 {
 	virtual void draw(i64 n, _area area) = 0; // нарисовать 1 элемент
 	virtual _interval get_y(i64 n) = 0; // дипазон рисования по y
-	virtual ~_basic_curve2() {}
+	virtual ~_basic_curve() {}
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _sable_graph : public _t_go
 {
-	std::vector<_basic_curve*> curve; // кривая
-	std::vector<_basic_curve2*> curve2; // кривая, 2я версия
+	std::vector<_basic_curve*> curve2; // кривая, 2я версия
 	i64 size_el = 6; // размер элемента
 
 	_sable_graph();
@@ -43,7 +41,7 @@ inline _basic_statistics research1; // для исследования стат�
 inline _basic_statistics research2; // для исследования статистики
 inline _basic_statistics research3; // для исследования статистики
 
-void calc_all_prediction(_basic_curve &o, i64& nn, double& kk);
+//void calc_all_prediction(_basic_curve &o, i64& nn, double& kk);
 void fun13(_tetron* tt0, _tetron* tt, u64 flags);
 void fun15(_tetron* tt0, _tetron* tt, u64 flags);
 void fun16(_tetron* tt0, _tetron* tt, u64 flags);

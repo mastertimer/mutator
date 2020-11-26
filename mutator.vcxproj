@@ -167,7 +167,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mult.cpp" />
     <ClCompile Include="mutator.cpp" />
-    <ClCompile Include="sable\basic_oracle.cpp" />
     <ClCompile Include="sable\mediator.cpp" />
     <ClCompile Include="sable\sable.cpp" />
     <ClCompile Include="sable\sable_stat.cpp" />
@@ -180,7 +179,6 @@
     <ClInclude Include="mult.h" />
     <ClInclude Include="mutator.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="sable\basic_oracle.h" />
     <ClInclude Include="sable\mediator.h" />
     <ClInclude Include="sable\sable.h" />
     <ClInclude Include="sable\sable_stat.h" />
