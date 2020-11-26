@@ -9,6 +9,7 @@ constexpr wchar_t oracle1_file[] = L"..\\..\\sable\\oracle1.bin";
 
 i64 _nervous_oracle::prediction()
 {
+	// return i64(rnd(15000) == 13) * 60; // случайный
 	if (zn.size() < 10) return 0;
 	if (zn.back().time + 60 != sss.back.time_to_minute()) return 0;
 	return get_latest_events(zn.size() - 1).start();
