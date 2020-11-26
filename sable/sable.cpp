@@ -27,9 +27,9 @@ _sable_graph *graph = nullptr; // график
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _index // разнообразные минутные коэффициенты
+struct _index           // разнообразные минутные коэффициенты
 {
-	_iinterval ncc; // диапазон цен
+	_iinterval ncc;     // диапазон цен
 	i64    time    = 0; // время (с обнуленной секундой (time%60 = 0))
 	double min     = 0; // минимальная цена
 	double max     = 0; // макимальная цена
@@ -111,10 +111,12 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 	}
 	graph->cha_area();
 
+	add_oracle(new _nervous_oracle);
 	add_oracle(new _oracle5, true, true);
 	index.start();
 	graph->curve2.push_back(new _candle_curve);
 	graph->curve2.push_back(new _prices_curve);
+	graph->curve2.push_back(new _nervous_curve);
 }
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)
@@ -679,8 +681,8 @@ void _candle_curve::draw(i64 n, _area area)
 	xx.max--;
 	if (xx.empty()) return;
 
-	constexpr uint col_rost = 0xFF28A050; // цвет ростущей свечки
-	constexpr uint col_pade = 0xFF186030; // цвет падающей свечки
+	constexpr uint col_rost = 0x8028A050; // цвет ростущей свечки
+	constexpr uint col_pade = 0x80186030; // цвет падающей свечки
 	double yfi, yla;
 	if (min_ < max_)
 	{
@@ -835,9 +837,84 @@ _interval _prices_curve::get_y(i64 n)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+_latest_events get_latest_events(i64 nn)
+{
+	const i64 k = 4;
+	_latest_events e;
+	e.event[0] = e.event[1] = e.event[2] = e.event[3] = 0;
+	e.minute[0] = e.minute[1] = e.minute[2] = e.minute[3] = 0;
+	e.x[0] = e.x[1] = e.x[2] = e.x[3] = 0.0;
+	if (nn < 10) return e;
+	i64 ii = std::max(k, nn - 40);
+	int ee = 0;
+	for (i64 n = nn; n >= ii; n--)
+	{
+		if ((i64)index.data[n].time - index.data[n - k].time != k * 60) continue;
+		bool rost_pro = true;
+		bool rost_pok = true;
+		bool pade_pro = true;
+		bool pade_pok = true;
+		for (i64 i = n - k; i < n; i++)
+		{
+			if (index.data[i].r_pro >= index.data[i + 1].r_pro) rost_pro = false;
+			if (index.data[i].r_pok >= index.data[i + 1].r_pok) rost_pok = false;
+			if (index.data[i].r_pro <= index.data[i + 1].r_pro) pade_pro = false;
+			if (index.data[i].r_pok <= index.data[i + 1].r_pok) pade_pok = false;
+		}
+		char a = 0;
+		if ((rost_pro || rost_pok) && (pade_pro || pade_pok))
+			a = 7;
+		else
+		{
+			if (rost_pok) a += 1;
+			if (rost_pro) a += 2;
+			if (pade_pro || pade_pok) a += 3;
+			if (pade_pok) a += 1;
+			if (pade_pro) a += 2;
+		}
+		if (a == 0) continue;
+		e.event[ee] = a;
+		e.minute[ee] = (int)(nn - n);
+		ee++;
+		if (ee == 4) break;
+	}
+	return e;
+}
+
 void _nervous_curve::draw(i64 n, _area area)
 {
+	const i64 k = 4;
+	if (n < k) return;
+	if ((i64)index.data[n].time - index.data[n - k].time != k * 60) return;
+	bool rost_pro = true;
+	bool rost_pok = true;
+	bool pade_pro = true;
+	bool pade_pok = true;
+	for (i64 i = n - k; i < n; i++)
+	{
+		if (index.data[i].r_pro >= index.data[i + 1].r_pro) rost_pro = false;
+		if (index.data[i].r_pok >= index.data[i + 1].r_pok) rost_pok = false;
+		if (index.data[i].r_pro <= index.data[i + 1].r_pro) pade_pro = false;
+		if (index.data[i].r_pok <= index.data[i + 1].r_pok) pade_pok = false;
+	}
+	uint c = 0xFF808080;
 
+	if (rost_pro) c += 0x70;
+	if (rost_pok) c += 0x700000;
+	if (pade_pro) c -= 0x70;
+	if (pade_pok) c -= 0x700000;
+
+	double r = area.x.length() * 0.5 * 2;
+	if (get_latest_events(n).start())
+	{
+		c = 0xFFFF0000;
+		r *= 2;
+	}
+
+	if (c == 0xFF808080) return;
+	area.y.min += 25;
+	area.y.max += 25;
+	master_bm.fill_ring(area.center(), r, r * 0.1, c, c);
 }
 
 _interval _nervous_curve::get_y(i64 n)
