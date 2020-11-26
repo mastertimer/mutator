@@ -13,10 +13,10 @@ max(rnd)  |   1.058        58       1.00097
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <chrono>
+#include <deque>
 
 #include "mediator.h"
 #include "oracle1.h"
-#include "oracle3.h"
 #include "oracle4.h"
 #include "oracle5.h"
 #include "sable.h"
@@ -103,7 +103,6 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 	}
 	graph->cha_area();
 
-//	add_oracle(new _oracle3);
 	add_oracle(new _oracle5, true, true);
 	index.start();
 	graph->curve2.push_back(new _candle_curve);

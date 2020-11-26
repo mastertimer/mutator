@@ -171,7 +171,6 @@
     <ClCompile Include="sable\mediator.cpp" />
     <ClCompile Include="sable\oracle1.cpp" />
     <ClCompile Include="sable\oracle2.cpp" />
-    <ClCompile Include="sable\oracle3.cpp" />
     <ClCompile Include="sable\oracle4.cpp" />
     <ClCompile Include="sable\oracle5.cpp" />
     <ClCompile Include="sable\sable.cpp" />
@@ -189,7 +188,6 @@
     <ClInclude Include="sable\mediator.h" />
     <ClInclude Include="sable\oracle1.h" />
     <ClInclude Include="sable\oracle2.h" />
-    <ClInclude Include="sable\oracle3.h" />
     <ClInclude Include="sable\oracle4.h" />
     <ClInclude Include="sable\oracle5.h" />
     <ClInclude Include="sable\sable.h" />
