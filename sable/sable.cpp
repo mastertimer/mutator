@@ -374,7 +374,7 @@ void _sable_graph::ris2(_trans tr, bool final)
 		if (timenext == 2000000000) break;
 		ke++;
 		timelast = timenext;
-		time_.push_back(timelast);
+//		time_.push_back(timelast);
 
 		for (int i = 0; i < ll; i++)
 		{
@@ -390,6 +390,20 @@ void _sable_graph::ris2(_trans tr, bool final)
 		}
 	}
 	delete[] al;
+	for (i64 i = 0; i < k_el; i++)
+	{
+		i64 ii = i + vib;
+		if (ii >= (i64)index.data.size()) break;
+		time_.push_back(index.data[ii].time);
+		for (i64 j = 0; j < ll2; j++)
+		{
+			_interval il = curve2[j]->get_y(ii);
+			double ymi = a.y.max - (il.min - zmin) * a.y.length() / (zmax - zmin);
+			double yma = a.y.max - (il.max - zmin) * a.y.length() / (zmax - zmin);
+			double x = r_el * i + a.x.min;
+			curve2[j]->draw(ii, { {x, x + r_el}, {yma, ymi} });
+		}
+	}
 	// рисование сетки
 	uint col_setka      = c_max - 0xE0000000; // цвет сетки
 	uint col_setka_font = c_def;              // цвет подписи сетки
@@ -614,12 +628,10 @@ void _candle2::draw(i64 n, _area area)
 	_iinterval xx = area.x;
 	xx.min++;
 	xx.max--;
-	xx.min++;
-	xx.max--;
 	if (xx.empty()) return;
 
-	constexpr uint col_rost = 0xff0000ff;// 0xFF28A050; // цвет ростущей свечки
-	constexpr uint col_pade = 0xffff0000;// 0xFF186030; // цвет падающей свечки
+	constexpr uint col_rost = 0xFF28A050; // цвет ростущей свечки
+	constexpr uint col_pade = 0xFF186030; // цвет падающей свечки
 	double yfi, yla;
 	if (min_ < max_)
 	{
