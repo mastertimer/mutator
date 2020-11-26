@@ -16,7 +16,6 @@ max(rnd)  |   1.058        58       1.00097
 #include <deque>
 
 #include "mediator.h"
-#include "oracle5.h"
 #include "sable.h"
 
 constexpr wchar_t sss_file[]   = L"..\\..\\sable\\base.c2";
@@ -116,7 +115,6 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 	}
 	graph->cha_area();
 
-	add_oracle(new _oracle5, true, true);
 	index.start();
 	graph->curve2.push_back(new _candle_curve);
 	graph->curve2.push_back(new _prices_curve);
@@ -945,12 +943,10 @@ void _compression_curve::draw(i64 n, _area area)
 		double y1 = y_graph(0.5);
 		_interval xx = area.x;
 		area.x = { xx.min, xx(0.5) };
-//		area.y = { y1 - ry * index.data[n].r_pro * 0.004, y1 };
-		area.y = { y1, y1 + ry * index.data[n].r_pro * 0.004 };
+		area.y = { y1 - ry * index.data[n].r_pro * 0.004, y1 };
 		master_bm.fill_rectangle(area, 0x60FF0000);
 		area.x = { xx(0.5), xx.max };
-//		area.y = { y1 - ry * index.data[n].r_pok * 0.004, y1 };
-		area.y = { y1, y1 + ry * index.data[n].r_pok * 0.004 };
+		area.y = { y1 - ry * index.data[n].r_pok * 0.004, y1 };
 		master_bm.fill_rectangle(area, 0x603030FF);
 	}
 }
