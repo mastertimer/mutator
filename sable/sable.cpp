@@ -70,7 +70,13 @@ struct _prices_curve : public _basic_curve2 // посекундный спрос
 	_interval get_y(i64 n) override; // дипазон рисования по y
 };
 
-struct _nervous_curve : public _basic_curve2
+struct _nervous_curve : public _basic_curve2 // нервозные шарики
+{
+	void draw(i64 n, _area area) override; // нарисовать 1 элемент
+	_interval get_y(i64 n) override; // дипазон рисования по y
+};
+
+struct _compression_curve : public _basic_curve2 // гистограмма степени сжатия
 {
 	void draw(i64 n, _area area) override; // нарисовать 1 элемент
 	_interval get_y(i64 n) override; // дипазон рисования по y
@@ -115,6 +121,7 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 	graph->curve2.push_back(new _candle_curve);
 	graph->curve2.push_back(new _prices_curve);
 	graph->curve2.push_back(new _nervous_curve);
+	graph->curve2.push_back(new _compression_curve);
 }
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)
@@ -927,5 +934,31 @@ _interval _nervous_curve::get_y(i64 n)
 	if (zn.back().time + 60 != sss.back.time_to_minute()) return 0;
 	return get_latest_events(zn.size() - 1).start();
 }*/
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void _compression_curve::draw(i64 n, _area area)
+{
+	//	if ((zn[n].r_pro > zn[n].r_pok * 1.8) || (zn[n].r_pok > zn[n].r_pro * 1.8))
+	{
+		double ry = y_graph.length() * 0.5;
+		double y1 = y_graph(0.5);
+		_interval xx = area.x;
+		area.x = { xx.min, xx(0.5) };
+//		area.y = { y1 - ry * index.data[n].r_pro * 0.004, y1 };
+		area.y = { y1, y1 + ry * index.data[n].r_pro * 0.004 };
+		master_bm.fill_rectangle(area, 0x60FF0000);
+		area.x = { xx(0.5), xx.max };
+//		area.y = { y1 - ry * index.data[n].r_pok * 0.004, y1 };
+		area.y = { y1, y1 + ry * index.data[n].r_pok * 0.004 };
+		master_bm.fill_rectangle(area, 0x603030FF);
+	}
+}
+
+_interval _compression_curve::get_y(i64 n)
+{
+	auto a = &index.data[n];
+	return { (a->first + a->last) * 0.5, (a->first + a->last) * 0.5 };
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
