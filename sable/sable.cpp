@@ -39,6 +39,9 @@ struct _index // разнообразные минутные коэффицие�
 	double c3_sale = 0; // цена продажи на 3-й секунде
 	double minmin  = 0; // минимальная цена минимального спроса ([19])
 	double maxmax  = 0; // максимальная цена максимального предложения ([19])
+	i64    v_r     = 0; // количество слагаемых
+	double r_pok   = 0; // средний размер покупки
+	double r_pro   = 0; // средний размер продажи
 };
 
 struct _index_data // все коэффициенты
@@ -64,6 +67,12 @@ struct _prices_curve : public _basic_curve2 // посекундный спрос
 	std::deque<_prices> part_ss; // часть супер-статистики
 	i64 begin_ss = 0; // начало куска супер-статистики
 
+	void draw(i64 n, _area area) override; // нарисовать 1 элемент
+	_interval get_y(i64 n) override; // дипазон рисования по y
+};
+
+struct _nervous_curve : public _basic_curve2
+{
 	void draw(i64 n, _area area) override; // нарисовать 1 элемент
 	_interval get_y(i64 n) override; // дипазон рисования по y
 };
@@ -602,7 +611,8 @@ bool _index_data::update()
 	_index cp;
 	for (i64 i = vcc; i < sss.size; i++)
 	{
-		sss.read(i, cc);
+		_sable_stat::_info_pak inf;
+		sss.read(i, cc, &inf);
 		time_t t2 = cc.time_to_minute();
 		if (t2 == t)
 		{
@@ -613,9 +623,23 @@ bool _index_data::update()
 			if (cc.sale[roffer-1].value * sss.c_unpak > cp.maxmax) cp.maxmax = cc.sale[roffer - 1].value * sss.c_unpak;
 			cp.ncc.max++;
 			cp.last = aa;
+			if (inf.ok)
+			{
+				cp.v_r++;
+				cp.r_pok += inf.r_pok;
+				cp.r_pro += inf.r_pro;
+			}
 			continue;
 		}
-		if (t != 0) data.push_back(cp);
+		if (t != 0)
+		{
+			if (cp.v_r > 1)
+			{
+				cp.r_pok /= cp.v_r;
+				cp.r_pro /= cp.v_r;
+			}
+			data.push_back(cp);
+		}
 		if (t2 == back_minute) break; // последнюю минуту пока не трогать
 		t = t2;
 		cp.time = t;
@@ -624,6 +648,18 @@ bool _index_data::update()
 		cp.max = cp.min = cp.last = cp.first = (cc.buy[0].value + cc.sale[0].value) * (sss.c_unpak * 0.5);
 		cp.minmin = cc.buy[roffer - 1].value * sss.c_unpak;
 		cp.maxmax = cc.sale[roffer - 1].value * sss.c_unpak;
+		if (inf.ok)
+		{
+			cp.v_r = 1;
+			cp.r_pok = inf.r_pok;
+			cp.r_pro = inf.r_pro;
+		}
+		else
+		{
+			cp.v_r = 0;
+			cp.r_pok = 0;
+			cp.r_pro = 0;
+		}
 	}
 	return true;
 }
@@ -795,6 +831,19 @@ _interval _prices_curve::get_y(i64 n)
 {
 	auto a = &index.data[n];
 	return { a->minmin - sss.c_unpak, a->maxmax };
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void _nervous_curve::draw(i64 n, _area area)
+{
+
+}
+
+_interval _nervous_curve::get_y(i64 n)
+{
+	auto a = &index.data[n];
+	return { (a->first + a->last) * 0.5, (a->first + a->last) * 0.5 };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
