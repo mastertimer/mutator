@@ -56,9 +56,6 @@
     <ClCompile Include="sable\basic_oracle.cpp">
       <Filter>Исходные файлы\sable</Filter>
     </ClCompile>
-    <ClCompile Include="sable\oracle1.cpp">
-      <Filter>Исходные файлы\sable</Filter>
-    </ClCompile>
     <ClCompile Include="sable\oracle5.cpp">
       <Filter>Исходные файлы\sable</Filter>
     </ClCompile>
@@ -74,9 +71,6 @@
       <Filter>Исходные файлы\sable</Filter>
     </ClInclude>
     <ClInclude Include="sable\mediator.h">
-      <Filter>Исходные файлы\sable</Filter>
-    </ClInclude>
-    <ClInclude Include="sable\oracle1.h">
       <Filter>Исходные файлы\sable</Filter>
     </ClInclude>
     <ClInclude Include="sable\sable.h">

@@ -16,7 +16,6 @@ max(rnd)  |   1.058        58       1.00097
 #include <deque>
 
 #include "mediator.h"
-#include "oracle1.h"
 #include "oracle5.h"
 #include "sable.h"
 
@@ -111,7 +110,6 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 	}
 	graph->cha_area();
 
-	add_oracle(new _nervous_oracle);
 	add_oracle(new _oracle5, true, true);
 	index.start();
 	graph->curve2.push_back(new _candle_curve);
@@ -681,8 +679,8 @@ void _candle_curve::draw(i64 n, _area area)
 	xx.max--;
 	if (xx.empty()) return;
 
-	constexpr uint col_rost = 0x8028A050; // цвет ростущей свечки
-	constexpr uint col_pade = 0x80186030; // цвет падающей свечки
+	constexpr uint col_rost = 0xff28A050; // цвет ростущей свечки
+	constexpr uint col_pade = 0xff186030; // цвет падающей свечки
 	double yfi, yla;
 	if (min_ < max_)
 	{
@@ -875,6 +873,7 @@ _latest_events get_latest_events(i64 nn)
 		if (a == 0) continue;
 		e.event[ee] = a;
 		e.minute[ee] = (int)(nn - n);
+		e.x[ee] = (index.data[n].first + index.data[n].last) * 0.5;
 		ee++;
 		if (ee == 4) break;
 	}
@@ -912,8 +911,6 @@ void _nervous_curve::draw(i64 n, _area area)
 	}
 
 	if (c == 0xFF808080) return;
-	area.y.min += 25;
-	area.y.max += 25;
 	master_bm.fill_ring(area.center(), r, r * 0.1, c, c);
 }
 
@@ -922,5 +919,13 @@ _interval _nervous_curve::get_y(i64 n)
 	auto a = &index.data[n];
 	return { (a->first + a->last) * 0.5, (a->first + a->last) * 0.5 };
 }
+
+/*i64 _nervous_oracle::prediction()
+{
+	// return i64(rnd(15000) == 13) * 60; // случайный
+	if (zn.size() < 10) return 0;
+	if (zn.back().time + 60 != sss.back.time_to_minute()) return 0;
+	return get_latest_events(zn.size() - 1).start();
+}*/
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
