@@ -129,6 +129,17 @@ struct _span // спектральный анализ
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+struct _spectr_curve : public _basic_curve // спектральная кривая
+{
+	_span spa;
+
+	void draw(i64 n, _area area) override; // нарисовать 1 элемент
+	_interval get_y(i64 n) override; // дипазон рисования по y
+	void spe_ana(i64 N, i64 maxGR);
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 _span::_span()
 {
 	int NP = 80;//максимальное значение периода
@@ -1059,6 +1070,96 @@ void _linear_oracle_curve::calc_matrix()
 
 	//	zn_.push_back(tz);
 	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+template <typename M> M Sqr(M x) { return x * x; }//квадрат
+
+void _spectr_curve::spe_ana(i64 N, i64 maxGR)
+{
+	for (int j = 0; j < spa.ff.size(); j++)
+	{
+		_svsincos* A = &spa.ff[j];
+		i64 L = A->sv_sin.KoSg.size();
+		i64 Nn = N - L / 2;
+		i64 Nk = N + L / 2;
+		if (Nn < 0) Nn = 0;
+		if (Nk >= (i64)index.data.size()) Nk = index.data.size() - 1;
+		if (Nk >= maxGR) Nk = maxGR - 1;
+		i64 dk = N - L / 2;
+		double sd = 0;
+		double sk = 0;
+		for (i64 i = Nn; i <= Nk; i++)
+		{
+			double k = A->sv_exp.KoSg[i - dk];
+			sk += k;
+			sd += index.data[i].c3_buy * k;
+		}
+		sd /= sk;
+		double ms = 0;
+		double mc = 0;
+		double ess = 0;
+		double ecc = 0;
+		double esc = 0;
+		for (i64 i = Nn; i <= Nk; i++)
+		{
+			double s = A->sv_sin.KoSg[i - dk];
+			double c = A->sv_cos.KoSg[i - dk];
+			double d = index.data[i].c3_buy - sd;
+			ms += d * s;
+			mc += d * c;
+			ess += s * s;
+			ecc += c * c;
+			esc += c * s;
+		}
+		double mn = 1.0 / (ecc * ess - esc * esc);
+		A->ks = mn * (ms * ecc - mc * esc);
+		A->kc = mn * (mc * ess - ms * esc);
+		A->kinf = 0;
+		for (i64 i = Nn; i <= Nk; i++)
+			//			A->kinf += log(1+Abs(A->ks*A->svSin.KoSg.data[i-dk]+A->kc*A->svCos.KoSg.data[i-dk]));
+			A->kinf += Sqr(A->ks * A->sv_sin.KoSg[i - dk] + A->kc * A->sv_cos.KoSg[i - dk]);
+	}
+	spa.ff.front().act = false;
+	spa.ff.back().act = false;
+	for (i64 j = 1; j < (i64)spa.ff.size() - 1; j++)
+		spa.ff[j].act = ((spa.ff[j].kinf > spa.ff[j - 1].kinf) && (spa.ff[j].kinf > spa.ff[j + 1].kinf));
+}
+
+void _spectr_curve::draw(i64 n, _area area)
+{
+	static std::vector<_koora> prspe(spa.ff.size());
+
+//	spe_ana(n, ko + pred + firstEl);
+	//if (i > 0) {
+	//	for (int j = 6; j < prspe.vdata_; j++) {     //0
+	//		ZKoora A2 = prspe.data_[j];
+	//		Zsvsincos* A = ss_.spa.FF.data[j];
+	//		if (A->act) {
+	//			//						if ((A->act)&&(A2.act)) {
+	//			int x1 = ots_levo + (i - 1) * (siEl + 1) + pol;
+	//			int x2 = ots_levo + i * (siEl + 1) + pol;
+	//			int L2 = A->svSin.KoSg.vdata_ / 2;
+	//			double y1 = A2.ks * A->svSin.KoSg.data_[L2] + A2.kc * A->svCos.KoSg.data_[L2];
+	//			double y2 = A->ks * A->svSin.KoSg.data_[L2] + A->kc * A->svCos.KoSg.data_[L2];
+	//			y1 += (min + max) * 0.5;
+	//			y2 += (min + max) * 0.5;
+	//			bitmap_->Canvas->Pen->Color = clWhite;
+	//			bitmap_->Canvas->MoveTo(x1, (ry_ - ots_niz) - (ry_ - ots_niz) * (y1 - min) / (max - min));
+	//			bitmap_->Canvas->LineTo(x2, (ry_ - ots_niz) - (ry_ - ots_niz) * (y2 - min) / (max - min));
+	//		}
+	//	}
+
+	//}
+	//for (int j = 0; j < prspe.vdata_; j++)
+	//	prspe.data_[j] = *ss_.spa.FF.data[j];
+}
+
+_interval _spectr_curve::get_y(i64 n)
+{
+	auto a = &index.data[n];
+	return { (a->first + a->last) * 0.5, (a->first + a->last) * 0.5 };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
