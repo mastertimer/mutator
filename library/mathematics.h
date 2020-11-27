@@ -28,13 +28,13 @@ struct _matrix
 	_matrix(i64 ry, i64 rx) noexcept;
 	//	matrix(size_t ry, size_t rx, double z) noexcept;// заполнить числом z
 	//	matrix(size_t ry, size_t rx, const std::function<double(size_t, size_t)>& fun) noexcept; // задать из функции fun
-	//	matrix(size_t ry) noexcept; // вектор
+	_matrix(i64 ry) noexcept; // вектор
 	_matrix(i64 ry, const std::function<double(i64)>& fun) noexcept; // вектор задать из функции
 	~_matrix() { delete[] data; }
 
 	void operator=(const _matrix& a) noexcept;
 	void operator=(_matrix&& a) noexcept;
-	//	void operator+=(const matrix& a) noexcept;
+	void operator+=(const _matrix& a) noexcept;
 
 	//	void set_diagonal_matrix(size_t n, double dz) noexcept; // задать матрицу диагонального вида
 
@@ -67,7 +67,7 @@ struct _matrix
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//matrix get_noise(size_t n, double k); // сгенерировать шум
+_matrix get_noise(i64 n, double k); // сгенерировать шум
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -104,12 +104,12 @@ _matrix::_matrix(const _matrix& a) noexcept : size(a.size)
 	return b;
 }*/
 
-/*void matrix::operator+=(const matrix& a) noexcept
+void _matrix::operator+=(const _matrix& a) noexcept
 {
-	if ((rx_ != a.rx_) || (ry_ != a.ry_)) return;
-	size_t n = rx_ * ry_;
-	for (size_t i = 0; i < n; i++) data_[i] += a.data_[i];
-}*/
+	if (size != a.size) return;
+	i64 n = size.x * size.y;
+	for (i64 i = 0; i < n; i++) data[i] += a.data[i];
+}
 
 /*matrix::matrix(size_t ry, size_t rx, double z) noexcept : ry_(ry), rx_(rx)
 {
@@ -131,15 +131,15 @@ _matrix::_matrix(const _matrix& a) noexcept : size(a.size)
 
 _matrix::_matrix(i64 ry, const std::function<double(i64)>& fun)  noexcept : size{ 1, ry }
 {
-	if (ry == 0) return;
-	data = new double[ry];
-	for (i64 i = 0; i < ry; i++) data[i] = fun(i);
+	if (size.y == 0) return;
+	data = new double[size.y];
+	for (i64 i = 0; i < size.y; i++) data[i] = fun(i);
 }
 
-/*matrix::matrix(size_t ry) noexcept : ry_(ry), rx_(1)
+_matrix::_matrix(i64 ry) noexcept : size{ 1, ry }
 {
-	if (ry_) data_ = new double[ry_];
-}*/
+	if (size.y) data = new double[size.y];
+}
 
 _matrix::_matrix(i64 ry, i64 rx)  noexcept : size{ rx,ry }
 {
@@ -381,14 +381,12 @@ bool matrix_column::min_max(double* mi, double* ma)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*matrix get_noise(size_t n, double k)
+_matrix get_noise(i64 n, double k)
 {
-
-	matrix b(n);
-	for (size_t i = 0; i < n; i++)
-		b[0][i] = (((double)rnd() / (double)(unsigned __int64)0xFFFFFFFFFFFFFFFF) - 0.5) * k;
+	_matrix b(n);
+	for (i64 i = 0; i < n; i++) b[0][i] = rnd(-k, k);
 	return b;
-}*/
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

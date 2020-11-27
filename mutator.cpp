@@ -673,8 +673,65 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 {
 }
 
+void test_linear_prediction()
+{
+	//GGraph* graph = new GGraph;
+	//graph->local_area_.x_.max = 800;
+	//graph->trans_.sm_ = { oko->mouse_xy_.x - 5, oko->mouse_xy_.y - 5 };
+	//graph->trans_ = oko->link_[TOko::N_ko].tetron_->operator TGO * ()->trans_.inverse() * graph->trans_;
+
+	//GList* list = new GList;
+	//list->trans_.sm_.x = graph->local_area_.x_.max;
+	//graph->CreateLink(list, flag_sub_go + flag_part);
+
+	i64 n = 500;
+	i64 b = 400;
+	i64 a = 30;
+	i64 pr = 200;
+
+	auto fun = [](size_t y) noexcept { return 100.0 + y * 0.005 + sin(y * 0.05); };
+
+	_matrix f(n, [&](size_t y) noexcept { return fun(y); });
+	f += get_noise(n, 0.15);
+	//matrix f2(pr, [&](size_t y) noexcept { return fun(n + y); });
+	//matrix M(a, b, [&](size_t y, size_t x) noexcept { return f[0][n - b - a + y + x]; });
+	//matrix r(b, [&](size_t y) noexcept { return f[0][n - b + y]; });
+	//matrix k = M.this_mul_transpose().pseudoinverse() * M * r;
+	//matrix f3 = f.linear_prediction(k, n, pr);
+
+	//size_t b2 = b - pr + 1;
+	//matrix U(a, b2, [&](size_t y, size_t x) noexcept { return f[0][n - b - a + y + x]; });
+	//matrix ru(b2, [&](size_t y) noexcept { return f[0][n - b + y + pr - 1]; });
+	//matrix k2 = U.this_mul_transpose().pseudoinverse() * U * ru;
+	//matrix f4 = f.linear_prediction(k2, n, pr, pr - 1);
+
+
+	//TMatrix* matrix2 = new TMatrix;
+	//matrix2->a_ = matrix(n, [](size_t y) noexcept { return (double)y; }) << f;
+	//list->CreateSuperLink(matrix2);
+	//matrix2 = new TMatrix;
+	//matrix2->a_ = matrix(pr, [&](size_t y) noexcept { return (double)y + n; }) << f2;
+	//list->CreateSuperLink(matrix2);
+	//matrix2 = new TMatrix;
+	//matrix2->a_ = matrix(pr, [&](size_t y) noexcept { return (double)y + n; }) << f3;
+	//list->CreateSuperLink(matrix2);
+	//matrix2 = new TMatrix;
+	//matrix2->a_ = matrix(pr, [&](size_t y) noexcept { return (double)y + n; }) << f4;
+	//list->CreateSuperLink(matrix2);
+	///*TMatrix* matrix2 = new TMatrix;
+	//matrix2->a_ = matrix(pr, [&](size_t y) noexcept { return (double)y + n; }) << (f2 - f3);
+	//list->CreateSuperLink(matrix2);*/
+
+	//oko->link_[TOko::N_ko].tetron_->CreateLink(graph, flag_sub_go + flag_part);
+	//oko->CreateLink(graph, flag_parasite, 0, TOko::N_act);
+
+	//SmenaAvt();
+	//tt->Tetron::Run(0, oko->link_[TOko::N_act].tetron_, flags);
+}
+
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
+	test_linear_prediction();
 /*	show_message(test_ss4());
 
 	_g_graph* g = new _g_graph;
