@@ -693,10 +693,10 @@ void test_linear_prediction()
 
 	_matrix f(n, [&](size_t y) noexcept { return fun(y); });
 	f += get_noise(n, 0.15);
-	//matrix f2(pr, [&](size_t y) noexcept { return fun(n + y); });
-	//matrix M(a, b, [&](size_t y, size_t x) noexcept { return f[0][n - b - a + y + x]; });
-	//matrix r(b, [&](size_t y) noexcept { return f[0][n - b + y]; });
-	//matrix k = M.this_mul_transpose().pseudoinverse() * M * r;
+	_matrix f2(pr, [&](size_t y) noexcept { return fun(n + y); });
+	_matrix M(a, b, [&](size_t y, size_t x) noexcept { return f[0][n - b - a + y + x]; });
+	_matrix r(b, [&](size_t y) noexcept { return f[0][n - b + y]; });
+	_matrix k = M.this_mul_transpose().pseudoinverse() * M * r;
 	//matrix f3 = f.linear_prediction(k, n, pr);
 
 	//size_t b2 = b - pr + 1;

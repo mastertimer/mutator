@@ -26,17 +26,17 @@ struct _matrix
 	_matrix(const _matrix& a) noexcept;
 	_matrix(_matrix&& a) noexcept;
 	_matrix(i64 ry, i64 rx) noexcept;
-	//	matrix(size_t ry, size_t rx, double z) noexcept;// заполнить числом z
-	//	matrix(size_t ry, size_t rx, const std::function<double(size_t, size_t)>& fun) noexcept; // задать из функции fun
+	_matrix(i64 ry, i64 rx, double z) noexcept;// заполнить числом z
+	_matrix(i64 ry, i64 rx, std::function<double(i64, i64)> fun) noexcept; // задать из функции fun
 	_matrix(i64 ry) noexcept; // вектор
-	_matrix(i64 ry, const std::function<double(i64)>& fun) noexcept; // вектор задать из функции
+	_matrix(i64 ry, std::function<double(i64)> fun) noexcept; // вектор задать из функции
 	~_matrix() { delete[] data; }
 
 	void operator=(const _matrix& a) noexcept;
 	void operator=(_matrix&& a) noexcept;
 	void operator+=(const _matrix& a) noexcept;
 
-	//	void set_diagonal_matrix(size_t n, double dz) noexcept; // задать матрицу диагонального вида
+	void set_diagonal_matrix(i64 n, double dz) noexcept; // задать матрицу диагонального вида
 
 	double* operator[](i64 n) { return data + (n * size.x); } // нужна€ строчка
 	void resize(_isize r); // изменить размер матрицы ! данные не сохран€ютс€
@@ -49,16 +49,16 @@ struct _matrix
 //	void MinMax(double* mi, double* ma); // найти диапазон
 
 //	matrix transpose() const noexcept; // транспонированна€ матрица
-//	matrix this_mul_transpose() const noexcept; // текуща€ матрица умножить на транспонированную себ€
-//	matrix pseudoinverse() const noexcept; // псевдообратна€ матрица
+	_matrix this_mul_transpose() const noexcept; // текуща€ матрица умножить на транспонированную себ€
+	_matrix pseudoinverse() const noexcept; // псевдообратна€ матрица
 
-//	void FindAllEigenVectors(matrix& R, matrix& A) const noexcept; // собственные вектора и собственные числа
+	void FindAllEigenVectors(_matrix& R, _matrix& A) const noexcept; // собственные вектора и собственные числа
 	 // линейное предсказание на основе коэффициентов
 //	matrix linear_prediction(const matrix& k, size_t start, size_t n, size_t ots = 0) const noexcept;
 //	double linear_prediction(const matrix& k) const noexcept; // линейное предсказание на основе коэффициентов
 
 //	matrix operator<<(const matrix& a) const noexcept; // склеить матрицы (количество строк должно быть одинаковым)
-//	matrix operator*(const matrix& a) const noexcept;
+	_matrix operator*(const _matrix& a) const noexcept;
 //	matrix operator-(const matrix& a) const noexcept;
 
 //	void Push(_stack* mem); // сохранить в стек
