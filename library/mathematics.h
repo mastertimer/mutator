@@ -25,6 +25,7 @@ struct _matrix
 	_matrix() = default;
 	_matrix(const _matrix& a) noexcept;
 	_matrix(_matrix&& a) noexcept;
+	_matrix(_isize r) noexcept;
 	_matrix(i64 ry, i64 rx) noexcept;
 	_matrix(i64 ry, i64 rx, double z) noexcept;// заполнить числом z
 	_matrix(i64 ry, i64 rx, std::function<double(i64, i64)> fun) noexcept; // задать из функции fun
@@ -56,7 +57,7 @@ struct _matrix
 
 	_matrix operator<<(const _matrix& a) const noexcept; // склеить матрицы (количество строк должно быть одинаковым)
 	_matrix operator*(const _matrix& a) const noexcept;
-//	matrix operator-(const matrix& a) const noexcept;
+	_matrix operator-(const _matrix& a) const noexcept;
 
 //	void Push(_stack* mem); // сохранить в стек
 //	void Pop(_stack* mem); // извлечь из стека

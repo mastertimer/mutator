@@ -95,14 +95,14 @@ _matrix _matrix::operator*(const _matrix& a) const noexcept
 	return b;
 }
 
-/*matrix matrix::operator-(const matrix& a) const noexcept
+_matrix _matrix::operator-(const _matrix& a) const noexcept
 {
-	if ((rx_ != a.rx_) || (ry_ != a.ry_)) return matrix();
-	matrix b(ry_, rx_);
-	size_t n = rx_ * ry_;
-	for (size_t i = 0; i < n; i++) b.data_[i] = data_[i] - a.data_[i];
+	if (size != a.size) return _matrix();
+	_matrix b(size);
+	i64 n = size.square();
+	for (i64 i = 0; i < n; i++) b.data[i] = data[i] - a.data[i];
 	return b;
-}*/
+}
 
 void _matrix::operator+=(const _matrix& a) noexcept
 {
@@ -141,6 +141,11 @@ _matrix::_matrix(i64 ry) noexcept : size{ 1, ry }
 }
 
 _matrix::_matrix(i64 ry, i64 rx)  noexcept : size{ rx,ry }
+{
+	if (!size.empty()) data = new double[size.square()];
+}
+
+_matrix::_matrix(_isize r)  noexcept : size(r)
 {
 	if (!size.empty()) data = new double[size.square()];
 }

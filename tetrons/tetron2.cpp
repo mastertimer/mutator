@@ -165,10 +165,10 @@ void _g_graph::ris2(_trans tr, bool final)
 			}
 		}
 	}
-	if ((a.x.length() > 50) && (a.y.length() > 50))
+	if ((a.x.length() > 70) && (a.y.length() > 50))
 	{
 		i64 y = std::max(a.y.min, 0.0);
-		i64 x = std::min((i64)a.x.max, master_bm.size.x) - 50;
+		i64 x = std::min((i64)a.x.max, master_bm.size.x) - 70;
 		ng = -1;
 		for (auto& j : curve)
 		{

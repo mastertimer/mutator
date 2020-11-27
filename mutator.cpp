@@ -701,25 +701,11 @@ void test_linear_prediction()
 	_matrix k2 = U.this_mul_transpose().pseudoinverse() * U * ru;
 	_matrix f4 = f.linear_prediction(k2, n, pr, pr - 1);
 
-	g->add(_matrix(n, [](i64 y) noexcept { return (double)y; }) << f, "исх");
-	//matrix2 = new TMatrix;
-	//matrix2->a_ = matrix(pr, [&](size_t y) noexcept { return (double)y + n; }) << f2;
-	//list->CreateSuperLink(matrix2);
-	//matrix2 = new TMatrix;
-	//matrix2->a_ = matrix(pr, [&](size_t y) noexcept { return (double)y + n; }) << f3;
-	//list->CreateSuperLink(matrix2);
-	//matrix2 = new TMatrix;
-	//matrix2->a_ = matrix(pr, [&](size_t y) noexcept { return (double)y + n; }) << f4;
-	//list->CreateSuperLink(matrix2);
-	///*TMatrix* matrix2 = new TMatrix;
-	//matrix2->a_ = matrix(pr, [&](size_t y) noexcept { return (double)y + n; }) << (f2 - f3);
-	//list->CreateSuperLink(matrix2);*/
-
-	//oko->link_[TOko::N_ko].tetron_->CreateLink(graph, flag_sub_go + flag_part);
-	//oko->CreateLink(graph, flag_parasite, 0, TOko::N_act);
-
-	//SmenaAvt();
-	//tt->Tetron::Run(0, oko->link_[TOko::N_act].tetron_, flags);
+	g->add(_matrix(n, [](i64 y) noexcept { return (double)y; }) << f, "исх.до");
+	g->add(_matrix(pr, [&](i64 y) noexcept { return (double)y + n; }) << f2, "исх.после");
+	g->add(_matrix(pr, [&](size_t y) noexcept { return (double)y + n; }) << f3, "восст.");
+	g->add(_matrix(pr, [&](size_t y) noexcept { return (double)y + n; }) << f4, "2восст.");
+//	g->add(_matrix(pr, [&](size_t y) noexcept { return (double)y + n; }) << (f2 - f3), "разн.");
 }
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
