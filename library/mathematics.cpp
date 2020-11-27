@@ -30,22 +30,22 @@ _matrix::_matrix(const _matrix& a) noexcept : size(a.size)
 	memcpy(data, a.data, size.square() * sizeof(double));
 }
 
-/*matrix matrix::operator<<(const matrix& a) const noexcept
+_matrix _matrix::operator<<(const _matrix& a) const noexcept
 {
 	if (a.empty()) return *this;
 	if (empty()) return a;
-	if (ry_ != a.ry_) return matrix();
-	matrix b(ry_, rx_ + a.rx_);
-	double* rez = b.data_;
-	double* m1 = data_;
-	double* m2 = a.data_;
-	for (int j = 0; j < ry_; j++)
+	if (size.y != a.size.y) return _matrix();
+	_matrix b(size.y, size.x + a.size.x);
+	double* rez = b.data;
+	double* m1 = data;
+	double* m2 = a.data;
+	for (i64 j = 0; j < size.y; j++)
 	{
-		for (int i = 0; i < rx_; i++, rez++, m1++) *rez = *m1;
-		for (int i = 0; i < a.rx_; i++, rez++, m2++)*rez = *m2;
+		for (i64 i = 0; i < size.x; i++, rez++, m1++) *rez = *m1;
+		for (i64 i = 0; i < a.size.x; i++, rez++, m2++)*rez = *m2;
 	}
 	return b;
-}*/
+}
 
 /*matrix matrix::transpose() const noexcept
 {
@@ -333,25 +333,25 @@ _matrix _matrix::pseudoinverse() const noexcept
 	return s;
 }*/
 
-/*matrix matrix::linear_prediction(const matrix& k, size_t start, size_t n, size_t ots) const noexcept
+_matrix _matrix::linear_prediction(const _matrix& k, i64 start, i64 n, i64 ots) const noexcept
 {
-	matrix b(n, 1, 0);
-	if (((k.rx_ != 1) && (k.ry_ != 1)) || ((rx_ != 1) && (ry_ != 1))) return b; // должен быть вектор
-	size_t rk = k.size();
-	size_t r = size();
+	_matrix b(n, 1, 0);
+	if (((k.size.x != 1) && (k.size.y != 1)) || ((size.x != 1) && (size.y != 1))) return b; // должен быть вектор
+	i64 rk = k.size.square();
+	i64 r = size.square();
 	if ((start < rk) || (start > r)) return b;
-	for (size_t i = 0; i < n; i++)
+	for (i64 i = 0; i < n; i++)
 	{
 		double s = 0;
-		for (size_t ii = 0; ii < rk; ii++)
+		for (i64 ii = 0; ii < rk; ii++)
 		{
-			__int64 p = (__int64)ii - (__int64)rk + (__int64)i - (__int64)ots;
-			s += k.data_[ii] * ((p >= 0) ? b.data_[p] : data_[start + p]);
+			i64 p = ii - rk + i - ots;
+			s += k.data[ii] * ((p >= 0) ? b.data[p] : data[start + p]);
 		}
-		b.data_[i] = s;
+		b.data[i] = s;
 	}
 	return b;
-}*/
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -675,40 +675,33 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 
 void test_linear_prediction()
 {
-	//GGraph* graph = new GGraph;
-	//graph->local_area_.x_.max = 800;
-	//graph->trans_.sm_ = { oko->mouse_xy_.x - 5, oko->mouse_xy_.y - 5 };
-	//graph->trans_ = oko->link_[TOko::N_ko].tetron_->operator TGO * ()->trans_.inverse() * graph->trans_;
-
-	//GList* list = new GList;
-	//list->trans_.sm_.x = graph->local_area_.x_.max;
-	//graph->CreateLink(list, flag_sub_go + flag_part);
+	_g_graph* g = new _g_graph;
+	g->local_area.x.max = 800;
+	g->local_area.y.max = 300;
+	n_ko->operator _t_basic_go* ()->set_t_trans(g, flag_sub_go + flag_part);
 
 	i64 n = 500;
 	i64 b = 400;
 	i64 a = 30;
 	i64 pr = 200;
 
-	auto fun = [](size_t y) noexcept { return 100.0 + y * 0.005 + sin(y * 0.05); };
+	auto fun = [](i64 y) noexcept { return 100.0 + y * 0.005 + sin(y * 0.05); };
 
-	_matrix f(n, [&](size_t y) noexcept { return fun(y); });
+	_matrix f(n, [&](i64 y) noexcept { return fun(y); });
 	f += get_noise(n, 0.15);
-	_matrix f2(pr, [&](size_t y) noexcept { return fun(n + y); });
-	_matrix M(a, b, [&](size_t y, size_t x) noexcept { return f[0][n - b - a + y + x]; });
-	_matrix r(b, [&](size_t y) noexcept { return f[0][n - b + y]; });
+	_matrix f2(pr, [&](i64 y) noexcept { return fun(n + y); });
+	_matrix M(a, b, [&](i64 y, i64 x) noexcept { return f[0][n - b - a + y + x]; });
+	_matrix r(b, [&](i64 y) noexcept { return f[0][n - b + y]; });
 	_matrix k = M.this_mul_transpose().pseudoinverse() * M * r;
-	//matrix f3 = f.linear_prediction(k, n, pr);
+	_matrix f3 = f.linear_prediction(k, n, pr);
 
-	//size_t b2 = b - pr + 1;
-	//matrix U(a, b2, [&](size_t y, size_t x) noexcept { return f[0][n - b - a + y + x]; });
-	//matrix ru(b2, [&](size_t y) noexcept { return f[0][n - b + y + pr - 1]; });
-	//matrix k2 = U.this_mul_transpose().pseudoinverse() * U * ru;
-	//matrix f4 = f.linear_prediction(k2, n, pr, pr - 1);
+	i64 b2 = b - pr + 1;
+	_matrix U(a, b2, [&](i64 y, i64 x) noexcept { return f[0][n - b - a + y + x]; });
+	_matrix ru(b2, [&](i64 y) noexcept { return f[0][n - b + y + pr - 1]; });
+	_matrix k2 = U.this_mul_transpose().pseudoinverse() * U * ru;
+	_matrix f4 = f.linear_prediction(k2, n, pr, pr - 1);
 
-
-	//TMatrix* matrix2 = new TMatrix;
-	//matrix2->a_ = matrix(n, [](size_t y) noexcept { return (double)y; }) << f;
-	//list->CreateSuperLink(matrix2);
+	g->add(_matrix(n, [](i64 y) noexcept { return (double)y; }) << f, "исх");
 	//matrix2 = new TMatrix;
 	//matrix2->a_ = matrix(pr, [&](size_t y) noexcept { return (double)y + n; }) << f2;
 	//list->CreateSuperLink(matrix2);

@@ -40,10 +40,7 @@ struct _matrix
 
 	double* operator[](i64 n) { return data + (n * size.x); } // нужная строчка
 	void resize(_isize r); // изменить размер матрицы ! данные не сохраняются
-//	inline bool empty() const noexcept { return rx_ * ry_ == 0; } // проверка на нулевой размер
-//	inline size_t size_x() const noexcept { return rx_; } // размер по x
-//	inline size_t size_y() const noexcept { return ry_; } // размер по y
-//	inline size_t size() const noexcept { return ry_ * rx_; } // размер
+	bool empty() const noexcept { return size.empty(); } // проверка на нулевой размер
 	matrix_column column(i64 x) { return { this, x }; } // столбец матрицы
 
 //	void MinMax(double* mi, double* ma); // найти диапазон
@@ -54,10 +51,10 @@ struct _matrix
 
 	void FindAllEigenVectors(_matrix& R, _matrix& A) const noexcept; // собственные вектора и собственные числа
 	 // линейное предсказание на основе коэффициентов
-//	matrix linear_prediction(const matrix& k, size_t start, size_t n, size_t ots = 0) const noexcept;
+	_matrix linear_prediction(const _matrix& k, i64 start, i64 n, i64 ots = 0) const noexcept;
 //	double linear_prediction(const matrix& k) const noexcept; // линейное предсказание на основе коэффициентов
 
-//	matrix operator<<(const matrix& a) const noexcept; // склеить матрицы (количество строк должно быть одинаковым)
+	_matrix operator<<(const _matrix& a) const noexcept; // склеить матрицы (количество строк должно быть одинаковым)
 	_matrix operator*(const _matrix& a) const noexcept;
 //	matrix operator-(const matrix& a) const noexcept;
 
