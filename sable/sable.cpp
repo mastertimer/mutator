@@ -54,6 +54,12 @@ struct _index_data // все коэффициенты
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+_index_data index; // все расчетные данные
+
+//_basic_curve* super_oracle = nullptr; // оракул для предсказания
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct _candle_curve : public _basic_curve // классические свечи
 {
 	void draw(i64 n, _area area) override; // нарисовать 1 элемент
@@ -92,9 +98,127 @@ struct _linear_oracle_curve : public _basic_curve // линейный предс
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_index_data index; // все расчетные данные
+struct _koora // коофициенты разложения
+{
+	double ks, kc; // коэффициенты при функции
+	bool act; // локальный максимум
+};
 
-//_basic_curve* super_oracle = nullptr; // оракул для предсказания
+struct _svertka // вектор свертки
+{
+	double SiSg = 0; // сигма сглаживания
+	std::vector<double> KoSg; // коэффициенты сглаживания
+
+	void InitKoSg(double _Si, i64 ki1); // вычислить коэффициенты сглаживания  _Si - сигма ki1 - количество разбиений каждого интервала
+	void InitSin(double _Si, i64 ki1); // вычислить Sin*E  _Si - сигма ki1 - количество разбиений каждого интервала
+	void InitCos(double _Si, i64 ki1); // вычислить Cos*E  _Si - сигма ki1 - количество разбиений каждого интервала
+};
+
+struct _svsincos : public _koora // пара ортогональных
+{
+	_svertka sv_sin, sv_cos, sv_exp; // пара функций ортогональных
+	double kinf = 0; // количество информации
+};
+
+struct _span // спектральный анализ
+{
+	std::vector<_svsincos> ff; // коэффициенты сглаживания
+
+	_span(); // конструктор
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+_span::_span()
+{
+	int NP = 80;//максимальное значение периода
+	for (int i = 1; i <= NP; i++) {
+		_svsincos a;
+		a.sv_sin.InitSin(i, 3);
+		a.sv_cos.InitCos(i, 3);
+		a.sv_exp.InitKoSg(i, 3);
+		ff.push_back(a);
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void _svertka::InitSin(double _Si, i64 ki1)
+{
+	if (_Si == SiSg) return;
+	if (_Si < 0) _Si = 0;
+	SiSg = _Si;
+	if (SiSg == 0)
+	{
+		KoSg.clear();
+		return;
+	}
+	i64 N = _Si * 3.5 + 1;
+	KoSg.resize(N * 2 + 1);
+	double kk = 1.0 / (2 * SiSg * SiSg);
+	double kk2 = 2 * pi / SiSg;
+	for (i64 i = -N; i <= N; i++)
+	{
+		double s = 0;
+		for (i64 j = 0; j < ki1; j++)
+		{
+			double x = i - 0.5 + (j + 0.5) / ki1;
+			s += exp(-x * x * kk) * sin(x * kk2);
+		}
+		KoSg[i + N] = s;
+	}
+}
+
+void _svertka::InitCos(double _Si, i64 ki1)
+{
+	if (_Si == SiSg) return;
+	if (_Si < 0) _Si = 0;
+	SiSg = _Si;
+	if (SiSg == 0)
+	{
+		KoSg.clear();
+		return;
+	}
+	i64 N = _Si * 3.5 + 1;
+	KoSg.resize(N * 2 + 1);
+	double kk = 1.0 / (2 * SiSg * SiSg);
+	double kk2 = 2 * pi / SiSg;
+	for (i64 i = -N; i <= N; i++)
+	{
+		double s = 0;
+		for (i64 j = 0; j < ki1; j++)
+		{
+			double x = i - 0.5 + (j + 0.5) / ki1;
+			s += exp(-x * x * kk) * cos(x * kk2);
+		}
+		KoSg[i + N] = s;
+	}
+}
+
+void _svertka::InitKoSg(double _Si, i64 ki1)
+{
+	if (_Si == SiSg) return;
+	if (_Si < 0) _Si = 0;
+	SiSg = _Si;
+	if (SiSg == 0)
+	{
+		KoSg.clear();
+		return;
+	}
+	i64 N = _Si * 3.5 + 1;
+	KoSg.resize(N * 2 + 1);
+	double kk = 1.0 / (2 * SiSg * SiSg);
+	for (i64 i = -N; i <= N; i++)
+	{
+		double s = 0;
+		for (i64 j = 0; j < ki1; j++)
+		{
+			double x = i - 0.5 + (j + 0.5) / ki1;
+			s += exp(-x * x * kk);
+		}
+		KoSg[i + N] = s;
+	}
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
