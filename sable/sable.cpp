@@ -22,7 +22,9 @@ constexpr wchar_t sss_file[]   = L"..\\..\\sable\\base.c2";
 constexpr wchar_t index_file[] = L"..\\..\\sable\\index.bin";
 
 _sable_graph *graph = nullptr; // график
-_interval y_graph; // переместить в более подходящее место
+
+_interval y_graph; // координата у на картинке
+_interval y_graph_re; // реальная координата y
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -487,6 +489,7 @@ void _sable_graph::ris2(_trans tr, bool final)
 	}
 	if (zmin == zmax) zmax = zmin + 1.0;
 	y_ = { zmin, zmax };
+	y_graph_re = y_;
 	time_.clear();
 	// 2-й проход - рисование
 	for (i64 i = 0; i < k_el; i++)
@@ -1086,7 +1089,7 @@ void _spectr_curve::spe_ana(i64 N, i64 maxGR)
 		i64 Nk = N + L / 2;
 		if (Nn < 0) Nn = 0;
 		if (Nk >= (i64)index.data.size()) Nk = index.data.size() - 1;
-		if (Nk >= maxGR) Nk = maxGR - 1;
+//*		if (Nk >= maxGR) Nk = maxGR - 1;
 		i64 dk = N - L / 2;
 		double sd = 0;
 		double sk = 0;
@@ -1130,36 +1133,41 @@ void _spectr_curve::spe_ana(i64 N, i64 maxGR)
 void _spectr_curve::draw(i64 n, _area area)
 {
 	static std::vector<_koora> prspe(spa.ff.size());
+	static i64 n_pr = -1;
+	static _area area_pr;
 
-//	spe_ana(n, ko + pred + firstEl);
-	//if (i > 0) {
-	//	for (int j = 6; j < prspe.vdata_; j++) {     //0
-	//		ZKoora A2 = prspe.data_[j];
-	//		Zsvsincos* A = ss_.spa.FF.data[j];
-	//		if (A->act) {
-	//			//						if ((A->act)&&(A2.act)) {
-	//			int x1 = ots_levo + (i - 1) * (siEl + 1) + pol;
-	//			int x2 = ots_levo + i * (siEl + 1) + pol;
-	//			int L2 = A->svSin.KoSg.vdata_ / 2;
-	//			double y1 = A2.ks * A->svSin.KoSg.data_[L2] + A2.kc * A->svCos.KoSg.data_[L2];
-	//			double y2 = A->ks * A->svSin.KoSg.data_[L2] + A->kc * A->svCos.KoSg.data_[L2];
-	//			y1 += (min + max) * 0.5;
-	//			y2 += (min + max) * 0.5;
-	//			bitmap_->Canvas->Pen->Color = clWhite;
-	//			bitmap_->Canvas->MoveTo(x1, (ry_ - ots_niz) - (ry_ - ots_niz) * (y1 - min) / (max - min));
-	//			bitmap_->Canvas->LineTo(x2, (ry_ - ots_niz) - (ry_ - ots_niz) * (y2 - min) / (max - min));
-	//		}
-	//	}
-
-	//}
-	//for (int j = 0; j < prspe.vdata_; j++)
-	//	prspe.data_[j] = *ss_.spa.FF.data[j];
+	spe_ana(n, 0/*ko + pred + firstEl*/);
+	if (n == n_pr + 1)
+	{
+		for (int j = 6; j < prspe.size(); j++)     //0
+		{
+			_koora A2 = prspe[j];
+			_svsincos* A = &spa.ff[j];
+			if (A->act)
+			{
+//						if ((A->act)&&(A2.act)) {
+				i64 x1 = area_pr.x(0.5);
+				i64 x2 = area.x(0.5);
+				i64 L2 = A->sv_sin.KoSg.size() / 2;
+				double y1 = A2.ks * A->sv_sin.KoSg[L2] + A2.kc * A->sv_cos.KoSg[L2];
+				double y2 = A->ks * A->sv_sin.KoSg[L2] + A->kc * A->sv_cos.KoSg[L2];
+				y1 += (y_graph_re.min + y_graph_re.max) * 0.5;
+				y2 += (y_graph_re.min + y_graph_re.max) * 0.5;
+				i64 yy1 = y_graph.max - (y1 - y_graph_re.min) * y_graph.length() / (y_graph_re.max - y_graph_re.min);
+				i64 yy2 = y_graph.max - (y2 - y_graph_re.min) * y_graph.length() / (y_graph_re.max - y_graph_re.min);
+				master_bm.line({x1, yy1}, {x2, yy2}, 0xffffffff);
+			}
+		}
+	}
+	n_pr = n;
+	area_pr = area;
+	for (int j = 0; j < prspe.size(); j++) prspe[j] = spa.ff[j];
 }
 
 _interval _spectr_curve::get_y(i64 n)
 {
 	auto a = &index.data[n];
-	return { (a->first + a->last) * 0.5, (a->first + a->last) * 0.5 };
+	return { a->min, a->max };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
