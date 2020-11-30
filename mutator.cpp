@@ -690,6 +690,7 @@ void test_linear_prediction()
 	_matrix f(n, [&](i64 y) noexcept { return fun(y); });
 	f += get_noise(n, 0.15);
 	_matrix f2(pr, [&](i64 y) noexcept { return fun(n + y); });
+
 	_matrix M(a, b, [&](i64 y, i64 x) noexcept { return f[0][n - b - a + y + x]; });
 	_matrix r(b, [&](i64 y) noexcept { return f[0][n - b + y]; });
 	_matrix k = M.this_mul_transpose().pseudoinverse() * M * r;

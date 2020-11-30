@@ -98,7 +98,8 @@ struct _linear_oracle_curve : public _basic_curve // линейный предс
 	void draw(i64 n, _area area) override; // нарисовать 1 элемент
 	_interval get_y(i64 n) override; // дипазон рисования по y
 
-	void calc_matrix(); // вычислить исходную матрицу
+	void calc_matrix(); // вычислить исходную матрицу (старое)
+	void calc_matrix2(); // вычислить исходную матрицу (новое)
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -259,6 +260,7 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 //	graph->curve2.push_back(new _nervous_curve);
 //	graph->curve2.push_back(new _compression_curve);
 	graph->curve2.push_back(new _linear_oracle_curve);
+//	graph->curve2.push_back(new _spectr_curve);
 }
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)
@@ -273,7 +275,7 @@ void fun15(_tetron* tt0, _tetron* tt, u64 flags)
 	if (b->checked) n_timer1000->add_flags(new _t_function(16), flag_run);
 }
 
-i64 can_trade    = -6; // разрешенное количество сделок (купить-продать = 2 сделки), отрицательное - нельзя
+i64 can_trade    = -6; // разрешенное количество сделок (купить-продать = 2 сделки), отрицательное - неактивно
 int vrema_prodat =  0; // время когда нужно продать
 
 void fun16(_tetron* tt0, _tetron* tt, u64 flags)
@@ -1045,6 +1047,54 @@ struct _time_zn
 
 	bool operator < (time_t a) const noexcept { return (time < a); } // для алгоритма поиска по времени
 };
+
+void _linear_oracle_curve::calc_matrix2()
+{
+	constexpr i64 prediction_depth = 35; // глубина предсказания 35 минут
+	constexpr i64 prediction_basis = 65; // база предсказания 60 минут
+
+	std::deque<time_t> data;
+
+	i64 v = 0; // количество строчек матрицы
+
+	// 1й заход - вычисление v
+	for (i64 i = prediction_basis - 1; i < (i64)index.data.size(); i++) // i - последняя минута базиса
+	{
+		time_t ti = index.data[i].time;
+		if (ti - index.data[i - (prediction_basis - 1)].time == (prediction_basis - 1) * 60)
+			data.push_back(ti + prediction_depth * 60);
+		while (!data.empty())
+		{
+			if (data.front() > ti) break;
+			if (data.front() == ti) v++;
+			data.pop_front();
+		}
+	}
+
+	_matrix m(prediction_basis, v);
+	_matrix r(v);
+
+	v = 0;
+	data.clear();
+
+	// 2й заход - заполение m и r
+	for (i64 i = prediction_basis - 1; i < (i64)index.data.size(); i++) // i - последняя минута базиса
+	{
+		time_t ti = index.data[i].time;
+		if (ti - index.data[i - (prediction_basis - 1)].time == (prediction_basis - 1) * 60)
+			data.push_back(ti + prediction_depth * 60);
+		while (!data.empty())
+		{
+			if (data.front() > ti) break;
+			if (data.front() == ti)
+			{
+				v++;
+			}
+			data.pop_front();
+		}
+	}
+
+}
 
 void _linear_oracle_curve::calc_matrix()
 {
