@@ -95,11 +95,15 @@ struct _compression_curve : public _basic_curve // гистограмма сте
 
 struct _linear_oracle_curve : public _basic_curve // линейный предсказатель
 {
+	static constexpr i64 prediction_depth = 35; // глубина предсказания 35 минут
+	static constexpr i64 prediction_basis = 65; // база предсказания 60 минут
+
+	_matrix kk; // вектор коэффициентов
+
 	void draw(i64 n, _area area) override; // нарисовать 1 элемент
 	_interval get_y(i64 n) override; // дипазон рисования по y
 
-	void calc_matrix(); // вычислить исходную матрицу (старое)
-	void calc_matrix2(); // вычислить исходную матрицу (новое)
+	void calc_matrix(); // вычислить вектор коэффициентов
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1048,11 +1052,8 @@ struct _time_zn
 	bool operator < (time_t a) const noexcept { return (time < a); } // для алгоритма поиска по времени
 };
 
-void _linear_oracle_curve::calc_matrix2()
+void _linear_oracle_curve::calc_matrix()
 {
-	constexpr i64 prediction_depth = 35; // глубина предсказания 35 минут
-	constexpr i64 prediction_basis = 65; // база предсказания 60 минут
-
 	std::deque<time_t> data;
 
 	i64 v = 0; // количество строчек матрицы
@@ -1088,58 +1089,16 @@ void _linear_oracle_curve::calc_matrix2()
 			if (data.front() > ti) break;
 			if (data.front() == ti)
 			{
+				i64 ii = i - prediction_basis - prediction_depth + 1;
+				for (i64 j = 0; j < prediction_basis; j++) m[j][v] = index.data[ii + j].cc;
+				r.data[v] = index.data[i].cc;
 				v++;
 			}
 			data.pop_front();
 		}
 	}
 
-}
-
-void _linear_oracle_curve::calc_matrix()
-{
-	i64 nc = index.data.size();
-
-	constexpr i64 prediction_depth = 35;          // глубина предсказания 35 минут
-	constexpr i64 prediction_basis = 65;          // база предсказания 60 минут
-	constexpr i64 max_dt_training  = 7 * 60 * 60; // максимум 7 часов
-	constexpr i64 min_dt_training  = (60 + prediction_basis + prediction_depth) * 60; // минимум 2.35 часа
-
-	std::deque<_time_zn> data;
-
-	_index* e;
-	_time_zn tz;
-	for (i64 i = 0; i < nc; i++)
-	{
-		e = &index.data[i];
-		tz.time = e->time;
-		tz.zn = e->cc;
-	//	/*		if (data.size())
-	//			{
-	//				if (tz.time_ - data.back().time_ == 120) data.push_back({ tz.time_ - 60, (tz.zn_ + data.back().zn_) * 0.5 }); // 1 пропуск допустим
-	//				if (tz.time_ - data.back().time_ != 60) data.clear();
-	//			}
-	//			data.push_back(tz);
-	//			while (data.back().time_ - data.front().time_ > max_dt_training) data.pop_front();
-	//			if (data.back().time_ - data.front().time_ < min_dt_training) continue;
-
-	//			size_t n = data.size();
-	//			size_t a = prediction_basis;
-	//			size_t pr = prediction_depth; // 1
-	//			matrix f(n, [&](size_t y) noexcept { return data[y].zn_; });
-
-	//			size_t b2 = n - a - pr + 1;
-	//			matrix U(a, b2, [&](size_t y, size_t x) noexcept { return f[0][y + x]; });
-	//			matrix ru(b2, [&](size_t y) noexcept { return f[0][a + y + pr - 1]; });
-	//			matrix k2 = U.this_mul_transpose().pseudoinverse() * U * ru;
-
-	//			tz.time_ += 60 * prediction_depth;
-	//	//		matrix f3 = f.linear_prediction(k2, n, prediction_depth);
-	//	//		tz.zn_ = f3[0][prediction_depth - 1];
-	//			tz.zn_ = f.linear_prediction(k2);*/
-
-	//	zn_.push_back(tz);
-	}
+	kk = m.this_mul_transpose().pseudoinverse() * m * r;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
