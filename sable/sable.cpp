@@ -43,6 +43,9 @@ struct _index           // разнообразные минутные коэф�
 	i64    v_r     = 0; // количество слагаемых
 	double r_pok   = 0; // средний размер покупки
 	double r_pro   = 0; // средний размер продажи
+	double cc      = 0; // средняя цена
+	double cc_buy  = 0; // средняя цена покупки
+	double cc_sale = 0; // средняя цена продажи
 };
 
 struct _index_data // все коэффициенты
@@ -660,6 +663,13 @@ bool _index_data::update()
 			if (cc.sale[roffer-1].value * sss.c_unpak > cp.maxmax) cp.maxmax = cc.sale[roffer - 1].value * sss.c_unpak;
 			cp.ncc.max++;
 			cp.last = aa;
+			cp.cc_buy += cc.buy[0].value;
+			cp.cc_sale += cc.sale[0].value;
+			if (cc.time % 60 == 3)
+			{
+				cp.c3_buy = cc.buy[0].value * sss.c_unpak;
+				cp.c3_sale = cc.sale[0].value * sss.c_unpak;
+			}
 			if (inf.ok)
 			{
 				cp.v_r++;
@@ -675,6 +685,9 @@ bool _index_data::update()
 				cp.r_pok /= cp.v_r;
 				cp.r_pro /= cp.v_r;
 			}
+			cp.cc_buy *= sss.c_unpak / cp.ncc.size();
+			cp.cc_sale *= sss.c_unpak / cp.ncc.size();
+			cp.cc = (cp.cc_buy + cp.cc_sale) * 0.5;
 			data.push_back(cp);
 		}
 		if (t2 == back_minute) break; // последнюю минуту пока не трогать
@@ -685,6 +698,10 @@ bool _index_data::update()
 		cp.max = cp.min = cp.last = cp.first = (cc.buy[0].value + cc.sale[0].value) * (sss.c_unpak * 0.5);
 		cp.minmin = cc.buy[roffer - 1].value * sss.c_unpak;
 		cp.maxmax = cc.sale[roffer - 1].value * sss.c_unpak;
+		cp.cc_buy = cc.buy[0].value;
+		cp.cc_sale = cc.sale[0].value;
+		cp.c3_buy = cc.buy[0].value * sss.c_unpak;
+		cp.c3_sale = cc.sale[0].value * sss.c_unpak;
 		if (inf.ok)
 		{
 			cp.v_r = 1;
@@ -1018,7 +1035,7 @@ void _linear_oracle_curve::draw(i64 n, _area area)
 _interval _linear_oracle_curve::get_y(i64 n)
 {
 	auto a = &index.data[n];
-	return { (a->first + a->last) * 0.5, (a->first + a->last) * 0.5 };
+	return { a->cc, a->cc };
 }
 
 struct _time_zn
@@ -1046,7 +1063,7 @@ void _linear_oracle_curve::calc_matrix()
 	{
 		e = &index.data[i];
 		tz.time = e->time;
-		tz.zn = (e->c3_buy + e->c3_sale) * 0.5;
+		tz.zn = e->cc;
 	//	/*		if (data.size())
 	//			{
 	//				if (tz.time_ - data.back().time_ == 120) data.push_back({ tz.time_ - 60, (tz.zn_ + data.back().zn_) * 0.5 }); // 1 пропуск допустим
@@ -1097,7 +1114,7 @@ void _spectr_curve::spe_ana(i64 N, i64 maxGR)
 		{
 			double k = A->sv_exp.KoSg[i - dk];
 			sk += k;
-			sd += index.data[i].c3_buy * k;
+			sd += index.data[i].cc * k;
 		}
 		sd /= sk;
 		double ms = 0;
@@ -1109,7 +1126,7 @@ void _spectr_curve::spe_ana(i64 N, i64 maxGR)
 		{
 			double s = A->sv_sin.KoSg[i - dk];
 			double c = A->sv_cos.KoSg[i - dk];
-			double d = index.data[i].c3_buy - sd;
+			double d = index.data[i].cc - sd;
 			ms += d * s;
 			mc += d * c;
 			ess += s * s;
@@ -1167,7 +1184,7 @@ void _spectr_curve::draw(i64 n, _area area)
 _interval _spectr_curve::get_y(i64 n)
 {
 	auto a = &index.data[n];
-	return { a->min, a->max };
+	return { a->cc, a->cc };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
