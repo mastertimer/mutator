@@ -1270,10 +1270,12 @@ _interval _compression_curve::get_y(i64 n)
 
 void test_linear_prediction2()
 {
+	constexpr i64 prediction_depth = 2;
 	std::vector<i64> sm;
 	sm.push_back((i64)(&((_index*)0)->cc));
-	sm.push_back((i64)(&((_index*)0)->first));
-	_matrix kk = calc_vector_prediction(10, _linear_oracle_curve::prediction_depth, &sm);
+	sm.push_back((i64)(&((_index*)0)->r_pok));
+	sm.push_back((i64)(&((_index*)0)->r_pro));
+	_matrix kk = calc_vector_prediction(10, prediction_depth, &sm);
 	i64 n = 0;
 	double s = 0; // модуль разницы
 	double s2 = 0; // квадрат разницы
@@ -1282,7 +1284,7 @@ void test_linear_prediction2()
 	for (i64 i = 1; i < (i64)index.data.size(); i++)
 	{
 		if (index.data[i].time - index.data[i - 1].time != 60) continue;
-		double pr = prediction(i, kk, _linear_oracle_curve::prediction_depth, &sm);
+		double pr = prediction(i, kk, prediction_depth, &sm);
 		if (pr == 0) continue;
 		n++;
 		double r = abs(pr - index.data[i].cc);
@@ -1297,9 +1299,9 @@ void test_linear_prediction2()
 	ss /= n;
 	ss2 = sqrt(ss2 / n);
 	show_message("s", s);
-	show_message("s2", s2);
+//	show_message("s2", s2);
 	show_message("ss", ss);
-	show_message("ss2", ss2);
+//	show_message("ss2", ss2);
 }
 
 void calc_all_prediction(std::function<i64(i64)> o, i64& vv, double& k)
