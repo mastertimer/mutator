@@ -1030,8 +1030,9 @@ i64 prediction1(i64 n)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_matrix calc_vector_prediction(i64 prediction_basis, i64 prediction_depth)
+_matrix calc_vector_prediction(i64 prediction_basis, i64 prediction_depth, std::vector<i64> *sm = nullptr)
 {
+	if (sm) if (sm->empty()) sm = nullptr;
 	std::deque<time_t> data;
 
 	i64 v = 0; // количество строчек матрицы
@@ -1050,7 +1051,10 @@ _matrix calc_vector_prediction(i64 prediction_basis, i64 prediction_depth)
 		}
 	}
 
-	_matrix m(prediction_basis, v);
+	i64 vv = 1;
+	if (sm) vv = sm->size();
+
+	_matrix m(prediction_basis * vv, v);
 	_matrix r(v);
 
 	v = 0;
@@ -1068,7 +1072,15 @@ _matrix calc_vector_prediction(i64 prediction_basis, i64 prediction_depth)
 			if (data.front() == ti)
 			{
 				i64 ii = i - prediction_basis - prediction_depth + 1;
-				for (i64 j = 0; j < prediction_basis; j++) m[j][v] = index.data[ii + j].cc;
+				for (i64 j = 0; j < prediction_basis; j++)
+					if (!sm)
+						m[j][v] = index.data[ii + j].cc;
+					else
+					{
+						i64 ad = (i64)&index.data[ii + j];
+						for (i64 jj = 0; jj < (i64)sm->size(); jj++)
+							m[j][v * vv + jj] = *((double*)(ad+(*sm)[jj]));
+					}
 				r.data[v] = index.data[i].cc;
 				v++;
 			}
@@ -1079,10 +1091,13 @@ _matrix calc_vector_prediction(i64 prediction_basis, i64 prediction_depth)
 	return m.this_mul_transpose().pseudoinverse() * m * r;
 }
 
-double prediction(i64 n, _matrix& kk, i64 prediction_depth)
+double prediction(i64 n, _matrix& kk, i64 prediction_depth, std::vector<i64>* sm = nullptr)
 {
 	if ((kk.size.x != 1) && (kk.size.y != 1)) return 0; // должен быть столбец или строка
-	i64 prediction_basis = kk.size.square();
+	if (sm) if (sm->empty()) sm = nullptr;
+	i64 vv = 1;
+	if (sm) vv = sm->size();
+	i64 prediction_basis = kk.size.square() / vv;
 	if (n < prediction_basis) return 0;
 	time_t t = index.data[n].time;
 	time_t lb = t - prediction_depth * 60;
@@ -1093,7 +1108,15 @@ double prediction(i64 n, _matrix& kk, i64 prediction_depth)
 		if (ina < 0) return 0;
 		if (lb - index.data[ina].time != (prediction_basis - 1) * 60) return 0;
 		double s = 0;
-		for (i64 j = 0; j < prediction_basis; j++) s += kk.data[j] * index.data[ina + j].cc;
+		for (i64 j = 0; j < prediction_basis; j++)
+			if (!sm)
+				s += kk.data[j] * index.data[ina + j].cc;
+			else
+			{
+				i64 ad = (i64)&index.data[ina + j];
+				for (i64 jj = 0; jj < (i64)sm->size(); jj++)
+					s += kk.data[j*vv+jj] * *((double*)(ad + (*sm)[jj]));
+			}
 		return s;
 	}
 	return 0;
@@ -1247,7 +1270,9 @@ _interval _compression_curve::get_y(i64 n)
 
 void test_linear_prediction2()
 {
-	_matrix kk = calc_vector_prediction(_linear_oracle_curve::prediction_basis, _linear_oracle_curve::prediction_depth);
+	std::vector<i64> sm;
+	sm.push_back((i64)(&((_index*)0)->cc));
+	_matrix kk = calc_vector_prediction(10, _linear_oracle_curve::prediction_depth, &sm);
 	i64 n = 0;
 	double s = 0; // модуль разницы
 	double s2 = 0; // квадрат разницы
@@ -1256,7 +1281,7 @@ void test_linear_prediction2()
 	for (i64 i = 1; i < (i64)index.data.size(); i++)
 	{
 		if (index.data[i].time - index.data[i - 1].time != 60) continue;
-		double pr = prediction(i, kk, _linear_oracle_curve::prediction_depth);
+		double pr = prediction(i, kk, _linear_oracle_curve::prediction_depth, &sm);
 		if (pr == 0) continue;
 		n++;
 		double r = abs(pr - index.data[i].cc);
