@@ -1079,7 +1079,7 @@ _matrix calc_vector_prediction(i64 prediction_basis, i64 prediction_depth, std::
 					{
 						i64 ad = (i64)&index.data[ii + j];
 						for (i64 jj = 0; jj < (i64)sm->size(); jj++)
-							m[j][v * vv + jj] = *((double*)(ad+(*sm)[jj]));
+							m[j * vv + jj][v] = *((double*)(ad + (*sm)[jj]));
 					}
 				r.data[v] = index.data[i].cc;
 				v++;
@@ -1115,7 +1115,7 @@ double prediction(i64 n, _matrix& kk, i64 prediction_depth, std::vector<i64>* sm
 			{
 				i64 ad = (i64)&index.data[ina + j];
 				for (i64 jj = 0; jj < (i64)sm->size(); jj++)
-					s += kk.data[j*vv+jj] * *((double*)(ad + (*sm)[jj]));
+					s += kk.data[j * vv + jj] * *((double*)(ad + (*sm)[jj]));
 			}
 		return s;
 	}
@@ -1272,6 +1272,7 @@ void test_linear_prediction2()
 {
 	std::vector<i64> sm;
 	sm.push_back((i64)(&((_index*)0)->cc));
+	sm.push_back((i64)(&((_index*)0)->first));
 	_matrix kk = calc_vector_prediction(10, _linear_oracle_curve::prediction_depth, &sm);
 	i64 n = 0;
 	double s = 0; // модуль разницы
