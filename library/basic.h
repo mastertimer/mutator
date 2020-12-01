@@ -60,10 +60,19 @@ bool save_file(std::wstring_view fn, const char* data, i64 n);
 bool load_file(std::wstring_view fn, char** data, i64* n);
 
 std::wstring string_to_wstring(std::string_view s);
-wstr         uint64_to_wstr_hex(u64 a);
+wstr uint64_to_wstr_hex(u64 a);
 
 std::wstring double_to_string(double a, int z);
 std::string  double_to_astring(double a, int z);
+
+void show_message(std::string_view s, i64 b);
+void show_message(std::string_view s, double b);
+void show_message(std::string_view s);
+void show_message(std::wstring_view s);
+void show_message(i64 s);
+void show_message(u64 s);
+void show_message(i64 a, i64 b);
+void show_message(double s);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

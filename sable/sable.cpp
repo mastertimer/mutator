@@ -102,8 +102,6 @@ struct _linear_oracle_curve : public _basic_curve // линейный предс
 
 	void draw(i64 n, _area area) override; // нарисовать 1 элемент
 	_interval get_y(i64 n) override; // дипазон рисования по y
-
-	double prediction(i64 n); // сделать линейное предсказание
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1081,10 +1079,30 @@ _matrix calc_vector_prediction(i64 prediction_basis, i64 prediction_depth)
 	return m.this_mul_transpose().pseudoinverse() * m * r;
 }
 
+double prediction(i64 n, _matrix& kk, i64 prediction_depth)
+{
+	if ((kk.size.x != 1) && (kk.size.y != 1)) return 0; // должен быть столбец или строка
+	i64 prediction_basis = kk.size.square();
+	if (n < prediction_basis) return 0;
+	time_t t = index.data[n].time;
+	time_t lb = t - prediction_depth * 60;
+	for (i64 i = n - prediction_basis; i < n; i++)
+	{
+		if (index.data[i].time != lb) continue;
+		i64 ina = i - prediction_basis + 1;
+		if (ina < 0) return 0;
+		if (lb - index.data[ina].time != (prediction_basis - 1) * 60) return 0;
+		double s = 0;
+		for (i64 j = 0; j < prediction_basis; j++) s += kk.data[j] * index.data[ina + j].cc;
+		return s;
+	}
+	return 0;
+}
+
 void _linear_oracle_curve::draw(i64 n, _area area)
 {
 	if (kk.empty()) kk = calc_vector_prediction(prediction_basis, prediction_depth);
-	double pr = prediction(n);
+	double pr = prediction(n, kk, prediction_depth);
 	if (pr == 0) return;
 	double yy1 = y_graph.max - (pr - y_graph_re.min) * y_graph.length() / (y_graph_re.max - y_graph_re.min);
 	double r = area.x.length();
@@ -1105,24 +1123,6 @@ struct _time_zn
 
 	bool operator < (time_t a) const noexcept { return (time < a); } // для алгоритма поиска по времени
 };
-
-double _linear_oracle_curve::prediction(i64 n)
-{
-	if (n < prediction_basis) return 0;
-	time_t t = index.data[n].time;
-	time_t lb = t - prediction_depth * 60;
-	for (i64 i = n - prediction_basis; i < n; i++)
-	{
-		if (index.data[i].time != lb) continue;
-		i64 ina = i - prediction_basis + 1;
-		if (ina < 0) return 0;
-		if (lb - index.data[ina].time != (prediction_basis - 1) * 60) return 0;
-		double s = 0;
-		for (i64 j = 0; j < prediction_basis; j++) s += kk.data[j] * index.data[ina + j].cc;
-		return s;
-	}
-	return 0;
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1245,13 +1245,35 @@ _interval _compression_curve::get_y(i64 n)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void test_linear_perdiction()
+void test_linear_prediction2()
 {
 	_matrix kk = calc_vector_prediction(_linear_oracle_curve::prediction_basis, _linear_oracle_curve::prediction_depth);
-	for (i64 i = 0; i < (i64)index.data.size(); i++)
+	i64 n = 0;
+	double s = 0; // модуль разницы
+	double s2 = 0; // квадрат разницы
+	double ss = 0; // модуль разницы
+	double ss2 = 0; // квадрат разницы
+	for (i64 i = 1; i < (i64)index.data.size(); i++)
 	{
-
+		if (index.data[i].time - index.data[i - 1].time != 60) continue;
+		double pr = prediction(i, kk, _linear_oracle_curve::prediction_depth);
+		if (pr == 0) continue;
+		n++;
+		double r = abs(pr - index.data[i].cc);
+		s += r;
+		s2 += r * r;
+		r = abs(index.data[i - 1].cc - index.data[i].cc);
+		ss += r;
+		ss2 += r * r;
 	}
+	s /= n;
+	s2 = sqrt(s2 / n);
+	ss /= n;
+	ss2 = sqrt(ss2 / n);
+	show_message("s", s);
+	show_message("s2", s2);
+	show_message("ss", ss);
+	show_message("ss2", ss2);
 }
 
 void calc_all_prediction(std::function<i64(i64)> o, i64& vv, double& k)

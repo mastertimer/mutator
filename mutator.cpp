@@ -24,44 +24,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void show_message(std::string_view s, i64 b)
-{
-	MessageBoxA(0, ((std::string)s + " = "+ std::to_string(b)).c_str(), "информация", MB_OK | MB_TASKMODAL);
-}
-
-void show_message(std::string_view s)
-{
-	MessageBoxA(0, s.data(), "информация", MB_OK | MB_TASKMODAL);
-}
-
-void show_message(std::wstring_view s)
-{
-	MessageBox(0, s.data(), L"информация", MB_OK | MB_TASKMODAL);
-}
-
-void show_message(i64 s)
-{
-	MessageBox(0, (std::to_wstring(s)).c_str(), L"целое число", MB_OK | MB_TASKMODAL);
-}
-
-void show_message(u64 s)
-{
-	MessageBox(0, (std::to_wstring(s)).c_str(), L"положительное целое число", MB_OK | MB_TASKMODAL);
-}
-
-void show_message(i64 a, i64 b)
-{
-	MessageBox(0, (L"a=" + std::to_wstring(a) + L"  b=" + std::to_wstring(b)).c_str(), L"пара чисел",
-		MB_OK | MB_TASKMODAL);
-}
-
-void show_message(double s)
-{
-	MessageBox(0, (std::to_wstring(s)).c_str(), L"вещественное число", MB_OK | MB_TASKMODAL);
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 _stack clipboard; // буффер обмена
 
 void fun03(_tetron* tt0, _tetron* tt, u64 flags);
@@ -711,7 +673,7 @@ void test_linear_prediction()
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	test_linear_prediction();
+	test_linear_prediction2();
 /*	show_message(test_ss4());
 
 	_g_graph* g = new _g_graph;
