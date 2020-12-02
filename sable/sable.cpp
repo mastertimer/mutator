@@ -99,7 +99,7 @@ struct _compression_curve : public _basic_curve // гистограмма сте
 
 struct _linear_oracle_curve : public _basic_curve // линейный предсказатель
 {
-	static constexpr i64 prediction_depth = 1; // глубина предсказания 35 минут
+	static constexpr i64 prediction_depth = 35; // глубина предсказания 35 минут
 	static constexpr i64 prediction_basis = 65; // база предсказания 60 минут
 
 	_matrix kk; // вектор коэффициентов
@@ -136,12 +136,12 @@ struct _spectr_linear
 {
 	std::vector<_linear1> linear;
 
-	void calc(_iinterval prediction_basis, i64 prediction_depth);
+	void calc(_iinterval prediction_basis, i64 prediction_depth, std::vector<i64>* sm);
 };
 
 struct _multi_linear_oracle_curve : public _basic_curve // мульти линейный предсказатель
 {
-	static constexpr i64 prediction_depth = 1; // глубина предсказания 35 минут
+	static constexpr i64 prediction_depth = 35; // глубина предсказания 35 минут
 	static constexpr i64 max_prediction_basis = 65; // база предсказания 60 минут
 
 	_spectr_linear sl; // вектора коэффициентов
@@ -306,7 +306,7 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 //	graph->curve2.push_back(new _prices_curve);
 //	graph->curve2.push_back(new _nervous_curve);
 //	graph->curve2.push_back(new _compression_curve);
-//	graph->curve2.push_back(new _linear_oracle_curve);
+	graph->curve2.push_back(new _linear_oracle_curve);
 	graph->curve2.push_back(new _multi_linear_oracle_curve);
 //	graph->curve2.push_back(new _spectr_curve);
 }
@@ -1158,7 +1158,7 @@ void _linear_oracle_curve::draw(i64 n, _area area)
 	if (pr == 0) return;
 	double yy1 = y_graph.max - (pr - y_graph_re.min) * y_graph.length() / (y_graph_re.max - y_graph_re.min);
 	double r = area.x.length();
-	master_bm.fill_ring(area.center(), r, r * 0.1, 0xFF0000FF, 0xFF0000FF);
+//	master_bm.fill_ring(area.center(), r, r * 0.1, 0xFF0000FF, 0xFF0000FF);
 	master_bm.fill_ring({ area.x(0.5), yy1 }, r, r * 0.1, 0x80ff0000, 0x80ff0000);
 }
 
@@ -1170,7 +1170,7 @@ struct _time_zn
 	bool operator < (time_t a) const noexcept { return (time < a); } // для алгоритма поиска по времени
 };
 
-void _spectr_linear::calc(_iinterval prediction_basis, i64 prediction_depth)
+void _spectr_linear::calc(_iinterval prediction_basis, i64 prediction_depth, std::vector<i64>* sm = nullptr)
 {
 	_label_statistics ls;
 	ls.prediction_basis = prediction_basis.max - 1;
@@ -1182,7 +1182,7 @@ void _spectr_linear::calc(_iinterval prediction_basis, i64 prediction_depth)
 		_linear1 l1;
 		l1.prediction_basis = i;
 		l1.prediction_depth = prediction_depth;
-		l1.kk = calc_vector_prediction(i, ls);
+		l1.kk = calc_vector_prediction(i, ls, sm);
 		linear.push_back(l1);
 	}
 }
@@ -1191,12 +1191,15 @@ void _spectr_linear::calc(_iinterval prediction_basis, i64 prediction_depth)
 
 void _multi_linear_oracle_curve::draw(i64 n, _area area)
 {
-	if (sl.linear.empty()) sl.calc({ 1i64, max_prediction_basis + 1 }, prediction_depth);
+	std::vector<i64> sm;
+//	sm.push_back((i64)(&((_index*)0)->r_pok));
+//	sm.push_back((i64)(&((_index*)0)->r_pro));
+	if (sl.linear.empty()) sl.calc({ 1i64, max_prediction_basis + 1 }, prediction_depth, &sm);
 	double y_pr = 0;
 	i64 rr = sl.linear.size();
 	for (i64 i = rr - 1; i >= 0; i--)
 	{
-		double pr = prediction(n, sl.linear[i].kk, sl.linear[i].prediction_depth);
+		double pr = prediction(n, sl.linear[i].kk, sl.linear[i].prediction_depth, &sm);
 		if (pr == 0) return;
 		double yy1 = y_graph.max - (pr - y_graph_re.min) * y_graph.length() / (y_graph_re.max - y_graph_re.min);
 		if (i < rr - 1) master_bm.line({ area.x((i+1.0)/rr), y_pr}, { area.x(double(i) / rr), yy1}, 0xffffffff);
