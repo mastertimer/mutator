@@ -306,7 +306,8 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 //	graph->curve2.push_back(new _prices_curve);
 //	graph->curve2.push_back(new _nervous_curve);
 //	graph->curve2.push_back(new _compression_curve);
-	graph->curve2.push_back(new _linear_oracle_curve);
+//	graph->curve2.push_back(new _linear_oracle_curve);
+	graph->curve2.push_back(new _multi_linear_oracle_curve);
 //	graph->curve2.push_back(new _spectr_curve);
 }
 
@@ -1182,6 +1183,7 @@ void _spectr_linear::calc(_iinterval prediction_basis, i64 prediction_depth)
 		l1.prediction_basis = i;
 		l1.prediction_depth = prediction_depth;
 		l1.kk = calc_vector_prediction(i, ls);
+		linear.push_back(l1);
 	}
 }
 
@@ -1189,7 +1191,17 @@ void _spectr_linear::calc(_iinterval prediction_basis, i64 prediction_depth)
 
 void _multi_linear_oracle_curve::draw(i64 n, _area area)
 {
-
+	if (sl.linear.empty()) sl.calc({ 1i64, max_prediction_basis + 1 }, prediction_depth);
+	double y_pr = 0;
+	i64 rr = sl.linear.size();
+	for (i64 i = rr - 1; i >= 0; i--)
+	{
+		double pr = prediction(n, sl.linear[i].kk, sl.linear[i].prediction_depth);
+		if (pr == 0) return;
+		double yy1 = y_graph.max - (pr - y_graph_re.min) * y_graph.length() / (y_graph_re.max - y_graph_re.min);
+		if (i < rr - 1) master_bm.line({ area.x((i+1.0)/rr), y_pr}, { area.x(double(i) / rr), yy1}, 0xffffffff);
+		y_pr = yy1;
+	}
 }
 
 _interval _basic_curve::get_y(i64 n)
