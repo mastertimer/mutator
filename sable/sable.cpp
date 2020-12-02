@@ -1079,6 +1079,34 @@ void _label_statistics::calc()
 	}
 }
 
+_matrix calc_vector_prediction(i64 prediction_basis, _label_statistics &ls, std::vector<i64>* sm = nullptr)
+{
+	i64 delta_basis = ls.prediction_basis - prediction_basis;
+	if ((delta_basis < 0) || (prediction_basis < 1)) return _matrix();
+	i64 vv = (sm) ? sm->size() + 1 : 1;
+	i64 v = ls.label.size();
+
+	_matrix m(prediction_basis * vv, v);
+	_matrix r(v);
+
+	for (v = 0; v < (i64)ls.label.size(); v++)
+	{
+		i64 i = ls.label[v].n;
+		i64 ii = ls.label[v].start_basis + delta_basis;
+		for (i64 j = 0; j < prediction_basis; j++)
+		{
+			m[j * vv][v] = index.data[ii + j].cc;
+			if (!sm) continue;
+			i64 ad = (i64)&index.data[ii + j];
+			for (i64 jj = 0; jj < (i64)sm->size(); jj++)
+				m[j * vv + jj + 1][v] = *((double*)(ad + (*sm)[jj]));
+		}
+		r.data[v] = index.data[i].cc;
+	}
+
+	return m.this_mul_transpose().pseudoinverse() * m * r;
+}
+
 _matrix calc_vector_prediction(i64 prediction_basis, i64 prediction_depth, std::vector<i64> *sm = nullptr)
 {
 	if (sm) if (sm->empty()) sm = nullptr;
@@ -1166,6 +1194,34 @@ double prediction(i64 n, _matrix& kk, i64 prediction_depth, std::vector<i64>* sm
 				for (i64 jj = 0; jj < (i64)sm->size(); jj++)
 					s += kk.data[j * vv + jj] * *((double*)(ad + (*sm)[jj]));
 			}
+		return s;
+	}
+	return 0;
+}
+
+double prediction2(i64 n, _matrix& kk, i64 prediction_depth, std::vector<i64>* sm = nullptr)
+{
+	if ((kk.size.x != 1) && (kk.size.y != 1)) return 0; // должен быть столбец или строка
+	i64 vv = (sm) ? sm->size() + 1 : 1;
+	i64 prediction_basis = kk.size.square() / vv;
+	if (n < prediction_basis) return 0;
+	time_t t = index.data[n].time;
+	time_t lb = t - prediction_depth * 60;
+	for (i64 i = n - prediction_basis; i < n; i++)
+	{
+		if (index.data[i].time != lb) continue;
+		i64 ina = i - prediction_basis + 1;
+		if (ina < 0) return 0;
+		if (lb - index.data[ina].time != (prediction_basis - 1) * 60) return 0;
+		double s = 0;
+		for (i64 j = 0; j < prediction_basis; j++)
+		{
+			s += kk.data[j * vv] * index.data[ina + j].cc;
+			if (!sm) continue;
+			i64 ad = (i64)&index.data[ina + j];
+			for (i64 jj = 0; jj < (i64)sm->size(); jj++)
+				s += kk.data[j * vv + jj + 1] * *((double*)(ad + (*sm)[jj]));
+		}
 		return s;
 	}
 	return 0;
@@ -1322,8 +1378,8 @@ void test_linear_prediction2()
 	constexpr i64 prediction_depth = 1;
 	std::vector<i64> sm;
 	sm.push_back((i64)(&((_index*)0)->cc));
-//	sm.push_back((i64)(&((_index*)0)->r_pok));
-//	sm.push_back((i64)(&((_index*)0)->r_pro));
+	sm.push_back((i64)(&((_index*)0)->r_pok));
+	sm.push_back((i64)(&((_index*)0)->r_pro));
 	_matrix kk = calc_vector_prediction(10, prediction_depth, &sm);
 	i64 n = 0;
 	double s = 0; // модуль разницы
@@ -1331,6 +1387,36 @@ void test_linear_prediction2()
 	for (i64 i = 1; i < (i64)index.data.size(); i++)
 	{
 		double pr = prediction(i, kk, prediction_depth, &sm);
+		if (pr == 0) continue;
+		n++;
+		double r = abs(pr - index.data[i].cc);
+		s += r;
+		s2 += r * r;
+	}
+	s /= n;
+	s2 = sqrt(s2 / n);
+	show_message("s", s);
+	show_message("s2", s2);
+}
+
+void test_linear_prediction3()
+{
+	constexpr i64 prediction_basis = 10;
+	constexpr i64 prediction_depth = 1;
+	std::vector<i64> sm;
+	sm.push_back((i64)(&((_index*)0)->r_pok));
+	sm.push_back((i64)(&((_index*)0)->r_pro));
+	_label_statistics ls;
+	ls.prediction_basis = prediction_basis;
+	ls.prediction_depth = prediction_depth;
+	ls.calc();
+	_matrix kk = calc_vector_prediction(prediction_basis, ls, &sm);
+	i64 n = 0;
+	double s = 0; // модуль разницы
+	double s2 = 0; // квадрат разницы
+	for (i64 i = 1; i < (i64)index.data.size(); i++)
+	{
+		double pr = prediction2(i, kk, prediction_depth, &sm);
 		if (pr == 0) continue;
 		n++;
 		double r = abs(pr - index.data[i].cc);

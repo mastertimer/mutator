@@ -43,6 +43,7 @@ inline _basic_statistics research3; // для исследования стат�
 
 void calc_all_prediction(std::function<i64(i64)> o, i64& vv, double& k);
 void test_linear_prediction2();
+void test_linear_prediction3();
 
 void fun13(_tetron* tt0, _tetron* tt, u64 flags);
 void fun15(_tetron* tt0, _tetron* tt, u64 flags);
