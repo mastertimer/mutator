@@ -112,10 +112,19 @@ struct _linear_oracle_curve : public _basic_curve // линейный предс
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _lppn // номера для статистики предсказаний
+struct _label_statistics
 {
-	i64 start_basis = 0; // номер первого элемента базиса
-	i64 n = 0; // номер элемента, который предсказывается
+	struct _lppn // номера для статистики предсказаний
+	{
+		i64 start_basis = 0; // номер первого элемента базиса
+		i64 n = 0; // номер элемента, который предсказывается
+	};
+
+	i64 prediction_depth = 1; // глубина предсказания 35 минут
+	i64 prediction_basis = 65; // база предсказания 60 минут
+	std::vector<_lppn> label;
+
+	void calc();
 };
 
 struct _linear1
@@ -1052,6 +1061,24 @@ i64 prediction1(i64 n)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void _label_statistics::calc()
+{
+	std::deque<std::pair<time_t,i64>> data;
+	label.clear();
+	for (i64 i = prediction_basis - 1; i < (i64)index.data.size(); i++) // i - последняя минута базиса
+	{
+		time_t ti = index.data[i].time;
+		if (ti - index.data[i - (prediction_basis - 1)].time == (prediction_basis - 1) * 60)
+			data.push_back({ ti + prediction_depth * 60,  i - (prediction_basis - 1) });
+		while (!data.empty())
+		{
+			if (data.front().first > ti) break;
+			if (data.front().first == ti) label.push_back({ data.front().second, i});
+			data.pop_front();
+		}
+	}
+}
+
 _matrix calc_vector_prediction(i64 prediction_basis, i64 prediction_depth, std::vector<i64> *sm = nullptr)
 {
 	if (sm) if (sm->empty()) sm = nullptr;
@@ -1292,38 +1319,28 @@ _interval _compression_curve::get_y(i64 n)
 
 void test_linear_prediction2()
 {
-	constexpr i64 prediction_depth = 2;
+	constexpr i64 prediction_depth = 1;
 	std::vector<i64> sm;
 	sm.push_back((i64)(&((_index*)0)->cc));
-	sm.push_back((i64)(&((_index*)0)->r_pok));
-	sm.push_back((i64)(&((_index*)0)->r_pro));
+//	sm.push_back((i64)(&((_index*)0)->r_pok));
+//	sm.push_back((i64)(&((_index*)0)->r_pro));
 	_matrix kk = calc_vector_prediction(10, prediction_depth, &sm);
 	i64 n = 0;
 	double s = 0; // модуль разницы
 	double s2 = 0; // квадрат разницы
-	double ss = 0; // модуль разницы
-	double ss2 = 0; // квадрат разницы
 	for (i64 i = 1; i < (i64)index.data.size(); i++)
 	{
-		if (index.data[i].time - index.data[i - 1].time != 60) continue;
 		double pr = prediction(i, kk, prediction_depth, &sm);
 		if (pr == 0) continue;
 		n++;
 		double r = abs(pr - index.data[i].cc);
 		s += r;
 		s2 += r * r;
-		r = abs(index.data[i - 1].cc - index.data[i].cc);
-		ss += r;
-		ss2 += r * r;
 	}
 	s /= n;
 	s2 = sqrt(s2 / n);
-	ss /= n;
-	ss2 = sqrt(ss2 / n);
 	show_message("s", s);
-//	show_message("s2", s2);
-	show_message("ss", ss);
-//	show_message("ss2", ss2);
+	show_message("s2", s2);
 }
 
 void calc_all_prediction(std::function<i64(i64)> o, i64& vv, double& k)
