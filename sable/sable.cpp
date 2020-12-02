@@ -90,13 +90,11 @@ struct _prices_curve : public _basic_curve // посекундный спрос/
 struct _nervous_curve : public _basic_curve // нервозные шарики
 {
 	void draw(i64 n, _area area) override; // нарисовать 1 элемент
-	_interval get_y(i64 n) override; // дипазон рисования по y
 };
 
 struct _compression_curve : public _basic_curve // гистограмма степени сжатия
 {
 	void draw(i64 n, _area area) override; // нарисовать 1 элемент
-	_interval get_y(i64 n) override; // дипазон рисования по y
 };
 
 struct _linear_oracle_curve : public _basic_curve // линейный предсказатель
@@ -107,7 +105,6 @@ struct _linear_oracle_curve : public _basic_curve // линейный предс
 	_matrix kk; // вектор коэффициентов
 
 	void draw(i64 n, _area area) override; // нарисовать 1 элемент
-	_interval get_y(i64 n) override; // дипазон рисования по y
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -133,6 +130,23 @@ struct _linear1
 	i64 prediction_basis = 65; // база предсказания 60 минут
 
 	_matrix kk; // вектор коэффициентов
+};
+
+struct _spectr_linear
+{
+	std::vector<_linear1> linear;
+
+	void calc(_iinterval prediction_basis, i64 prediction_depth);
+};
+
+struct _multi_linear_oracle_curve : public _basic_curve // мульти линейный предсказатель
+{
+	static constexpr i64 prediction_depth = 1; // глубина предсказания 35 минут
+	static constexpr i64 max_prediction_basis = 65; // база предсказания 60 минут
+
+	_spectr_linear sl; // вектора коэффициентов
+
+	void draw(i64 n, _area area) override; // нарисовать 1 элемент
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1046,12 +1060,6 @@ void _nervous_curve::draw(i64 n, _area area)
 	master_bm.fill_ring(area.center(), r, r * 0.1, c, c);
 }
 
-_interval _nervous_curve::get_y(i64 n)
-{
-	auto a = &index.data[n];
-	return { (a->first + a->last) * 0.5, (a->first + a->last) * 0.5 };
-}
-
 i64 prediction1(i64 n)
 {
 	// return i64(rnd(15000) == 13) * 60; // случайный
@@ -1153,12 +1161,6 @@ void _linear_oracle_curve::draw(i64 n, _area area)
 	master_bm.fill_ring({ area.x(0.5), yy1 }, r, r * 0.1, 0x80ff0000, 0x80ff0000);
 }
 
-_interval _linear_oracle_curve::get_y(i64 n)
-{
-	auto a = &index.data[n];
-	return { a->cc, a->cc };
-}
-
 struct _time_zn
 {
 	time_t time; // время
@@ -1167,8 +1169,36 @@ struct _time_zn
 	bool operator < (time_t a) const noexcept { return (time < a); } // для алгоритма поиска по времени
 };
 
+void _spectr_linear::calc(_iinterval prediction_basis, i64 prediction_depth)
+{
+	_label_statistics ls;
+	ls.prediction_basis = prediction_basis.max - 1;
+	ls.prediction_depth = prediction_depth;
+	ls.calc();
+	linear.clear();
+	for (i64 i = prediction_basis.min; i < prediction_basis.max; i++)
+	{
+		_linear1 l1;
+		l1.prediction_basis = i;
+		l1.prediction_depth = prediction_depth;
+		l1.kk = calc_vector_prediction(i, ls);
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void _multi_linear_oracle_curve::draw(i64 n, _area area)
+{
+
+}
+
+_interval _basic_curve::get_y(i64 n)
+{
+	auto a = &index.data[n];
+	return { a->cc, a->cc };
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template <typename M> M Sqr(M x) { return x * x; }//квадрат
 
 void _spectr_curve::spe_ana(i64 N, i64 maxGR)
@@ -1278,12 +1308,6 @@ void _compression_curve::draw(i64 n, _area area)
 		area.y = { y1 - ry * index.data[n].r_pok * 0.004, y1 };
 		master_bm.fill_rectangle(area, 0x603030FF);
 	}
-}
-
-_interval _compression_curve::get_y(i64 n)
-{
-	auto a = &index.data[n];
-	return { (a->first + a->last) * 0.5, (a->first + a->last) * 0.5 };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
