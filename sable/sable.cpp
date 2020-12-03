@@ -346,7 +346,7 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 //	graph->curve2.push_back(new _nervous_curve);
 //	graph->curve2.push_back(new _compression_curve);
 	graph->curve2.push_back(new _linear_oracle_curve);
-//	graph->curve2.push_back(new _multi_linear_oracle_curve);
+	graph->curve2.push_back(new _multi_linear_oracle_curve);
 //	graph->curve2.push_back(new _spectr_curve);
 }
 
@@ -1175,7 +1175,7 @@ double prediction(i64 n, _matrix& kk, i64 prediction_depth, std::vector<i64>* sm
 	if (n < prediction_basis) return 0;
 	time_t t = index.data[n].time;
 	time_t lb = t - prediction_depth * 60;
-	for (i64 i = n - prediction_basis; i < n; i++)
+	for (i64 i = n - prediction_depth; i < n; i++)
 	{
 		if (index.data[i].time != lb) continue;
 		i64 ina = i - prediction_basis + 1;

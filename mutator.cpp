@@ -683,7 +683,6 @@ void test_interval_statistics()
 	_interval_statistics is;
 
 	std::stringstream a;
-
 	for (i64 i = 1; i <= 35; i++)
 	{
 		calc_delta_price(i, bs);
@@ -694,7 +693,7 @@ void test_interval_statistics()
 			a << ", " << is.element[j].interval.max;
 		a << "})," << std::endl;
 	}
-	::to_clipboard(a.str().c_str());
+//	::to_clipboard(a.str().c_str());
 }
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
