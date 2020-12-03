@@ -2,6 +2,11 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void _g_graph::add(double x, const _interval_statistics& is)
+{
+	curve2.push_back({ is, x });
+}
+
 void _g_graph::add(const _matrix& b, std::string_view s, bool bar)
 {
 	curve.push_back({ b, std::string(s), bar });
@@ -21,6 +26,32 @@ void _g_graph::ris2(_trans tr, bool final)
 	double maxx = 0;
 	double miny = 1;
 	double maxy = 0;
+
+	for (auto& i : curve2)
+	{
+		if (minx > maxx)
+		{
+			minx = i.x;
+			maxx = i.x;
+		}
+		else
+		{
+			if (i.x < minx) minx = i.x;
+			if (i.x > maxx) maxx = i.x;
+		}
+		double min = i.is.min_mean();
+		double max = i.is.max_mean();
+		if (miny > maxy)
+		{
+			miny = min;
+			maxy = max;
+		}
+		else
+		{
+			if (min < miny) miny = min;
+			if (max > maxy) maxy = max;
+		}
+	}
 
 	for (auto& i : curve)
 	{
@@ -77,6 +108,22 @@ void _g_graph::ris2(_trans tr, bool final)
 	double kx = a.x.length() / (maxx - minx);
 	double ky = a.y.length() / (maxy - miny);
 	int ng = 0;
+	double dxc2 = 5; // потом что-то придумать
+	if (curve2.size() > 1) dxc2 = (curve2[1].x - curve2[0].x) * kx; // тоже не очень хорошо
+	dxc2 *= 0.1; // чтоб поменьше был
+	for (auto& j : curve2)
+	{
+		double xx = (a.x.min + (j.x - minx) * kx);
+		for (auto& i : j.is.element)
+		{
+			double y1 = (a.y.max - (i.interval.min - miny) * ky);
+			double y2 = (a.y.max - (i.interval.max - miny) * ky);
+			double y3 = (a.y.max - (i.mean - miny) * ky);
+			master_bm.line({ xx - dxc2 * 2, y1 }, { xx + dxc2 * 2, y1 }, c_def);
+			master_bm.line({ xx - dxc2 * 2, y2 }, { xx + dxc2 * 2, y2 }, c_def);
+			master_bm.fill_circle({xx, y3}, dxc2, c_def);
+		}
+	}
 	double delta_bar = 0;
 	for (auto& j : curve)
 	{

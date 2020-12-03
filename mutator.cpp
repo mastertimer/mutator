@@ -671,9 +671,27 @@ void test_linear_prediction()
 //	g->add(_matrix(pr, [&](size_t y) noexcept { return (double)y + n; }) << (f2 - f3), "разн.");
 }
 
+void test_interval_statistics()
+{
+	_g_graph* g = new _g_graph;
+	g->local_area.x.max = 800;
+	g->local_area.y.max = 300;
+	n_ko->operator _t_basic_go* ()->set_t_trans(g, flag_sub_go + flag_part);
+
+	_basic_statistics bs;
+	_interval_statistics is;
+	for (i64 i = 1; i <= 35; i++)
+	{
+		calc_delta_price(i, bs);
+		is.init_equiprobable(bs, 9, 0.01);
+		g->add(i, is);
+	}
+}
+
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	test_linear_prediction3();
+	test_interval_statistics();
+//	test_linear_prediction3();
 /*	show_message(test_ss4());
 
 	_g_graph* g = new _g_graph;

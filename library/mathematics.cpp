@@ -429,6 +429,18 @@ i64 _basic_statistics::operator[](i64 x) const noexcept
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+double _interval_statistics::min_mean()
+{
+	if (element.empty()) return 0;
+	return element.front().mean;
+}
+
+double _interval_statistics::max_mean()
+{
+	if (element.empty()) return 0;
+	return element.back().mean;
+}
+
 void _interval_statistics::init_equiprobable(_basic_statistics& bs, i64 n, double k)
 {
 	element.resize(n);

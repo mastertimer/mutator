@@ -11,11 +11,18 @@ struct _curve
 	double      width = 1.5;   // толщина линии
 };
 
+struct _curve2 // потом объеденить и улучшить
+{
+	_interval_statistics is;
+	double x;
+};
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _g_graph : public _t_go
 {
 	std::vector<_curve> curve;
+	std::vector<_curve2> curve2;
 
 	_g_graph() { local_area = { {0, 100}, {0, 100} }; }
 
@@ -24,6 +31,7 @@ struct _g_graph : public _t_go
 	void ris2(_trans tr, bool final) override;
 
 	void add(const _matrix& b, std::string_view s = "", bool bar = false);
+	void add(double x, const _interval_statistics& is);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

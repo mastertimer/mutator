@@ -307,7 +307,7 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 //	graph->curve2.push_back(new _nervous_curve);
 //	graph->curve2.push_back(new _compression_curve);
 	graph->curve2.push_back(new _linear_oracle_curve);
-	graph->curve2.push_back(new _multi_linear_oracle_curve);
+//	graph->curve2.push_back(new _multi_linear_oracle_curve);
 //	graph->curve2.push_back(new _spectr_curve);
 }
 
