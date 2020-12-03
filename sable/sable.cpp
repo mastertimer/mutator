@@ -171,6 +171,14 @@ struct _linear1
 	_matrix kk; // вектор коэффициентов
 };
 
+struct _linear_n
+{
+	i64 prediction_depth = 1; // глубина предсказания 35 минут
+	i64 prediction_basis = 65; // база предсказания 60 минут
+
+	std::vector<_matrix> kk; // вектора коэффициентов для каждого из интервалов
+};
+
 struct _spectr_linear
 {
 	std::vector<_linear1> linear;
@@ -184,6 +192,23 @@ struct _multi_linear_oracle_curve : public _basic_curve // мульти лине
 	static constexpr i64 max_prediction_basis = 65; // база предсказания 60 минут
 
 	_spectr_linear sl; // вектора коэффициентов
+
+	void draw(i64 n, _area area) override; // нарисовать 1 элемент
+};
+
+struct _multi_spectr_linear
+{
+	std::vector<_linear_n> linear;
+
+	void calc(_iinterval prediction_basis, i64 prediction_depth, std::vector<i64>* sm);
+};
+
+struct _multi_multi_linear_oracle_curve : public _basic_curve // мульти мульти линейный предсказатель
+{
+	static constexpr i64 prediction_depth = 35; // глубина предсказания 35 минут
+	static constexpr i64 max_prediction_basis = 65; // база предсказания 60 минут
+
+	_multi_spectr_linear sl; // вектора коэффициентов
 
 	void draw(i64 n, _area area) override; // нарисовать 1 элемент
 };
@@ -1167,6 +1192,44 @@ _matrix calc_vector_prediction(i64 prediction_basis, _label_statistics &ls, std:
 	return m.this_mul_transpose().pseudoinverse() * m * r;
 }
 
+void calc_multi_vector_prediction(i64 prediction_basis, _label_statistics& ls, std::vector<i64>* sm, std::vector<_matrix> &kk)
+{
+	kk.clear();
+	i64 delta_basis = ls.prediction_basis - prediction_basis;
+	if ((delta_basis < 0) || (prediction_basis < 1)) return;
+	i64 vv = (sm) ? sm->size() + 1 : 1;
+	i64 v = ls.label.size();
+
+	i64 k_int = ispe[ls.prediction_depth].count();
+
+	_matrix m(prediction_basis * vv, v);
+	_matrix* r = new _matrix[k_int];
+	for (i64 i = 0; i < k_int; i++) r[i].resize({ 1, v });
+
+	for (v = 0; v < (i64)ls.label.size(); v++)
+	{
+		i64 i = ls.label[v].n;
+		i64 ii = ls.label[v].start_basis + delta_basis;
+		for (i64 j = 0; j < prediction_basis; j++)
+		{
+			m[j * vv][v] = index.data[ii + j].cc;
+			if (!sm) continue;
+			i64 ad = (i64)&index.data[ii + j];
+			for (i64 jj = 0; jj < (i64)sm->size(); jj++)
+				m[j * vv + jj + 1][v] = *((double*)(ad + (*sm)[jj]));
+		}
+		for (i64 g = 0; g < k_int; g++) r[g].data[v] = 0;
+		i64 ni = ispe[ls.prediction_depth].find(index.data[i].cc);
+		if (ni >= 0) r[ni].data[v] = 1;
+	}
+
+	kk.resize(k_int);
+	m = m.this_mul_transpose().pseudoinverse() * m;
+	for (i64 i = 0; i < k_int; i++) kk[i] = m * r[i];
+
+	delete[] r;
+}
+
 double prediction(i64 n, _matrix& kk, i64 prediction_depth, std::vector<i64>* sm = nullptr)
 {
 	if ((kk.size.x != 1) && (kk.size.y != 1)) return 0; // должен быть столбец или строка
@@ -1238,7 +1301,42 @@ void _spectr_linear::calc(_iinterval prediction_basis, i64 prediction_depth, std
 	}
 }
 
+void _multi_spectr_linear::calc(_iinterval prediction_basis, i64 prediction_depth, std::vector<i64>* sm)
+{
+	_label_statistics ls;
+	ls.prediction_basis = prediction_basis.max - 1;
+	ls.prediction_depth = prediction_depth;
+	ls.calc();
+	linear.clear();
+	for (i64 i = prediction_basis.min; i < prediction_basis.max; i++)
+	{
+		_linear_n ln;
+		ln.prediction_basis = i;
+		ln.prediction_depth = prediction_depth;
+		calc_multi_vector_prediction(i, ls, sm, ln.kk);
+		linear.push_back(ln);
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void _multi_multi_linear_oracle_curve::draw(i64 n, _area area)
+{
+	std::vector<i64> sm;
+	//	sm.push_back((i64)(&((_index*)0)->r_pok));
+	//	sm.push_back((i64)(&((_index*)0)->r_pro));
+	if (sl.linear.empty()) sl.calc({ 1i64, max_prediction_basis + 1 }, prediction_depth, &sm);
+/*	double y_pr = 0;
+	i64 rr = sl.linear.size();
+	for (i64 i = rr - 1; i >= 0; i--)
+	{
+		double pr = prediction(n, sl.linear[i].kk, sl.linear[i].prediction_depth, &sm);
+		if (pr == 0) return;
+		double yy1 = y_graph.max - (pr - y_graph_re.min) * y_graph.length() / (y_graph_re.max - y_graph_re.min);
+		if (i < rr - 1) master_bm.line({ area.x((i + 1.0) / rr), y_pr }, { area.x(double(i) / rr), yy1 }, 0xffffffff);
+		y_pr = yy1;
+	}*/
+}
 
 void _multi_linear_oracle_curve::draw(i64 n, _area area)
 {

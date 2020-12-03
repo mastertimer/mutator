@@ -10,6 +10,9 @@ struct _multi_interval //      примерно ~~      |   | |      |  |    |          
 
 	_multi_interval() = default;
 	_multi_interval(const std::vector<double>& a) : border(a) {}
+
+	i64 count() { if (border.empty()) return 0; return border.size() - 1; } // количество интервалов
+	i64 find(double a); // найти номер интервала, в котором лежит число
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
