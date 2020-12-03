@@ -17,6 +17,7 @@
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <ctime>
+#include <sstream>
 
 #include "sable.h"
 #include "tetron2.h"
@@ -680,12 +681,20 @@ void test_interval_statistics()
 
 	_basic_statistics bs;
 	_interval_statistics is;
+
+	std::stringstream a;
+
 	for (i64 i = 1; i <= 35; i++)
 	{
 		calc_delta_price(i, bs);
-		is.init_equiprobable(bs, 9, 0.01);
+		is.init_equiprobable(bs, 13, 0.01);
 		g->add(i, is);
+		a << "_multi_interval({" << is.element[0].interval.min;
+		for (i64 j = 0; j < (i64)is.element.size(); j++)
+			a << ", " << is.element[j].interval.max;
+		a << "})," << std::endl;
 	}
+	::to_clipboard(a.str().c_str());
 }
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
