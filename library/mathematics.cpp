@@ -396,6 +396,7 @@ _matrix get_noise(i64 n, double k)
 
 void _basic_statistics::push(i64 x)
 {
+	if (data.empty()) start = x;
 	if (x - start >= (i64)data.size()) data.resize(x - start + 1, 0);
 	if (x < start) { data.insert(data.begin(), start - x, 0); start = x; }
 	data[x - start]++;
@@ -424,6 +425,34 @@ i64 _basic_statistics::operator[](i64 x) const noexcept
 	if (x - start >= (i64)data.size()) return 0;
 	if (x < start) return 0;
 	return data[x - start];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void _interval_statistics::init_equiprobable(_basic_statistics& bs, i64 n, double k)
+{
+	element.resize(n);
+	i64 nbs = bs.number();
+	i64 ii = 0;
+	i64 s = 0;
+	for (i64 i = 0; i < n; i++)
+	{
+		i64 ss = nbs * (i + 1) / n;
+		i64 s_p = s;
+		i64 ii_p = i;
+		double mean = 0;
+		while ((s < ss) && (ii < (i64)bs.data.size()))
+		{
+			mean += ((ii + bs.start) * k) * bs.data[ii];
+			s += bs.data[ii];
+			ii++;
+		}
+		element[i].interval.min = (ii_p + bs.start - 0.5) * k;
+		element[i].interval.max = (ii + bs.start - 0.5) * k;
+		if (s - s_p) mean /= (s - s_p);
+		element[i].mean = mean;
+		element[i].number = s - s_p;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

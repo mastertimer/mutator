@@ -62,6 +62,7 @@ struct _sable_stat // статистика цен, сжатая  (в 2 раза меньше, в 3 раза медленн
 	_bit_vector data; // сжатые данные
 	static constexpr time_t old_dtime = 160; // разность времени, после которого цены считаются устаревшими
 	static constexpr double c_unpak = 0.01; // распаковка цен
+	static constexpr double c_pak = 100; // упаковка цен
 
 	bool add(const _prices& c); // добавить цены (сжать)
 	bool read(i64 n, _prices& c, _info_pak* inf = nullptr); // прочитать цены (расжать)

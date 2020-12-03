@@ -1082,9 +1082,21 @@ void _label_statistics::calc()
 		while (!data.empty())
 		{
 			if (data.front().first > ti) break;
-			if (data.front().first == ti) label.push_back({ data.front().second, i});
+			if (data.front().first == ti) label.push_back({ data.front().second, i });
 			data.pop_front();
 		}
+	}
+}
+
+void calc_delta_price(i64 delta_minute, _basic_statistics &bs)
+{
+	bs.clear();
+	for (i64 i = delta_minute; i < (i64)index.data.size(); i++)
+	{
+		if (index.data[i].time - index.data[i - delta_minute].time != delta_minute * 60) continue;
+		double d = (index.data[i].cc - index.data[i - delta_minute].cc) * sss.c_pak;
+		if (d > 0) d += 0.5; else d -= 0.5; // для правильного округления
+		bs.push(d);
 	}
 }
 

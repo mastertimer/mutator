@@ -85,9 +85,26 @@ struct _basic_statistics // базовая разреженная статистика с нулями
 	i64 start = 0;
 
 	void push(i64 x); // добавить число в статистику
+	void clear() noexcept { data.clear(); }
 	i64 number() const noexcept;
 	i64 number(i64 be, i64 en) const noexcept; // количество в интервале [be,en)
 	i64 operator[](i64 x) const noexcept;
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct _interval_statistics // ограниченная интервальная статистика
+{
+	struct _element_is // элемент интервальной статистики
+	{
+		_interval interval; // интервал диапазона
+		double mean = 0; // среднее значение
+		i64 number = 0; // количество чисел в этом диапазоне
+	};
+	
+	std::vector<_element_is> element;
+
+	void init_equiprobable(_basic_statistics &bs, i64 n, double k); // инициализировать равновероятным
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
