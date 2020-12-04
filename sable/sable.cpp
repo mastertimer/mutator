@@ -146,6 +146,16 @@ struct _linear_oracle_curve : public _basic_curve // линейный предс
 	void draw(i64 n, _area area) override; // нарисовать 1 элемент
 };
 
+struct _linear_oracle_norm_curve : public _basic_curve // линейный предсказатель
+{
+	static constexpr i64 prediction_depth = 35; // глубина предсказания 35 минут
+	static constexpr i64 prediction_basis = 65; // база предсказания 60 минут
+
+	_matrix kk; // вектор коэффициентов
+
+	void draw(i64 n, _area area) override; // нарисовать 1 элемент
+};
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _label_statistics
@@ -371,8 +381,9 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 //	graph->curve2.push_back(new _nervous_curve);
 //	graph->curve2.push_back(new _compression_curve);
 	graph->curve2.push_back(new _linear_oracle_curve);
-	graph->curve2.push_back(new _multi_linear_oracle_curve);
-	graph->curve2.push_back(new _multi_multi_linear_oracle_curve);
+	graph->curve2.push_back(new _linear_oracle_norm_curve);
+	//	graph->curve2.push_back(new _multi_linear_oracle_curve);
+//	graph->curve2.push_back(new _multi_multi_linear_oracle_curve);
 //	graph->curve2.push_back(new _spectr_curve);
 }
 
@@ -1193,6 +1204,35 @@ _matrix calc_vector_prediction(i64 prediction_basis, _label_statistics &ls, std:
 	return m.this_mul_transpose().pseudoinverse() * m * r;
 }
 
+_matrix calc_vector_prediction_norm(i64 prediction_basis, _label_statistics& ls, std::vector<i64>* sm = nullptr)
+{
+	i64 delta_basis = ls.prediction_basis - prediction_basis;
+	if ((delta_basis < 0) || (prediction_basis < 1)) return _matrix();
+	i64 vv = (sm) ? sm->size() + 1 : 1;
+	i64 v = ls.label.size();
+
+	_matrix m(prediction_basis * vv, v);
+	_matrix r(v);
+
+	for (v = 0; v < (i64)ls.label.size(); v++)
+	{
+		i64 i = ls.label[v].n;
+		i64 ii = ls.label[v].start_basis + delta_basis;
+		double a = 1.0 / index.data[ii + prediction_basis - 1].cc;
+		for (i64 j = 0; j < prediction_basis; j++)
+		{
+			m[j * vv][v] = index.data[ii + j].cc * a - 1;
+			if (!sm) continue;
+			i64 ad = (i64)&index.data[ii + j];
+			for (i64 jj = 0; jj < (i64)sm->size(); jj++)
+				m[j * vv + jj + 1][v] = *((double*)(ad + (*sm)[jj]));
+		}
+		r.data[v] = index.data[i].cc * a - 1;
+	}
+
+	return m.this_mul_transpose().pseudoinverse() * m * r;
+}
+
 void calc_multi_vector_prediction(i64 prediction_basis, _label_statistics& ls, std::vector<i64>* sm, std::vector<_matrix> &kk)
 {
 	kk.clear();
@@ -1259,6 +1299,35 @@ double prediction(i64 n, _matrix& kk, i64 prediction_depth, std::vector<i64>* sm
 	return 0;
 }
 
+double prediction_norm(i64 n, _matrix& kk, i64 prediction_depth, std::vector<i64>* sm = nullptr)
+{
+	if ((kk.size.x != 1) && (kk.size.y != 1)) return 0; // должен быть столбец или строка
+	i64 vv = (sm) ? sm->size() + 1 : 1;
+	i64 prediction_basis = kk.size.square() / vv;
+	if (n < prediction_basis) return 0;
+	time_t t = index.data[n].time;
+	time_t lb = t - prediction_depth * 60;
+	for (i64 i = n - prediction_depth; i < n; i++)
+	{
+		if (index.data[i].time != lb) continue;
+		i64 ina = i - prediction_basis + 1;
+		if (ina < 0) return 0;
+		if (lb - index.data[ina].time != (prediction_basis - 1) * 60) return 0;
+		double s = 0;
+		double a = 1.0 / index.data[ina + prediction_basis - 1].cc;
+		for (i64 j = 0; j < prediction_basis; j++)
+		{
+			s += kk.data[j * vv] * (index.data[ina + j].cc * a - 1);
+			if (!sm) continue;
+			i64 ad = (i64)&index.data[ina + j];
+			for (i64 jj = 0; jj < (i64)sm->size(); jj++)
+				s += kk.data[j * vv + jj + 1] * *((double*)(ad + (*sm)[jj]));
+		}
+		return (s + 1.0) / a;
+	}
+	return 0;
+}
+
 void _linear_oracle_curve::draw(i64 n, _area area)
 {
 	if (kk.empty())
@@ -1273,8 +1342,24 @@ void _linear_oracle_curve::draw(i64 n, _area area)
 	if (pr == 0) return;
 	double yy1 = y_graph.max - (pr - y_graph_re.min) * y_graph.length() / (y_graph_re.max - y_graph_re.min);
 	double r = area.x.length();
-//	master_bm.fill_ring(area.center(), r, r * 0.1, 0xFF0000FF, 0xFF0000FF);
 	master_bm.fill_ring({ area.x(0.5), yy1 }, r, r * 0.1, 0x80ff0000, 0x80ff0000);
+}
+
+void _linear_oracle_norm_curve::draw(i64 n, _area area)
+{
+	if (kk.empty())
+	{
+		_label_statistics ls;
+		ls.prediction_basis = prediction_basis;
+		ls.prediction_depth = prediction_depth;
+		ls.calc();
+		kk = calc_vector_prediction_norm(prediction_basis, ls);
+	}
+	double pr = prediction_norm(n, kk, prediction_depth);
+	if (pr == 0) return;
+	double yy1 = y_graph.max - (pr - y_graph_re.min) * y_graph.length() / (y_graph_re.max - y_graph_re.min);
+	double r = area.x.length();
+	master_bm.fill_ring({ area.x(0.5), yy1 }, r, r * 0.1, 0x8000ff00, 0x8000ff00);
 }
 
 struct _time_zn
@@ -1495,6 +1580,36 @@ void test_linear_prediction3()
 	for (i64 i = 1; i < (i64)index.data.size(); i++)
 	{
 		double pr = prediction(i, kk, prediction_depth, &sm);
+		if (pr == 0) continue;
+		n++;
+		double r = abs(pr - index.data[i].cc);
+		s += r;
+		s2 += r * r;
+	}
+	s /= n;
+	s2 = sqrt(s2 / n);
+	show_message("s", s);
+	show_message("s2", s2);
+}
+
+void test_linear_prediction4()
+{
+	constexpr i64 prediction_basis = 10;
+	constexpr i64 prediction_depth = 1;
+	std::vector<i64> sm;
+	sm.push_back((i64)(&((_index*)0)->r_pok));
+	sm.push_back((i64)(&((_index*)0)->r_pro));
+	_label_statistics ls;
+	ls.prediction_basis = prediction_basis;
+	ls.prediction_depth = prediction_depth;
+	ls.calc();
+	_matrix kk = calc_vector_prediction_norm(prediction_basis, ls, &sm);
+	i64 n = 0;
+	double s = 0; // модуль разницы
+	double s2 = 0; // квадрат разницы
+	for (i64 i = 1; i < (i64)index.data.size(); i++)
+	{
+		double pr = prediction_norm(i, kk, prediction_depth, &sm);
 		if (pr == 0) continue;
 		n++;
 		double r = abs(pr - index.data[i].cc);

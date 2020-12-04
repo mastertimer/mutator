@@ -699,8 +699,9 @@ void test_interval_statistics()
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
 //	test_interval_statistics();
-//	test_linear_prediction3();
-/*	show_message(test_ss4());
+	test_linear_prediction3();
+	test_linear_prediction4();
+	/*	show_message(test_ss4());
 
 	_g_graph* g = new _g_graph;
 	n_ko->operator _t_basic_go* ()->set_t_trans(g, flag_sub_go + flag_part);
