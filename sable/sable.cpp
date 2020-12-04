@@ -371,8 +371,8 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 //	graph->curve2.push_back(new _nervous_curve);
 //	graph->curve2.push_back(new _compression_curve);
 	graph->curve2.push_back(new _linear_oracle_curve);
-//	graph->curve2.push_back(new _multi_linear_oracle_curve);
-//	graph->curve2.push_back(new _multi_multi_linear_oracle_curve);
+	graph->curve2.push_back(new _multi_linear_oracle_curve);
+	graph->curve2.push_back(new _multi_multi_linear_oracle_curve);
 //	graph->curve2.push_back(new _spectr_curve);
 }
 
@@ -1220,7 +1220,7 @@ void calc_multi_vector_prediction(i64 prediction_basis, _label_statistics& ls, s
 				m[j * vv + jj + 1][v] = *((double*)(ad + (*sm)[jj]));
 		}
 		for (i64 g = 0; g < k_int; g++) r[g].data[v] = 0;
-		i64 ni = ispe[ls.prediction_depth].find(index.data[i].cc);
+		i64 ni = ispe[ls.prediction_depth].find(index.data[i].cc - index.data[ii + prediction_basis - 1].cc);
 		if (ni >= 0) r[ni].data[v] = 1;
 	}
 
@@ -1236,7 +1236,7 @@ double prediction(i64 n, _matrix& kk, i64 prediction_depth, std::vector<i64>* sm
 	if ((kk.size.x != 1) && (kk.size.y != 1)) return 0; // должен быть столбец или строка
 	i64 vv = (sm) ? sm->size() + 1 : 1;
 	i64 prediction_basis = kk.size.square() / vv;
-	if (n < prediction_basis) return 0;
+	if (n < prediction_depth) return 0;
 	time_t t = index.data[n].time;
 	time_t lb = t - prediction_depth * 60;
 	for (i64 i = n - prediction_depth; i < n; i++)
@@ -1257,6 +1257,40 @@ double prediction(i64 n, _matrix& kk, i64 prediction_depth, std::vector<i64>* sm
 		return s;
 	}
 	return 0;
+}
+
+_matrix prediction_multi(i64 n, std::vector<_matrix>& kk, i64 prediction_depth, std::vector<i64>* sm, double& y0)
+{
+	for (auto &i: kk)
+		if ((i.size.x != 1) && (i.size.y != 1)) return _matrix(); // должен быть столбец или строка
+	i64 vv = (sm) ? sm->size() + 1 : 1;
+	i64 prediction_basis = kk[0].size.square() / vv;
+	if (n < prediction_depth) return 0;
+	time_t t = index.data[n].time;
+	time_t lb = t - prediction_depth * 60;
+	_matrix res(kk.size());
+	for (i64 i = n - prediction_depth; i < n; i++)
+	{
+		if (index.data[i].time != lb) continue;
+		i64 ina = i - prediction_basis + 1;
+		if (ina < 0) return 0;
+		if (lb - index.data[ina].time != (prediction_basis - 1) * 60) return 0;
+		for (i64 oo = 0; oo < (i64)kk.size(); oo++)
+		{
+			double s = 0;
+			for (i64 j = 0; j < prediction_basis; j++)
+			{
+				s += kk[oo].data[j * vv] * index.data[ina + j].cc;
+				if (!sm) continue;
+				i64 ad = (i64)&index.data[ina + j];
+				for (i64 jj = 0; jj < (i64)sm->size(); jj++)
+					s += kk[oo].data[j * vv + jj + 1] * *((double*)(ad + (*sm)[jj]));
+			}
+			res.data[oo] = s;
+		}
+		return res;
+	}
+	return _matrix();
 }
 
 void _linear_oracle_curve::draw(i64 n, _area area)
@@ -1326,16 +1360,20 @@ void _multi_multi_linear_oracle_curve::draw(i64 n, _area area)
 	//	sm.push_back((i64)(&((_index*)0)->r_pok));
 	//	sm.push_back((i64)(&((_index*)0)->r_pro));
 	if (sl.linear.empty()) sl.calc({ 1i64, max_prediction_basis + 1 }, prediction_depth, &sm);
-/*	double y_pr = 0;
 	i64 rr = sl.linear.size();
-	for (i64 i = rr - 1; i >= 0; i--)
+	for (i64 i = 0; i < rr; i++)
 	{
-		double pr = prediction(n, sl.linear[i].kk, sl.linear[i].prediction_depth, &sm);
-		if (pr == 0) return;
-		double yy1 = y_graph.max - (pr - y_graph_re.min) * y_graph.length() / (y_graph_re.max - y_graph_re.min);
-		if (i < rr - 1) master_bm.line({ area.x((i + 1.0) / rr), y_pr }, { area.x(double(i) / rr), yy1 }, 0xffffffff);
-		y_pr = yy1;
-	}*/
+		double y0;
+		_matrix pr = prediction_multi(n, sl.linear[i].kk, sl.linear[i].prediction_depth, &sm, y0);
+		for (i64 j = 1; j < pr.size.y - 1; j++)
+		{
+			double y1 = y0 + ispe[sl.linear[i].prediction_depth].border[j];
+			double y2 = y0 + ispe[sl.linear[i].prediction_depth].border[j+1];
+			double yy1 = y_graph.max - (y1 - y_graph_re.min) * y_graph.length() / (y_graph_re.max - y_graph_re.min);
+			double yy2 = y_graph.max - (y2 - y_graph_re.min) * y_graph.length() / (y_graph_re.max - y_graph_re.min);
+			master_bm.rectangle({ {area.x(double(i) / rr), area.x((i + 1.0) / rr)}, {yy2, yy1} }, 0x80ffffff);
+		}
+	}
 }
 
 void _multi_linear_oracle_curve::draw(i64 n, _area area)
