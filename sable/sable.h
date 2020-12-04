@@ -43,7 +43,6 @@ inline _basic_statistics research3; // для исследования стат�
 
 void calc_all_prediction(std::function<i64(i64)> o, i64& vv, double& k);
 void test_linear_prediction3();
-void test_linear_prediction4();
 void calc_delta_price(i64 delta_minute, _basic_statistics& bs);
 
 void fun13(_tetron* tt0, _tetron* tt, u64 flags);
