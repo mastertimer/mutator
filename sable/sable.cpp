@@ -1,5 +1,12 @@
 ﻿/*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+!! проверить мульти-мульти на синусоиде
+рисование ломанной линии
+выделить нулевые оси у графика
+не подписывать сетку < 0, если все данные > 0 (и наоборот)
+сделать отображение секунд при увеличении графика цен
+преобразование координат при выводе графика
+
           | результат | итераций | 1 итерация
 ---------------------------------------------
 0.999     |   0.941        61       0.99900
@@ -1275,6 +1282,7 @@ _matrix prediction_multi(i64 n, std::vector<_matrix>& kk, i64 prediction_depth, 
 		i64 ina = i - prediction_basis + 1;
 		if (ina < 0) return 0;
 		if (lb - index.data[ina].time != (prediction_basis - 1) * 60) return 0;
+		y0 = index.data[ina + prediction_basis - 1].cc;
 		for (i64 oo = 0; oo < (i64)kk.size(); oo++)
 		{
 			double s = 0;
@@ -1365,13 +1373,19 @@ void _multi_multi_linear_oracle_curve::draw(i64 n, _area area)
 	{
 		double y0;
 		_matrix pr = prediction_multi(n, sl.linear[i].kk, sl.linear[i].prediction_depth, &sm, y0);
-		for (i64 j = 1; j < pr.size.y - 1; j++)
+		for (i64 j = 0; j < pr.size.y; j++)
 		{
 			double y1 = y0 + ispe[sl.linear[i].prediction_depth].border[j];
 			double y2 = y0 + ispe[sl.linear[i].prediction_depth].border[j+1];
+			if (j == 0) y1 = y0 - 2.5; // 2.5 взято просто так, чтобы график не весь закрашивался
+			if (j == pr.size.y - 1) y2 = y0 + 2.5; // 2.5 взято просто так, чтобы график не весь закрашивался
 			double yy1 = y_graph.max - (y1 - y_graph_re.min) * y_graph.length() / (y_graph_re.max - y_graph_re.min);
 			double yy2 = y_graph.max - (y2 - y_graph_re.min) * y_graph.length() / (y_graph_re.max - y_graph_re.min);
-			master_bm.rectangle({ {area.x(double(i) / rr), area.x((i + 1.0) / rr)}, {yy2, yy1} }, 0x80ffffff);
+			i64 k = pr[j][0] * 255;
+			if (k < 0) k = 0;
+			if (k > 255) k = 255;
+			k <<= 24;
+			master_bm.fill_rectangle({ {area.x(double(i) / rr), area.x((i + 1.0) / rr)}, {yy2, yy1} }, (k + 0xffffff));
 		}
 	}
 }
