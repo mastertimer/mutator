@@ -1,6 +1,7 @@
 ﻿/*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-!! проверить мульти-мульти на синусоиде
+!! сделать подмену цен - сложной зашумленной синусоидой для тестирования оракулов !!! дополнительные тесты не нужны !!!
+!! проверить мульти-мульти
 рисование ломанной линии
 выделить нулевые оси у графика
 не подписывать сетку < 0, если все данные > 0 (и наоборот)
@@ -374,13 +375,13 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 
 	index.start();
 	graph->curve2.push_back(new _candle_curve);
-//	graph->curve2.push_back(new _prices_curve);
-//	graph->curve2.push_back(new _nervous_curve);
-//	graph->curve2.push_back(new _compression_curve);
+	graph->curve2.push_back(new _prices_curve);
+	graph->curve2.push_back(new _nervous_curve);
+	graph->curve2.push_back(new _compression_curve);
 	graph->curve2.push_back(new _linear_oracle_curve);
 	graph->curve2.push_back(new _multi_linear_oracle_curve);
 	graph->curve2.push_back(new _multi_multi_linear_oracle_curve);
-//	graph->curve2.push_back(new _spectr_curve);
+	graph->curve2.push_back(new _spectr_curve);
 }
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)
