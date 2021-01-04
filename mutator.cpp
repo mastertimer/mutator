@@ -10,9 +10,11 @@
 
 #include <ctime>
 #include <sstream>
+#include <chrono>
 
 #include "sable.h"
 #include "tetron2.h"
+#include "compression.h"
 #include "mutator.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -761,10 +763,44 @@ void test_interval_statistics()
 //	to_clipboard(a.str().c_str());
 }
 
+void test_compression()
+{
+	std::vector<uchar> data, res, data2;
+	load_file(L"e:\\mutator.cpp", data);
+	show_message("загружено", (i64)data.size());
+
+	auto t = std::chrono::high_resolution_clock::now();
+	uchar kk = 0;
+	arithmetic_coding2(data, res);
+	//	AC_pak(data, res);
+	//kk = ppm(data, res, 16); // 16
+	std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - t;
+	show_message("dt", dt.count() / 1000000);
+	show_message("сжатый размер "+ std::to_string(res.size() - (kk > 0)) + "." + std::to_string((int)kk));
+
+	arithmetic_decoding(res, data2);
+	//	data2 = AC_unpak(res);
+	show_message("расжатый размер", (i64)data2.size());
+
+	if (data2.size() != data.size()) return;
+	i64 nerr = -1;
+	for (i64 i = 0; i < data.size(); i++)
+		if (data[i] != data2[i])
+		{
+			nerr = i;
+			break;
+		}
+	if (nerr < 0)
+		show_message("распаковано верно!");
+	else
+		show_message("ошибка, символ №", nerr);
+}
+
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
+	test_compression();
 //	test_interval_statistics_sin();
-	test_linear_prediction();
+//	test_linear_prediction();
 //	test_interval_statistics();
 //	test_linear_prediction3();
 	/*	show_message(test_ss4());

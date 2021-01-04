@@ -58,6 +58,7 @@ void os_pordis(double min, double max, i64 maxN, double& mi, double& step, doubl
 
 bool save_file(std::wstring_view fn, const char* data, i64 n);
 bool load_file(std::wstring_view fn, char** data, i64* n);
+bool load_file(std::wstring_view fn, std::vector<uchar>& res);
 
 std::wstring string_to_wstring(std::string_view s);
 wstr uint64_to_wstr_hex(u64 a);

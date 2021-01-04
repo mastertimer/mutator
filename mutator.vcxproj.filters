@@ -53,6 +53,9 @@
     <ClCompile Include="tetrons\tetron2.cpp">
       <Filter>Исходные файлы\tetrons</Filter>
     </ClCompile>
+    <ClCompile Include="library\compression.cpp">
+      <Filter>Исходные файлы\library</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\basic.h">
@@ -84,6 +87,9 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="library\compression.h">
+      <Filter>Исходные файлы\library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

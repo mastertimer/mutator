@@ -93,6 +93,24 @@ bool load_file(std::wstring_view fn, char** data, i64* n)
 	return true;
 }
 
+bool load_file(std::wstring_view fn, std::vector<uchar>& res)
+{
+	res.clear();
+	std::ifstream f(fn.data(), std::ofstream::binary);
+	if (!f) return false;
+	f.seekg(0, f.end);
+	auto siz = f.tellg();
+	res.resize(siz);
+	f.seekg(0);
+	f.read((char*)res.data(), siz);
+	if (!f.good())
+	{
+		res.clear();
+		return false;
+	}
+	return true;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool _stack::operator==(const _stack& a) const noexcept
