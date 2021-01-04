@@ -7,7 +7,8 @@
 void arithmetic_coding(const std::vector<uchar>& data, std::vector<uchar>& res);
 void arithmetic_decoding(const std::vector<uchar>& data, std::vector<uchar>& res);
 
-void arithmetic_coding2(const std::vector<uchar>& data, std::vector<uchar>& res);
+void arithmetic_coding2(const std::vector<uchar>& data, _bit_vector& res);
+void arithmetic_decoding2(_bit_vector& data, std::vector<uchar>& res);
 
 uchar ppm(const std::vector<uchar>& data, std::vector<uchar>& res, u64 g = 0);
 
