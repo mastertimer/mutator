@@ -14,16 +14,14 @@ struct _ppc
 	std::map<uchar, _ppc> next;
 };
 
-constexpr double kkk4 = 6.0; // 21.0
-//                                                        *
-constexpr double kk5[30] = { 21, 22, 22, 20, 20, 20, 20, 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+constexpr double kkk4 = 19.0; // 19.0
 
 struct _frequency
 {
 	double frequency[256];
 
-	void start() noexcept { for (int i = 0; i < 256; i++) frequency[i] = kk5[0] / 256.0; }
-	void norm(u64 nl);
+	void start() noexcept { for (int i = 0; i < 256; i++) frequency[i] = kkk4 / 256.0; }
+	void norm();
 	void norm(u64 rr, u64* f);
 };
 
@@ -41,11 +39,11 @@ void _frequency::norm(u64 rr, u64* f)
 	}
 }
 
-void _frequency::norm(u64 nl)
+void _frequency::norm()
 {
 	double s = 0;
 	for (int i = 0; i < 256; i++) s += frequency[i];
-	s = kk5[nl] / s;
+	s = kkk4 / s;
 	for (int i = 0; i < 256; i++) frequency[i] *= s;
 }
 
@@ -91,7 +89,7 @@ uchar ppm(const std::vector<uchar>& data, std::vector<uchar>& res, u64 g)
 		for (u64 j = 1; j <= g; j++)
 		{
 			if (j > i) break;
-			f.norm(j);
+			f.norm();
 			ppc2 = &ppc2->next[data[i - j]];
 			for (auto& jj : ppc2->next) f.frequency[jj.first] += jj.second.frequency;
 		}
@@ -502,6 +500,118 @@ void AC_pak(const std::vector<uchar>& data, std::vector<uchar>& res)
 	else
 	{
 		int no = (tbit >> 3);
+		if ((tbit & 7) == 0) res[no] = 1;
+		else
+		{
+			res[no] <<= 1;
+			res[no]++;
+		}
+		tbit++;
+		while (BrakBit--)
+		{
+			no = (tbit >> 3);
+			if ((tbit & 7) == 0) res[no] = 0;
+			else res[no] <<= 1;
+			tbit++;
+		}
+	}
+	if (tbit & 7) res[(tbit >> 3)] <<= 8 - (tbit & 7);
+	res.resize(((tbit - 1) >> 3) + 1);
+}
+
+void AC_pak64(const std::vector<uchar>& data, std::vector<uchar>& res)
+{
+	u64 tbit = 0;
+	i64 L = data.size();
+	res.resize(L + 666);
+	u64 dv[257], vdv = 257;
+	for (i64 i = 0; i < 257; i++) dv[i] = 1;
+	u64 n = 0, dn = 0x80000000;
+	i64 BrakBit = 0;
+	for (i64 i = 0; i <= L; i++)
+	{
+		i64 c = (i < L) ? data[i] : 256;
+		u64 v = 0;
+		for (i64 j = 0; j < c; j++) v += dv[j];
+		n = n + (u64)dn * v / vdv;
+		dn = (u64)dn * dv[c] / vdv;
+		for (;;)
+		{
+			if (n + dn <= 0x40000000)
+			{
+				i64 no = (tbit >> 3);
+				if ((tbit & 7) == 0) res[no] = 0;
+				else res[no] <<= 1;
+				tbit++;
+				while (BrakBit--)
+				{
+					no = (tbit >> 3);
+					if ((tbit & 7) == 0) res[no] = 1;
+					else
+					{
+						res[no] <<= 1;
+						res[no]++;
+					}
+					tbit++;
+				}
+				BrakBit = 0;
+			}
+			else
+				if (n >= 0x40000000)
+				{
+					n -= 0x40000000;
+					i64 no = (tbit >> 3);
+					if ((tbit & 7) == 0) res[no] = 1;
+					else
+					{
+						res[no] <<= 1;
+						res[no]++;
+					}
+					tbit++;
+					while (BrakBit--)
+					{
+						no = (tbit >> 3);
+						if ((tbit & 7) == 0) res[no] = 0;
+						else res[no] <<= 1;
+						tbit++;
+					}
+					BrakBit = 0;
+				}
+				else
+					if ((n >= 0x20000000) && (n + dn <= 0x60000000))
+					{
+						BrakBit++;
+						n -= 0x20000000;
+					}
+					else break;
+			n <<= 1;
+			dn <<= 1;
+		}
+		dv[c]++;
+		vdv++;
+	}
+	BrakBit++;
+	if (n < 0x20000000)
+	{
+		i64 no = (tbit >> 3);
+		if ((tbit & 7) == 0) res[no] = 0;
+		else res[no] <<= 1;
+		tbit++;
+		while (BrakBit--)
+		{
+			no = (tbit >> 3);
+			if ((tbit & 7) == 0) res[no] = 1;
+			else
+			{
+				res[no] <<= 1;
+				res[no]++;
+			}
+			tbit++;
+		}
+	}
+	else
+	{
+		i64 no = (tbit >> 3);
 		if ((tbit & 7) == 0) res[no] = 1;
 		else
 		{

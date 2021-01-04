@@ -771,15 +771,15 @@ void test_compression()
 
 	auto t = std::chrono::high_resolution_clock::now();
 	uchar kk = 0;
-	arithmetic_coding2(data, res);
-	//	AC_pak(data, res);
-	//kk = ppm(data, res, 16); // 16
+	arithmetic_coding(data, res);
+//	AC_pak64(data, res);
+//	kk = ppm(data, res, 16); // 16
 	std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - t;
 	show_message("dt", dt.count() / 1000000);
 	show_message("сжатый размер "+ std::to_string(res.size() - (kk > 0)) + "." + std::to_string((int)kk));
 
 	arithmetic_decoding(res, data2);
-	//	data2 = AC_unpak(res);
+//	data2 = AC_unpak(res);
 	show_message("расжатый размер", (i64)data2.size());
 
 	if (data2.size() != data.size()) return;
