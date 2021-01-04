@@ -145,75 +145,7 @@ uchar ppm(const std::vector<uchar>& data, std::vector<uchar>& res, u64 g)
 	return r1n;
 }
 
-void arithmetic_coding(const std::vector<uchar>& data, std::vector<uchar>& res)
-{
-	res.clear();
-	if (data.empty()) return;
-	u64 bad_bit = 0; // количество плохих бит
-	uchar bit_size = 0;
-	u64 s2 = data.size();
-	res.reserve(s2 + 100);
-	while (s2) { bit_size++; s2 >>= 1; }
-	uchar r1 = bit_size - 1; // активный байт
-	uchar r1n = 6; // количество бит в активном байте
-	auto otgruz = [&](uchar bit)
-	{
-		r1 = (r1 << 1) + bit;
-		if (++r1n == 8)
-		{
-			res.push_back(r1);
-			r1 = r1n = 0;
-		}
-	};
-	for (uchar i = 0; i < bit_size; i++) otgruz((data.size() >> i) & 1);
-	u64 frequency[256]; // частоты
-	for (auto& i : frequency) i = 1;
-	u64 summ_frequency = 256;
-	u64 begin = h0; // начало рабочего диапазона
-	u64 end = h4; // конец рабочего диапазона
-	for (u64 c : data)
-	{
-		u64 ed = end - begin;
-
-		u64 chs = 0;
-		for (i64 i = 0; i < (i64)c; i++) chs += frequency[i];
-
-		end = begin + ed * (chs + frequency[c]) / summ_frequency;
-		begin += ed * chs / summ_frequency;
-		for (;;)
-		{
-			if (end <= h2)
-			{
-				otgruz(0);
-				while (bad_bit) { otgruz(1); bad_bit--; }
-				begin <<= 1;
-				end <<= 1;
-				continue;
-			}
-			if (begin >= h2)
-			{
-				otgruz(1);
-				while (bad_bit) { otgruz(0); bad_bit--; }
-				begin = (begin - h2) << 1;
-				end = (end - h2) << 1;
-				continue;
-			}
-			if ((begin < h1) || (end > h3)) break;
-			begin = (begin - h1) << 1;
-			end = (end - h1) << 1;
-			bad_bit++;
-		}
-		frequency[c]++;
-		summ_frequency++;
-	}
-	uchar c = ((begin <= h1) && (end >= h2));
-	otgruz(c ^ 1);
-	otgruz(c);
-	while (bad_bit) { otgruz(c); bad_bit--; }
-	if (r1n) res.push_back(r1 << (8 - r1n));
-}
-
-_bit_vector arithmetic_coding2(const std::vector<uchar>& data)
+_bit_vector arithmetic_coding(const std::vector<uchar>& data)
 {
 	_bit_vector res;
 	if (data.empty()) return res;
@@ -267,31 +199,12 @@ _bit_vector arithmetic_coding2(const std::vector<uchar>& data)
 	return res;
 }
 
-void arithmetic_decoding(const std::vector<uchar>& data, std::vector<uchar>& res)
+void arithmetic_decoding(_bit_vector& data, std::vector<uchar>& res)
 {
 	res.clear();
 	if (data.empty()) return;
-	uchar r1 = data[0]; // активный байт
-	uchar r1n = 7; // активный бит в активном байте
-	u64 n_data = 1;
-
-	auto read = [&]()
-	{
-		uchar rr = (r1 >> r1n) & 1;
-		if (r1n > 0)
-			r1n--;
-		else
-		{
-			if (n_data < data.size()) r1 = data[n_data++];
-			r1n = 7;
-		}
-		return rr;
-	};
-
-	uchar bit_size = (r1 >> 2) + 1;
-	r1n -= 6;
-	u64 raz = 0;
-	for (int i = 0; i < bit_size; i++) raz += (((u64)read()) << i);
+	uchar bit_size = data.popn(6) + 1;
+	u64 raz = data.popn(bit_size);
 	res.reserve(raz);
 
 	u64 frequency[257]; // частичные суммы
@@ -316,7 +229,7 @@ void arithmetic_decoding(const std::vector<uchar>& data, std::vector<uchar>& res
 
 	for (;;)
 	{
-		uchar bit = read();
+		uchar bit = data.pop1();
 		gl >>= 1;
 		if (bit) begin += gl; else end -= gl;
 
