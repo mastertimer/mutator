@@ -192,10 +192,9 @@ _bit_vector arithmetic_coding(const std::vector<uchar>& data)
 		frequency[c]++;
 		summ_frequency++;
 	}
-	uchar c = ((begin <= h1) && (end >= h2));
+	u64 c = ((begin <= h1) && (end >= h2));
 	res.push1(c ^ 1);
-	res.push1(c);
-	res.pushnod(c, bad_bit);
+	res.pushnod(c, bad_bit + 1);
 	return res;
 }
 
@@ -437,118 +436,6 @@ void arithmetic_decoding2(_bit_vector& data, std::vector<uchar>& res)
 	}
 }
 
-void AC_pak(const std::vector<uchar>& data, std::vector<uchar>& res)
-{
-	unsigned int tbit = 0;
-	int L = data.size();
-	res.resize(L + 666);
-	unsigned int dv[257], vdv = 257;
-	for (int i = 0; i < 257; i++) dv[i] = 1;
-	unsigned int n = 0, dn = 0x80000000;
-	int BrakBit = 0;
-	for (int i = 0; i <= L; i++)
-	{
-		int c = (i < L) ? data[i] : 256;
-		unsigned int v = 0;
-		for (int j = 0; j < c; j++) v += dv[j];
-		n = n + (unsigned long long)dn * v / vdv;
-		dn = (unsigned long long)dn * dv[c] / vdv;
-		for (;;)
-		{
-			if (n + dn <= 0x40000000)
-			{
-				int no = (tbit >> 3);
-				if ((tbit & 7) == 0) res[no] = 0;
-				else res[no] <<= 1;
-				tbit++;
-				while (BrakBit--)
-				{
-					no = (tbit >> 3);
-					if ((tbit & 7) == 0) res[no] = 1;
-					else
-					{
-						res[no] <<= 1;
-						res[no]++;
-					}
-					tbit++;
-				}
-				BrakBit = 0;
-			}
-			else
-				if (n >= 0x40000000)
-				{
-					n -= 0x40000000;
-					int no = (tbit >> 3);
-					if ((tbit & 7) == 0) res[no] = 1;
-					else
-					{
-						res[no] <<= 1;
-						res[no]++;
-					}
-					tbit++;
-					while (BrakBit--)
-					{
-						no = (tbit >> 3);
-						if ((tbit & 7) == 0) res[no] = 0;
-						else res[no] <<= 1;
-						tbit++;
-					}
-					BrakBit = 0;
-				}
-				else
-					if ((n >= 0x20000000) && (n + dn <= 0x60000000))
-					{
-						BrakBit++;
-						n -= 0x20000000;
-					}
-					else break;
-			n <<= 1;
-			dn <<= 1;
-		}
-		dv[c]++;
-		vdv++;
-	}
-	BrakBit++;
-	if (n < 0x20000000)
-	{
-		int no = (tbit >> 3);
-		if ((tbit & 7) == 0) res[no] = 0;
-		else res[no] <<= 1;
-		tbit++;
-		while (BrakBit--)
-		{
-			no = (tbit >> 3);
-			if ((tbit & 7) == 0) res[no] = 1;
-			else
-			{
-				res[no] <<= 1;
-				res[no]++;
-			}
-			tbit++;
-		}
-	}
-	else
-	{
-		int no = (tbit >> 3);
-		if ((tbit & 7) == 0) res[no] = 1;
-		else
-		{
-			res[no] <<= 1;
-			res[no]++;
-		}
-		tbit++;
-		while (BrakBit--)
-		{
-			no = (tbit >> 3);
-			if ((tbit & 7) == 0) res[no] = 0;
-			else res[no] <<= 1;
-			tbit++;
-		}
-	}
-	if (tbit & 7) res[(tbit >> 3)] <<= 8 - (tbit & 7);
-	res.resize(((tbit - 1) >> 3) + 1);
-}
-
 void AC_pak64(const std::vector<uchar>& data, std::vector<uchar>& res)
 {
 	u64 tbit = 0;
@@ -661,20 +548,20 @@ void AC_pak64(const std::vector<uchar>& data, std::vector<uchar>& res)
 	res.resize(((tbit - 1) >> 3) + 1);
 }
 
-std::vector<unsigned char> AC_unpak(std::vector<unsigned char>& A)
+std::vector<unsigned char> AC_unpak64(std::vector<unsigned char>& A)
 {
 	std::vector<unsigned char> Re;
-	unsigned int tbit = 0;
-	int L = A.size();
+	u64 tbit = 0;
+	i64 L = A.size();
 	Re.resize(L + 666);
-	int zp = 0;
-	unsigned int dv[257], vdv = 257;
-	for (int i = 0; i < 257; i++) dv[i] = 1;
-	unsigned int n = 0, dn = 0x80000000, x = 0;
-	for (int i = 1; i <= 31; i++)
+	i64 zp = 0;
+	u64 dv[257], vdv = 257;
+	for (i64 i = 0; i < 257; i++) dv[i] = 1;
+	u64 n = 0, dn = 0x80000000, x = 0;
+	for (i64 i = 1; i <= 31; i++)
 	{
 		x <<= 1;
-		int no = (tbit >> 3) + 1;
+		i64 no = (tbit >> 3) + 1;
 		if (no <= L)
 			x += ((unsigned char)A[no - 1] >> (7 - (tbit & 7))) & 1;
 		else
@@ -683,10 +570,10 @@ std::vector<unsigned char> AC_unpak(std::vector<unsigned char>& A)
 	}
 	for (;;)
 	{
-		unsigned int y;
+		u64 y;
 		y = ((unsigned long long)(x - n + 1) * vdv - 1) / dn;
-		int c;
-		unsigned int v = 0;
+		i64 c;
+		u64 v = 0;
 		for (c = 0; y >= (v += dv[c]); c++);
 		v -= dv[c];
 		n = n + (unsigned long long)dn * v / vdv;
@@ -712,7 +599,7 @@ std::vector<unsigned char> AC_unpak(std::vector<unsigned char>& A)
 			n <<= 1;
 			dn <<= 1;
 			x <<= 1;
-			int no = (tbit >> 3) + 1;
+			i64 no = (tbit >> 3) + 1;
 			if (no <= L)
 				x += (A[no - 1] >> (7 - (tbit & 7))) & 1;
 			else

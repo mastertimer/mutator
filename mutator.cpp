@@ -632,22 +632,22 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 
 void test_compression()
 {
-	std::vector<uchar> data, data2, res;
-//	_bit_vector res;
+	std::vector<uchar> data, data2;
+	_bit_vector res;
 	load_file(L"e:\\mutator.cpp", data);
 	show_message("загружено", (i64)data.size());
 
-	auto t = std::chrono::high_resolution_clock::now();
 	uchar kk = 0;
-//	res = arithmetic_coding(data);
-	AC_pak64(data, res);
+	res = arithmetic_coding(data);
+//	AC_pak64(data, res);
 //	kk = ppm(data, res, 16); // 16
-	std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - t;
-	show_message("dt", dt.count() / 1000000);
 	show_message("сжатый размер "+ std::to_string(res.size() - (kk > 0)) + "." + std::to_string((int)kk));
 
-//	arithmetic_decoding2(res, data2);
-	data2 = AC_unpak(res);
+	auto t = std::chrono::high_resolution_clock::now();
+	arithmetic_decoding2(res, data2);
+//	data2 = AC_unpak64(res);
+	std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - t;
+	show_message("dt", dt.count() / 1000000);
 	show_message("расжатый размер", (i64)data2.size());
 
 	if (data2.size() != data.size()) return;
