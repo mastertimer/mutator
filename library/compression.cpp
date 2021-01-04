@@ -239,7 +239,7 @@ void arithmetic_coding2(const std::vector<uchar>& data, _bit_vector& res)
 			if (end <= h2)
 			{
 				res.push1(0);
-				while (bad_bit) { res.push1(1); bad_bit--; }
+				if (bad_bit) { res.pushnod(1, bad_bit); bad_bit = 0; }
 				begin <<= 1;
 				end <<= 1;
 				continue;
@@ -247,7 +247,7 @@ void arithmetic_coding2(const std::vector<uchar>& data, _bit_vector& res)
 			if (begin >= h2)
 			{
 				res.push1(1);
-				while (bad_bit) { res.push1(0); bad_bit--; }
+				if (bad_bit) { res.pushnod(0, bad_bit); bad_bit = 0; }
 				begin = (begin - h2) << 1;
 				end = (end - h2) << 1;
 				continue;
@@ -263,7 +263,7 @@ void arithmetic_coding2(const std::vector<uchar>& data, _bit_vector& res)
 	uchar c = ((begin <= h1) && (end >= h2));
 	res.push1(c ^ 1);
 	res.push1(c);
-	while (bad_bit) { res.push1(c); bad_bit--; }
+	res.pushnod(c, bad_bit);
 }
 
 void arithmetic_decoding(const std::vector<uchar>& data, std::vector<uchar>& res)

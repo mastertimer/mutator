@@ -168,12 +168,30 @@ void _bit_vector::push1(u64 a) noexcept
 	data.back() |= (a << bit++);
 }
 
+void _bit_vector::pushnod(u64 a, u64 n) noexcept
+{
+	u64 aa = (a & 1) ? 0xffffffffffffffff : 0;
+	if (n <= 64)
+	{
+		pushn(aa, n);
+		return;
+	}
+	if (bit < 64)
+	{
+		u64 nn = 64 - bit;
+		pushn(aa, nn);
+		n -= nn;
+	}
+	for (; n >= 64; n -= 64) pushn(aa, 64);
+	pushn(aa, n);
+}
+
 void _bit_vector::pushn(u64 a, uchar n) noexcept
 {
+	if (n == 0) return;
 	a &= mask1(n);
 	if (bit == 64)
 	{
-		if (n == 0) return;
 		data.push_back(a);
 		bit = n;
 		return;

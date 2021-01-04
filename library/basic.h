@@ -176,6 +176,7 @@ struct _bit_vector // вектор с побитовой записью / чте
 
 	void push1(u64 a) noexcept; // добавить 1 бит
 	void pushn(u64 a, uchar n) noexcept; // добавить n бит
+	void pushnod(u64 a, u64 n) noexcept; // добавить n одинаковых бит
 	void pushn1(u64 a) noexcept; // добавить ограниченное количество бит, 1xxxxxxxx
 	u64 pop1() noexcept; // прочитать 1 бит
 	u64 popn(uchar n) noexcept; // прочитать n бит
