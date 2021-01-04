@@ -156,16 +156,15 @@ _bit_vector arithmetic_coding(const std::vector<uchar>& data)
 	u64 frequency[256]; // частоты
 	for (auto& i: frequency) i = 1;
 	u64 summ_frequency = 256;
-	u64 begin = h0; // начало рабочего диапазона
-	u64 end = h4; // конец рабочего диапазона
+	u64 begin = h0, end = h4; // рабочий диапазон
 	u64 bad_bit = 0; // количество плохих бит
 	for (u64 c : data)
 	{
 		u64 chs = 0;
-		for (i64 i = 0; i < (i64)c; i++) chs += frequency[i];
+		for (u64 i = 0; i < c; i++) chs += frequency[i];
 		u64 ed = end - begin;
-		end = begin + ed * (chs + frequency[c]) / summ_frequency;
-		begin += ed * chs / summ_frequency;
+		end = begin + ed * (chs + frequency[c]++) / summ_frequency;
+		begin += ed * chs / summ_frequency++;
 		for (;;)
 		{
 			if ((end <= h2) || (begin >= h2))
@@ -182,8 +181,6 @@ _bit_vector arithmetic_coding(const std::vector<uchar>& data)
 			end = (end - h1) << 1;
 			bad_bit++;
 		}
-		frequency[c]++;
-		summ_frequency++;
 	}
 	u64 c = ((begin <= h1) && (end >= h2));
 	res.push1(c ^ 1);
