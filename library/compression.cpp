@@ -213,10 +213,10 @@ void arithmetic_coding(const std::vector<uchar>& data, std::vector<uchar>& res)
 	if (r1n) res.push_back(r1 << (8 - r1n));
 }
 
-void arithmetic_coding2(const std::vector<uchar>& data, _bit_vector& res)
+_bit_vector arithmetic_coding2(const std::vector<uchar>& data)
 {
-	res.clear();
-	if (data.empty()) return;
+	_bit_vector res;
+	if (data.empty()) return res;
 	u64 bit_size = 0;
 	for (; bit_size < 64; bit_size++) if ((data.size() >> bit_size) == 1) break;
 	res.pushn(bit_size, 6);
@@ -264,6 +264,7 @@ void arithmetic_coding2(const std::vector<uchar>& data, _bit_vector& res)
 	res.push1(c ^ 1);
 	res.push1(c);
 	res.pushnod(c, bad_bit);
+	return res;
 }
 
 void arithmetic_decoding(const std::vector<uchar>& data, std::vector<uchar>& res)

@@ -772,7 +772,7 @@ void test_compression()
 
 	auto t = std::chrono::high_resolution_clock::now();
 	uchar kk = 0;
-	arithmetic_coding2(data, res);
+	res = arithmetic_coding2(data);
 //	AC_pak64(data, res);
 //	kk = ppm(data, res, 16); // 16
 	std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - t;
