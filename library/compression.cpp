@@ -168,20 +168,13 @@ _bit_vector arithmetic_coding(const std::vector<uchar>& data)
 		begin += ed * chs / summ_frequency;
 		for (;;)
 		{
-			if (end <= h2)
+			if ((end <= h2) || (begin >= h2))
 			{
-				res.push1(0);
-				if (bad_bit) { res.pushnod(1, bad_bit); bad_bit = 0; }
-				begin <<= 1;
-				end <<= 1;
-				continue;
-			}
-			if (begin >= h2)
-			{
-				res.push1(1);
-				if (bad_bit) { res.pushnod(0, bad_bit); bad_bit = 0; }
-				begin = (begin - h2) << 1;
-				end = (end - h2) << 1;
+				u64 bi = (begin >= h2);
+				res.push1(bi);
+				if (bad_bit) { res.pushnod(bi ^ 1, bad_bit); bad_bit = 0; }
+				begin = (begin - h2 * bi) << 1;
+				end = (end - h2 * bi) << 1;
 				continue;
 			}
 			if ((begin < h1) || (end > h3)) break;

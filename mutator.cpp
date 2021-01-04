@@ -638,15 +638,17 @@ void test_compression()
 	show_message("загружено", (i64)data.size());
 
 	uchar kk = 0;
+	auto t = std::chrono::high_resolution_clock::now();
 	res = arithmetic_coding(data);
-//	AC_pak64(data, res);
+	std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - t;
+	//	AC_pak64(data, res);
 //	kk = ppm(data, res, 16); // 16
 	show_message("сжатый размер "+ std::to_string(res.size() - (kk > 0)) + "." + std::to_string((int)kk));
 
-	auto t = std::chrono::high_resolution_clock::now();
+	//auto t = std::chrono::high_resolution_clock::now();
 	arithmetic_decoding2(res, data2);
 //	data2 = AC_unpak64(res);
-	std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - t;
+	//std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - t;
 	show_message("dt", dt.count() / 1000000);
 	show_message("расжатый размер", (i64)data2.size());
 
