@@ -666,9 +666,66 @@ void test_compression()
 		show_message("ошибка, символ №", nerr);
 }
 
+void test2()
+{
+	double p[256] = { 1, 1 }; // частоты (ненормированные)
+	for (auto& i : p) i = 1;
+	p[255] = 0;
+
+	constexpr i64 n = 1000000; // длина последовательности
+
+	double s = 0;
+	for (auto i : p) s += i;
+	for (auto &i : p) i /= s;
+
+	i64 c[256]; // количество символов
+	i64 ss = 0;
+	for (i64 i = 255; i > 0; i--)
+	{
+		c[i] = p[i] * n + 0.5;
+		ss += c[i];
+	}
+	c[0] = n - ss;
+
+	double e0 = 0; // идеальный размер
+	for (auto i : c)
+		if (i > 0)
+			e0 += i * log(((double)i) / n);
+	e0 /= -log(2.0);
+//	show_message(e0);
+
+	double k = 100; // есть идеальный коэффициент!
+	double pp[256];
+	for (auto& i : pp) i = k;
+	double summ_pp = k * 256;
+
+	i64 nn = n;
+	double e = 0; // реальный размер
+
+	while (nn) // пока не исчерпаны цифры
+	{
+		i64 ii = rnd(nn);
+		i64 q = 0;
+		for (i64 i = 0; i < 256; i++) // i - сработавший символ
+		{
+			q += c[i];
+			if (ii >= q) continue;
+			e += log(pp[i] / summ_pp);
+			pp[i]++;
+			c[i]--;
+			break;
+		}
+		nn--;
+		summ_pp++;
+	}
+	e /= -log(2.0);
+	show_message((e - e0) / 8);
+}
+
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	test_compression();
+//	test_compression();
+	test2();
 }
 
 void fun34(_tetron* tt0, _tetron* tt, u64 flags)
