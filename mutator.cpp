@@ -676,7 +676,7 @@ void test2()
 
 	double s = 0;
 	for (auto i : p) s += i;
-	for (auto &i : p) i /= s;
+	for (auto& i : p) i /= s;
 
 	i64 c[256]; // количество символов
 	i64 ss = 0;
@@ -692,7 +692,7 @@ void test2()
 		if (i > 0)
 			e0 += i * log(((double)i) / n);
 	e0 /= -log(2.0);
-//	show_message(e0);
+	//	show_message(e0);
 
 	std::vector<uchar> a;
 
@@ -712,21 +712,51 @@ void test2()
 		nn--;
 	}
 
-	double k = 1; // есть идеальный коэффициент?
-	double pp[256];
-	for (auto& i : pp) i = k;
-	double summ_pp = k * 256;
+	constexpr double dk = 1.05;
 
-	double e = 0; // реальный размер
-
-	for (auto i: a) // сгенерированная заранее последовательность
+	auto calc_de = [&](double k)
 	{
-		e += log(pp[i] / summ_pp);
-		pp[i]++;
-		summ_pp++;
+		double pp[256];
+		for (auto& i : pp) i = k;
+		double summ_pp = k * 256;
+
+		double e = 0; // реальный размер
+
+		for (auto i : a) // сгенерированная заранее последовательность
+		{
+			e += log(pp[i] / summ_pp);
+			pp[i]++;
+			summ_pp++;
+		}
+		e /= -log(2.0);
+		return (e - e0) / 8;
+	};
+
+	// подбор идельного k
+	double k = 1;
+	double e = calc_de(k);
+	for (;;)
+	{
+		double k1 = k * dk;
+		double e1 = calc_de(k1);
+		if (e1 < e)
+		{
+			e = e1;
+			k = k1;
+			continue;
+		}
+		k1 = k / dk;
+		e1 = calc_de(k1);
+		if (e1 < e)
+		{
+			e = e1;
+			k = k1;
+			continue;
+		}
+		break;
 	}
-	e /= -log(2.0);
-	show_message((e - e0) / 8);
+	show_message("k", k);
+	show_message("e", e);
 }
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
