@@ -4,6 +4,19 @@
 #include <sstream>
 #include <iomanip>
 
+i64 bit_for_value(u64 k) // k - количество чисел. (1) = 0, (2) = 1, (4) = 2
+{
+	if (k == 0) return 0;
+	k--;
+	i64 n = 0;
+	while (k)
+	{
+		n++;
+		k >>= 1;
+	}
+	return n;
+}
+
 void os_pordis(double min, double max, i64 maxN, double& mi, double& step, double min_step)
 {
 	i64 n;

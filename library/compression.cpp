@@ -148,9 +148,7 @@ uchar ppm(const std::vector<uchar>& data, std::vector<uchar>& res, u64 g)
 _bit_vector arithmetic_coding(const std::vector<uchar>& data)
 {
 	_bit_vector res;
-	if (data.empty()) return res;
-	u64 bit_size = 0;
-	for (; bit_size < 64; bit_size++) if ((data.size() >> bit_size) == 1) break;
+	u64 bit_size = bit_for_value(data.size() + 1);
 	res.pushn(bit_size, 6);
 	res.pushn(data.size(), bit_size + 1);
 	u64 frequency[256]; // частоты

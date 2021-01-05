@@ -53,6 +53,8 @@ inline std::wstring exe_path; // путь к запущенному exe файл
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+i64 bit_for_value(u64 k); // k - количество чисел. (1) = 0, (2) = 1, (4) = 2
+
 void to_clipboard(astr text);
 void os_pordis(double min, double max, i64 maxN, double& mi, double& step, double min_step = 0.0);
 
