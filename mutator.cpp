@@ -712,8 +712,6 @@ void test2()
 		nn--;
 	}
 
-	constexpr double dk = 1.05;
-
 	auto calc_de = [&](double k)
 	{
 		double pp[256];
@@ -733,6 +731,7 @@ void test2()
 	};
 
 	// подбор идельного k
+	double dk = 2;
 	double k = 1;
 	double e = calc_de(k);
 	for (;;)
@@ -755,6 +754,29 @@ void test2()
 		}
 		break;
 	}
+	// еще разочек
+	dk = 1.02;
+	for (;;)
+	{
+		double k1 = k * dk;
+		double e1 = calc_de(k1);
+		if (e1 < e)
+		{
+			e = e1;
+			k = k1;
+			continue;
+		}
+		k1 = k / dk;
+		e1 = calc_de(k1);
+		if (e1 < e)
+		{
+			e = e1;
+			k = k1;
+			continue;
+		}
+		break;
+	}
+
 	show_message("k", k);
 	show_message("e", e);
 }
