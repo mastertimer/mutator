@@ -150,7 +150,7 @@ _bit_vector arithmetic_coding(const std::vector<uchar>& data)
 	_bit_vector res;
 	u64 bit_size = bit_for_value(data.size() + 1);
 	res.pushn(bit_size, 6);
-	res.pushn(data.size(), bit_size + 1);
+	res.pushn(data.size(), bit_size);
 	u64 frequency[256]; // частоты
 	for (auto& i: frequency) i = 1;
 	u64 summ_frequency = 256;
@@ -190,7 +190,7 @@ void arithmetic_decoding(_bit_vector& data, std::vector<uchar>& res)
 {
 	res.clear();
 	if (data.empty()) return;
-	uchar bit_size = data.popn(6) + 1;
+	uchar bit_size = data.popn(6);
 	u64 raz = data.popn(bit_size);
 	res.reserve(raz);
 
@@ -309,7 +309,7 @@ void arithmetic_decoding2(_bit_vector& data, std::vector<uchar>& res)
 {
 	res.clear();
 	if (data.empty()) return;
-	uchar bit_size = data.popn(6) + 1;
+	uchar bit_size = data.popn(6);
 	u64 raz = data.popn(bit_size);
 	res.reserve(raz);
 
