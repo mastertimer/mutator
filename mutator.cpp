@@ -694,14 +694,9 @@ void test2()
 	e0 /= -log(2.0);
 //	show_message(e0);
 
-	double k = 100; // есть идеальный коэффициент!
-	double pp[256];
-	for (auto& i : pp) i = k;
-	double summ_pp = k * 256;
+	std::vector<uchar> a;
 
 	i64 nn = n;
-	double e = 0; // реальный размер
-
 	while (nn) // пока не исчерпаны цифры
 	{
 		i64 ii = rnd(nn);
@@ -710,12 +705,24 @@ void test2()
 		{
 			q += c[i];
 			if (ii >= q) continue;
-			e += log(pp[i] / summ_pp);
-			pp[i]++;
+			a.push_back(i);
 			c[i]--;
 			break;
 		}
 		nn--;
+	}
+
+	double k = 1; // есть идеальный коэффициент?
+	double pp[256];
+	for (auto& i : pp) i = k;
+	double summ_pp = k * 256;
+
+	double e = 0; // реальный размер
+
+	for (auto i: a) // сгенерированная заранее последовательность
+	{
+		e += log(pp[i] / summ_pp);
+		pp[i]++;
 		summ_pp++;
 	}
 	e /= -log(2.0);
