@@ -669,8 +669,8 @@ void test_compression()
 void test2()
 {
 	double p[256] = { 1, 1 }; // частоты (ненормированные)
-	for (auto& i : p) i = 1;
-	p[255] = 0;
+//	for (auto& i : p) i = 1;
+//	p[255] = 0;
 
 	constexpr i64 n = 1000000; // длина последовательности
 
@@ -692,7 +692,7 @@ void test2()
 		if (i > 0)
 			e0 += i * log(((double)i) / n);
 	e0 /= -log(2.0);
-	//	show_message(e0);
+	show_message("e0 (%)", 100.0 * e0 / (8 * n));
 
 	std::vector<uchar> a;
 
