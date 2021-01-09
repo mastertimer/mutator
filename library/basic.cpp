@@ -2130,6 +2130,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 	}
 
 	xxxyyy* yyay_1 = &(yy[ay]);
+	if (ay > 0) yyay_1 = &(yy[ay - 1]); //!!!! исправляет ошибку, но возможно что-то портит
 	xxxyyy* yyay = &(yy[ay]);
 	for (i64 y = y1; y <= y2; y++)
 	{
