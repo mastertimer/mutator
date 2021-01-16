@@ -449,7 +449,7 @@
 			"id": 41,
 			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
 			"checked": 0,
-			"hint": "создать _g_tetron2",
+			"hint": "создать _view_tetron",
 			"picture": [
 				"007e70c0818b200080100060080010c4fffbc2ff03021840021840011880011880c1ff83c1ff83011880011880021840021840c2ff43c4ff23080010100008200004c08103007e00"
 			],
@@ -5619,7 +5619,7 @@
 			]
 		},
 		{
-			"name": "_g_tetron2",
+			"name": "_view_tetron",
 			"id": 555,
 			"local_area": { "x": { "min": 0, "max": 24 }, "y": { "min": 0, "max": 24 } },
 			"links": [

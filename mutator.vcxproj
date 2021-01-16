@@ -171,6 +171,7 @@
     <ClCompile Include="sable\mediator.cpp" />
     <ClCompile Include="sable\sable.cpp" />
     <ClCompile Include="sable\sable_stat.cpp" />
+    <ClCompile Include="tetrons\cfgt.cpp" />
     <ClCompile Include="tetrons\tetron.cpp" />
     <ClCompile Include="tetrons\tetron2.cpp" />
   </ItemGroup>
@@ -184,6 +185,7 @@
     <ClInclude Include="sable\mediator.h" />
     <ClInclude Include="sable\sable.h" />
     <ClInclude Include="sable\sable_stat.h" />
+    <ClInclude Include="tetrons\cfgt.h" />
     <ClInclude Include="tetrons\tetron.h" />
     <ClInclude Include="tetrons\tetron2.h" />
   </ItemGroup>

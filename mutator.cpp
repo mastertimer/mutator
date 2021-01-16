@@ -13,6 +13,7 @@
 
 #include "sable.h"
 #include "tetron2.h"
+#include "cfgt.h"
 #include "compression.h"
 #include "mutator.h"
 
@@ -653,7 +654,7 @@ void test_compression()
 
 	if (data2.size() != data.size()) return;
 	i64 nerr = -1;
-	for (i64 i = 0; i < data.size(); i++)
+	for (i64 i = 0; i < (i64)data.size(); i++)
 		if (data[i] != data2[i])
 		{
 			nerr = i;
@@ -1198,7 +1199,7 @@ _tetron* create_tetron(const std::string& name)
 		make(_g_froglif),
 		make(_g_scrollbar),
 		make(_g_color_ring),
-		make(_g_tetron2),
+		make(_view_tetron),
 		make(_t_string),
 		make(_g_edit_string),
 		make(_t_int),
@@ -1241,7 +1242,7 @@ _tetron* create_tetron(uchar tipt)
 	case 15: return new _t_xy;                // 0x30
 	case 16: return new _g_scrollbar;         // 0xF8
 	case 17: return new _g_color_ring;        // 0x72
-	case 18: return new _g_tetron2;           // 0xFF
+	case 18: return new _view_tetron;           // 0xFF
 
 	case 24: return new _t_string;            // 0x10
 	case 25: return new _g_edit_string;       // 0xFB

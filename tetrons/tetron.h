@@ -1088,26 +1088,6 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _molecule
-{
-	_id tetron; // тетрон
-	_id tr_t;
-};
-
-struct _g_tetron2 : public _t_go
-{
-	std::wstring hint;
-	std::vector<_molecule> mo;
-
-	_g_tetron2() { local_area = { {0, 24}, {0, 24} }; }
-	uchar type() { return 18; }
-	int get_froglif() { return 0xFF; }
-	void ris2(_trans tr, bool final) override;
-	double final_radius()  override { return 21.0; } // минимальный полуразмер, после которого не рисуется структура
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 template <typename _t>
 _t* find1_plus_gtetron(_tetron* tet, u64 flags)
 {
