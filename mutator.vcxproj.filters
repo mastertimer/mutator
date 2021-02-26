@@ -50,9 +50,6 @@
     <ClCompile Include="tetrons\tetron.cpp">
       <Filter>Исходные файлы\tetrons</Filter>
     </ClCompile>
-    <ClCompile Include="tetrons\tetron2.cpp">
-      <Filter>Исходные файлы\tetrons</Filter>
-    </ClCompile>
     <ClCompile Include="library\compression.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
@@ -74,9 +71,6 @@
       <Filter>Исходные файлы\sable</Filter>
     </ClInclude>
     <ClInclude Include="tetrons\tetron.h">
-      <Filter>Исходные файлы\tetrons</Filter>
-    </ClInclude>
-    <ClInclude Include="tetrons\tetron2.h">
       <Filter>Исходные файлы\tetrons</Filter>
     </ClInclude>
     <ClInclude Include="mult.h">

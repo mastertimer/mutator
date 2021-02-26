@@ -32,7 +32,7 @@
 #include <chrono>
 
 #include "sable.h"
-#include "tetron2.h"
+#include "tetron.h"
 #include "compression.h"
 #include "mutator.h"
 

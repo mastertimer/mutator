@@ -172,7 +172,6 @@
     <ClCompile Include="sable\sable.cpp" />
     <ClCompile Include="sable\sable_stat.cpp" />
     <ClCompile Include="tetrons\tetron.cpp" />
-    <ClCompile Include="tetrons\tetron2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\basic.h" />
@@ -185,7 +184,6 @@
     <ClInclude Include="sable\sable.h" />
     <ClInclude Include="sable\sable_stat.h" />
     <ClInclude Include="tetrons\tetron.h" />
-    <ClInclude Include="tetrons\tetron2.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mutator.rc" />
