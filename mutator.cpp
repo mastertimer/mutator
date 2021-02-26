@@ -13,13 +13,12 @@
 
 #include "sable.h"
 #include "tetron2.h"
-#include "cfgt.h"
 #include "compression.h"
 #include "mutator.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_stack clipboard; // буффер обмена
+_stack clipboard; // буфер обмена
 
 void fun03(_tetron* tt0, _tetron* tt, u64 flags);
 
@@ -1199,7 +1198,6 @@ _tetron* create_tetron(const std::string& name)
 		make(_g_froglif),
 		make(_g_scrollbar),
 		make(_g_color_ring),
-		make(_view_tetron),
 		make(_t_string),
 		make(_g_edit_string),
 		make(_t_int),
@@ -1242,7 +1240,6 @@ _tetron* create_tetron(uchar tipt)
 	case 15: return new _t_xy;                // 0x30
 	case 16: return new _g_scrollbar;         // 0xF8
 	case 17: return new _g_color_ring;        // 0x72
-	case 18: return new _view_tetron;           // 0xFF
 
 	case 24: return new _t_string;            // 0x10
 	case 25: return new _g_edit_string;       // 0xFB
