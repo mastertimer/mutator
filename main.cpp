@@ -1,13 +1,11 @@
 ﻿#include <filesystem>
 
 #include "mutator.h"
-#include "mult.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 constexpr wchar_t tetfile[] = L"..\\..\\tetrons.txt";
 HCURSOR g_cu = LoadCursor(0, IDC_ARROW); // активный курсор
-bool view_mult = false; // режим анимации
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -41,7 +39,6 @@ void change_window_text(HWND hwnd)
 
 void paint(HWND hwnd)
 {
-	if (view_mult) return;
 	change_window_text(hwnd);
 	HDC hdc = GetDC(hwnd);
 	RECT rect;
@@ -49,21 +46,6 @@ void paint(HWND hwnd)
 	mutator::draw({ rect.right, rect.bottom });
 	BitBlt(hdc, 0, 0, rect.right, rect.bottom, master_bm.hdc, 0, 0, SRCCOPY);
 	ReleaseDC(hwnd, hdc);
-}
-
-void paint_mult(HWND hwnd)
-{
-	static auto t = (std::chrono::high_resolution_clock::now() - std::chrono::high_resolution_clock::now()) * 0;
-	if (!view_mult) return;
-	auto t0 = std::chrono::high_resolution_clock::now();
-	HDC hdc = GetDC(hwnd);
-	RECT rect;
-	GetClientRect(hwnd, &rect);
-	_bitmap* bm = draw_mult();
-	bm->text16(0, 0, std::to_string(t.count() / 1000000), c_max);
-	BitBlt(hdc, 0, 0, rect.right, rect.bottom, bm->hdc, 0, 0, SRCCOPY);
-	ReleaseDC(hwnd, hdc);
-	t = std::chrono::high_resolution_clock::now() - t0;
 }
 
 void init_shift(WPARAM wparam)
@@ -177,11 +159,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			run_timer = true;
 			return 0;
 		}
-		if (wParam == VK_F3)
-		{
-			view_mult = !view_mult;
-			return 0;
-		}
 		//		InitShift(Shift);
 		*n_down_key->operator i64* () = wParam;
 		n_down_key->run(0, n_down_key, flag_run);
@@ -211,20 +188,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case 2:
 			n_timer250->run(0, n_timer250, flag_run);
 			break;
-		case 3:
-			paint_mult(hWnd);
-			break;
 		}
 		return 0;
 	case WM_CREATE:
 		SetTimer(hWnd, 1, 1000, 0); // общий с отрисовкой
 		SetTimer(hWnd, 2, 250, 0); // более быстрый, без отрисовки
-		SetTimer(hWnd, 3, 50, 0); // для анимации
 		return 0;
 	case WM_DESTROY:
 		KillTimer(hWnd, 1);
 		KillTimer(hWnd, 2);
-		KillTimer(hWnd, 3);
 		PostQuitMessage(0);
 		return 0;
 	}

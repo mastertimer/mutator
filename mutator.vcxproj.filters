@@ -29,9 +29,6 @@
     <ClCompile Include="mutator.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="mult.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="sable\sable.cpp">
       <Filter>Исходные файлы\sable</Filter>
     </ClCompile>
@@ -72,9 +69,6 @@
     </ClInclude>
     <ClInclude Include="tetrons\tetron.h">
       <Filter>Исходные файлы\tetrons</Filter>
-    </ClInclude>
-    <ClInclude Include="mult.h">
-      <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="mutator.h">
       <Filter>Исходные файлы</Filter>

@@ -166,7 +166,6 @@
     <ClCompile Include="library\compression.cpp" />
     <ClCompile Include="library\mathematics.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="mult.cpp" />
     <ClCompile Include="mutator.cpp" />
     <ClCompile Include="sable\mediator.cpp" />
     <ClCompile Include="sable\sable.cpp" />
@@ -177,7 +176,6 @@
     <ClInclude Include="library\basic.h" />
     <ClInclude Include="library\compression.h" />
     <ClInclude Include="library\mathematics.h" />
-    <ClInclude Include="mult.h" />
     <ClInclude Include="mutator.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="sable\mediator.h" />
