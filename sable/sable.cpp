@@ -134,6 +134,16 @@ struct _prices_curve : public _basic_curve // посекундный спрос/
 	_interval get_y(i64 n) override; // дипазон рисования по y
 };
 
+struct _prices_curve2 : public _basic_curve // посекундный спрос/предложение (цвет - дельта)
+{
+	static const int max_part = 22000; // максимально количество элементов ss
+	std::deque<_prices> part_ss; // часть супер-статистики
+	i64 begin_ss = 0; // начало куска супер-статистики
+
+	void draw(i64 n, _area area) override; // нарисовать 1 элемент
+	_interval get_y(i64 n) override; // дипазон рисования по y
+};
+
 struct _nervous_curve : public _basic_curve // нервозные шарики
 {
 	void draw(i64 n, _area area) override; // нарисовать 1 элемент
@@ -375,13 +385,14 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 
 	index.start();
 	graph->curve2.push_back(new _candle_curve);
-	graph->curve2.push_back(new _prices_curve);
-	graph->curve2.push_back(new _nervous_curve);
-	graph->curve2.push_back(new _compression_curve);
-	graph->curve2.push_back(new _linear_oracle_curve);
-	graph->curve2.push_back(new _multi_linear_oracle_curve);
-	graph->curve2.push_back(new _multi_multi_linear_oracle_curve);
-	graph->curve2.push_back(new _spectr_curve);
+	graph->curve2.push_back(new _prices_curve2);
+//	graph->curve2.push_back(new _prices_curve);
+//	graph->curve2.push_back(new _nervous_curve);
+//	graph->curve2.push_back(new _compression_curve);
+//	graph->curve2.push_back(new _linear_oracle_curve);
+//	graph->curve2.push_back(new _multi_linear_oracle_curve);
+//	graph->curve2.push_back(new _multi_multi_linear_oracle_curve);
+//	graph->curve2.push_back(new _spectr_curve);
 }
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)
@@ -1012,6 +1023,142 @@ _interval _prices_curve::get_y(i64 n)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void _prices_curve2::draw(i64 n, _area area)
+{
+	static _prices pri[61]; // цены
+	static double min, max; // разброс по y
+	min = 0;
+	max = sss.c_unpak;
+	for (auto& i : pri) i.clear();
+
+	for (i64 i = index.data[n].ncc.min; i < index.data[n].ncc.max; i++)
+	{
+		if (i < begin_ss)
+		{
+			i64 delta = begin_ss - i;
+			if (delta >= max_part)
+				part_ss.clear();
+			else
+			{
+				_prices w;
+				w.clear();
+				for (int i_ = 0; i_ < delta; i_++)
+				{
+					part_ss.push_front(w);
+					if (part_ss.size() > max_part) part_ss.pop_back();
+				}
+			}
+			begin_ss = i;
+		}
+		if (i >= begin_ss + (i64)part_ss.size())
+		{
+			_prices w;
+			w.clear();
+			i64 delta = i - (begin_ss + (int)part_ss.size()) + 1;
+			if (delta >= max_part)
+			{
+				part_ss.clear();
+				part_ss.push_back(w);
+				begin_ss = i;
+			}
+			else
+				for (int i_ = 0; i_ < delta; i_++)
+				{
+					part_ss.push_back(w);
+					if (part_ss.size() > max_part)
+					{
+						part_ss.pop_front();
+						begin_ss++;
+					}
+				}
+		}
+		i64 ii = i - begin_ss;
+		if (part_ss[ii].empty()) sss.read(i, part_ss[ii]);
+		pri[part_ss[ii].time % 60] = part_ss[ii];
+	}
+	min = index.data[n].minmin - sss.c_unpak;
+	max = index.data[n].maxmax;
+	_iinterval xx = area.x;
+	xx.min++;
+	i64 dx = xx.size();
+	if (dx < 2) return;
+	i64 step = 60;
+	if (dx >= 4) step = 30;
+	if (dx >= 6) step = 20;
+	if (dx >= 8) step = 15;
+	if (dx >= 10) step = 12;
+	if (dx >= 12) step = 10;
+	if (dx >= 20) step = 6;
+	if (dx >= 24) step = 5;
+	if (dx >= 30) step = 4;
+	if (dx >= 40) step = 3;
+	if (dx >= 60) step = 2;
+	if (dx >= 120) step = 1;
+	i64 kol = 60 / step;
+	double dd = max - min;
+	double ddy = area.y.max - area.y.min;
+	i64 ss_pr = -1;
+	for (i64 i = 0; i < kol; i++)
+	{
+		i64 ss_ = i * step;
+		while (pri[ss_].empty())
+		{
+			if (ss_ + 1 >= (i + 1) * step) break;
+			ss_++;
+		}
+		if (pri[ss_].empty()) continue;
+		i64 xx1 = xx.min + dx * i / kol;
+		i64 xx2 = xx.min + dx * (i + 1) / kol - 1;
+		if (pri[ss_].sale[3].value < pri[ss_].buy[3].value)
+		{
+			//		xx1++;
+		}
+		for (int j = roffer - 1; j >= 0; j--)
+		{
+			double ce = pri[ss_].sale[j].value * sss.c_unpak;
+			_iinterval yy(area.y.min + (max - ce) * ddy / dd, area.y.min + (max - ce + sss.c_unpak) * ddy / dd);
+			yy.min++;
+			yy.max--;
+			if (yy.empty()) continue;
+
+			uint cc = 0x40ffffff;
+			if (ss_pr >= 0)
+			{
+				if (pri[ss_].sale[j].number > pri[ss_pr].sale[j].number) cc = 0x9000ff00;
+				if (pri[ss_].sale[j].number < pri[ss_pr].sale[j].number) cc = 0x70ff0000;
+			}
+
+			master_bm.fill_rectangle({ {xx1, xx2}, yy }, cc);
+		}
+		for (int j = 0; j < roffer; j++)
+		{
+			double ce = pri[ss_].buy[j].value * sss.c_unpak;
+			_iinterval yy(area.y.min + (max - ce) * ddy / dd, area.y.min + (max - ce + sss.c_unpak) * ddy / dd);
+			yy.min++;
+			yy.max--;
+			if (yy.empty()) continue;
+
+			uint cc = 0x40ffffff;
+			if (ss_pr >= 0)
+			{
+				if (pri[ss_].buy[j].number > pri[ss_pr].buy[j].number) cc = 0xc04040ff;
+				if (pri[ss_].buy[j].number < pri[ss_pr].buy[j].number) cc = 0x70ffff00;
+			}
+
+
+			master_bm.fill_rectangle({ {xx1, xx2}, yy }, cc);
+		}
+		ss_pr = ss_;
+	}
+}
+
+_interval _prices_curve2::get_y(i64 n)
+{
+	auto a = &index.data[n];
+	return { a->minmin - sss.c_unpak, a->maxmax };
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct _latest_events // последние события !!! для нервозных предсказателей !!! удалить, если их уже нет !!!
 {
 	char event[4]; // [0] - последнее событие

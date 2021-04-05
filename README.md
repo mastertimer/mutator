@@ -1,2 +1,3 @@
 # mutator
-Artificial General Intelligence  
+self-editor
+general program
