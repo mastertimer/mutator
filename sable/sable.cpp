@@ -1115,6 +1115,8 @@ void _prices_curve2::draw(i64 n, _area area)
 		}
 		for (int j = roffer - 1; j >= 0; j--)
 		{
+			auto os = pri[ss_].sale[j].value % 10;
+			if ((os != 1) && (os != 4)) continue;
 			double ce = pri[ss_].sale[j].value * sss.c_unpak;
 			_iinterval yy(area.y.min + (max - ce) * ddy / dd, area.y.min + (max - ce + sss.c_unpak) * ddy / dd);
 			yy.min++;
@@ -1127,10 +1129,9 @@ void _prices_curve2::draw(i64 n, _area area)
 				if (pri[ss_].sale[j].number > pri[ss_pr].sale[j].number) cc = 0x9000ff00;
 				if (pri[ss_].sale[j].number < pri[ss_pr].sale[j].number) cc = 0x70ff0000;
 			}
-
-			master_bm.fill_rectangle({ {xx1, xx2}, yy }, cc);
+			if (cc != 0x40ffffff) master_bm.fill_rectangle({ {xx1, xx2}, yy }, cc);
 		}
-		for (int j = 0; j < roffer; j++)
+/*		for (int j = 0; j < roffer; j++)
 		{
 			double ce = pri[ss_].buy[j].value * sss.c_unpak;
 			_iinterval yy(area.y.min + (max - ce) * ddy / dd, area.y.min + (max - ce + sss.c_unpak) * ddy / dd);
@@ -1147,7 +1148,7 @@ void _prices_curve2::draw(i64 n, _area area)
 
 
 			master_bm.fill_rectangle({ {xx1, xx2}, yy }, cc);
-		}
+		}*/
 		ss_pr = ss_;
 	}
 }
