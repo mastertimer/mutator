@@ -63,6 +63,7 @@ bool load_file(std::wstring_view fn, char** data, i64* n);
 bool load_file(std::wstring_view fn, std::vector<uchar>& res);
 
 std::wstring string_to_wstring(std::string_view s);
+std::string wstring_to_string(std::wstring_view b);
 wstr uint64_to_wstr_hex(u64 a);
 
 std::wstring double_to_string(double a, int z);
@@ -800,6 +801,7 @@ struct _bitmap : public _picture
 	uint f_c = 0; // цвет шрифта
 	uint f_cf = 0; // цвет фона шрифта
 
+	wstr get_font_name();
 	void set_font(wstr name, bool bold);
 	void podg_font(int r); // подготовка шрифта в выводу
 	void podg_cc(uint c, uint cf); // подготовка цветов к выводу

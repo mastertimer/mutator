@@ -1266,10 +1266,18 @@ void _g_terminal::ris2(_trans tr, bool final)
 	if ((oo.y.size() < 30) || (oo.x.size() < 30)) return;
 
 
-	i64 y_sep = oo.y.max - 13; // разделительная линия
+	std::wstring old_font = master_bm.get_font_name();
+	master_bm.set_font(L"Consolas", false);
+	int font_size = 12; // минимум 12 для читабельности
+	int font_width = master_bm.size_text("0123456789", font_size).x / 10;
+
+	i64 y_sep = oo.y.max - font_size - 2; // разделительная линия
 	i64 x_text = oo.x.min + 3;
 	master_bm.line({oo.x.min, y_sep }, { oo.x.max, y_sep }, c0);
-	master_bm.text16(x_text, y_sep, "Привет! Й[цущфрдypgj)I", c_max);
+	master_bm.text(x_text, y_sep + 1, "Привет! Й[цущфрдypgj)I", font_size, c_def, 0xff000000);
+
+
+	master_bm.set_font(old_font.c_str(), false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

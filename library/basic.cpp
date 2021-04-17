@@ -804,18 +804,18 @@ bool _bitmap::resize(_isize wh)
 
 _bitmap::_bitmap(int rx3, int ry3) : _picture({ rx3, ry3 })
 {
-	font.lfHeight = 13;              // высота шрифта или символа
-	font.lfWidth = 0;               // средняя ширина символов в шрифте
-	font.lfEscapement = 0;               // угол, между вектором наклона и осью X устройства
-	font.lfOrientation = 0;               // угол, между основной линией каждого символа и осью X устройства
-	font.lfWeight = 100;             // толщина шрифта в диапазоне от 0 до 1000
-	font.lfItalic = 0;               // курсивный шрифт
-	font.lfUnderline = 0;               // подчеркнутый шрифт
-	font.lfStrikeOut = 0;               // зачеркнутый шрифт
-	font.lfCharSet = RUSSIAN_CHARSET; // набор символов
-	font.lfOutPrecision = 0;               // точность вывода
-	font.lfClipPrecision = 0;               // точность отсечения
-	font.lfQuality = 0;               // качество вывода
+	font.lfHeight         = 13;              // высота шрифта или символа
+	font.lfWidth          = 0;               // средняя ширина символов в шрифте
+	font.lfEscapement     = 0;               // угол, между вектором наклона и осью X устройства
+	font.lfOrientation    = 0;               // угол, между основной линией каждого символа и осью X устройства
+	font.lfWeight         = 100;             // толщина шрифта в диапазоне от 0 до 1000
+	font.lfItalic         = 0;               // курсивный шрифт
+	font.lfUnderline      = 0;               // подчеркнутый шрифт
+	font.lfStrikeOut      = 0;               // зачеркнутый шрифт
+	font.lfCharSet        = RUSSIAN_CHARSET; // набор символов
+	font.lfOutPrecision   = 0;               // точность вывода
+	font.lfClipPrecision  = 0;               // точность отсечения
+	font.lfQuality        = 0;               // качество вывода
 	font.lfPitchAndFamily = 0;               // ширина символов и семейство шрифта
 	memcpy(font.lfFaceName, L"Tahoma", 14);  // название шрифта
 
@@ -896,6 +896,11 @@ void _bitmap::podg_cc(uint c, uint cf)
 		else SetBkMode(hdc, TRANSPARENT);
 		f_cf = cf;
 	}
+}
+
+wstr _bitmap::get_font_name()
+{
+	return font.lfFaceName;
 }
 
 void _bitmap::set_font(wstr name, bool bold)
