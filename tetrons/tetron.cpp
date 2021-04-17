@@ -1256,6 +1256,43 @@ void _g_rect::ris2(_trans tr, bool final)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+_g_terminal::_g_terminal()
+{
+	local_area = { {0, 100}, {0, 100} };
+	key_fokus = true;
+}
+
+void _g_terminal::key_down(ushort key)
+{
+	visible_cursor = true;
+	if (key == 37) // left
+	{
+		if (cursor > 0)
+		{
+			cursor--;
+			cha_area();
+		}
+		return;
+	}
+	if (key == 39) // right
+	{
+		if (cursor < (i64)cmd.size())
+		{
+			cursor++;
+			cha_area();
+		}
+		return;
+	}
+}
+
+void _g_terminal::key_press(ushort key)
+{
+	if (key < 32) return;
+	cmd.insert(cursor, 1, key);
+	cursor++;
+	cha_area();
+}
+
 void _g_terminal::run(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	add_obl_izm(area_cursor);
@@ -1270,14 +1307,28 @@ void _g_terminal::ris2(_trans tr, bool final)
 	int font_width = master_bm.size_text("0123456789", font_size).x / 10;
 
 	_iarea oo = tr(local_area);
-	i64 x_text = oo.x.min + 3;
+	i64 otst_x = 3;
+	i64 x_text = oo.x.min + otst_x;
 	i64 y_sep = oo.y.max - font_size - 3; // разделительная линия
 	i64 y_cmd = y_sep + 1;
+	i64 cmd_vis_len = (oo.x.size() - otst_x * 2) / font_width;
+	i64 len_cmd1 = cmd.size() + 1; // +1 для курсора в конце строки
+	if (len_cmd1 - first < cmd_vis_len)
+	{
+		first = len_cmd1 - cmd_vis_len;
+		if (first < 0) first = 0;
+	}
+	if (cursor - first >= cmd_vis_len)
+	{
+		first = cursor - cmd_vis_len + 1;
+	}
+	if (cursor < first) first = cursor;
 
 	uint c2 = get_c2();
 	uint c0 = get_c();
 
-	area_cursor = { {x_text, x_text + font_width}, {y_cmd, y_cmd + font_size} };
+	area_cursor = { {x_text + (cursor - first) * font_width, x_text + (cursor - first + 1) * font_width},
+		{y_cmd, y_cmd + font_size} };
 	if (_area(area_cursor) == master_obl_izm)
 	{
 		if (visible_cursor) master_bm.fill_rectangle(area_cursor, c_maxx - 0xC0000000);
@@ -1292,7 +1343,7 @@ void _g_terminal::ris2(_trans tr, bool final)
 
 
 	master_bm.line({oo.x.min, y_sep }, { oo.x.max, y_sep }, c0);
-	master_bm.text(x_text, y_cmd, "Привет! Й[цущфрдypgj)I", font_size, c_def, 0xff000000);
+	master_bm.text(x_text, y_cmd, cmd.substr(first, cmd_vis_len).c_str(), font_size, c_def, 0xff000000);
 
 	if (visible_cursor) master_bm.fill_rectangle(area_cursor, c_maxx - 0xC0000000);
 
