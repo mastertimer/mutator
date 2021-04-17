@@ -1256,6 +1256,14 @@ void _g_rect::ris2(_trans tr, bool final)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void _g_terminal::run_cmd()
+{
+	if (cmd.empty()) return;
+	text.push_back(L"> " + cmd);
+	text.push_back(L"команда не опознана!");
+	cmd.clear();
+}
+
 _g_terminal::_g_terminal()
 {
 	local_area = { {0, 100}, {0, 100} };
@@ -1265,22 +1273,39 @@ _g_terminal::_g_terminal()
 void _g_terminal::key_down(ushort key)
 {
 	visible_cursor = true;
-	if (key == 37) // left
+	if (key == 8) // backspace
 	{
 		if (cursor > 0)
 		{
+			cmd.erase(cursor - 1LL, 1);
 			cursor--;
-			cha_area();
 		}
+		cha_area();
+		return;
+	}
+	if (key == 13) // enter
+	{
+		cursor = 0;
+		run_cmd();
+		cha_area();
+		return;
+	}
+	if (key == 37) // left
+	{
+		if (cursor > 0)	cursor--;
+		cha_area();
 		return;
 	}
 	if (key == 39) // right
 	{
-		if (cursor < (i64)cmd.size())
-		{
-			cursor++;
-			cha_area();
-		}
+		if (cursor < (i64)cmd.size()) cursor++;
+		cha_area();
+		return;
+	}
+	if (key == 46) // delete
+	{
+		if (cursor < (i64)cmd.size()) cmd.erase(cursor, 1);
+		cha_area();
 		return;
 	}
 }
@@ -1331,6 +1356,7 @@ void _g_terminal::ris2(_trans tr, bool final)
 		{y_cmd, y_cmd + font_size} };
 	if (_area(area_cursor) == master_obl_izm)
 	{
+		master_bm.text(area_cursor.x.min, y_cmd, cmd.substr(cursor, 1), font_size, c_def, 0xff000000);
 		if (visible_cursor) master_bm.fill_rectangle(area_cursor, c_maxx - 0xC0000000);
 		goto finish;
 	}
@@ -1343,9 +1369,14 @@ void _g_terminal::ris2(_trans tr, bool final)
 
 
 	master_bm.line({oo.x.min, y_sep }, { oo.x.max, y_sep }, c0);
-	master_bm.text(x_text, y_cmd, cmd.substr(first, cmd_vis_len).c_str(), font_size, c_def, 0xff000000);
+	master_bm.text(x_text, y_cmd, cmd.substr(first, cmd_vis_len), font_size, c_def, 0xff000000);
 
 	if (visible_cursor) master_bm.fill_rectangle(area_cursor, c_maxx - 0xC0000000);
+
+	for (i64 i = 1; i <= (i64)text.size(); i++)
+	{
+		master_bm.text(x_text, y_cmd - i * font_size - 2, *(text.end() - i), font_size, c_def, 0xff000000);
+	}
 
 finish:
 	master_bm.set_font(old_font.c_str(), false);

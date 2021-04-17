@@ -1169,7 +1169,7 @@ struct _g_graph : public _t_go
 
 struct _g_terminal : public _t_go
 {
-	std::vector<std::string> text;
+	std::vector<std::wstring> text;
 	std::wstring cmd; // командная строка
 	i64 cursor = 0; // позиция курсора в командной строке
 	i64 first = 0; // номер первого символа
@@ -1183,6 +1183,7 @@ struct _g_terminal : public _t_go
 	void run(_tetron* tt0, _tetron* tt, u64 flags) override;
 	void key_down(ushort key) override;
 	void key_press(ushort key) override;
+	void run_cmd(); // выволнить введенную команду
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
