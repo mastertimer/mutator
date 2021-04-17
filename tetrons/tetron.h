@@ -1170,11 +1170,16 @@ struct _g_graph : public _t_go
 struct _g_terminal : public _t_go
 {
 	std::vector<std::string> text;
+	std::string cmd; // командная строка
+	i64 cursor_cmd = 0;
+	bool visible_cursor = true;
+	_iarea area_cursor;
 
 	_g_terminal() { local_area = { {0, 100}, {0, 100} }; }
 	uchar type() override { return 18; }
 	int get_froglif() override { return 0xFC; }
 	void ris2(_trans tr, bool final) override;
+	void run(_tetron* tt0, _tetron* tt, u64 flags) override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1256,27 +1256,47 @@ void _g_rect::ris2(_trans tr, bool final)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void _g_terminal::run(_tetron* tt0, _tetron* tt, u64 flags)
+{
+	add_obl_izm(area_cursor);
+	visible_cursor = !visible_cursor;
+}
+
 void _g_terminal::ris2(_trans tr, bool final)
 {
-	_iarea oo = tr(local_area);
-	uint c2 = get_c2();
-	master_bm.fill_rectangle(oo, c2);
-	uint c0 = get_c();
-	if (((c0 >> 24) != 0x00) && (c0 != c2)) master_bm.rectangle(oo, c0);
-	if ((oo.y.size() < 30) || (oo.x.size() < 30)) return;
-
-
 	std::wstring old_font = master_bm.get_font_name();
 	master_bm.set_font(L"Consolas", false);
-	int font_size = 12; // минимум 12 для читабельности
+	int font_size = 26; // минимум 12 для читабельности
 	int font_width = master_bm.size_text("0123456789", font_size).x / 10;
 
-	i64 y_sep = oo.y.max - font_size - 2; // разделительная линия
+	_iarea oo = tr(local_area);
 	i64 x_text = oo.x.min + 3;
+	i64 y_sep = oo.y.max - font_size - 3; // разделительная линия
+	i64 y_cmd = y_sep + 1;
+
+	uint c2 = get_c2();
+	uint c0 = get_c();
+
+	area_cursor = { {x_text, x_text + font_width}, {y_cmd, y_cmd + font_size} };
+	if (_area(area_cursor) == master_obl_izm)
+	{
+		if (visible_cursor) master_bm.fill_rectangle(area_cursor, c_maxx - 0xC0000000);
+		goto finish;
+	}
+
+	master_bm.fill_rectangle(oo, c2);
+	if (((c0 >> 24) != 0x00) && (c0 != c2)) master_bm.rectangle(oo, c0);
+	if ((oo.y.size() < 30) || (oo.x.size() < 30)) goto finish;
+
+	n_timer1000->add_flags(this, flag_run, false);
+
+
 	master_bm.line({oo.x.min, y_sep }, { oo.x.max, y_sep }, c0);
-	master_bm.text(x_text, y_sep + 1, "Привет! Й[цущфрдypgj)I", font_size, c_def, 0xff000000);
+	master_bm.text(x_text, y_cmd, "Привет! Й[цущфрдypgj)I", font_size, c_def, 0xff000000);
 
+	if (visible_cursor) master_bm.fill_rectangle(area_cursor, c_maxx - 0xC0000000);
 
+finish:
 	master_bm.set_font(old_font.c_str(), false);
 }
 

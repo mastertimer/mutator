@@ -666,15 +666,17 @@ struct _area
 	_area(const _area&) = default;
 	_area(_interval x_, _interval y_) : x(x_), y(y_) {}
 	_area(_isize b) : x{ 0.0, b.x - de_i }, y{ 0.0, b.y - de_i } {}
+	_area(_iarea b) : x{ (double)b.x.min, (double)b.x.max }, y{ (double)b.y.min, (double)b.y.max } {} // !!! проверить и исправить !!!
 	_area(_xy b) : x{ b.x, b.x }, y{ b.y, b.y } {}
 
 	void operator=(const _isize b) noexcept { x = { 0, b.x - de_i }; y = { 0, b.y - de_i }; }
 
 	operator _iarea() const noexcept { return { x, y }; }
 
+	bool operator==(const _area& b) const noexcept;
 	bool operator<=(const _area& b) const noexcept;
 	bool operator<(const _area& b)  const noexcept; // внутри, грани могут касаться, но не равно
-	bool inside(const _area& b)     const noexcept;    // внутри, грани не касаются!
+	bool inside(const _area& b)     const noexcept; // внутри, грани не касаются!
 
 	void operator&=(const _area& b) noexcept { x &= b.x; y &= b.y; }
 	void operator+=(const _area& b) noexcept;
@@ -713,14 +715,14 @@ struct _trans
 	_xy  operator()(const _xy& b)    const noexcept; // применение трансформации
 	double operator()(double b)      const noexcept { return scale * b; } // применение трансформации
 
-	_trans operator*(_trans tr)      const noexcept;  // сместить и промасштабировать
-	_trans operator/(_trans tr)      const noexcept;  // обратно сместить и промасштабировать
+	_trans operator*(_trans tr)      const noexcept; // сместить и промасштабировать
+	_trans operator/(_trans tr)      const noexcept; // обратно сместить и промасштабировать
 
 	void operator*=(_trans tr)             noexcept { offset += tr.offset * scale; scale *= tr.scale; }
 	void operator/=(_trans tr); // обратно сместить и промасштабировать
 	bool operator!=(const _trans& b) const noexcept;
 
-	_trans inverse()                 const noexcept;   // обратная трансформация
+	_trans inverse()                 const noexcept; // обратная трансформация
 	_xy inverse(_xy b)               const noexcept;
 	_area inverse(const _area& b)    const noexcept;
 

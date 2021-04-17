@@ -644,6 +644,12 @@ void _area::operator+=(const _area& b) noexcept
 	if (b.y.max > this->y.max) this->y.max = b.y.max;
 }
 
+bool _area::operator==(const _area& b) const noexcept
+{
+	if (empty() && b.empty()) return true;
+	return ((x.min == b.x.min) && (x.max == b.x.max) && (y.min == b.y.min) && (y.max == b.y.max));
+}
+
 bool _area::operator<=(const _area& b) const noexcept
 {
 	if (empty()) return true;
