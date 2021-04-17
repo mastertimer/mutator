@@ -1332,6 +1332,7 @@ namespace mutator
 			tet.read("id", my_id);
 			id_tetron = my_id;
 			_tetron* tt = create_tetron(name);
+			if (tt->type() == 18) terminal = tt; // временно
 			tt->pop(tet);
 			tet.arr("links");
 			while (!tet.error)

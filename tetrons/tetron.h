@@ -232,6 +232,8 @@ inline _id n_finish_mouse_move; // АБСТРАКТНЫЙ ПРЕДОК  функ
 inline _id n_fun_up_middle;     // АБСТРАКТНЫЙ ПРЕДОК  функция отжато колесо мышки
 inline _id n_timer250;          // таймер с периодом 1000
 
+inline _id terminal; // первый попавшийся терминал при чтении файла
+
 struct _pair_tetron // пара тетронов
 {
 	_tetron* low_tetron = nullptr; // тетрон с меньшим адресом
@@ -1167,6 +1169,8 @@ struct _g_graph : public _t_go
 
 struct _g_terminal : public _t_go
 {
+	std::vector<std::string> text;
+
 	_g_terminal() { local_area = { {0, 100}, {0, 100} }; }
 	uchar type() override { return 18; }
 	int get_froglif() override { return 0xFC; }

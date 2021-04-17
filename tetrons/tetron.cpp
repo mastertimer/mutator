@@ -1258,11 +1258,18 @@ void _g_rect::ris2(_trans tr, bool final)
 
 void _g_terminal::ris2(_trans tr, bool final)
 {
-	_area oo = tr(local_area);
+	_iarea oo = tr(local_area);
 	uint c2 = get_c2();
-	master_bm.fill_rectangle({ {(i64)oo.x.min, (i64)oo.x.max + 1}, {(i64)oo.y.min, (i64)oo.y.max + 1} }, c2);
+	master_bm.fill_rectangle(oo, c2);
 	uint c0 = get_c();
 	if (((c0 >> 24) != 0x00) && (c0 != c2)) master_bm.rectangle(oo, c0);
+	if ((oo.y.size() < 30) || (oo.x.size() < 30)) return;
+
+
+	i64 y_sep = oo.y.max - 13; // разделительная линия
+	i64 x_text = oo.x.min + 3;
+	master_bm.line({oo.x.min, y_sep }, { oo.x.max, y_sep }, c0);
+	master_bm.text16(x_text, y_sep, "Привет! Й[цущфрдypgj)I", c_max);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
