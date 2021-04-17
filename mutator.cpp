@@ -1230,7 +1230,8 @@ _tetron* create_tetron(const std::string& name)
 		make(_g_button),
 		make(_g_tetron),
 		make(_sable_graph),
-		make(_g_graph)
+		make(_g_graph),
+		make(_g_terminal)
 	};
 #undef make
 	auto fun = ss_tetron.find(name);
@@ -1260,6 +1261,7 @@ _tetron* create_tetron(uchar tipt)
 	case 15: return new _t_xy;                // 0x30
 	case 16: return new _g_scrollbar;         // 0xF8
 	case 17: return new _g_color_ring;        // 0x72
+	case 18: return new _g_terminal;          // 0x73
 
 	case 24: return new _t_string;            // 0x10
 	case 25: return new _g_edit_string;       // 0xFB

@@ -1136,7 +1136,7 @@ struct _curve
 {
 	_matrix     a;             // данные - 1 или 2 стобца
 	std::string caption;       // подпись линии
-	bool        bar = false; // гистограмма
+	bool        bar   = false; // гистограмма
 	double      width = 1.5;   // толщина линии
 };
 
@@ -1165,3 +1165,12 @@ struct _g_graph : public _t_go
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+struct _g_terminal : public _t_go
+{
+	_g_terminal() { local_area = { {0, 100}, {0, 100} }; }
+	uchar type() override { return 18; }
+	int get_froglif() override { return 0xFC; }
+	void ris2(_trans tr, bool final) override;
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

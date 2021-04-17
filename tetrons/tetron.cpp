@@ -1256,6 +1256,17 @@ void _g_rect::ris2(_trans tr, bool final)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void _g_terminal::ris2(_trans tr, bool final)
+{
+	_area oo = tr(local_area);
+	uint c2 = get_c2();
+	master_bm.fill_rectangle({ {(i64)oo.x.min, (i64)oo.x.max + 1}, {(i64)oo.y.min, (i64)oo.y.max + 1} }, c2);
+	uint c0 = get_c();
+	if (((c0 >> 24) != 0x00) && (c0 != c2)) master_bm.rectangle(oo, c0);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void _g_text::set_text(std::wstring_view s2_)
 {
 	del_area();
