@@ -1172,7 +1172,6 @@ struct _g_terminal : public _t_go
 	std::vector<std::wstring> text;
 	std::wstring cmd; // командная строка
 	i64 cursor = 0; // позиция курсора в командной строке
-	i64 first = 0; // номер первого символа
 	bool visible_cursor = true;
 	_iarea area_cursor;
 

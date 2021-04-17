@@ -1259,7 +1259,7 @@ void _g_rect::ris2(_trans tr, bool final)
 void _g_terminal::run_cmd()
 {
 	if (cmd.empty()) return;
-	text.push_back(L"> " + cmd);
+	text.push_back(cmd);
 	text.push_back(L"команда не опознана!");
 	cmd.clear();
 }
@@ -1328,35 +1328,29 @@ void _g_terminal::ris2(_trans tr, bool final)
 {
 	std::wstring old_font = master_bm.get_font_name();
 	master_bm.set_font(L"Consolas", false);
-	int font_size = 26; // минимум 12 для читабельности
+	int font_size = 12; // минимум 12 для читабельности
 	int font_width = master_bm.size_text("0123456789", font_size).x / 10;
 
+	std::wstring prefix = L"> ";
+	std::wstring full_cmd = prefix + cmd;
 	_iarea oo = tr(local_area);
 	i64 otst_x = 3;
 	i64 x_text = oo.x.min + otst_x;
-	i64 y_sep = oo.y.max - font_size - 3; // разделительная линия
-	i64 y_cmd = y_sep + 1;
+	i64 y_cmd = oo.y.max - font_size - 2;
 	i64 cmd_vis_len = (oo.x.size() - otst_x * 2) / font_width;
-	i64 len_cmd1 = cmd.size() + 1; // +1 для курсора в конце строки
-	if (len_cmd1 - first < cmd_vis_len)
-	{
-		first = len_cmd1 - cmd_vis_len;
-		if (first < 0) first = 0;
-	}
-	if (cursor - first >= cmd_vis_len)
-	{
-		first = cursor - cmd_vis_len + 1;
-	}
-	if (cursor < first) first = cursor;
 
 	uint c2 = get_c2();
 	uint c0 = get_c();
 
-	area_cursor = { {x_text + (cursor - first) * font_width, x_text + (cursor - first + 1) * font_width},
-		{y_cmd, y_cmd + font_size} };
+	i64 ks = (full_cmd.size() + cmd_vis_len) / cmd_vis_len;
+
+	i64 x_cur = (cursor + (i64)prefix.size()) % cmd_vis_len;
+	i64 y_cur = (cursor + (i64)prefix.size()) / cmd_vis_len;
+	area_cursor = { {x_text + x_cur * font_width, x_text + (x_cur + 1) * font_width},
+		{y_cmd - (ks - 1 - y_cur) * font_size, y_cmd - (ks - 2 - y_cur) * font_size} };
 	if (_area(area_cursor) == master_obl_izm)
 	{
-		master_bm.text(area_cursor.x.min, y_cmd, cmd.substr(cursor, 1), font_size, c_def, 0xff000000);
+		master_bm.text(area_cursor.x.min, area_cursor.y.min, cmd.substr(cursor, 1), font_size, c_max, 0xff000000);
 		if (visible_cursor) master_bm.fill_rectangle(area_cursor, c_maxx - 0xC0000000);
 		goto finish;
 	}
@@ -1367,15 +1361,26 @@ void _g_terminal::ris2(_trans tr, bool final)
 
 	n_timer1000->add_flags(this, flag_run, false);
 
-
-	master_bm.line({oo.x.min, y_sep }, { oo.x.max, y_sep }, c0);
-	master_bm.text(x_text, y_cmd, cmd.substr(first, cmd_vis_len), font_size, c_def, 0xff000000);
+	for (i64 i = 0; i < ks; i++)
+	{
+		master_bm.text(x_text, y_cmd - (ks - 1 - i) * font_size, full_cmd.substr(i* cmd_vis_len, cmd_vis_len),
+			font_size, c_max, 0xff000000);
+	}
 
 	if (visible_cursor) master_bm.fill_rectangle(area_cursor, c_maxx - 0xC0000000);
 
-	for (i64 i = 1; i <= (i64)text.size(); i++)
+	for (i64 i = text.size() - 1; i >= 0; i--)
 	{
-		master_bm.text(x_text, y_cmd - i * font_size - 2, *(text.end() - i), font_size, c_def, 0xff000000);
+		std::wstring &s = text[i];
+		i64 ks2 = (s.size() + cmd_vis_len - 1) / cmd_vis_len;
+
+		ks += ks2;
+
+		for (i64 j = 0; j < ks2; j++)
+		{
+			master_bm.text(x_text, y_cmd - (ks - 1 - j) * font_size, s.substr(j * cmd_vis_len, cmd_vis_len),
+				font_size, c_def, 0xff000000);
+		}
 	}
 
 finish:
