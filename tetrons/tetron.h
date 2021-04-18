@@ -1175,6 +1175,7 @@ struct _g_terminal : public _t_go
 	bool visible_cursor = true;
 	_iarea area_cursor;
 	i64 scrollbar = 0; // отступ ползунка снизу
+	inline static std::wstring prefix = L"> ";
 
 	_g_terminal();
 	uchar type() override { return 18; }
@@ -1183,6 +1184,7 @@ struct _g_terminal : public _t_go
 	void run(_tetron* tt0, _tetron* tt, u64 flags) override;
 	void key_down(ushort key) override;
 	void key_press(ushort key) override;
+	bool mouse_wheel2(_xy r) override;
 	void run_cmd(); // выволнить введенную команду
 
 private:

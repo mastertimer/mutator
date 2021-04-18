@@ -1256,6 +1256,13 @@ void _g_rect::ris2(_trans tr, bool final)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+bool _g_terminal::mouse_wheel2(_xy r)
+{
+	scrollbar += *n_wheel->operator i64 * ();
+	cha_area();
+	return true;
+}
+
 void _g_terminal::run_cmd()
 {
 	if (cmd.empty()) return;
@@ -1263,7 +1270,7 @@ void _g_terminal::run_cmd()
 		text.clear();
 	else
 	{
-		text.push_back(cmd);
+		text.push_back(prefix + cmd);
 		text.push_back(L"команда не опознана!");
 	}
 	old_cmd_vis_len = -1;
@@ -1344,7 +1351,6 @@ void _g_terminal::ris2(_trans tr, bool final)
 	int font_width = master_bm.size_text("0123456789", font_size).x / 10;
 	i64 width_scrollbar = 20; // ширина полосы прокрутки
 
-	std::wstring prefix = L"> ";
 	std::wstring full_cmd = prefix + cmd;
 
 	_iarea oo = tr(local_area);
@@ -1394,13 +1400,21 @@ void _g_terminal::ris2(_trans tr, bool final)
 	if (((c0 >> 24) != 0x00) && (c0 != c2)) master_bm.rectangle(oo2, c0);
 	if ((oo2.y.size() < 30) || (oo2.x.size() < 30)) goto finish;
 
-	if (full_lines > max_lines)
-	{
+/*	if (full_lines <= max_lines)
+		scrollbar = 0;
+	else*/
+	{ // ползунок
 		master_bm.line({ oo.x.max - 1, oo.y.min }, { oo.x.max - 1, oo.y.max }, c0);
 		master_bm.line({ oo2.x.max, oo.y.min }, { oo.x.max - 2, oo.y.min }, c0);
 		master_bm.line({ oo2.x.max, oo.y.max - 1 }, { oo.x.max - 2, oo.y.max - 1 }, c0);
+
+		if (scrollbar < 0) scrollbar = 0;
+		if (scrollbar > full_lines - max_lines) scrollbar = full_lines - max_lines;
+
+		i64 tt = (oo.y.size() - otst_y * 2 - length_slider) * scrollbar / (full_lines - max_lines);
+
 		master_bm.fill_rectangle({ {oo.x.max - width_scrollbar + 2, oo.x.max - 2},
-			{oo.y.min + otst_y, oo.y.min + otst_y + length_slider} }, c0);
+			{oo.y.max - otst_y - tt - length_slider, oo.y.max - otst_y - tt} }, c0);
 	}
 
 	n_timer1000->add_flags(this, flag_run, false);
