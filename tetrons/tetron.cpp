@@ -1400,9 +1400,9 @@ void _g_terminal::ris2(_trans tr, bool final)
 	if (((c0 >> 24) != 0x00) && (c0 != c2)) master_bm.rectangle(oo2, c0);
 	if ((oo2.y.size() < 30) || (oo2.x.size() < 30)) goto finish;
 
-/*	if (full_lines <= max_lines)
+	if (full_lines <= max_lines)
 		scrollbar = 0;
-	else*/
+	else
 	{ // ползунок
 		master_bm.line({ oo.x.max - 1, oo.y.min }, { oo.x.max - 1, oo.y.max }, c0);
 		master_bm.line({ oo2.x.max, oo.y.min }, { oo.x.max - 2, oo.y.min }, c0);
@@ -1421,7 +1421,10 @@ void _g_terminal::ris2(_trans tr, bool final)
 
 	for (i64 i = 0; i < ks; i++)
 	{
-		master_bm.text(x_text, y_cmd - (ks - 1 - i) * font_size, full_cmd.substr(i* cmd_vis_len, cmd_vis_len),
+		i64 n = ks - 1 - i - scrollbar;
+		if (n < 0) break;
+		if (n >= max_lines) continue;
+		master_bm.text(x_text, y_cmd - n * font_size, full_cmd.substr(i* cmd_vis_len, cmd_vis_len),
 			font_size, c_max, 0xff000000);
 	}
 
@@ -1436,11 +1439,13 @@ void _g_terminal::ris2(_trans tr, bool final)
 
 		for (i64 j = 0; j < ks2; j++)
 		{
-			if (ks - j > max_lines) continue;
-			master_bm.text(x_text, y_cmd - (ks - 1 - j) * font_size, s.substr(j * cmd_vis_len, cmd_vis_len),
+			i64 n = ks - 1 - j - scrollbar;
+			if (n < 0) break;
+			if (n >= max_lines) continue;
+			master_bm.text(x_text, y_cmd - n * font_size, s.substr(j * cmd_vis_len, cmd_vis_len),
 				font_size, c_def, 0xff000000);
 		}
-		if (ks > max_lines) break;
+		if (ks - scrollbar > max_lines) break;
 	}
 
 finish:
