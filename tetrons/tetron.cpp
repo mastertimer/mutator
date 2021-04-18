@@ -1256,6 +1256,22 @@ void _g_rect::ris2(_trans tr, bool final)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+bool _g_terminal::mouse_down_left2(_xy r)
+{
+	return true;
+}
+
+void _g_terminal::mouse_up_left2(_xy r)
+{
+
+}
+
+void _g_terminal::mouse_move_left2(_xy r)
+{
+	scrollbar++;
+	cha_area();
+}
+
 bool _g_terminal::mouse_wheel2(_xy r)
 {
 	scrollbar += *n_wheel->operator i64 * ();
@@ -1320,6 +1336,11 @@ void _g_terminal::key_down(ushort key)
 		vis_cur = true;
 		return;
 	}
+	if (key == 45) // insert
+	{
+		insert_mode = !insert_mode;
+		return;
+	}
 	if (key == 46) // delete
 	{
 		if (cursor < (i64)cmd.size())
@@ -1336,7 +1357,10 @@ void _g_terminal::key_down(ushort key)
 void _g_terminal::key_press(ushort key)
 {
 	if (key < 32) return;
-	cmd.insert(cursor, 1, key);
+	if (insert_mode || (cursor >= (i64)cmd.size()))
+		cmd.insert(cursor, 1, key);
+	else
+		cmd[cursor] = key;
 	cursor++;
 	old_cmd_vis_len = -1;
 	cha_area();
