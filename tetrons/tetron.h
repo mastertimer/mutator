@@ -1190,6 +1190,7 @@ struct _g_terminal : public _t_go
 private:
 	i64 old_cmd_vis_len = -1; // количество символов в строке
 	i64 old_full_lines = 0; // полное количество строк
+	i64 vis_cur = false; // сделать курсор видимым
 
 };
 

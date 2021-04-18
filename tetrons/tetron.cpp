@@ -1293,6 +1293,7 @@ void _g_terminal::key_down(ushort key)
 			cmd.erase(cursor - 1LL, 1);
 			cursor--;
 			old_cmd_vis_len = -1;
+			vis_cur = true;
 		}
 		cha_area();
 		return;
@@ -1302,18 +1303,21 @@ void _g_terminal::key_down(ushort key)
 		cursor = 0;
 		run_cmd();
 		cha_area();
+		vis_cur = true;
 		return;
 	}
 	if (key == 37) // left
 	{
 		if (cursor > 0)	cursor--;
 		cha_area();
+		vis_cur = true;
 		return;
 	}
 	if (key == 39) // right
 	{
 		if (cursor < (i64)cmd.size()) cursor++;
 		cha_area();
+		vis_cur = true;
 		return;
 	}
 	if (key == 46) // delete
@@ -1322,6 +1326,7 @@ void _g_terminal::key_down(ushort key)
 		{
 			cmd.erase(cursor, 1);
 			old_cmd_vis_len = -1;
+			vis_cur = true;
 		}
 		cha_area();
 		return;
@@ -1335,6 +1340,7 @@ void _g_terminal::key_press(ushort key)
 	cursor++;
 	old_cmd_vis_len = -1;
 	cha_area();
+	vis_cur = true;
 }
 
 void _g_terminal::run(_tetron* tt0, _tetron* tt, u64 flags)
@@ -1385,12 +1391,32 @@ void _g_terminal::ris2(_trans tr, bool final)
 	uint c2 = get_c2();
 	uint c0 = get_c();
 
+	if (scrollbar > full_lines - max_lines) scrollbar = full_lines - max_lines;
+	if (scrollbar < 0) scrollbar = 0;
+
 	i64 x_cur = (cursor + (i64)prefix.size()) % cmd_vis_len;
 	i64 y_cur = (cursor + (i64)prefix.size()) / cmd_vis_len;
+	i64 n_cur = ks - 1 - y_cur - scrollbar;
 	area_cursor = { {x_text + x_cur * font_width, x_text + (x_cur + 1) * font_width},
-		{y_cmd - (ks - 1 - y_cur) * font_size, y_cmd - (ks - 2 - y_cur) * font_size} };
+		{y_cmd - n_cur * font_size, y_cmd - (n_cur - 1) * font_size} };
+	if ((n_cur < 0) || (n_cur >= max_lines))
+	{
+		if (!vis_cur)
+			area_cursor.clear();
+		else
+		{
+			scrollbar = ks - 1 - y_cur;
+			if (scrollbar > full_lines - max_lines) scrollbar = full_lines - max_lines;
+			if (scrollbar < 0) scrollbar = 0;
+			n_cur = ks - 1 - y_cur - scrollbar;
+			area_cursor = { {x_text + x_cur * font_width, x_text + (x_cur + 1) * font_width},
+				{y_cmd - n_cur * font_size, y_cmd - (n_cur - 1) * font_size} };
+		}
+	}
+	vis_cur = false;
 	if (_area(area_cursor) == master_obl_izm) // перерисовать только курсор
 	{
+		if (area_cursor.empty()) goto finish; // перестраховка
 		master_bm.text(area_cursor.x.min, area_cursor.y.min, cmd.substr(cursor, 1), font_size, c_max, 0xff000000);
 		if (visible_cursor) master_bm.fill_rectangle(area_cursor, c_maxx - 0xC0000000);
 		goto finish;
@@ -1400,16 +1426,11 @@ void _g_terminal::ris2(_trans tr, bool final)
 	if (((c0 >> 24) != 0x00) && (c0 != c2)) master_bm.rectangle(oo2, c0);
 	if ((oo2.y.size() < 30) || (oo2.x.size() < 30)) goto finish;
 
-	if (full_lines <= max_lines)
-		scrollbar = 0;
-	else
+	if (full_lines > max_lines)
 	{ // ползунок
 		master_bm.line({ oo.x.max - 1, oo.y.min }, { oo.x.max - 1, oo.y.max }, c0);
 		master_bm.line({ oo2.x.max, oo.y.min }, { oo.x.max - 2, oo.y.min }, c0);
 		master_bm.line({ oo2.x.max, oo.y.max - 1 }, { oo.x.max - 2, oo.y.max - 1 }, c0);
-
-		if (scrollbar < 0) scrollbar = 0;
-		if (scrollbar > full_lines - max_lines) scrollbar = full_lines - max_lines;
 
 		i64 tt = (oo.y.size() - otst_y * 2 - length_slider) * scrollbar / (full_lines - max_lines);
 

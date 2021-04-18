@@ -626,6 +626,7 @@ struct _iarea
 	_iarea operator&(const _iarea& b) const noexcept { _iarea c(*this); c &= b; return c; }
 
 	bool empty() const noexcept { return (x.min >= x.max) || (y.min >= y.max); }
+	void clear() noexcept { x = { 0LL, 0LL }; }
 	_isize size() const noexcept { if (empty()) return { 0,0 }; return { x.max - x.min, y.max - y.min }; }
 
 	_iarea move(_ixy d) const noexcept { return { {x.min + d.x, x.max + d.x}, {y.min + d.y, y.max + d.y} }; }
