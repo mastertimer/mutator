@@ -1174,6 +1174,7 @@ struct _g_terminal : public _t_go
 	i64 cursor = 0; // позиция курсора в командной строке
 	bool visible_cursor = true;
 	_iarea area_cursor;
+	i64 scrollbar = 0; // отступ ползунка снизу
 
 	_g_terminal();
 	uchar type() override { return 18; }
@@ -1183,6 +1184,11 @@ struct _g_terminal : public _t_go
 	void key_down(ushort key) override;
 	void key_press(ushort key) override;
 	void run_cmd(); // выволнить введенную команду
+
+private:
+	i64 old_cmd_vis_len = -1; // количество символов в строке
+	i64 old_full_lines = 0; // полное количество строк
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

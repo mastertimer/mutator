@@ -1259,8 +1259,14 @@ void _g_rect::ris2(_trans tr, bool final)
 void _g_terminal::run_cmd()
 {
 	if (cmd.empty()) return;
-	text.push_back(cmd);
-	text.push_back(L"команда не опознана!");
+	if (cmd == L"clear")
+		text.clear();
+	else
+	{
+		text.push_back(cmd);
+		text.push_back(L"команда не опознана!");
+	}
+	old_cmd_vis_len = -1;
 	cmd.clear();
 }
 
@@ -1279,6 +1285,7 @@ void _g_terminal::key_down(ushort key)
 		{
 			cmd.erase(cursor - 1LL, 1);
 			cursor--;
+			old_cmd_vis_len = -1;
 		}
 		cha_area();
 		return;
@@ -1304,7 +1311,11 @@ void _g_terminal::key_down(ushort key)
 	}
 	if (key == 46) // delete
 	{
-		if (cursor < (i64)cmd.size()) cmd.erase(cursor, 1);
+		if (cursor < (i64)cmd.size())
+		{
+			cmd.erase(cursor, 1);
+			old_cmd_vis_len = -1;
+		}
 		cha_area();
 		return;
 	}
@@ -1315,6 +1326,7 @@ void _g_terminal::key_press(ushort key)
 	if (key < 32) return;
 	cmd.insert(cursor, 1, key);
 	cursor++;
+	old_cmd_vis_len = -1;
 	cha_area();
 }
 
@@ -1328,36 +1340,68 @@ void _g_terminal::ris2(_trans tr, bool final)
 {
 	std::wstring old_font = master_bm.get_font_name();
 	master_bm.set_font(L"Consolas", false);
-	int font_size = 12; // минимум 12 для читабельности
+	int font_size = 26; // минимум 12 для читабельности
 	int font_width = master_bm.size_text("0123456789", font_size).x / 10;
+	i64 width_scrollbar = 20; // ширина полосы прокрутки
 
 	std::wstring prefix = L"> ";
 	std::wstring full_cmd = prefix + cmd;
+
 	_iarea oo = tr(local_area);
+	_iarea oo2 = oo;
+	oo2.x.max -= width_scrollbar - 1;
+
 	i64 otst_x = 3;
+	i64 otst_y = 2;
 	i64 x_text = oo.x.min + otst_x;
-	i64 y_cmd = oo.y.max - font_size - 2;
-	i64 cmd_vis_len = (oo.x.size() - otst_x * 2) / font_width;
+	i64 y_cmd = oo.y.max - font_size - otst_y;
+	i64 cmd_vis_len = (oo.x.size() - otst_x * 2 - width_scrollbar) / font_width;
+	i64 ks = (full_cmd.size() + cmd_vis_len) / cmd_vis_len;
+
+	i64 max_lines = (oo.y.size() - otst_y * 2) / font_size; // строк в окне
+
+	i64 full_lines = 0; // общее количество строк
+	if (old_cmd_vis_len == cmd_vis_len)
+		full_lines = old_full_lines;
+	else
+	{
+		full_lines = ks;
+		for (auto s = text.rbegin(); s != text.rend(); s++)
+			full_lines += (s->size() + cmd_vis_len - 1) / cmd_vis_len;
+		old_cmd_vis_len = cmd_vis_len;
+		old_full_lines = full_lines;
+	}
+
+	i64 length_slider = max_lines * (oo.y.size() - otst_y * 2) / full_lines;
+	if (length_slider > oo.y.size() - otst_y * 2) length_slider = oo.y.size() - otst_y * 2;
+	if (length_slider < 10) length_slider = 10;
 
 	uint c2 = get_c2();
 	uint c0 = get_c();
-
-	i64 ks = (full_cmd.size() + cmd_vis_len) / cmd_vis_len;
 
 	i64 x_cur = (cursor + (i64)prefix.size()) % cmd_vis_len;
 	i64 y_cur = (cursor + (i64)prefix.size()) / cmd_vis_len;
 	area_cursor = { {x_text + x_cur * font_width, x_text + (x_cur + 1) * font_width},
 		{y_cmd - (ks - 1 - y_cur) * font_size, y_cmd - (ks - 2 - y_cur) * font_size} };
-	if (_area(area_cursor) == master_obl_izm)
+	if (_area(area_cursor) == master_obl_izm) // перерисовать только курсор
 	{
 		master_bm.text(area_cursor.x.min, area_cursor.y.min, cmd.substr(cursor, 1), font_size, c_max, 0xff000000);
 		if (visible_cursor) master_bm.fill_rectangle(area_cursor, c_maxx - 0xC0000000);
 		goto finish;
 	}
 
-	master_bm.fill_rectangle(oo, c2);
-	if (((c0 >> 24) != 0x00) && (c0 != c2)) master_bm.rectangle(oo, c0);
-	if ((oo.y.size() < 30) || (oo.x.size() < 30)) goto finish;
+	master_bm.fill_rectangle(oo2, c2);
+	if (((c0 >> 24) != 0x00) && (c0 != c2)) master_bm.rectangle(oo2, c0);
+	if ((oo2.y.size() < 30) || (oo2.x.size() < 30)) goto finish;
+
+	if (full_lines > max_lines)
+	{
+		master_bm.line({ oo.x.max - 1, oo.y.min }, { oo.x.max - 1, oo.y.max }, c0);
+		master_bm.line({ oo2.x.max, oo.y.min }, { oo.x.max - 2, oo.y.min }, c0);
+		master_bm.line({ oo2.x.max, oo.y.max - 1 }, { oo.x.max - 2, oo.y.max - 1 }, c0);
+		master_bm.fill_rectangle({ {oo.x.max - width_scrollbar + 2, oo.x.max - 2},
+			{oo.y.min + otst_y, oo.y.min + otst_y + length_slider} }, c0);
+	}
 
 	n_timer1000->add_flags(this, flag_run, false);
 
@@ -1378,9 +1422,11 @@ void _g_terminal::ris2(_trans tr, bool final)
 
 		for (i64 j = 0; j < ks2; j++)
 		{
+			if (ks - j > max_lines) continue;
 			master_bm.text(x_text, y_cmd - (ks - 1 - j) * font_size, s.substr(j * cmd_vis_len, cmd_vis_len),
 				font_size, c_def, 0xff000000);
 		}
+		if (ks > max_lines) break;
 	}
 
 finish:
