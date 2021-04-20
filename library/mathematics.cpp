@@ -1,4 +1,4 @@
-#include <algorithm>
+п»ї#include <algorithm>
 
 #include "mathematics.h"
 
@@ -7,9 +7,9 @@
 i64 _multi_interval::find(double a)
 {
 	i64 l = border.size();
-	if (l < 2) return -1; // должно быть минимум 2 границы
+	if (l < 2) return -1; // РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РјРёРЅРёРјСѓРј 2 РіСЂР°РЅРёС†С‹
 	i64 n = upper_bound(border.begin(), border.end(), a) - border.begin();
-	if (n < l) return n - 1; // для n = 0 -> -1 так и получается
+	if (n < l) return n - 1; // РґР»СЏ n = 0 -> -1 С‚Р°Рє Рё РїРѕР»СѓС‡Р°РµС‚СЃСЏ
 	if (border.back() != a) return -1;
 	return l - 2;
 }
@@ -217,12 +217,12 @@ void _matrix::set_diagonal_matrix(i64 n, double dz) noexcept
 
 void _matrix::FindAllEigenVectors(_matrix& R, _matrix& A) const noexcept
 {
-	// Сборник научных программ на Фортране. Вып. 2. Матричная алгебра и линейная
-	// алгебра. Нью-Йорк, 1960-1971, пер. с англ. (США). М., "Статистика", 1974.
-	// 224 с.
-	// стр - 187, подпрограмма EIGEN
+	// РЎР±РѕСЂРЅРёРє РЅР°СѓС‡РЅС‹С… РїСЂРѕРіСЂР°РјРј РЅР° Р¤РѕСЂС‚СЂР°РЅРµ. Р’С‹Рї. 2. РњР°С‚СЂРёС‡РЅР°СЏ Р°Р»РіРµР±СЂР° Рё Р»РёРЅРµР№РЅР°СЏ
+	// Р°Р»РіРµР±СЂР°. РќСЊСЋ-Р™РѕСЂРє, 1960-1971, РїРµСЂ. СЃ Р°РЅРіР». (РЎРЁРђ). Рњ., "РЎС‚Р°С‚РёСЃС‚РёРєР°", 1974.
+	// 224 СЃ.
+	// СЃС‚СЂ - 187, РїРѕРґРїСЂРѕРіСЂР°РјРјР° EIGEN
 	double ANORM, ANRMX, THR, X, Y, SINX, SINX2, COSX, COSX2, SINCS;
-	constexpr double RANGE = 1.0E-13;                                     // было -13
+	constexpr double RANGE = 1.0E-13;                                     // Р±С‹Р»Рѕ -13
 //	constexpr double LIM = 1.0E-11;                                       // -6
 	A = *this;
 	size_t N = A.size.x;
@@ -288,7 +288,7 @@ void _matrix::FindAllEigenVectors(_matrix& R, _matrix& A) const noexcept
 		//			R.PerestCol(i, j);
 		//		}
 
-		//// конец подпрограммы EIGEN
+		//// РєРѕРЅРµС† РїРѕРґРїСЂРѕРіСЂР°РјРјС‹ EIGEN
 
 		//for (int j = 0; j < N; j++)
 		//	for (int i = 0; i < N; i++)
@@ -312,10 +312,10 @@ void _matrix::FindAllEigenVectors(_matrix& R, _matrix& A) const noexcept
 		//Vl = rx_;
 }
 
-//вычисление псевдообратной матрицы
+//РІС‹С‡РёСЃР»РµРЅРёРµ РїСЃРµРІРґРѕРѕР±СЂР°С‚РЅРѕР№ РјР°С‚СЂРёС†С‹
 _matrix _matrix::pseudoinverse() const noexcept
 {
-	double LIM = 1.0E-13;                                       // min -10 max -15  было -11 -13
+	double LIM = 1.0E-13;                                       // min -10 max -15  Р±С‹Р»Рѕ -11 -13
 	_matrix BQ, BL;
 	FindAllEigenVectors(BQ, BL);
 	double SumD = 0;
@@ -355,7 +355,7 @@ _matrix _matrix::pseudoinverse() const noexcept
 _matrix _matrix::linear_prediction(const _matrix& k, i64 start, i64 n, i64 ots) const noexcept
 {
 	_matrix b(n, 1, 0);
-	if (((k.size.x != 1) && (k.size.y != 1)) || ((size.x != 1) && (size.y != 1))) return b; // должен быть вектор
+	if (((k.size.x != 1) && (k.size.y != 1)) || ((size.x != 1) && (size.y != 1))) return b; // РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІРµРєС‚РѕСЂ
 	i64 rk = k.size.square();
 	i64 r = size.square();
 	if ((start < rk) || (start > r)) return b;
