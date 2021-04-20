@@ -1,31 +1,31 @@
-#pragma once
+п»ї#pragma once
 
 #include "basic.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _multi_interval //      примерно ~~      |   | |      |  |    |           ||| |    -> [)[)[)[]
+struct _multi_interval //      РїСЂРёРјРµСЂРЅРѕ ~~      |   | |      |  |    |           ||| |    -> [)[)[)[]
 {
-	std::vector<double> border; // границы
+	std::vector<double> border; // РіСЂР°РЅРёС†С‹
 
 	_multi_interval() = default;
 	_multi_interval(const std::vector<double>& a) : border(a) {}
 
-	i64 count() { if (border.empty()) return 0; return border.size() - 1; } // количество интервалов
-	i64 find(double a); // найти номер интервала, в котором лежит число
+	i64 count() { if (border.empty()) return 0; return border.size() - 1; } // РєРѕР»РёС‡РµСЃС‚РІРѕ РёРЅС‚РµСЂРІР°Р»РѕРІ
+	i64 find(double a); // РЅР°Р№С‚Рё РЅРѕРјРµСЂ РёРЅС‚РµСЂРІР°Р»Р°, РІ РєРѕС‚РѕСЂРѕРј Р»РµР¶РёС‚ С‡РёСЃР»Рѕ
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _matrix;
 
-struct matrix_column // столбец матрицы
+struct matrix_column // СЃС‚РѕР»Р±РµС† РјР°С‚СЂРёС†С‹
 {
-	_matrix* m; // указатель на матрицу
-	i64 x; // номер столбца
+	_matrix* m; // СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РјР°С‚СЂРёС†Сѓ
+	i64 x; // РЅРѕРјРµСЂ СЃС‚РѕР»Р±С†Р°
 
-	bool min_max(double* mi, double* ma); // найти диапазон
-//	double Delta(size_t y = 1); // разница 2-х элементов [y] - [y-1]
+	bool min_max(double* mi, double* ma); // РЅР°Р№С‚Рё РґРёР°РїР°Р·РѕРЅ
+//	double Delta(size_t y = 1); // СЂР°Р·РЅРёС†Р° 2-С… СЌР»РµРјРµРЅС‚РѕРІ [y] - [y-1]
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,91 +40,91 @@ struct _matrix
 	_matrix(_matrix&& a) noexcept;
 	_matrix(_isize r) noexcept;
 	_matrix(i64 ry, i64 rx) noexcept;
-	_matrix(i64 ry, i64 rx, double z) noexcept;// заполнить числом z
-	_matrix(i64 ry, i64 rx, std::function<double(i64, i64)> fun) noexcept; // задать из функции fun
-	_matrix(i64 ry) noexcept; // вектор
-	_matrix(i64 ry, std::function<double(i64)> fun) noexcept; // вектор задать из функции
+	_matrix(i64 ry, i64 rx, double z) noexcept;// Р·Р°РїРѕР»РЅРёС‚СЊ С‡РёСЃР»РѕРј z
+	_matrix(i64 ry, i64 rx, std::function<double(i64, i64)> fun) noexcept; // Р·Р°РґР°С‚СЊ РёР· С„СѓРЅРєС†РёРё fun
+	_matrix(i64 ry) noexcept; // РІРµРєС‚РѕСЂ
+	_matrix(i64 ry, std::function<double(i64)> fun) noexcept; // РІРµРєС‚РѕСЂ Р·Р°РґР°С‚СЊ РёР· С„СѓРЅРєС†РёРё
 	~_matrix() { delete[] data; }
 
 	void operator=(const _matrix& a) noexcept;
 	void operator=(_matrix&& a) noexcept;
 	void operator+=(const _matrix& a) noexcept;
 
-	void set_diagonal_matrix(i64 n, double dz) noexcept; // задать матрицу диагонального вида
+	void set_diagonal_matrix(i64 n, double dz) noexcept; // Р·Р°РґР°С‚СЊ РјР°С‚СЂРёС†Сѓ РґРёР°РіРѕРЅР°Р»СЊРЅРѕРіРѕ РІРёРґР°
 
-	double* operator[](i64 n) { return data + (n * size.x); } // нужная строчка
-	void resize(_isize r); // изменить размер матрицы ! данные не сохраняются
-	bool empty() const noexcept { return size.empty(); } // проверка на нулевой размер
-	matrix_column column(i64 x) { return { this, x }; } // столбец матрицы
+	double* operator[](i64 n) { return data + (n * size.x); } // РЅСѓР¶РЅР°СЏ СЃС‚СЂРѕС‡РєР°
+	void resize(_isize r); // РёР·РјРµРЅРёС‚СЊ СЂР°Р·РјРµСЂ РјР°С‚СЂРёС†С‹ ! РґР°РЅРЅС‹Рµ РЅРµ СЃРѕС…СЂР°РЅСЏСЋС‚СЃСЏ
+	bool empty() const noexcept { return size.empty(); } // РїСЂРѕРІРµСЂРєР° РЅР° РЅСѓР»РµРІРѕР№ СЂР°Р·РјРµСЂ
+	matrix_column column(i64 x) { return { this, x }; } // СЃС‚РѕР»Р±РµС† РјР°С‚СЂРёС†С‹
 
-//	void MinMax(double* mi, double* ma); // найти диапазон
+//	void MinMax(double* mi, double* ma); // РЅР°Р№С‚Рё РґРёР°РїР°Р·РѕРЅ
 
-//	matrix transpose() const noexcept; // транспонированная матрица
-	_matrix this_mul_transpose() const noexcept; // текущая матрица умножить на транспонированную себя
-	_matrix pseudoinverse() const noexcept; // псевдообратная матрица
+//	matrix transpose() const noexcept; // С‚СЂР°РЅСЃРїРѕРЅРёСЂРѕРІР°РЅРЅР°СЏ РјР°С‚СЂРёС†Р°
+	_matrix this_mul_transpose() const noexcept; // С‚РµРєСѓС‰Р°СЏ РјР°С‚СЂРёС†Р° СѓРјРЅРѕР¶РёС‚СЊ РЅР° С‚СЂР°РЅСЃРїРѕРЅРёСЂРѕРІР°РЅРЅСѓСЋ СЃРµР±СЏ
+	_matrix pseudoinverse() const noexcept; // РїСЃРµРІРґРѕРѕР±СЂР°С‚РЅР°СЏ РјР°С‚СЂРёС†Р°
 
-	void FindAllEigenVectors(_matrix& R, _matrix& A) const noexcept; // собственные вектора и собственные числа
-	 // линейное предсказание на основе коэффициентов
+	void FindAllEigenVectors(_matrix& R, _matrix& A) const noexcept; // СЃРѕР±СЃС‚РІРµРЅРЅС‹Рµ РІРµРєС‚РѕСЂР° Рё СЃРѕР±СЃС‚РІРµРЅРЅС‹Рµ С‡РёСЃР»Р°
+	 // Р»РёРЅРµР№РЅРѕРµ РїСЂРµРґСЃРєР°Р·Р°РЅРёРµ РЅР° РѕСЃРЅРѕРІРµ РєРѕСЌС„С„РёС†РёРµРЅС‚РѕРІ
 	_matrix linear_prediction(const _matrix& k, i64 start, i64 n, i64 ots = 0) const noexcept;
-//	double linear_prediction(const matrix& k) const noexcept; // линейное предсказание на основе коэффициентов
+//	double linear_prediction(const matrix& k) const noexcept; // Р»РёРЅРµР№РЅРѕРµ РїСЂРµРґСЃРєР°Р·Р°РЅРёРµ РЅР° РѕСЃРЅРѕРІРµ РєРѕСЌС„С„РёС†РёРµРЅС‚РѕРІ
 
-	_matrix operator<<(const _matrix& a) const noexcept; // склеить матрицы (количество строк должно быть одинаковым)
+	_matrix operator<<(const _matrix& a) const noexcept; // СЃРєР»РµРёС‚СЊ РјР°С‚СЂРёС†С‹ (РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РѕРґРёРЅР°РєРѕРІС‹Рј)
 	_matrix operator*(const _matrix& a) const noexcept;
 	_matrix operator-(const _matrix& a) const noexcept;
 
-//	void Push(_stack* mem); // сохранить в стек
-//	void Pop(_stack* mem); // извлечь из стека
+//	void Push(_stack* mem); // СЃРѕС…СЂР°РЅРёС‚СЊ РІ СЃС‚РµРє
+//	void Pop(_stack* mem); // РёР·РІР»РµС‡СЊ РёР· СЃС‚РµРєР°
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_matrix get_noise(i64 n, double k); // сгенерировать шум
+_matrix get_noise(i64 n, double k); // СЃРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ С€СѓРј
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _one_stat // единица статистики
+struct _one_stat // РµРґРёРЅРёС†Р° СЃС‚Р°С‚РёСЃС‚РёРєРё
 {
-	i64 value;   // значение / цена
-	i64 number;  // количество
+	i64 value;   // Р·РЅР°С‡РµРЅРёРµ / С†РµРЅР°
+	i64 number;  // РєРѕР»РёС‡РµСЃС‚РІРѕ
 
 	bool operator!=(_one_stat a) const noexcept { return ((value != a.value) || (number != a.number)); }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _basic_statistics // базовая разреженная статистика с нулями
+struct _basic_statistics // Р±Р°Р·РѕРІР°СЏ СЂР°Р·СЂРµР¶РµРЅРЅР°СЏ СЃС‚Р°С‚РёСЃС‚РёРєР° СЃ РЅСѓР»СЏРјРё
 {
 	std::vector<i64> data;
 	i64 start = 0;
 
-	void push(i64 x); // добавить число в статистику
+	void push(i64 x); // РґРѕР±Р°РІРёС‚СЊ С‡РёСЃР»Рѕ РІ СЃС‚Р°С‚РёСЃС‚РёРєСѓ
 	void clear() noexcept { data.clear(); }
 	i64 number() const noexcept;
-	i64 number(i64 be, i64 en) const noexcept; // количество в интервале [be,en)
+	i64 number(i64 be, i64 en) const noexcept; // РєРѕР»РёС‡РµСЃС‚РІРѕ РІ РёРЅС‚РµСЂРІР°Р»Рµ [be,en)
 	i64 operator[](i64 x) const noexcept;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _interval_statistics // ограниченная интервальная статистика
+struct _interval_statistics // РѕРіСЂР°РЅРёС‡РµРЅРЅР°СЏ РёРЅС‚РµСЂРІР°Р»СЊРЅР°СЏ СЃС‚Р°С‚РёСЃС‚РёРєР°
 {
-	struct _element_is // элемент интервальной статистики
+	struct _element_is // СЌР»РµРјРµРЅС‚ РёРЅС‚РµСЂРІР°Р»СЊРЅРѕР№ СЃС‚Р°С‚РёСЃС‚РёРєРё
 	{
-		_interval interval; // интервал диапазона
-		double mean = 0; // среднее значение
-		i64 number = 0; // количество чисел в этом диапазоне
+		_interval interval; // РёРЅС‚РµСЂРІР°Р» РґРёР°РїР°Р·РѕРЅР°
+		double mean = 0; // СЃСЂРµРґРЅРµРµ Р·РЅР°С‡РµРЅРёРµ
+		i64 number = 0; // РєРѕР»РёС‡РµСЃС‚РІРѕ С‡РёСЃРµР» РІ СЌС‚РѕРј РґРёР°РїР°Р·РѕРЅРµ
 	};
 	
 	std::vector<_element_is> element;
 
-	void init_equiprobable(_basic_statistics &bs, i64 n, double k); // инициализировать равновероятным
-	double min_mean(); // левая граница первого элемента
-	double max_mean(); // правая граница последнего элемента
+	void init_equiprobable(_basic_statistics &bs, i64 n, double k); // РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°С‚СЊ СЂР°РІРЅРѕРІРµСЂРѕСЏС‚РЅС‹Рј
+	double min_mean(); // Р»РµРІР°СЏ РіСЂР°РЅРёС†Р° РїРµСЂРІРѕРіРѕ СЌР»РµРјРµРЅС‚Р°
+	double max_mean(); // РїСЂР°РІР°СЏ РіСЂР°РЅРёС†Р° РїРѕСЃР»РµРґРЅРµРіРѕ СЌР»РµРјРµРЅС‚Р°
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _statistics // сжатая статистика
+struct _statistics // СЃР¶Р°С‚Р°СЏ СЃС‚Р°С‚РёСЃС‚РёРєР°
 {
 	std::vector<_one_stat> data;
 	typedef std::vector<_one_stat>::iterator _it;
@@ -136,13 +136,13 @@ struct _statistics // сжатая статистика
 	void clear() { data.clear(); }
 	i64 min_value() const noexcept { return (data.empty()) ? 0 : data.front().value; }
 	i64 max_value() const noexcept { return (data.empty()) ? 0 : data.back().value; }
-	i64 number(_cit be, _cit en) const noexcept; // количество в интервале [be,en)
-	i64 number(i64 be, i64 en) const noexcept; // количество в интервале [be,en)
-	i64 number() const noexcept { return number(data.begin(), data.end()); } // общее количество
+	i64 number(_cit be, _cit en) const noexcept; // РєРѕР»РёС‡РµСЃС‚РІРѕ РІ РёРЅС‚РµСЂРІР°Р»Рµ [be,en)
+	i64 number(i64 be, i64 en) const noexcept; // РєРѕР»РёС‡РµСЃС‚РІРѕ РІ РёРЅС‚РµСЂРІР°Р»Рµ [be,en)
+	i64 number() const noexcept { return number(data.begin(), data.end()); } // РѕР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ
 
-	i64 first_zero(); // номер первого нулевого элемента начиная со start (-1 если не нашлось)
-	i64 number_not_zero() { return data.size(); } // количество значений с ненулевым количеством
-	double arithmetic_size(_it be, _it en); // арифметический размер в битах
+	i64 first_zero(); // РЅРѕРјРµСЂ РїРµСЂРІРѕРіРѕ РЅСѓР»РµРІРѕРіРѕ СЌР»РµРјРµРЅС‚Р° РЅР°С‡РёРЅР°СЏ СЃРѕ start (-1 РµСЃР»Рё РЅРµ РЅР°С€Р»РѕСЃСЊ)
+	i64 number_not_zero() { return data.size(); } // РєРѕР»РёС‡РµСЃС‚РІРѕ Р·РЅР°С‡РµРЅРёР№ СЃ РЅРµРЅСѓР»РµРІС‹Рј РєРѕР»РёС‡РµСЃС‚РІРѕРј
+	double arithmetic_size(_it be, _it en); // Р°СЂРёС„РјРµС‚РёС‡РµСЃРєРёР№ СЂР°Р·РјРµСЂ РІ Р±РёС‚Р°С…
 	double arithmetic_size() { return arithmetic_size(data.begin(), data.end()); }
 
 	void operator=(const _basic_statistics& a);
@@ -151,8 +151,8 @@ struct _statistics // сжатая статистика
 
 	i64 operator[](i64 n) const noexcept; // value -> number
 
-	_matrix to_matrix(); // два столбца - x и y
-	_matrix to_matrix(i64 mi, i64 ma); // два столбца - x и y
+	_matrix to_matrix(); // РґРІР° СЃС‚РѕР»Р±С†Р° - x Рё y
+	_matrix to_matrix(i64 mi, i64 ma); // РґРІР° СЃС‚РѕР»Р±С†Р° - x Рё y
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

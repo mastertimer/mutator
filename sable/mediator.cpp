@@ -1,4 +1,4 @@
-#include <chrono>
+п»ї#include <chrono>
 
 #include "mediator.h"
 
@@ -10,7 +10,7 @@ std::wstring mmm1 = L"1";
 std::wstring mmm2 = L"2";
 std::wstring mmm3 = L"3";
 
-int kkk2 = 1; // количество продаваемых акций
+int kkk2 = 1; // РєРѕР»РёС‡РµСЃС‚РІРѕ РїСЂРѕРґР°РІР°РµРјС‹С… Р°РєС†РёР№
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -69,11 +69,11 @@ void _kusok_bukva::cod(ushort* aa, int vaa, wchar_t cc, char nf, i64 nbitt)
 
 _recognize::_recognize()
 {
-	static const int vf_ = 2; // количество шрифтов
-	_bitmap bm_[vf_]; // холст для рисования
+	static const int vf_ = 2; // РєРѕР»РёС‡РµСЃС‚РІРѕ С€СЂРёС„С‚РѕРІ
+	_bitmap bm_[vf_]; // С…РѕР»СЃС‚ РґР»СЏ СЂРёСЃРѕРІР°РЅРёСЏ
 	bm_[0].set_font(L"MS Sans Serif", false);
 	bm_[1].set_font(L"MS Sans Serif", true);
-	std::wstring nabor = L"0123456789.,:;-()[]><=абвгдежзийклмнопрстуфхцчшщъыьэюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
+	std::wstring nabor = L"0123456789.,:;-()[]><=Р°Р±РІРіРґРµР¶Р·РёР№РєР»РјРЅРѕРїСЂСЃС‚СѓС„С…С†С‡С€С‰СЉС‹СЊСЌСЋСЏРђР‘Р’Р“Р”Р•Р–Р—РР™РљР›РњРќРћРџР РЎРўРЈР¤РҐР¦Р§РЁР©РЄР«Р¬Р­Р®РЇ"
 		L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	int L = (int)nabor.size();
 	std::wstring ss_ = L"0";
@@ -86,7 +86,7 @@ _recognize::_recognize()
 			_isize size = bm_[nf].size_text(ss_.data(), 8);
 			//			if (c == ' ') ShowMessage(IntToStr((int)size.cx));
 			//			if (size.cy != 13) ShowMessage(ss_+" "+IntToStr((int)size.cy));
-			if (size.x > 20) return;//что-то не то...
+			if (size.x > 20) return;//С‡С‚Рѕ-С‚Рѕ РЅРµ С‚Рѕ...
 			if ((size.x > bm_[nf].size.x) || (size.y > bm_[nf].size.y))
 				bm_[nf].resize({ std::max(size.x, bm_[nf].size.x), std::max(size.y, bm_[nf].size.y) });
 			bm_[nf].clear(0);
@@ -114,7 +114,7 @@ int _recognize::read_okno_soobsenii()
 	if (!w) return 1;
 	offset = { 0, 0 };
 	ClientToScreen(w, &offset);
-	image.clear(0xFFFFFFFF); // т.к. если окно свернуто, то не грабится
+	image.clear(0xFFFFFFFF); // С‚.Рє. РµСЃР»Рё РѕРєРЅРѕ СЃРІРµСЂРЅСѓС‚Рѕ, С‚Рѕ РЅРµ РіСЂР°Р±РёС‚СЃСЏ
 	image.grab_ecran_oo2(w);
 	find_text13(0xFF000000);
 	return 0;
@@ -122,52 +122,52 @@ int _recognize::read_okno_soobsenii()
 
 int _recognize::read_vnimanie_pokupka()
 {
-	HWND w = FindWindow(0, L"Внимание");
+	HWND w = FindWindow(0, L"Р’РЅРёРјР°РЅРёРµ");
 	if (!w) return 1;
 	offset = { 0, 0 };
 	ClientToScreen(w, &offset);
-	image.clear(0xFFFFFFFF); // т.к. если окно свернуто, то не грабится
+	image.clear(0xFFFFFFFF); // С‚.Рє. РµСЃР»Рё РѕРєРЅРѕ СЃРІРµСЂРЅСѓС‚Рѕ, С‚Рѕ РЅРµ РіСЂР°Р±РёС‚СЃСЏ
 	image.grab_ecran_oo2(w);
 	find_text13(0xFF000000);
-	if ((elem.size() < 17) || (elem.size() > 18)) return 2; // неправильное количество элементов
-	if (find_elem(L"Выдействителы-ожелаетевыполнитьтранзакцию") < 0) return 3;
-	if (find_elem(L"ЛимитированнаяПокупка") < 0) return 4;
+	if ((elem.size() < 17) || (elem.size() > 18)) return 2; // РЅРµРїСЂР°РІРёР»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ
+	if (find_elem(L"Р’С‹РґРµР№СЃС‚РІРёС‚РµР»С‹-РѕР¶РµР»Р°РµС‚РµРІС‹РїРѕР»РЅРёС‚СЊС‚СЂР°РЅР·Р°РєС†РёСЋ") < 0) return 3;
+	if (find_elem(L"Р›РёРјРёС‚РёСЂРѕРІР°РЅРЅР°СЏРџРѕРєСѓРїРєР°") < 0) return 4;
 	return 0;
 }
 
 int _recognize::read_vnimanie_prodaza()
 {
-	HWND w = FindWindow(0, L"Внимание");
+	HWND w = FindWindow(0, L"Р’РЅРёРјР°РЅРёРµ");
 	if (!w) return 1;
 	offset = { 0, 0 };
 	ClientToScreen(w, &offset);
-	image.clear(0xFFFFFFFF); // т.к. если окно свернуто, то не грабится
+	image.clear(0xFFFFFFFF); // С‚.Рє. РµСЃР»Рё РѕРєРЅРѕ СЃРІРµСЂРЅСѓС‚Рѕ, С‚Рѕ РЅРµ РіСЂР°Р±РёС‚СЃСЏ
 	image.grab_ecran_oo2(w);
 	find_text13(0xFF000000);
-	if ((elem.size() < 17) || (elem.size() > 18)) return 2; // неправильное количество элементов
-	if (find_elem(L"Выдействителы-ожелаетевыполнитьтранзакцию") < 0) return 3;
-	if (find_elem(L"ЛимитированнаяПродажа") < 0) return 4;
+	if ((elem.size() < 17) || (elem.size() > 18)) return 2; // РЅРµРїСЂР°РІРёР»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ
+	if (find_elem(L"Р’С‹РґРµР№СЃС‚РІРёС‚РµР»С‹-РѕР¶РµР»Р°РµС‚РµРІС‹РїРѕР»РЅРёС‚СЊС‚СЂР°РЅР·Р°РєС†РёСЋ") < 0) return 3;
+	if (find_elem(L"Р›РёРјРёС‚РёСЂРѕРІР°РЅРЅР°СЏРџСЂРѕРґР°Р¶Р°") < 0) return 4;
 	return 0;
 }
 
 int _recognize::read_vvod_zaya()
 {
-	HWND w = FindWindow(0, L"МБ ФР: Т+ Акции и ДР Ввод заявки");
+	HWND w = FindWindow(0, L"РњР‘ Р¤Р : Рў+ РђРєС†РёРё Рё Р”Р  Р’РІРѕРґ Р·Р°СЏРІРєРё");
 	if (!w) return 1;
 	offset = { 0, 0 };
 	ClientToScreen(w, &offset);
-	image.clear(0xFFFFFFFF); // т.к. если окно свернуто, то не грабится
+	image.clear(0xFFFFFFFF); // С‚.Рє. РµСЃР»Рё РѕРєРЅРѕ СЃРІРµСЂРЅСѓС‚Рѕ, С‚Рѕ РЅРµ РіСЂР°Р±РёС‚СЃСЏ
 	image.grab_ecran_oo2(w);
 	find_text13(0xFF000000);
-	if ((elem.size() < 20) || (elem.size() > 28)) return 2; // неправильное количество элементов
+	if ((elem.size() < 20) || (elem.size() > 28)) return 2; // РЅРµРїСЂР°РІРёР»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ
 	return 0;
 }
 
 struct FindWnd
 {
-	std::wstring class_name_; // имя класса
-	std::wstring window_name_; // имя окна
-	HWND hwnd_{}; // указатель окна
+	std::wstring class_name_; // РёРјСЏ РєР»Р°СЃСЃР°
+	std::wstring window_name_; // РёРјСЏ РѕРєРЅР°
+	HWND hwnd_{}; // СѓРєР°Р·Р°С‚РµР»СЊ РѕРєРЅР°
 };
 
 BOOL CALLBACK PoiskOkna(HWND hwnd, LPARAM lParam)
@@ -190,7 +190,7 @@ BOOL CALLBACK PoiskOkna(HWND hwnd, LPARAM lParam)
 	//s = str;
 	//GetClassName(hwnd, str, 255);
 	//s = s + L" : " + str;
-	//MessageBox(0, s.c_str(), L"упс", MB_OK | MB_TASKMODAL);
+	//MessageBox(0, s.c_str(), L"СѓРїСЃ", MB_OK | MB_TASKMODAL);
 
 	//if (aa->class_name_ != str) return TRUE;
 	//aa->hwnd_ = hwnd;
@@ -216,15 +216,15 @@ int _recognize::read_tablica_zayavok(int a, int& b)
 	b = 0;
 	HWND w = FindWindow(0, mmm3.c_str());
 	if (!w) return 1;
-	HWND w2 = FindSubWindow(w, L"InfoMDITableCommon", L"Таблица заявок Основной рынок"); // InfoPriceTable HostWindow
+	HWND w2 = FindSubWindow(w, L"InfoMDITableCommon", L"РўР°Р±Р»РёС†Р° Р·Р°СЏРІРѕРє РћСЃРЅРѕРІРЅРѕР№ СЂС‹РЅРѕРє"); // InfoPriceTable HostWindow
 	if (!w2) return 2;
 	RECT rr;
 	GetWindowRect(w2, &rr);
 
-	image.clear(0xFFFFFFFF); // т.к. если окно свернуто, то не грабится
+	image.clear(0xFFFFFFFF); // С‚.Рє. РµСЃР»Рё РѕРєРЅРѕ СЃРІРµСЂРЅСѓС‚Рѕ, С‚Рѕ РЅРµ РіСЂР°Р±РёС‚СЃСЏ
 	image.grab_ecran_oo2(w2);
 	//	image_.SaveToFile(L"err.bmp");
-	find_text13(0xFF0040FF, 10); // синим цветом 
+	find_text13(0xFF0040FF, 10); // СЃРёРЅРёРј С†РІРµС‚РѕРј 
 
 	std::wstring ss_ = std::to_wstring(a);
 	for (uint i = 0; i < elem.size(); i++)
@@ -237,13 +237,13 @@ bool _recognize::find_window_prices(RECT* rr)
 	load_mmm();
 	HWND w = FindWindow(0, mmm3.c_str());
 	if (!w) return false;
-	HWND w2 = FindSubWindow(w, L"InfoPriceTable", L"Сбербанк [МБ ФР: Т+ Акции и ДР] Котировки"); // InfoPriceTable HostWindow
+	HWND w2 = FindSubWindow(w, L"InfoPriceTable", L"РЎР±РµСЂР±Р°РЅРє [РњР‘ Р¤Р : Рў+ РђРєС†РёРё Рё Р”Р ] РљРѕС‚РёСЂРѕРІРєРё"); // InfoPriceTable HostWindow
 	if (!w2) return false;
 	GetWindowRect(w2, rr);
 	return true;
 }
 
-i64 to_int(const std::wstring& s) // преобразование в число с игнорированием нечисловых символов
+i64 to_int(const std::wstring& s) // РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІ С‡РёСЃР»Рѕ СЃ РёРіРЅРѕСЂРёСЂРѕРІР°РЅРёРµРј РЅРµС‡РёСЃР»РѕРІС‹С… СЃРёРјРІРѕР»РѕРІ
 {
 	i64 r = 0;
 	bool znak = false;
@@ -261,7 +261,7 @@ i64 to_int(const std::wstring& s) // преобразование в число с игнорированием неч
 
 int _recognize::test_image(_prices* pr)
 {
-	find_text13(0xFF0000FF); // синим цветом покупки
+	find_text13(0xFF0000FF); // СЃРёРЅРёРј С†РІРµС‚РѕРј РїРѕРєСѓРїРєРё
 	if (elem.size() != roffer * 2) return 3;
 	i64 pre = 0;
 	for (int i = 0; i < roffer; i++)
@@ -275,7 +275,7 @@ int _recognize::test_image(_prices* pr)
 		if ((a < 1) || (a > 2000000000)) return 6;
 		pr->buy[roffer - 1 - i].number = static_cast<int>(a);
 	}
-	find_red_text13(24); // красным цветом продажи
+	find_red_text13(24); // РєСЂР°СЃРЅС‹Рј С†РІРµС‚РѕРј РїСЂРѕРґР°Р¶Рё
 	if (elem.size() != roffer * 2) return 7;
 	for (int i = 0; i < roffer; i++)
 	{
@@ -296,12 +296,12 @@ int _recognize::read_prices_from_screen(_prices* pr)
 	load_mmm();
 	HWND w = FindWindow(0, mmm3.c_str());
 	if (!w) return 1;
-	HWND w2 = FindSubWindow(w, L"InfoPriceTable", L"Сбербанк [МБ ФР: Т+ Акции и ДР] Котировки"); // InfoPriceTable HostWindow
+	HWND w2 = FindSubWindow(w, L"InfoPriceTable", L"РЎР±РµСЂР±Р°РЅРє [РњР‘ Р¤Р : Рў+ РђРєС†РёРё Рё Р”Р ] РљРѕС‚РёСЂРѕРІРєРё"); // InfoPriceTable HostWindow
 	if (!w2) return 2;
-	image.clear(0xFFFFFFFF); // т.к. если окно свернуто, то не грабится
+	image.clear(0xFFFFFFFF); // С‚.Рє. РµСЃР»Рё РѕРєРЅРѕ СЃРІРµСЂРЅСѓС‚Рѕ, С‚Рѕ РЅРµ РіСЂР°Р±РёС‚СЃСЏ
 	pr->time = time(0);
 	image.grab_ecran_oo2(w2);
-	find_text13(0xFF0000FF); // синим цветом покупки
+	find_text13(0xFF0000FF); // СЃРёРЅРёРј С†РІРµС‚РѕРј РїРѕРєСѓРїРєРё
 	if (elem.size() != roffer * 2) return 3;
 	i64 pre = 0;
 	for (i64 i = 0; i < roffer; i++)
@@ -316,7 +316,7 @@ int _recognize::read_prices_from_screen(_prices* pr)
 		if ((a < 1) || (a > 2000000000)) return 6;
 		pr->buy[roffer - 1 - i].number = static_cast<int>(a);
 	}
-	find_red_text13(24); // красным цветом продажи
+	find_red_text13(24); // РєСЂР°СЃРЅС‹Рј С†РІРµС‚РѕРј РїСЂРѕРґР°Р¶Рё
 	if (elem.size() != roffer * 2) return 7;
 	for (i64 i = 0; i < roffer; i++)
 	{
@@ -360,7 +360,7 @@ void _recognize::find_red_text13(uint err)
 				continue;
 			}
 			if (i - last == 8)
-			{ // КРИТИЧЕСКАЯ РАЗНИЦА!!!!
+			{ // РљР РРўРР§Р•РЎРљРђРЇ Р РђР—РќРР¦Рђ!!!!
 				if (!norm)
 				{
 					_area_string aa;
@@ -416,7 +416,7 @@ void _recognize::find_text13(uint c, int err)
 				continue;
 			}
 			if (i - last == 8)
-			{ // КРИТИЧЕСКАЯ РАЗНИЦА!!!!
+			{ // РљР РРўРР§Р•РЎРљРђРЇ Р РђР—РќРР¦Рђ!!!!
 				if (!norm)
 				{
 					_area_string aa;
@@ -460,7 +460,7 @@ void _recognize::find_text13(uint c)
 				continue;
 			}
 			if (i - last == 8)
-			{ // КРИТИЧЕСКАЯ РАЗНИЦА!!!!
+			{ // РљР РРўРР§Р•РЎРљРђРЇ Р РђР—РќРР¦Рђ!!!!
 				if (!norm)
 				{
 					_area_string aa;
@@ -601,23 +601,23 @@ int bad_string_to_int(std::wstring& s)
 void buy_stock(_tetron* tt, bool buy)
 {
 	load_mmm();
-	int otst_20 = 1; // 20 >= x >= 1, 1 - лучшая цена
+	int otst_20 = 1; // 20 >= x >= 1, 1 - Р»СѓС‡С€Р°СЏ С†РµРЅР°
 	static int KKK;
 	static bool win8 = false;
 	static __int64 n = 0;
-	// шаг 01: внедрение и инициализация
+	// С€Р°Рі 01: РІРЅРµРґСЂРµРЅРёРµ Рё РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
 	if (tt->link.empty())
 	{
 		n_timer250->add_flags(tt, flag_run);
 		return;
 	}
-	// пауза
+	// РїР°СѓР·Р°
 	if (n < 1)
 	{
 		n = n + 1;
 		return;
 	}
-	// шаг 01: двойной клик по цене
+	// С€Р°Рі 01: РґРІРѕР№РЅРѕР№ РєР»РёРє РїРѕ С†РµРЅРµ
 	if (n == 1)
 	{
 		n = 1000;
@@ -631,7 +631,7 @@ void buy_stock(_tetron* tt, bool buy)
 		n = 2;
 		return;
 	}
-	// шаг 02: поиск окна и нажатие на код клиента
+	// С€Р°Рі 02: РїРѕРёСЃРє РѕРєРЅР° Рё РЅР°Р¶Р°С‚РёРµ РЅР° РєРѕРґ РєР»РёРµРЅС‚Р°
 	if (n < 13)
 	{
 		int er = recognize.read_vvod_zaya();
@@ -642,36 +642,36 @@ void buy_stock(_tetron* tt, bool buy)
 			{
 				n = 1000;
 				//        ra2.kar_->bitmap_->SaveToFile("xxx.bmp");
-				//				MessageBox(0, (L"не найдено окно, ошибка " + to_wstring(er)).data(), L"упс..", MB_OK | MB_TASKMODAL);
+				//				MessageBox(0, (L"РЅРµ РЅР°Р№РґРµРЅРѕ РѕРєРЅРѕ, РѕС€РёР±РєР° " + to_wstring(er)).data(), L"СѓРїСЃ..", MB_OK | MB_TASKMODAL);
 			}
 			return;
 		}
 		n = 1000;
-		int n_pok = recognize.find_elem(L"Покупка");
-		int n_pro = recognize.find_elem(L"Продажа");
+		int n_pok = recognize.find_elem(L"РџРѕРєСѓРїРєР°");
+		int n_pro = recognize.find_elem(L"РџСЂРѕРґР°Р¶Р°");
 		if ((n_pok < 0) || (n_pro < 0))
 		{
-			//			MessageBox(0, L"не найдена покупка/продажа", L"упс..", MB_OK | MB_TASKMODAL);
+			//			MessageBox(0, L"РЅРµ РЅР°Р№РґРµРЅР° РїРѕРєСѓРїРєР°/РїСЂРѕРґР°Р¶Р°", L"СѓРїСЃ..", MB_OK | MB_TASKMODAL);
 			return;
 		}
 		uint c = recognize.image.sl(recognize.elem[n_pok].area.y.min)[recognize.elem[n_pok].area.x.min - 1];
 		uchar* cc = (uchar*)&c;
-		bool cfpok = (cc[0] != cc[1]) || (cc[0] != cc[2]); // не серый цвет
+		bool cfpok = (cc[0] != cc[1]) || (cc[0] != cc[2]); // РЅРµ СЃРµСЂС‹Р№ С†РІРµС‚
 		c = recognize.image.sl(recognize.elem[n_pro].area.y.min)[recognize.elem[n_pro].area.x.min - 1];
 		cc = (uchar*)&c;
-		bool cfpro = (cc[0] != cc[1]) || (cc[0] != cc[2]); // не серый цвет
+		bool cfpro = (cc[0] != cc[1]) || (cc[0] != cc[2]); // РЅРµ СЃРµСЂС‹Р№ С†РІРµС‚
 //		bool cfpok = (recognize.image.sl(recognize.elem[n_pok].area.y.min)[recognize.elem[n_pok].area.x.min - 1] != recognize.image.data[0]);
 //		bool cfpro = (recognize.image.sl(recognize.elem[n_pro].area.y.min)[recognize.elem[n_pro].area.x.min - 1] != recognize.image.data[0]);
 		if (cfpok == cfpro)
 		{
-			//			MessageBox(0, L"одинаковые цвета покупка/продажа", L"упс..", MB_OK | MB_TASKMODAL);
+			//			MessageBox(0, L"РѕРґРёРЅР°РєРѕРІС‹Рµ С†РІРµС‚Р° РїРѕРєСѓРїРєР°/РїСЂРѕРґР°Р¶Р°", L"СѓРїСЃ..", MB_OK | MB_TASKMODAL);
 			return;
 		}
 		if (buy)
 		{
 			if (!cfpok)
 			{
-				//				MessageBox(0, L"НЕ покупка", L"упс..", MB_OK | MB_TASKMODAL);
+				//				MessageBox(0, L"РќР• РїРѕРєСѓРїРєР°", L"СѓРїСЃ..", MB_OK | MB_TASKMODAL);
 				return;
 			}
 		}
@@ -679,16 +679,16 @@ void buy_stock(_tetron* tt, bool buy)
 		{
 			if (!cfpro)
 			{
-				//				MessageBox(0, L"НЕ продажа", L"упс..", MB_OK | MB_TASKMODAL);
+				//				MessageBox(0, L"РќР• РїСЂРѕРґР°Р¶Р°", L"СѓРїСЃ..", MB_OK | MB_TASKMODAL);
 				return;
 			}
 
 		}
-		int kk = recognize.find_elem(L"КодКлиента");
-		int kk2 = recognize.find_elem(L"Поручение");
+		int kk = recognize.find_elem(L"РљРѕРґРљР»РёРµРЅС‚Р°");
+		int kk2 = recognize.find_elem(L"РџРѕСЂСѓС‡РµРЅРёРµ");
 		if ((kk < 0) || (kk2 < 0))
 		{
-			//			MessageBox(0, L"странно нет кода клиента", L"упс..", MB_OK | MB_TASKMODAL);
+			//			MessageBox(0, L"СЃС‚СЂР°РЅРЅРѕ РЅРµС‚ РєРѕРґР° РєР»РёРµРЅС‚Р°", L"СѓРїСЃ..", MB_OK | MB_TASKMODAL);
 			return;
 		}
 		if (abs(recognize.elem[kk].area.x.min - recognize.elem[kk2].area.x.min) < 5) win8 = true;
@@ -699,10 +699,10 @@ void buy_stock(_tetron* tt, bool buy)
 		n = 13;
 		return;
 	}
-	// шаг 03: выбор кода клиента 
+	// С€Р°Рі 03: РІС‹Р±РѕСЂ РєРѕРґР° РєР»РёРµРЅС‚Р° 
 	if (n == 13)
 	{
-		int kk = recognize.find_elem(L"КодКлиента");
+		int kk = recognize.find_elem(L"РљРѕРґРљР»РёРµРЅС‚Р°");
 		if (kk < 0)
 		{
 			n = 1000;
@@ -715,10 +715,10 @@ void buy_stock(_tetron* tt, bool buy)
 		n = 14;
 		return;
 	}
-	// шаг 04: щелканье кода клиента
+	// С€Р°Рі 04: С‰РµР»РєР°РЅСЊРµ РєРѕРґР° РєР»РёРµРЅС‚Р°
 	if (n == 14)
 	{
-		int kk = recognize.find_elem(L"КодКлиента");
+		int kk = recognize.find_elem(L"РљРѕРґРљР»РёРµРЅС‚Р°");
 		if (kk < 0)
 		{
 			n = 1000;
@@ -731,7 +731,7 @@ void buy_stock(_tetron* tt, bool buy)
 		n = 15;
 		return;
 	}
-	// шаг 05: поиск кода клиента, щелчок по количеству
+	// С€Р°Рі 05: РїРѕРёСЃРє РєРѕРґР° РєР»РёРµРЅС‚Р°, С‰РµР»С‡РѕРє РїРѕ РєРѕР»РёС‡РµСЃС‚РІСѓ
 	if (n == 15)
 	{
 		int er = recognize.read_vvod_zaya();
@@ -745,7 +745,7 @@ void buy_stock(_tetron* tt, bool buy)
 			n = 1000;
 			return;
 		}
-		int kk = recognize.find_elem_kusok(L"Кол-во");
+		int kk = recognize.find_elem_kusok(L"РљРѕР»-РІРѕ");
 		if (kk < 0)
 		{
 			n = 1000;
@@ -758,22 +758,22 @@ void buy_stock(_tetron* tt, bool buy)
 		n = 16;
 		return;
 	}
-	// шаг 06: ввод количества
+	// С€Р°Рі 06: РІРІРѕРґ РєРѕР»РёС‡РµСЃС‚РІР°
 	if (n == 16)
 	{
-		// выделение
+		// РІС‹РґРµР»РµРЅРёРµ
 		keybd_event(0x11, 0, 0, 0);
 		keybd_event('A', 0, 0, 0);
 		keybd_event('A', 0, KEYEVENTF_KEYUP, 0);
 		keybd_event(0x11, 0, KEYEVENTF_KEYUP, 0);
-		// удаление
+		// СѓРґР°Р»РµРЅРёРµ
 		keybd_event(0x2E, 0, 0, 0);
 		keybd_event(0x2E, 0, KEYEVENTF_KEYUP, 0);
 		if (!win8)
 		{
-			// определение количества
-			int kmax = recognize.find_elem_kusok(L"mах:");
-			int klot = recognize.find_elem_kusok(L"Кол-во(лот");
+			// РѕРїСЂРµРґРµР»РµРЅРёРµ РєРѕР»РёС‡РµСЃС‚РІР°
+			int kmax = recognize.find_elem_kusok(L"mР°С…:");
+			int klot = recognize.find_elem_kusok(L"РљРѕР»-РІРѕ(Р»РѕС‚");
 			if ((kmax < 0) || (klot < 0))
 			{
 				n = 1000;
@@ -782,7 +782,7 @@ void buy_stock(_tetron* tt, bool buy)
 			kmax = bad_string_to_int(recognize.elem[kmax].s);
 			klot = bad_string_to_int(recognize.elem[klot].s);
 			if (klot == 0)
-			{ // на всякий случай
+			{ // РЅР° РІСЃСЏРєРёР№ СЃР»СѓС‡Р°Р№
 				n = 1000;
 				return;
 			}
@@ -794,7 +794,7 @@ void buy_stock(_tetron* tt, bool buy)
 			n = 1000;
 			return;
 		}
-		// ввод количества
+		// РІРІРѕРґ РєРѕР»РёС‡РµСЃС‚РІР°
 		std::string s = std::to_string(KKK);
 		for (int i = 0; i < s.size(); i++)
 		{
@@ -804,7 +804,7 @@ void buy_stock(_tetron* tt, bool buy)
 		n = 17;
 		return;
 	}
-	// шаг 07: проверка и нажатие на Да
+	// С€Р°Рі 07: РїСЂРѕРІРµСЂРєР° Рё РЅР°Р¶Р°С‚РёРµ РЅР° Р”Р°
 	if (n == 17)
 	{
 		int er = recognize.read_vvod_zaya();
@@ -818,7 +818,7 @@ void buy_stock(_tetron* tt, bool buy)
 			n = 1000;
 			return;
 		}
-		int kk = recognize.find_elem(L"Да");
+		int kk = recognize.find_elem(L"Р”Р°");
 		if (kk < 0)
 		{
 			n = 1000;
@@ -827,7 +827,7 @@ void buy_stock(_tetron* tt, bool buy)
 		SetCursorPos((int)(recognize.elem[kk].area.x.min + 20 + recognize.offset.x), (int)(recognize.elem[kk].area.y.min + 5 + recognize.offset.y));
 
 
-		mouse_click(); // НЕЛЬЗЯ
+		mouse_click(); // РќР•Р›Р¬Р—РЇ
 		n = 18;
 		return;
 	}
@@ -841,18 +841,18 @@ void buy_stock(_tetron* tt, bool buy)
 			{
 				n = 1000;
 				//        ra2.kar_->bitmap_->SaveToFile("xxx.bmp");
-				//				MessageBox(0, (L"не найдено окно внимание, ошибка " + to_wstring(er)).data(), L"упс..", MB_OK | MB_TASKMODAL);
+				//				MessageBox(0, (L"РЅРµ РЅР°Р№РґРµРЅРѕ РѕРєРЅРѕ РІРЅРёРјР°РЅРёРµ, РѕС€РёР±РєР° " + to_wstring(er)).data(), L"СѓРїСЃ..", MB_OK | MB_TASKMODAL);
 			}
 			return;
 		}
-		int kk = recognize.find_elem(L"ОК");
+		int kk = recognize.find_elem(L"РћРљ");
 		if (kk < 0)
 		{
 			n = 1000;
 			return;
 		}
 		SetCursorPos((int)(recognize.elem[kk].area.x.min + 20 + recognize.offset.x), (int)(recognize.elem[kk].area.y.min + 5 + recognize.offset.y));
-		mouse_click();                                                     // НЕЛЬЗЯ
+		mouse_click();                                                     // РќР•Р›Р¬Р—РЇ
 		n = 29;
 		return;
 	}
@@ -866,12 +866,12 @@ void buy_stock(_tetron* tt, bool buy)
 			{
 				n = 1000;
 				//        ra2.kar_->bitmap_->SaveToFile("xxx.bmp");
-				//				MessageBox(0, (L"не найдено окно сообщений, ошибка " + to_wstring(er)).data(), L"упс..", MB_OK | MB_TASKMODAL);
+				//				MessageBox(0, (L"РЅРµ РЅР°Р№РґРµРЅРѕ РѕРєРЅРѕ СЃРѕРѕР±С‰РµРЅРёР№, РѕС€РёР±РєР° " + to_wstring(er)).data(), L"СѓРїСЃ..", MB_OK | MB_TASKMODAL);
 			}
 			return;
 		}
 		SetCursorPos((int)(recognize.offset.x + recognize.image.size.x - 23), (int)(recognize.offset.y - 15));
-		mouse_click(); // НЕЛЬЗЯ
+		mouse_click(); // РќР•Р›Р¬Р—РЇ
 		n = 40;
 		return;
 	}
