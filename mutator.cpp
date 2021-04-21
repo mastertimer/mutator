@@ -1239,9 +1239,9 @@ _tetron* create_tetron(const std::string& name)
 	return fun->second();
 }
 
-_tetron* create_tetron(uchar tipt)
+_tetron* create_tetron(uchar type)
 {
-	switch (tipt)
+	switch (type)
 	{
 	case  0: return new _tetron;              // 0x20
 	case  1: return new _g_edit64bit;         // 0xFE

@@ -35,7 +35,7 @@ std::string _tetron::name()
 	return s.substr(4, s.size() - 6);
 }
 
-namespace SuperDelTetron2
+namespace super_del_tetron2
 {
 	_speed<_vector_tetron>          ud(false); // список на удаление
 	_speed<_hash_table_tetron>      Sp(false); // полный список
@@ -43,7 +43,7 @@ namespace SuperDelTetron2
 	_speed<_hash_table_tetron>      Ba(false); // плохой список
 	_tetron*                        start;     // стартовый особый тетрон
 
-	void MetkaDelB12(_tetron* b)
+	void metka_del_B12(_tetron* b)
 	{
 		if (Sp2.find(b)) return;
 		if (Ba->find(b)) return;
@@ -53,11 +53,11 @@ namespace SuperDelTetron2
 		{
 			_tetron* a = (*i)(b);
 			if (!i->test_flags(b, flag_part)) continue;
-			MetkaDelB12(a);
+			metka_del_B12(a);
 		}
 	}
 
-	bool moi(_tetron* b)
+	bool is_my(_tetron* b)
 	{
 		for (auto i : b->link)
 		{
@@ -74,25 +74,25 @@ namespace SuperDelTetron2
 		return true;
 	}
 
-	void AntiMetkaB12(_tetron* b)
+	void anti_metka_B12(_tetron* b)
 	{
 		if (Sp2.find(b)) return;
 		if (Ba->find(b)) return;
 		Sp2.insert(b);
-		if (moi(b))
+		if (is_my(b))
 		{
 			for (auto i : b->link)
 			{
 				_tetron* a = (*i)(b);
 				if (!i->test_flags(b, flag_part)) continue;
-				AntiMetkaB12(a);
+				anti_metka_B12(a);
 			}
 		}
 		else
 			b->traversal(Ba, flag_part);
 	}
 
-	void PodgSpUnikSv(_tetron* b) // подготовить список уникальный свойств тетрона
+	void prepare_sp_unik_sv(_tetron* b) // подготовить список уникальный свойств тетрона
 	{
 		Sp.start();
 		Sp2.clear();
@@ -106,7 +106,7 @@ namespace SuperDelTetron2
 		{
 			_tetron* a = (*i)(b);
 			if (!i->test_flags(b, flag_part)) continue;
-			AntiMetkaB12(a);
+			anti_metka_B12(a);
 		}
 		// подготовить список
 		Sp2.clear();
@@ -115,11 +115,11 @@ namespace SuperDelTetron2
 		{
 			_tetron* a = (*i)(b);
 			if (!i->test_flags(b, flag_part)) continue;
-			MetkaDelB12(a);
+			metka_del_B12(a);
 		}
 	}
 
-	void FreeBank()
+	void free_bank()
 	{
 		Ba.stop();
 		Sp.stop();
@@ -129,22 +129,22 @@ namespace SuperDelTetron2
 
 _tetron* _tetron::copy_plus()
 {
-	SuperDelTetron2::PodgSpUnikSv(this);
-	SuperDelTetron2::ud->push_back(this); // т.к. в списке главного тетрона нет
+	super_del_tetron2::prepare_sp_unik_sv(this);
+	super_del_tetron2::ud->push_back(this); // т.к. в списке главного тетрона нет
 	                                      // Sp2 = ud ???
-	for (auto b : *SuperDelTetron2::ud)
+	for (auto b : *super_del_tetron2::ud)
 	{
 		_tetron* a = create_tetron(b->type());
 		a->copy(b);
-		SuperDelTetron2::Sp2.find(b)->a = a;
+		super_del_tetron2::Sp2.find(b)->a = a;
 	}
-	for (auto a : *SuperDelTetron2::ud)
+	for (auto a : *super_del_tetron2::ud)
 	{
-		_tetron* aa = SuperDelTetron2::Sp2.find(a)->a;
+		_tetron* aa = super_del_tetron2::Sp2.find(a)->a;
 		for (auto j : a->link)
 		{
 			_tetron* b = (*j)(a);
-			auto     n = SuperDelTetron2::Sp2.find(b);
+			auto     n = super_del_tetron2::Sp2.find(b);
 			if (!n)
 			{
 				aa->add_flags(b, j->get_flags(a) & 0xFFFFFFFF, false);
@@ -153,8 +153,8 @@ _tetron* _tetron::copy_plus()
 			if (aa <= n->a) aa->add_flags(n->a, j->get_flags(a), false);
 		}
 	}
-	_tetron* rr = SuperDelTetron2::Sp2.find(this)->a;
-	SuperDelTetron2::FreeBank();
+	_tetron* rr = super_del_tetron2::Sp2.find(this)->a;
+	super_del_tetron2::free_bank();
 	return rr;
 }
 
@@ -267,9 +267,9 @@ void delete_hvost(_tetron* t, bool del_t, bool run_func)
 {
 	bool pprr           = run_before_del_link;
 	run_before_del_link = run_func;
-	SuperDelTetron2::PodgSpUnikSv(t);
-	for (auto i : *SuperDelTetron2::ud) delete i;
-	SuperDelTetron2::FreeBank();
+	super_del_tetron2::prepare_sp_unik_sv(t);
+	for (auto i : *super_del_tetron2::ud) delete i;
+	super_del_tetron2::free_bank();
 	if (del_t) delete t;
 	run_before_del_link = pprr;
 }
