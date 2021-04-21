@@ -1965,6 +1965,7 @@ void _g_edit_string::key_down(ushort key)
 			s->erase(cursor - 1LL, 1);
 			cursor--;
 			cha_area();
+			master_obl_izm = { {0.0, (double)master_bm.size.x}, {0.0, (double)master_bm.size.y} };  // перерисовать всё
 		}
 		return;
 	}
@@ -1993,6 +1994,7 @@ void _g_edit_string::key_down(ushort key)
 		{
 			s->erase(cursor, 1);
 			cha_area();
+			master_obl_izm = { {0.0, (double)master_bm.size.x}, {0.0, (double)master_bm.size.y} };  // перерисовать всё
 		}
 		return;
 	}
@@ -2006,6 +2008,8 @@ void _g_edit_string::key_press(ushort key)
 	s->insert(cursor, 1, key);
 	cursor++;
 	cha_area();
+	// я не нашёл правильного способа сообщить тексту, что он изменён, так что:
+	master_obl_izm = { {0.0, (double)master_bm.size.x}, {0.0, (double)master_bm.size.y} };  // перерисовать всё
 }
 
 _g_edit_string::_g_edit_string()
