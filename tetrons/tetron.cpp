@@ -3032,8 +3032,19 @@ void _g_link::ris2(_trans tr, bool final)
 			c = brighten(c);
 		}
 		if ((al != -1) || (f & (1ULL << i)))
-			master_bm.lines(pp11 + (pp12 - pp11) * ((i + 0.5) / (v_link * 2)) + v * dl,
-				pp21 + (pp22 - pp21) * ((i + 0.5) / (v_link * 2)) - v * dl2, t, c);
+		{
+			auto beg = pp11 + (pp12 - pp11) * ((i + 0.5) / (v_link * 2)) + v * dl;
+			auto end = pp21 + (pp22 - pp21) * ((i + 0.5) / (v_link * 2)) - v * dl2;
+			master_bm.lines(beg, end, t, c);
+
+			auto dist = beg - end;
+			if (dist.len() >= 8)
+			{
+				dist = dist * (1 / dist.len()) * 7;
+				master_bm.lines(end, end + dist.rotation(0.26), t, c);
+				master_bm.lines(end, end + dist.rotation(-0.26), t, c);
+			}
+		}
 		c = (f & (1ULL << (i + 32))) ? color_set[i] : cclow(color_set[i]);
 		t = 1;
 		if (al == (v_link * 2 - 1 - i))
@@ -3042,8 +3053,19 @@ void _g_link::ris2(_trans tr, bool final)
 			c = brighten(c);
 		}
 		if ((al != -1) || (f & (1ULL << (i + 32))))
-			master_bm.lines(pp11 + (pp12 - pp11) * ((v_link * 2 - 0.5 - i) / (v_link * 2)) + v * dl,
-				pp21 + (pp22 - pp21) * ((v_link * 2 - 0.5 - i) / (v_link * 2)) - v * dl2, t, c);
+		{
+			auto beg = pp11 + (pp12 - pp11) * ((v_link * 2 - 0.5 - i) / (v_link * 2)) + v * dl;
+			auto end = pp21 + (pp22 - pp21) * ((v_link * 2 - 0.5 - i) / (v_link * 2)) - v * dl2;
+			master_bm.lines(beg, end, t, c);
+
+			auto dist = end - beg;
+			if (dist.len() >= 8)
+			{
+				dist = dist * (1 / dist.len()) * 7;
+				master_bm.lines(beg, beg + dist.rotation(0.26), t, c);
+				master_bm.lines(beg, beg + dist.rotation(-0.26), t, c);
+			}
+		}
 	}
 }
 
