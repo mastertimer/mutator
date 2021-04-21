@@ -56,9 +56,8 @@ end:
 	}
 }
 
-void to_clipboard(astr text)
+void set_clipboard_text(astr text)
 {
-
 	if (OpenClipboard(0))//открываем буфер обмена
 	{
 		HGLOBAL hgBuffer;

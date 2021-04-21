@@ -327,14 +327,14 @@ extern __hash_table<_link> glink; // ??? если сделать inline - буд
 void delete_hvost(_tetron* t, bool del_t = false, bool run_func = true);
 void optimize_hash_intermediate();
 void add_obl_izm(_area a); // добавить область изменения
-_tetron* create_tetron(uchar tipt); // определено в другом места
+_tetron* create_tetron(uchar type); // определено в другом места
 
-namespace SuperDelTetron2
+namespace super_del_tetron2
 {
 	extern _speed<_vector_tetron> ud; // список на удаление
 
-	void PodgSpUnikSv(_tetron* b);
-	void FreeBank();
+	void prepare_sp_unik_sv(_tetron* b);
+	void free_bank();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -776,7 +776,7 @@ struct _g_text : public _t_go
 	void  push(_wjson& b)     override { _t_go::push(b);   b.add("s", s); }
 	void  pop(_rjson& b)      override { _t_go::pop(b);    b.read("s", s); }
 
-	operator std::wstring* () override { return &s; }
+	operator std::wstring* () override { return &s; }  // !!! нет способа отследить изменение текста
 	operator _g_text* ()      override { return this; }
 
 	void ris2(_trans tr, bool final) override;

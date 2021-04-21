@@ -741,7 +741,7 @@ void _cdf::to_clipboard()
 	{
 		a << "{" << i.first << ", " << (int)i.bit << ", " << i.prefix << "}, ";
 	}
-	::to_clipboard(a.str().c_str());
+	::set_clipboard_text(a.str().c_str());
 }
 
 /*double _cdf::calc_size1(const _statistics& st)
@@ -999,7 +999,7 @@ void _cdf3::to_clipboard()
 	a << start << ", {";
 	for (auto& i : prefix) a << i << ", ";
 	a << "}";
-	::to_clipboard(a.str().c_str());
+	::set_clipboard_text(a.str().c_str());
 }
 
 bool _cdf3::coding(i64 a, _bit_vector& bs) const noexcept
