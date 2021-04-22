@@ -782,7 +782,7 @@ struct _g_text : public _t_go
 	void  push(_wjson& b)     override { _t_go::push(b);   b.add("s", s); }
 	void  pop(_rjson& b)      override { _t_go::pop(b);    b.read("s", s); }
 
-	operator std::wstring* () override { return &s; }  // !!! нет способа отследить изменение текста
+	operator std::wstring* () override { return &s; }
 	operator _g_text* ()      override { return this; }
 
 	void ris2(_trans tr, bool final) override;
