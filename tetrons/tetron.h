@@ -117,12 +117,13 @@ struct _tetron
 	virtual void add_unique_flags(_tetron* t, u64 flags, bool after = true); // создать уникальную связь
 	virtual void after_create_link(_link* li) {} // выз. после создания связи
 	virtual void before_delete_link(_link* li) {} // выз. перед удалением связи
+	virtual void value_changed() {} // было изменено внутренняя переменная
 	void traversal(_hash_table_tetron* ht, u64 flags, _vector_tetron* lt = 0);
 
 	void copy(_tetron* a); // присвоение содержимого
 	_tetron* copy_plus(); // копировать с хвостами
 
-	template <typename _t> _t* find1(u64 flags); // найти указатель нужного типа на глубине 1, с заданными флагами  
+	template <typename _t> _t* find1(u64 flags, _tetron** base_tetron = nullptr); // найти указатель нужного типа на глубине 1, с заданными флагами  
 	template <typename _t> _t* find_intermediate(_tetron* t, u64 flags_before, u64 flags_after); // промежуточный
 	void find_all_intermediate(_tetron* t, u64 flags_before, u64 flags_after, _vector_id& res); // все промежуточные (у родителей тоже)
 
@@ -409,14 +410,19 @@ template <typename _t> _t* _tetron::find_intermediate(_tetron* t, u64 flags_befo
 	return res;
 }
 
-template <typename _t> _t* _tetron::find1(u64 flags)
+template <typename _t> _t* _tetron::find1(u64 flags, _tetron** base_tetron)
 {
 	for (auto i : link)
 	{
 		_tetron* a = (*i)(this);
 		if (!i->test_flags(this, flags)) continue;
-		if (_t* x = *a) return x;
+		if (_t* x = *a)
+		{
+			if (base_tetron) *base_tetron = a;
+			return x;
+		}
 	}
+	if (base_tetron) *base_tetron = nullptr;
 	return nullptr;
 }
 
@@ -781,7 +787,7 @@ struct _g_text : public _t_go
 
 	void ris2(_trans tr, bool final) override;
 
-	void set_text(std::wstring_view s2_);
+	void value_changed() override; // было изменено внутренняя переменная
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1092,7 +1098,7 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename _t>
-_t* find1_plus_gtetron(_tetron* tet, u64 flags)
+_t* find1_plus_gtetron(_tetron* tet, u64 flags, _tetron** base_tetron = nullptr)
 {
 	for (auto i : tet->link)
 	{
@@ -1100,11 +1106,16 @@ _t* find1_plus_gtetron(_tetron* tet, u64 flags)
 		if (!i->test_flags(tet, flags)) continue;
 		if (_g_tetron* g = *a)
 		{
-			_t* t2 = g->find1<_t>(flag_specialty);
+			_t* t2 = g->find1<_t>(flag_specialty, base_tetron);
 			if (t2 != nullptr) return t2;
 		}
-		if (_t* x = *a) return x;
+		if (_t* x = *a)
+		{
+			if (base_tetron) *base_tetron = a;
+			return x;
+		}
 	}
+	if (base_tetron) *base_tetron = nullptr;
 	return nullptr;
 }
 

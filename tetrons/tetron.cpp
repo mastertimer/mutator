@@ -1499,12 +1499,11 @@ finish:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_text::set_text(std::wstring_view s2_)
+void _g_text::value_changed()
 {
 	del_area();
-	s = s2_;
-	_isize size = master_bm.size_text(s2_, 13);
-	local_area = { {-1, (double)size.x}, {0, (double)size.y} };
+	_isize size = master_bm.size_text(s, 13);
+	local_area = { {-1, std::max((double)size.x, 13.0)}, {0, std::max((double)size.y, 13.0)} };
 	area_definite = false;
 	add_area();
 }
@@ -1539,7 +1538,8 @@ void add_hint(std::wstring_view hint, _t_go* g)
 	_t_trans* ttr = new _t_trans;
 	ttr->trans = ko->trans.inverse() * tr;
 	ttr->add_flags(go, flag_part + flag_sub_go);
-	go->set_text(hint);
+	go->s = hint;
+	go->value_changed();
 	ko->add_flags(ttr, flag_part + flag_sub_go);
 	n_hint = go;
 }
@@ -1548,7 +1548,8 @@ void change_hint(std::wstring_view hint)
 {
 	if (!n_hint) return;
 	_g_text* go = *n_hint;
-	go->set_text(hint);
+	go->s = hint;
+	go->value_changed();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1956,7 +1957,8 @@ void _g_edit_string::ris2(_trans tr, bool final)
 
 void _g_edit_string::key_down(ushort key)
 {
-	std::wstring* s = find1_plus_gtetron<std::wstring>(this, flag_specialty);
+	_tetron* s_t;
+	std::wstring* s = find1_plus_gtetron<std::wstring>(this, flag_specialty, &s_t);
 	if (!s) return;
 	if (key == 8) // backspace
 	{
@@ -1965,6 +1967,7 @@ void _g_edit_string::key_down(ushort key)
 			s->erase(cursor - 1LL, 1);
 			cursor--;
 			cha_area();
+			s_t->value_changed();
 		}
 		return;
 	}
@@ -1993,6 +1996,7 @@ void _g_edit_string::key_down(ushort key)
 		{
 			s->erase(cursor, 1);
 			cha_area();
+			s_t->value_changed();
 		}
 		return;
 	}
@@ -2001,13 +2005,13 @@ void _g_edit_string::key_down(ushort key)
 void _g_edit_string::key_press(ushort key)
 {
 	if (key < 32) return;
-	std::wstring* s = find1_plus_gtetron<std::wstring>(this, flag_specialty);
+	_tetron* s_t;
+	std::wstring* s = find1_plus_gtetron<std::wstring>(this, flag_specialty, &s_t);
 	if (!s) return;
 	s->insert(cursor, 1, key);
 	cursor++;
-	cha_area(); // эта функция обновляет область конкретной _g_edit_string!!
-	// я не нашёл правильного способа сообщить тексту, что он изменён, так что:
-	// что за баг? вроде норм все работает?
+	cha_area();
+	s_t->value_changed();
 }
 
 _g_edit_string::_g_edit_string()
