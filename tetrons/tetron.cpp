@@ -1462,7 +1462,10 @@ void _g_terminal::ris2(_trans tr, bool final)
 			{oo.y.max - otst_y - tt - length_slider, oo.y.max - otst_y - tt} }, c0);
 	}
 
-	n_timer1000->add_flags(this, flag_run, false);
+	if (n_act_key == this)
+		n_timer1000->add_flags(this, flag_run, false);
+	else
+		n_timer1000->del_flags(this, flag_run, false);
 
 	for (i64 i = 0; i < ks; i++)
 	{
