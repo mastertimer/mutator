@@ -1362,27 +1362,44 @@ void _g_terminal::set_clipboard()
 		x0 = selection_end.x;
 		y0 = selection_end.y;
 	}
+	if (y0 == y1)
+	{
+		if (x1 < x0) std::swap(x0, x1);
+	}
 	i64 yy = full_lines;
-	for (auto& s : text)
+
+	auto fff = [&](const std::wstring &s)
 	{
 		i64 ks = (s.size() + cmd_vis_len - 1) / cmd_vis_len;
-		if (yy - 1 < y0) break;
+		if (yy - 1 < y0) return;
 		if (yy - ks > y1)
 		{
 			yy -= ks;
-			continue;
+			return;
 		}
 		if ((yy - 1 < y1) && (yy - ks > y0))
 		{
 			result += s + L"\r\n";
 			yy -= ks;
-			continue;
+			return;
 		}
 		for (i64 i = 0; i < ks; i++)
 		{
 			yy--;
+			if ((yy > y0) && (yy < y1)) result += s.substr(i * cmd_vis_len, cmd_vis_len) + ((i == ks - 1) ? L"\r\n" : L"");
+			if ((yy == y1) && (yy == y0))
+			{
+				result += s.substr(i * cmd_vis_len + x0, x1 - x0 + 1);
+				continue;
+			}
+			if (yy == y1) result += s.substr(i * cmd_vis_len + x1, cmd_vis_len - x1) + ((i == ks - 1) ? L"\r\n" : L"");
+			if (yy == y0) result += s.substr(i * cmd_vis_len, x0 + 1) + ((i == ks - 1) ? L"\r\n" : L"");
 		}
-	}
+	};
+
+	for (auto& s : text) fff(s);
+	fff(prefix + cmd);
+
 	set_clipboard_text(result);
 	selection_begin.x = -1;
 }
