@@ -1262,8 +1262,8 @@ bool _g_terminal::mouse_down_left2(_xy r)
 	y0_move_slider = -1;
 	r = master_trans_go(r);
 	_iarea oo = master_trans_go(local_area);
-	if ((r.x > oo.x.max - width_scrollbar) && (r.x < oo.x.max))
-	{
+	if (r.x > oo.x.max - width_scrollbar)
+	{ // на полосе прокрутки
 		if (r.y < y_slider.min)
 			scrollbar += max_lines - 1;
 		else
@@ -1275,18 +1275,40 @@ bool _g_terminal::mouse_down_left2(_xy r)
 				scrollbar0_move_slider = scrollbar;
 			}
 	}
+	else
+	{ // на тексте
+		i64 x_text = oo.x.min + otst_x;
+		i64 y_cmd = oo.y.max - otst_y;
+
+		i64 xx = (r.x - x_text) / font_width;
+		i64 yy = (y_cmd - r.y) / font_size;
+
+		selection_begin = { xx, yy };
+		selection_end = { xx, yy };
+	}
 	cha_area();
 	return true;
 }
 
 void _g_terminal::mouse_move_left2(_xy r)
 {
-	if (y0_move_slider < 0) return;
 	r = master_trans_go(r);
 	_iarea oo = master_trans_go(local_area);
-	i64 ypix = oo.y.size() - otst_y * 2 - y_slider.size();
-	i64 yline = full_lines - max_lines;
-	scrollbar = scrollbar0_move_slider - (r.y - y0_move_slider) * yline / ypix;
+	if (y0_move_slider >= 0)
+	{
+		i64 ypix = oo.y.size() - otst_y * 2 - y_slider.size();
+		i64 yline = full_lines - max_lines;
+		scrollbar = scrollbar0_move_slider - (r.y - y0_move_slider) * yline / ypix;
+		cha_area();
+		return;
+	}
+	// выделение текста
+	i64 x_text = oo.x.min + otst_x;
+	i64 y_cmd = oo.y.max - otst_y;
+
+	i64 xx = (r.x - x_text) / font_width;
+	i64 yy = (y_cmd - r.y) / font_size;
+	selection_end = { xx, yy };
 	cha_area();
 }
 
@@ -1308,6 +1330,7 @@ void _g_terminal::run_cmd()
 		text.push_back(L"команда не опознана!");
 	}
 	old_cmd_vis_len = -1;
+	selection_begin.x = -1;
 	cmd.clear();
 }
 
@@ -1320,56 +1343,53 @@ _g_terminal::_g_terminal()
 void _g_terminal::key_down(ushort key)
 {
 	visible_cursor = true;
-	if (key == 8) // backspace
+	switch (key)
 	{
+	case 8: // backspace
 		if (cursor > 0)
 		{
 			cmd.erase(cursor - 1LL, 1);
 			cursor--;
 			old_cmd_vis_len = -1;
+			selection_begin.x = -1;
 			vis_cur = true;
 		}
-		cha_area();
-		return;
-	}
-	if (key == 13) // enter
-	{
+		break;
+	case 13: // enter
 		cursor = 0;
 		run_cmd();
-		cha_area();
 		vis_cur = true;
-		return;
-	}
-	if (key == 37) // left
-	{
+		break;
+	case 35: // end
+		cursor = (i64)cmd.size();
+		vis_cur = true;
+		break;
+	case 36: // home
+		cursor = 0;
+		vis_cur = true;
+		break;
+	case 37: // left
 		if (cursor > 0)	cursor--;
-		cha_area();
 		vis_cur = true;
-		return;
-	}
-	if (key == 39) // right
-	{
+		break;
+	case 39: // right
 		if (cursor < (i64)cmd.size()) cursor++;
-		cha_area();
 		vis_cur = true;
-		return;
-	}
-	if (key == 45) // insert
-	{
+		break;
+	case 45: // insert
 		insert_mode = !insert_mode;
-		return;
-	}
-	if (key == 46) // delete
-	{
+		break;
+	case 46: // delete
 		if (cursor < (i64)cmd.size())
 		{
 			cmd.erase(cursor, 1);
 			old_cmd_vis_len = -1;
+			selection_begin.x = -1;
 			vis_cur = true;
 		}
-		cha_area();
-		return;
+		break;
 	}
+	cha_area();
 }
 
 void _g_terminal::key_press(ushort key)
@@ -1381,6 +1401,7 @@ void _g_terminal::key_press(ushort key)
 		cmd[cursor] = key;
 	cursor++;
 	old_cmd_vis_len = -1;
+	selection_begin.x = -1;
 	cha_area();
 	vis_cur = true;
 }
@@ -1395,8 +1416,7 @@ void _g_terminal::ris2(_trans tr, bool final)
 {
 	std::wstring old_font = master_bm.get_font_name();
 	master_bm.set_font(L"Consolas", false);
-	int font_size = 26; // минимум 12 для читабельности
-	int font_width = master_bm.size_text("0123456789", font_size).x / 10;
+	if (font_width == 0) font_width = master_bm.size_text("0123456789", font_size).x / 10;
 
 	std::wstring full_cmd = prefix + cmd;
 
@@ -1509,6 +1529,60 @@ void _g_terminal::ris2(_trans tr, bool final)
 				font_size, c_def, 0xff000000);
 		}
 		if (ks - scrollbar > max_lines) break;
+	}
+
+	if (selection_begin.x >= 0)
+	{
+		if (selection_begin.y == selection_end.y)
+		{
+			i64 yy = selection_begin.y - scrollbar;
+			if ((yy >= 0) && (yy < max_lines))
+			{
+				i64 x0 = std::min(selection_begin.x, selection_end.x);
+				i64 x1 = std::max(selection_begin.x, selection_end.x) + 1;
+				_iarea a = { {x_text + x0 * font_width, x_text + x1 * font_width},
+					{y_cmd - yy * font_size, y_cmd - (yy - 1) * font_size} };
+				master_bm.fill_rectangle(a, c_maxx - 0xA0000000);
+			}
+		}
+		else
+		{
+			i64 x0, y0, x1, y1;
+			if (selection_begin.y < selection_end.y)
+			{
+				x0 = selection_begin.x;
+				y0 = selection_begin.y - scrollbar;
+				x1 = selection_end.x;
+				y1 = selection_end.y - scrollbar;
+			}
+			else
+			{
+				x1 = selection_begin.x;
+				y1 = selection_begin.y - scrollbar;
+				x0 = selection_end.x;
+				y0 = selection_end.y - scrollbar;
+			}
+			if ((y1 >= 0) && (y1 < max_lines))
+			{
+				_iarea a = { {x_text + x1 * font_width, x_text + cmd_vis_len * font_width},
+				{y_cmd - y1 * font_size, y_cmd - (y1 - 1) * font_size} };
+				master_bm.fill_rectangle(a, c_maxx - 0xA0000000);
+			}
+			for (i64 yy = y1 - 1; yy > y0; yy--)
+				if ((yy >= 0) && (yy < max_lines))
+				{
+					_iarea a = { {x_text, x_text + cmd_vis_len * font_width},
+					{y_cmd - yy * font_size, y_cmd - (yy - 1) * font_size} };
+					master_bm.fill_rectangle(a, c_maxx - 0xA0000000);
+				}
+
+			if ((y0 >= 0) && (y0 < max_lines))
+			{
+				_iarea a = { {x_text, x_text + (x0 + 1) * font_width},
+				{y_cmd - y0 * font_size, y_cmd - (y0 - 1) * font_size} };
+				master_bm.fill_rectangle(a, c_maxx - 0xA0000000);
+			}
+		}
 	}
 
 finish:

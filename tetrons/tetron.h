@@ -1187,10 +1187,14 @@ struct _g_terminal : public _t_go
 	bool insert_mode = true;
 	_iarea area_cursor;
 	i64 scrollbar = 0; // отступ ползунка снизу
+	inline static int font_size = 26; // минимум 12 для читабельности
+	int font_width = 0; // ширина символов
 	inline static std::wstring prefix = L"> ";
 	inline static i64 width_scrollbar = 20; // ширина полосы прокрутки
 	inline static i64 otst_x = 3; // отступ при рисовании
 	inline static i64 otst_y = 2; // отступ при рисовании
+	_ixy selection_begin = { -1LL,0LL }; // номер отображаемой строки и номер символа
+	_ixy selection_end = { 0LL,0LL }; // номер отображаемой строки и номер символа
 
 	_g_terminal();
 	uchar type() override { return 18; }
@@ -1212,7 +1216,7 @@ private:
 	i64 max_lines = 0; // сколько строк помещается на экране
 	double y0_move_slider = -1; // начальный y - перемещения ползунка
 	i64 scrollbar0_move_slider = 0; // начальное положение scrollbar
-	i64 full_lines; // полное количество строк
+	i64 full_lines = 0; // полное количество строк
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
