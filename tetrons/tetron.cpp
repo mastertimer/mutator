@@ -569,10 +569,11 @@ bool _t_basic_go::mouse_down_left(_trans tr)
 				if (b) b->operator _t_basic_go* ()->cha_area();
 				cha_area();
 			}
+			master_trans_go = tr; // было в if
 			if (tgo->mouse_down_left2(r))
 			{
 				n_tani = this;
-				master_trans_go = tr;
+//				master_trans_go = tr;
 				return true;
 			}
 			if (tgo->key_fokus) return true;
@@ -1258,17 +1259,34 @@ void _g_rect::ris2(_trans tr, bool final)
 
 bool _g_terminal::mouse_down_left2(_xy r)
 {
+	y0_move_slider = -1;
+	r = master_trans_go(r);
+	_iarea oo = master_trans_go(local_area);
+	if ((r.x > oo.x.max - width_scrollbar) && (r.x < oo.x.max))
+	{
+		if (r.y < y_slider.min)
+			scrollbar += max_lines - 1;
+		else
+			if (r.y > y_slider.max)
+				scrollbar -= max_lines - 1;
+			else
+			{
+				y0_move_slider = r.y;
+				scrollbar0_move_slider = scrollbar;
+			}
+	}
+	cha_area();
 	return true;
-}
-
-void _g_terminal::mouse_up_left2(_xy r)
-{
-
 }
 
 void _g_terminal::mouse_move_left2(_xy r)
 {
-	scrollbar++;
+	if (y0_move_slider < 0) return;
+	r = master_trans_go(r);
+	_iarea oo = master_trans_go(local_area);
+	i64 ypix = oo.y.size() - otst_y * 2 - y_slider.size();
+	i64 yline = full_lines - max_lines;
+	scrollbar = scrollbar0_move_slider - (r.y - y0_move_slider) * yline / ypix;
 	cha_area();
 }
 
@@ -1379,7 +1397,6 @@ void _g_terminal::ris2(_trans tr, bool final)
 	master_bm.set_font(L"Consolas", false);
 	int font_size = 26; // минимум 12 для читабельности
 	int font_width = master_bm.size_text("0123456789", font_size).x / 10;
-	i64 width_scrollbar = 20; // ширина полосы прокрутки
 
 	std::wstring full_cmd = prefix + cmd;
 
@@ -1387,16 +1404,14 @@ void _g_terminal::ris2(_trans tr, bool final)
 	_iarea oo2 = oo;
 	oo2.x.max -= width_scrollbar - 1;
 
-	i64 otst_x = 3;
-	i64 otst_y = 2;
 	i64 x_text = oo.x.min + otst_x;
 	i64 y_cmd = oo.y.max - font_size - otst_y;
 	i64 cmd_vis_len = (oo.x.size() - otst_x * 2 - width_scrollbar) / font_width;
 	i64 ks = (full_cmd.size() + cmd_vis_len) / cmd_vis_len;
 
-	i64 max_lines = (oo.y.size() - otst_y * 2) / font_size; // строк в окне
+	max_lines = (oo.y.size() - otst_y * 2) / font_size; // строк в окне
 
-	i64 full_lines = 0; // общее количество строк
+	full_lines = 0; // общее количество строк
 	if (old_cmd_vis_len == cmd_vis_len)
 		full_lines = old_full_lines;
 	else
@@ -1458,8 +1473,8 @@ void _g_terminal::ris2(_trans tr, bool final)
 
 		i64 tt = (oo.y.size() - otst_y * 2 - length_slider) * scrollbar / (full_lines - max_lines);
 
-		master_bm.fill_rectangle({ {oo.x.max - width_scrollbar + 2, oo.x.max - 2},
-			{oo.y.max - otst_y - tt - length_slider, oo.y.max - otst_y - tt} }, c0);
+		y_slider = { oo.y.max - otst_y - tt - length_slider, oo.y.max - otst_y - tt };
+		master_bm.fill_rectangle({ {oo.x.max - width_scrollbar + 2, oo.x.max - 2}, y_slider }, c0);
 	}
 
 	if (n_act_key == this)

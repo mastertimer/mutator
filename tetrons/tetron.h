@@ -1188,6 +1188,9 @@ struct _g_terminal : public _t_go
 	_iarea area_cursor;
 	i64 scrollbar = 0; // отступ ползунка снизу
 	inline static std::wstring prefix = L"> ";
+	inline static i64 width_scrollbar = 20; // ширина полосы прокрутки
+	inline static i64 otst_x = 3; // отступ при рисовании
+	inline static i64 otst_y = 2; // отступ при рисовании
 
 	_g_terminal();
 	uchar type() override { return 18; }
@@ -1198,7 +1201,6 @@ struct _g_terminal : public _t_go
 	void key_press(ushort key) override;
 	bool mouse_wheel2(_xy r) override;
 	bool mouse_down_left2(_xy r) override;
-	void mouse_up_left2(_xy r) override;
 	void mouse_move_left2(_xy r) override;
 	void run_cmd(); // выволнить введенную команду
 
@@ -1206,7 +1208,11 @@ private:
 	i64 old_cmd_vis_len = -1; // количество символов в строке
 	i64 old_full_lines = 0; // полное количество строк
 	i64 vis_cur = false; // сделать курсор видимым
-
+	_iinterval y_slider; // пиксельные координаты y ползунка
+	i64 max_lines = 0; // сколько строк помещается на экране
+	double y0_move_slider = -1; // начальный y - перемещения ползунка
+	i64 scrollbar0_move_slider = 0; // начальное положение scrollbar
+	i64 full_lines; // полное количество строк
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
