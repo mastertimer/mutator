@@ -52,7 +52,7 @@ void init_shift(WPARAM wparam)
 {
 	*n_s_shift ->operator i64* () = wparam & MK_SHIFT;
 	*n_s_alt   ->operator i64* () = false;
-	*n_s_ctrl  ->operator i64* () = wparam & MK_CONTROL;
+//	*n_s_ctrl  ->operator i64* () = wparam & MK_CONTROL;
 	*n_s_left  ->operator i64* () = wparam & MK_LBUTTON;
 	*n_s_right ->operator i64* () = wparam & MK_RBUTTON;
 	*n_s_middle->operator i64* () = wparam & MK_MBUTTON;
@@ -135,34 +135,46 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (!master_obl_izm.empty()) paint(hWnd);
 		return 0;
 	case WM_KEYDOWN:
-		if (wParam == VK_F1)
+		switch (wParam)
 		{
-			static bool norm = true;
-			if (norm)
+		case VK_F1:
 			{
-				SetWindowLongPtr(hWnd, GWL_STYLE, WS_VISIBLE);
-				ShowWindow(hWnd, SW_MAXIMIZE);
+				static bool norm = true;
+				if (norm)
+				{
+					SetWindowLongPtr(hWnd, GWL_STYLE, WS_VISIBLE);
+					ShowWindow(hWnd, SW_MAXIMIZE);
+				}
+				else
+				{
+					ShowWindow(hWnd, SW_SHOWNORMAL);
+					SetWindowLongPtr(hWnd, GWL_STYLE, WS_VISIBLE | WS_OVERLAPPEDWINDOW);
+				}
+				norm = !norm;
 			}
-			else
+			break;
+		case VK_F2:
 			{
-				ShowWindow(hWnd, SW_SHOWNORMAL);
-				SetWindowLongPtr(hWnd, GWL_STYLE, WS_VISIBLE | WS_OVERLAPPEDWINDOW);
+				run_timer = false;
+				int r = MessageBox(hWnd, L"сохранить?", L"предупреждение", MB_YESNO);
+				if (r == IDYES) mutator::save_to_txt_file((exe_path + tetfile).c_str());
+				run_timer = true;
 			}
-			norm = !norm;
-			return 0;
+			break;
+		case VK_CONTROL:
+			*n_s_ctrl  ->operator i64* () = 1;
+			break;
+		default:
+			*n_down_key->operator i64* () = wParam;
+			n_down_key->run(0, n_down_key, flag_run);
+			if (!master_obl_izm.empty()) paint(hWnd);
 		}
-		if (wParam == VK_F2)
+		return 0;
+	case WM_KEYUP:
+		if (wParam == VK_CONTROL)
 		{
-			run_timer = false;
-			int r = MessageBox(hWnd, L"сохранить?", L"предупреждение", MB_YESNO);
-			if (r == IDYES) mutator::save_to_txt_file((exe_path + tetfile).c_str());
-			run_timer = true;
-			return 0;
+			*n_s_ctrl  ->operator i64* () = 1;
 		}
-		//		InitShift(Shift);
-		*n_down_key->operator i64* () = wParam;
-		n_down_key->run(0, n_down_key, flag_run);
-		if (!master_obl_izm.empty()) paint(hWnd);
 		return 0;
 	case WM_CHAR:
 		*n_press_key->operator i64* () = wParam;

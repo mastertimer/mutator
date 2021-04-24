@@ -1281,7 +1281,7 @@ bool _g_terminal::mouse_down_left2(_xy r)
 		i64 y_cmd = oo.y.max - otst_y;
 
 		i64 xx = (r.x - x_text) / font_width;
-		i64 yy = (y_cmd - r.y) / font_size;
+		i64 yy = (y_cmd - r.y) / font_size + scrollbar;
 
 		selection_begin = { xx, yy };
 		selection_end = { xx, yy };
@@ -1307,8 +1307,11 @@ void _g_terminal::mouse_move_left2(_xy r)
 	i64 y_cmd = oo.y.max - otst_y;
 
 	i64 xx = (r.x - x_text) / font_width;
-	i64 yy = (y_cmd - r.y) / font_size;
+	i64 yy = (y_cmd - r.y) / font_size + scrollbar;
 	selection_end = { xx, yy };
+	if (yy - scrollbar < 0) scrollbar--;
+	if (yy - scrollbar >= max_lines) scrollbar++;
+
 	cha_area();
 }
 
@@ -1338,6 +1341,50 @@ _g_terminal::_g_terminal()
 {
 	local_area = { {0, 100}, {0, 100} };
 	key_fokus = true;
+}
+
+void _g_terminal::set_clipboard()
+{
+	if (selection_begin.x < 0) return;
+	std::wstring result;
+	i64 x0, y0, x1, y1;
+	if (selection_begin.y < selection_end.y)
+	{
+		x0 = selection_begin.x;
+		y0 = selection_begin.y;
+		x1 = selection_end.x;
+		y1 = selection_end.y;
+	}
+	else
+	{
+		x1 = selection_begin.x;
+		y1 = selection_begin.y;
+		x0 = selection_end.x;
+		y0 = selection_end.y;
+	}
+	i64 yy = full_lines;
+	for (auto& s : text)
+	{
+		i64 ks = (s.size() + cmd_vis_len - 1) / cmd_vis_len;
+		if (yy - 1 < y0) break;
+		if (yy - ks > y1)
+		{
+			yy -= ks;
+			continue;
+		}
+		if ((yy - 1 < y1) && (yy - ks > y0))
+		{
+			result += s + L"\r\n";
+			yy -= ks;
+			continue;
+		}
+		for (i64 i = 0; i < ks; i++)
+		{
+			yy--;
+		}
+	}
+	set_clipboard_text(result);
+	selection_begin.x = -1;
 }
 
 void _g_terminal::key_down(ushort key)
@@ -1388,6 +1435,9 @@ void _g_terminal::key_down(ushort key)
 			vis_cur = true;
 		}
 		break;
+	case 67: // c
+		if (*(i64*)*n_s_ctrl) set_clipboard();
+		break;
 	}
 	cha_area();
 }
@@ -1426,7 +1476,7 @@ void _g_terminal::ris2(_trans tr, bool final)
 
 	i64 x_text = oo.x.min + otst_x;
 	i64 y_cmd = oo.y.max - font_size - otst_y;
-	i64 cmd_vis_len = (oo.x.size() - otst_x * 2 - width_scrollbar) / font_width;
+	cmd_vis_len = (oo.x.size() - otst_x * 2 - width_scrollbar) / font_width;
 	i64 ks = (full_cmd.size() + cmd_vis_len) / cmd_vis_len;
 
 	max_lines = (oo.y.size() - otst_y * 2) / font_size; // строк в окне
