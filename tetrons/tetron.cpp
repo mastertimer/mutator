@@ -1909,7 +1909,7 @@ void _g_edit_double::ris2(_trans tr, bool final)
 	if (sf2 < 5) return;
 	std::wstring s = double_to_string(a, 2);
 
-	master_bm.text((int)(oo.x.min + 5), (int)(oo.y.min + 1), s.c_str(), sf2, c0, 0xff000000);
+	master_bm.text((int)(oo.x.min + 5), (int)(oo.y.min + 1), s.c_str(), sf2, c0, c_background);
 	if (n_act_key == this)
 	{
 		_isize size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
