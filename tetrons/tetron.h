@@ -225,6 +225,7 @@ inline _id n_mouse_move;        // АБСТРАКТНЫЙ ПРЕДОК  функ
 inline _id n_finish_mouse_move; // АБСТРАКТНЫЙ ПРЕДОК  функция конца перемещения мышки над объектом
 inline _id n_fun_up_middle;     // АБСТРАКТНЫЙ ПРЕДОК  функция отжато колесо мышки
 inline _id n_timer250;          // таймер с периодом 1000
+inline _id n_cc0;               // цвет фона
 
 inline _id terminal; // первый попавшийся терминал при чтении файла
 

@@ -244,6 +244,11 @@ void load_theme(std::wstring file_name)
 	}
 }
 
+void set_tetrons_colors()
+{
+	*n_cc0->operator i64* () = cc0;
+}
+
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 	wchar_t buffer[MAX_PATH];
@@ -253,6 +258,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	exe_path = fn;
 	load_theme(exe_path + ini_file);
 	if (!mutator::start((exe_path + tetfile).c_str())) return 1;
+	set_tetrons_colors();
 
 	static TCHAR szWindowClass[] = L"win64app";
 	WNDCLASSEX wcex;
