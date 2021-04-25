@@ -1364,7 +1364,7 @@ namespace mutator
 		if (master_bm.resize(r))
 		{
 			// центрировать холст относительно окна
-			if (prev_size.x != 0 && prev_size.y != 0)
+			if (prev_size.x != 0 && prev_size.y != 0 && r.x != 0 && r.y != 0)
 			{
 				_t_trans* kor = *n_ko;
 				kor->cha_area(kor->calc_area());
