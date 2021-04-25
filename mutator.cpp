@@ -1358,24 +1358,22 @@ namespace mutator
 		return (tet.error == 0);
 	}
 
+	void resize(_isize r)
+	{
+		static auto prev_size = _isize{1200, 800};
+		_t_trans* kor = *n_ko;
+		kor->cha_area(kor->calc_area());
+		kor->trans.offset.x += (double)(r.x - prev_size.x) / 2;
+		kor->trans.offset.y += (double)(r.y - prev_size.y) / 2;
+		kor->cha_area(kor->calc_area());
+		n_move_all->run(0, n_move_all, flag_run);
+		master_obl_izm = r;  // обновить экран
+		prev_size = r;
+	}
+
 	void draw(_isize r)
 	{
-		auto prev_size = master_bm.size;
-		if (master_bm.resize(r))
-		{
-			// центрировать холст относительно окна
-			if (prev_size.x != 0 && prev_size.y != 0)
-			{
-				_t_trans* kor = *n_ko;
-				kor->cha_area(kor->calc_area());
-				kor->trans.offset.x += (r.x - prev_size.x) / 2;
-				kor->trans.offset.y += (r.y - prev_size.y) / 2;
-				kor->cha_area(kor->calc_area());
-				n_move_all->run(0, n_move_all, flag_run);
-			}
-
-			master_obl_izm = r;  // обновить экран
-		}
+		if (master_bm.resize(r)) master_obl_izm = r;
 		if (master_obl_izm.empty()) return;
 		master_bm.set_area(master_obl_izm);
 		master_obl_izm &= master_bm.size;
