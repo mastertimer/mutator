@@ -5,23 +5,6 @@
 #include "basic.h"
 #include "mathematics.h"
 
-/* классическая тема мутатора
-constexpr uint c_background = 0xFF000000;
-constexpr uint c_maxx       = 0xFFA0FFC0;
-constexpr uint c_max        = 0xFF40FF80;
-constexpr uint c_def        = 0xFF208040;
-constexpr uint c_min        = 0xFF104020;
-constexpr uint c_minn       = 0xFF082010;
-*/
-
-// цвета как в visual studio
-constexpr uint c_background = 0xff1e1e1e;
-constexpr uint c_maxx       = 0xffffffff;
-constexpr uint c_max        = 0xffdcdcaa;
-constexpr uint c_def        = 0xffc8c8c8;
-constexpr uint c_min        = 0xff569cd6;
-constexpr uint c_minn       = 0xFF082010;
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 enum class _cursor { normal, size_all, hand_point, size_we, size_ns, drag }; // виды курсора
@@ -599,7 +582,7 @@ struct _t_trans : public _t_basic_go
 
 struct _t_go : public _t_basic_go
 {
-	//	static constexpr uint c1_default = c_def; // цвет рисования по умолчанию
+	//	static constexpr uint c1_default = cc1; // цвет рисования по умолчанию
 	static constexpr uint c2_default = 0; // цвет фона по умолчанию
 
 	_area local_area; // область только этого объекта
@@ -1008,7 +991,7 @@ struct _g_button : public _t_go
 
 struct _g_color_ring : public _t_go
 {
-	_hsva color = c_def;
+	_hsva color = cc1;
 
 	_g_color_ring() { local_area = { {0, 300}, {0, 300} }; }
 	uchar type() { return 17; }

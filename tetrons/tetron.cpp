@@ -810,9 +810,9 @@ bool _t_go::mouse_move2(_xy r)
 uint _t_go::get_c()
 {
 	_tetron* a = find_intermediate<_tetron>(n_color_line, flag_information, flag_parent);
-	if (a == nullptr) return c_def;
+	if (a == nullptr) return cc1;
 	if (i64* c = *a) return (uint)*c;
-	return c_def;
+	return cc1;
 }
 
 uint _t_go::get_c2()
@@ -831,7 +831,7 @@ void _t_go::set_c(uint c)
 		if (i64* cc = *a)*cc = c;
 		return;
 	}
-	if (c == c_def) return;
+	if (c == cc1) return;
 	_t_int* ti = new _t_int;
 	ti->a = c;
 	ti->add_flags(n_color_line, flag_parent);
@@ -892,7 +892,7 @@ void _t_go::ris(_trans tr, bool final)
 		if (oo.x.min < 0) oo.x.min = 0;
 		if (oo.y.min < 0) oo.y.min = 0;
 		std::wstring s = double_to_string(t.count() / 1000000.0, 2);
-		master_bm.text((int)(oo.x.min + 1), (int)oo.y.min, s.c_str(), 13, c_max, 0x00000000);
+		master_bm.text((int)(oo.x.min + 1), (int)oo.y.min, s.c_str(), 13, cc2, 0x00000000);
 	}
 }
 
@@ -1186,16 +1186,16 @@ void _g_picture::ris2(_trans tr, bool final)
 	if (pic.size.x * pic.size.y == 0)
 	{
 		int rr = 100;
-		master_bm.line({ tr.offset.x, tr.offset.y }, { tr.offset.x + rr * tr.scale, tr.offset.y }, c_def);
+		master_bm.line({ tr.offset.x, tr.offset.y }, { tr.offset.x + rr * tr.scale, tr.offset.y }, cc1);
 		master_bm.line({ tr.offset.x + rr * tr.scale, tr.offset.y },
-			{ tr.offset.x + rr * tr.scale, tr.offset.y + rr * tr.scale }, c_def);
+			{ tr.offset.x + rr * tr.scale, tr.offset.y + rr * tr.scale }, cc1);
 		master_bm.line({ tr.offset.x + rr * tr.scale, tr.offset.y + rr * tr.scale },
-			{ tr.offset.x, tr.offset.y + rr * tr.scale }, c_def);
-		master_bm.line({ tr.offset.x, tr.offset.y + rr * tr.scale }, { tr.offset.x, tr.offset.y }, c_def);
+			{ tr.offset.x, tr.offset.y + rr * tr.scale }, cc1);
+		master_bm.line({ tr.offset.x, tr.offset.y + rr * tr.scale }, { tr.offset.x, tr.offset.y }, cc1);
 		master_bm.line({ tr.offset.x, tr.offset.y },
-			{ tr.offset.x + rr * tr.scale, tr.offset.y + rr * tr.scale }, c_def);
+			{ tr.offset.x + rr * tr.scale, tr.offset.y + rr * tr.scale }, cc1);
 		master_bm.line({ tr.offset.x + rr * tr.scale, tr.offset.y },
-			{ tr.offset.x, tr.offset.y + rr * tr.scale }, c_def);
+			{ tr.offset.x, tr.offset.y + rr * tr.scale }, cc1);
 		return;
 	}
 	_area oo = tr(local_area);
@@ -1628,8 +1628,8 @@ void _g_terminal::ris2(_trans tr, bool final)
 	if (_area(area_cursor) == master_obl_izm) // перерисовать только курсор
 	{
 		if (area_cursor.empty()) goto finish; // перестраховка
-		master_bm.text(area_cursor.x.min, area_cursor.y.min, cmd.substr(cursor, 1), font_size, c_max, c_background);
-		if (visible_cursor) master_bm.fill_rectangle(area_cursor, c_maxx - 0xC0000000);
+		master_bm.text(area_cursor.x.min, area_cursor.y.min, cmd.substr(cursor, 1), font_size, cc2, cc0);
+		if (visible_cursor) master_bm.fill_rectangle(area_cursor, cc3 - 0xC0000000);
 		goto finish;
 	}
 
@@ -1660,10 +1660,10 @@ void _g_terminal::ris2(_trans tr, bool final)
 		if (n < 0) break;
 		if (n >= max_lines) continue;
 		master_bm.text(x_text, y_cmd - n * font_size, full_cmd.substr(i* cmd_vis_len, cmd_vis_len),
-			font_size, c_max, c_background);
+			font_size, cc2, cc0);
 	}
 
-	if (visible_cursor) master_bm.fill_rectangle(area_cursor, c_maxx - 0xC0000000);
+	if (visible_cursor) master_bm.fill_rectangle(area_cursor, cc3 - 0xC0000000);
 
 	for (i64 i = text.size() - 1; i >= 0; i--)
 	{
@@ -1678,7 +1678,7 @@ void _g_terminal::ris2(_trans tr, bool final)
 			if (n < 0) break;
 			if (n >= max_lines) continue;
 			master_bm.text(x_text, y_cmd - n * font_size, s.substr(j * cmd_vis_len, cmd_vis_len),
-				font_size, c_def, c_background);
+				font_size, cc1, cc0);
 		}
 		if (ks - scrollbar > max_lines) break;
 	}
@@ -1694,7 +1694,7 @@ void _g_terminal::ris2(_trans tr, bool final)
 				i64 x1 = std::max(selection_begin.x, selection_end.x) + 1;
 				_iarea a = { {x_text + x0 * font_width, x_text + x1 * font_width},
 					{y_cmd - yy * font_size, y_cmd - (yy - 1) * font_size} };
-				master_bm.fill_rectangle(a, c_maxx - 0xA0000000);
+				master_bm.fill_rectangle(a, cc3 - 0xA0000000);
 			}
 		}
 		else
@@ -1718,21 +1718,21 @@ void _g_terminal::ris2(_trans tr, bool final)
 			{
 				_iarea a = { {x_text + x1 * font_width, x_text + cmd_vis_len * font_width},
 				{y_cmd - y1 * font_size, y_cmd - (y1 - 1) * font_size} };
-				master_bm.fill_rectangle(a, c_maxx - 0xA0000000);
+				master_bm.fill_rectangle(a, cc3 - 0xA0000000);
 			}
 			for (i64 yy = y1 - 1; yy > y0; yy--)
 				if ((yy >= 0) && (yy < max_lines))
 				{
 					_iarea a = { {x_text, x_text + cmd_vis_len * font_width},
 					{y_cmd - yy * font_size, y_cmd - (yy - 1) * font_size} };
-					master_bm.fill_rectangle(a, c_maxx - 0xA0000000);
+					master_bm.fill_rectangle(a, cc3 - 0xA0000000);
 				}
 
 			if ((y0 >= 0) && (y0 < max_lines))
 			{
 				_iarea a = { {x_text, x_text + (x0 + 1) * font_width},
 				{y_cmd - y0 * font_size, y_cmd - (y0 - 1) * font_size} };
-				master_bm.fill_rectangle(a, c_maxx - 0xA0000000);
+				master_bm.fill_rectangle(a, cc3 - 0xA0000000);
 			}
 		}
 	}
@@ -1777,8 +1777,8 @@ void add_hint(std::wstring_view hint, _t_go* g)
 	tr.offset += _xy{ -siz.x * 0.5, -15.0 } + _xy{ g->local_area.x(0.5), g->local_area.y.min } *tr.scale;
 	tr.scale = 1;
 	_g_text* go = new _g_text;
-	go->set_c(c_maxx);
-	go->set_c2(c_background);
+	go->set_c(cc3);
+	go->set_c2(cc0);
 	_t_trans* ttr = new _t_trans;
 	ttr->trans = ko->trans.inverse() * tr;
 	ttr->add_flags(go, flag_part + flag_sub_go);
@@ -1868,7 +1868,7 @@ void _g_scrollbar::after_create_link(_link* li)
 void _g_scrollbar::ris2(_trans tr, bool final)
 {
 	_area a = tr(local_area);
-	uint c = c_def;
+	uint c = cc1;
 	if ((vid & 1) == 0)
 	{
 		master_bm.line({ a.x.min, a.y(0.5) }, { a.x.max, a.y(0.5) }, c);
@@ -1909,7 +1909,7 @@ void _g_edit_double::ris2(_trans tr, bool final)
 	if (sf2 < 5) return;
 	std::wstring s = double_to_string(a, 2);
 
-	master_bm.text((int)(oo.x.min + 5), (int)(oo.y.min + 1), s.c_str(), sf2, c0, c_background);
+	master_bm.text((int)(oo.x.min + 5), (int)(oo.y.min + 1), s.c_str(), sf2, c0, cc0);
 	if (n_act_key == this)
 	{
 		_isize size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
@@ -2019,7 +2019,7 @@ void _g_edit_int::ris2(_trans tr, bool final)
 	}
 	bool hex = test_flags(n_hex, flag_information);
 	std::wstring s = (hex) ? std::wstring(uint64_to_wstr_hex(*a)) : std::to_wstring(*a);
-	master_bm.text((int)(oo.x.min + 5), (int)(oo.y.min + 1), s.c_str(), sf2, c0, c_background);
+	master_bm.text((int)(oo.x.min + 5), (int)(oo.y.min + 1), s.c_str(), sf2, c0, cc0);
 	if (n_act_key == this)
 	{
 		_isize size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
@@ -2272,12 +2272,12 @@ void _g_edit_multi_string::ris2(_trans tr, bool final)
 	if ((oo.x.length() <= 3) || (oo.y.length() <= 3)) return;
 	_multi_string* str = find1_plus_gtetron<_multi_string>(this, flag_specialty);
 	if (!str) str = &strings;
-	master_bm.rectangle((_area)oo, c_def);
+	master_bm.rectangle((_area)oo, cc1);
 	if (str != &strings)
 	{
 		_area ooo = oo;
 		ooo = ooo.expansion(-1.0);
-		master_bm.rectangle((_area)ooo, c_def);
+		master_bm.rectangle((_area)ooo, cc1);
 	}
 	len2 = (int)((local_area.y.length() - 8) / 16);
 	if (len2 == 0) return;
@@ -2306,7 +2306,7 @@ void _g_edit_multi_string::ris2(_trans tr, bool final)
 	{
 		i64 ii = first + i;
 		master_bm.text((int)(oo.x.min + 4 * tr.scale), (int)(oo.y.min + (i * 16LL + 4) * tr.scale),
-			str->line[ii].c_str(), sf, c_def, 0);
+			str->line[ii].c_str(), sf, cc1, 0);
 	}
 	if (first) master_bm.line({ oo.x.min + 2 * tr.scale, oo.y.min + 2 * tr.scale },
 		{ oo.x.max - 2 * tr.scale, oo.y.min + 2 * tr.scale }, 0xFF30C0F0);
@@ -2319,7 +2319,7 @@ void _g_edit_multi_string::ris2(_trans tr, bool final)
 		master_bm.line({ oo.x.min + 4 * tr.scale + size.x - 1,
 			oo.y.min + (((i64)cursor.y - first) * 16 + 4) * tr.scale },
 			{ oo.x.min + 4 * tr.scale + size.x - 1,
-			oo.y.min + ((cursor.y + 1LL - first) * 16 + 4) * tr.scale }, c_def);
+			oo.y.min + ((cursor.y + 1LL - first) * 16 + 4) * tr.scale }, cc1);
 	}
 }
 
@@ -2526,14 +2526,14 @@ void _g_edit64bit::ris2(_trans tr, bool final)
 				master_bm.fill_rectangle({ {(i64)(oo.x.min + 1 + (d - 1) * 0.125 * i),
 					(i64)(oo.x.min + (d - 1) * 0.125 * (i + 1.0)) + 1},
 					{(i64)(oo.y.min + 1 + (d2 - 1) * 0.125 * j),
-					(i64)(oo.y.min + (d2 - 1) * 0.125 * (j + 1.0)) + 1} }, c_max);
-	if ((d < 25) || (d2 < 25)) { master_bm.rectangle((_area)oo, c_def); }
+					(i64)(oo.y.min + (d2 - 1) * 0.125 * (j + 1.0)) + 1} }, cc2);
+	if ((d < 25) || (d2 < 25)) { master_bm.rectangle((_area)oo, cc1); }
 	else
 	{
 		for (int i = 0; i <= 8; i++)
 		{
-			master_bm.line({ oo.x.min, oo.y.min + d2 * 0.125 * i }, { oo.x.max, oo.y.min + d2 * 0.125 * i }, c_def);
-			master_bm.line({ oo.x.min + d * 0.125 * i, oo.y.min }, { oo.x.min + d * 0.125 * i, oo.y.max }, c_def);
+			master_bm.line({ oo.x.min, oo.y.min + d2 * 0.125 * i }, { oo.x.max, oo.y.min + d2 * 0.125 * i }, cc1);
+			master_bm.line({ oo.x.min + d * 0.125 * i, oo.y.min }, { oo.x.min + d * 0.125 * i, oo.y.max }, cc1);
 		}
 		if (act >= 0)
 		{
@@ -2592,11 +2592,11 @@ void _g_button::RisIco(astr kod, const char* s)
 	for (astr i = s; *i; i++)
 		if (*i == '\n')
 		{
-			picture.text16(0, y, ss, c_def);
+			picture.text16(0, y, ss, cc1);
 			y += dy;
 			ss = i + 1;
 		}
-	picture.text16(0, y, ss, c_def);
+	picture.text16(0, y, ss, cc1);
 }
 
 void _g_button::ris2(_trans tr, bool final)
@@ -2611,10 +2611,10 @@ void _g_button::ris2(_trans tr, bool final)
 		master_bm.stretch_draw(&picture, ce.x - rx2 / 2, ce.y - ry2 / 2, tr.scale);
 	}
 	else
-		c = c_def;
-	if (checked) c = c_def - 0x40000000;
-	if (n_go_move == this) c = c_def - 0x80000000;
-	if (n_tani == this) c = c_max - 0x80000000;
+		c = cc1;
+	if (checked) c = cc1 - 0x40000000;
+	if (n_go_move == this) c = cc1 - 0x80000000;
+	if (n_tani == this) c = cc2 - 0x80000000;
 	master_bm.fill_rectangle({ {(i64)oo.x.min, (i64)oo.x.max + 1}, {(i64)oo.y.min, (i64)oo.y.max + 1} }, c);
 }
 
@@ -2683,7 +2683,7 @@ void _g_color_ring::ris2(_trans tr, bool final)
 	_area a = tr(local_area);
 	double r = a.radius();
 	_xy c = a.center();
-	master_bm.ring(a.center(), r, r * 0.04, c_def);
+	master_bm.ring(a.center(), r, r * 0.04, cc1);
 	master_bm.fill_circle(c, r * 0.3, color);
 	double r1 = 0.4 * r;
 	double r2 = 0.5 * r;
@@ -2839,7 +2839,7 @@ void _g_list_link::ris2(_trans tr, bool final)
 		//		int nn = a->link[ii].nom_link();
 		//			s += L" " + IntToString(nn);
 		s = std::to_wstring(ii) + L". " + s;
-		uint color = c_def;
+		uint color = cc1;
 		master_bm.text((int)(oo.x.min + 4 * tr.scale), (int)(oo.y.min + (i * 16.0 + 4) * tr.scale), s.c_str(), sf,
 			color, 0);
 	}
@@ -2849,7 +2849,7 @@ void _g_list_link::ris2(_trans tr, bool final)
 		{ oo.x.max - 2 * tr.scale, oo.y.max - 2 * tr.scale }, 0xFF30C0F0);
 	master_bm.rectangle({ {(i64)(oo.x.min + 2 * tr.scale), (i64)(oo.x.max - 2 * tr.scale) + 1},
 		{(i64)(oo.y.min + (4 + ((i64)cursor - first) * 16) * tr.scale),
-		(i64)(oo.y.min + (19 + ((i64)cursor - first) * 16) * tr.scale) + 1} }, c_def);
+		(i64)(oo.y.min + (19 + ((i64)cursor - first) * 16) * tr.scale) + 1} }, cc1);
 	if ((tf != a) || (cursor != curf))
 	{
 		tf = a;
@@ -3084,7 +3084,7 @@ void _g_tetron::ris2(_trans tr, bool final)
 	double r = a.radius();
 	double d = log(1.001 + r) * 0.5;
 	double y = 0.7 * (r - d) * 2;
-	uint c = c_min;
+	uint c = cc4;
 
 	_tetron* t2 = find1<_tetron>(flag_specialty); // связанный тетрон
 	bool im_temp = test_flags(n_temp_go, flag_parent); // текущий _g_tetron - временный
@@ -3095,7 +3095,7 @@ void _g_tetron::ris2(_trans tr, bool final)
 	else
 		if (t2 == root_tetron) c = 0xFFFF0000;
 
-	master_bm.fill_ring(p, r, d, c, (im_temp) ? 0 : c_background);
+	master_bm.fill_ring(p, r, d, c, (im_temp) ? 0 : cc0);
 
 	_t_trans* ttr = nullptr; // звезда
 	if (star) ttr = *star;
@@ -3112,7 +3112,7 @@ void _g_tetron::ris2(_trans tr, bool final)
 			if (cmp_drawn())
 				delete_hvost(star, true, false);
 		int fr = t2->get_froglif();
-		master_bm.froglif(p - _xy{ y / 2, y / 2 }, y, (uchar*)&fr, 2, c_max);
+		master_bm.froglif(p - _xy{ y / 2, y / 2 }, y, (uchar*)&fr, 2, cc2);
 		return;
 	}
 
@@ -3435,10 +3435,10 @@ void _g_graph::ris2(_trans tr, bool final)
 {
 	constexpr double ot = 0.03; // отступ от каждой стороны
 	_area a = tr(local_area);
-	master_bm.rectangle(a, c_def);
+	master_bm.rectangle(a, cc1);
 
-	unsigned int col_setka = c_min - 0xA0000000; // цвет сетки
-	unsigned int col_font = c_max - 0x80000000; // цвет шрифта
+	unsigned int col_setka = cc4 - 0xA0000000; // цвет сетки
+	unsigned int col_font = cc2 - 0x80000000; // цвет шрифта
 
 	// вычисление диапазона
 	double minx = 1;
@@ -3538,9 +3538,9 @@ void _g_graph::ris2(_trans tr, bool final)
 			double y1 = (a.y.max - (i.interval.min - miny) * ky);
 			double y2 = (a.y.max - (i.interval.max - miny) * ky);
 			double y3 = (a.y.max - (i.mean - miny) * ky);
-			master_bm.line({ xx - dxc2 * 2, y1 }, { xx + dxc2 * 2, y1 }, c_def);
-			master_bm.line({ xx - dxc2 * 2, y2 }, { xx + dxc2 * 2, y2 }, c_def);
-			master_bm.fill_circle({ xx, y3 }, dxc2, c_def);
+			master_bm.line({ xx - dxc2 * 2, y1 }, { xx + dxc2 * 2, y1 }, cc1);
+			master_bm.line({ xx - dxc2 * 2, y2 }, { xx + dxc2 * 2, y2 }, cc1);
+			master_bm.fill_circle({ xx, y3 }, dxc2, cc1);
 		}
 	}
 	double delta_bar = 0;
@@ -3550,7 +3550,7 @@ void _g_graph::ris2(_trans tr, bool final)
 		if ((c->size.x < 1) || (c->size.x > 2)) continue; // должно быть 1-2 столбца
 		double xpr = 0;
 		double ypr = 0;
-		uint cc = (ng < _countof(color_set)) ? color_set[ng] : c_max;
+		uint cc = (ng < _countof(color_set)) ? color_set[ng] : cc2;
 		//		cc -= 0x80000000;
 		ng++;
 		for (int i = 0; i < c->size.y; i++)
@@ -3641,7 +3641,7 @@ void _g_graph::ris2(_trans tr, bool final)
 			ng++;
 			if (j.caption == "") continue;
 			y += 16;
-			uint cc = (ng < _countof(color_set)) ? color_set[ng] : c_max;
+			uint cc = (ng < _countof(color_set)) ? color_set[ng] : cc2;
 			master_bm.text16(x, y, j.caption, cc);
 			master_bm.lines({ x - 20.0, y + 6.0 }, { x - 4.0, y + 6.0 }, j.width, cc);
 		}

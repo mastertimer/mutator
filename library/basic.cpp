@@ -3595,10 +3595,6 @@ uint brighten(uint c)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-constexpr uint c_pak0 = 0;          // для сжатия картинок
-//constexpr uint c_pak1 = 0xFF208040; // для сжатия картинок
-constexpr uint c_pak1 = 0xffc8c8c8; // для сжатия картинок
-
 _wjson& _wjson::str(std::string_view name, bool lin)
 {
 	add_start(name) << '{';
@@ -3824,7 +3820,7 @@ _wjson& _wjson::add(std::string_view name, const _picture& b)
 	{
 		pak = true;
 		for (i64 i = 0; i < 576; i++)
-			if ((b.data[i] != c_pak0) && (b.data[i] != c_pak1))
+			if ((b.data[i] != cc00) && (b.data[i] != cc1))
 			{
 				pak = false;
 				break;
@@ -3838,7 +3834,7 @@ _wjson& _wjson::add(std::string_view name, const _picture& b)
 	{
 		uchar a[72] = {};
 		for (i64 i = 0; i < 576; i++)
-			if (b.data[i] == c_pak1)
+			if (b.data[i] == cc1)
 				a[i >> 3] |= (1 << (i & 7));
 		add_mem(a, 72);
 	}
@@ -4091,10 +4087,10 @@ void _rjson::read(std::string_view name, _picture& b)
 	end();
 	if (temp.size() == 0) { b.resize({ 0, 0 });	return; }
 	if (temp.size() == 1)
-		if (temp[0].size() == 144) // сжатие кнопок 24x24 (c_def, 0) в будущем сдалать универсальное сжатие картинок
+		if (temp[0].size() == 144) // сжатие кнопок 24x24 (cc1, cc00) в будущем сдалать универсальное сжатие картинок
 		{
 			b.resize({ 24, 24 });
-			b.clear(c_pak0);
+			b.clear(cc00);
 			uchar a[72];
 			if (!string_to_mem(temp[0], a, 72))
 			{
@@ -4103,7 +4099,7 @@ void _rjson::read(std::string_view name, _picture& b)
 			}
 			for (i64 i = 0; i < 576; i++)
 				if (a[i >> 3] & (1 << (i & 7)))
-					b.data[i] = c_pak1;
+					b.data[i] = cc1;
 			return;
 		}
 	int rx = (int)(temp[0].size() / 8);

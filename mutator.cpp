@@ -901,7 +901,7 @@ void fun48(_tetron* tt0, _tetron* tt, u64 flags)
 	if (g == nullptr) return;
 	_xy r1 = master_trans_go.inverse(mouse_xy_pr);
 	_xy r2 = master_trans_go.inverse(mouse_xy);
-	g->pic.line(r1, r2, (*n_s_shift->operator i64 * ()) ? 0 : c_def, true);
+	g->pic.line(r1, r2, (*n_s_shift->operator i64 * ()) ? 0 : cc1, true);
 	g->cha_area();
 }
 
@@ -1379,7 +1379,7 @@ namespace mutator
 		if (master_obl_izm.empty()) return;
 		master_bm.set_area(master_obl_izm);
 		master_obl_izm &= master_bm.size;
-		master_bm.clear(c_background);
+		master_bm.clear(cc0);
 		master_chain_go.clear();
 		n_ko->operator _t_trans* ()->ris(_trans(), false);
 		master_obl_izm.clear();
