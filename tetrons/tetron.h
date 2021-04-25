@@ -1182,15 +1182,16 @@ struct _g_terminal : public _t_go
 {
 	struct _command
 	{
-		virtual void run(_g_terminal *t) = 0;
+		virtual void run(_g_terminal *t, std::vector<std::wstring>& parameters) = 0;
 		virtual std::wstring help() = 0;
 		virtual ~_command() {}
 	};
 
 	std::map<std::wstring, std::unique_ptr<_command>> command;
-
-	std::vector<std::wstring> text;
 	std::wstring cmd; // командная строка
+	std::vector<std::wstring> previous_cmd; // база всех вызываемых команд
+
+	i64 act_previous_cmd = 0; // активная предыдущая команда
 	i64 cursor = 0; // позиция курсора в командной строке
 	bool visible_cursor = true;
 	bool insert_mode = true;
@@ -1216,8 +1217,11 @@ struct _g_terminal : public _t_go
 	bool mouse_down_left2(_xy r) override;
 	void mouse_move_left2(_xy r) override;
 	void run_cmd(); // выволнить введенную команду
+	void add_text(std::wstring_view s); // добавить текст
+	void text_clear() { text.clear(); }
 
 private:
+	std::vector<std::wstring> text;
 	i64 old_cmd_vis_len = -1; // количество символов в строке
 	i64 old_full_lines = 0; // полное количество строк
 	i64 vis_cur = false; // сделать курсор видимым
@@ -1233,14 +1237,20 @@ private:
 
 struct _cmd_clear : public _g_terminal::_command
 {
-	void run(_g_terminal* t) override;
+	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override;
 	std::wstring help() override { return L"очищение экрана"; }
 };
 
 struct _cmd_help : public _g_terminal::_command
 {
-	void run(_g_terminal* t) override;
+	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override;
 	std::wstring help() override { return L"вывод справки"; }
+};
+
+struct _cmd_test : public _g_terminal::_command
+{
+	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override;
+	std::wstring help() override { return L"тестовая команда"; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1346,20 +1346,31 @@ void _g_terminal::run_cmd()
 		}
 	if (command_name.empty()) command_name = cmd.substr(i0, cmd.size() - i0); 
 	// вычленение параметров
-//	int rez = 0; // 0 - пробелы
-/*	for (i64 i = i0 + command_name.size(); i < cmd.size(); i++)
+	int rez = 0; // 0 - пробелы 1 - набор символов 2 - строка "safasf asf"
+	int start_p = 0;
+	for (i64 i = i0 + command_name.size(); i < (i64)cmd.size(); i++)
 	{
 		wchar_t c = cmd[i];
 		if (rez == 0)
 		{
 			if ((c == L' ') || (c == L'\t')) continue;
+			start_p = i;
+			rez = (c == L'"') ? 2 : 1;
+			continue;
 		}
-	}*/
+		if (rez == 1) if ((c != L' ') && (c != L'\t')) continue;
+		if (rez == 2) if (c != L'"') continue;
+		parameters.push_back(cmd.substr(start_p, i - start_p + (rez == 2)));
+		rez = 0;
+	}
+	if (rez == 1) parameters.push_back(cmd.substr(start_p, cmd.size() - start_p));
 	if (!command_name.empty())
 	{
 		text.push_back(prefix + cmd);
+		previous_cmd.push_back(cmd);
+		act_previous_cmd = previous_cmd.size();
 		if (auto cc = command.find(command_name); cc != command.end())
-			cc->second->run(this);
+			cc->second->run(this, parameters);
 		else
 			text.push_back(L"команда не найдена");
 	}
@@ -1368,14 +1379,26 @@ void _g_terminal::run_cmd()
 	cmd.clear();
 }
 
-void _cmd_help::run(_g_terminal* t)
+void _cmd_help::run(_g_terminal* t, std::vector<std::wstring> &parameters)
 {
-	for (auto &i: t->command) t->text.push_back(i.first + L" - " + i.second->help());
+	for (auto &i: t->command) t->add_text(i.first + L" - " + i.second->help());
 }
 
-void _cmd_clear::run(_g_terminal* t)
+void _cmd_clear::run(_g_terminal* t, std::vector<std::wstring>& parameters)
 {
-	t->text.clear();
+	t->text_clear();
+}
+
+void _cmd_test::run(_g_terminal* t, std::vector<std::wstring>& parameters)
+{
+	for (i64 i = 0; i < (i64)parameters.size(); i++)
+		t->add_text(std::to_wstring(i) + L"й параметр = " + parameters[i]);
+}
+
+void _g_terminal::add_text(std::wstring_view s)
+{
+	text.emplace_back(s);
+	if (text.size() > 20000) text.erase(text.begin(), text.begin() + 10000);
 }
 
 _g_terminal::_g_terminal()
@@ -1385,6 +1408,7 @@ _g_terminal::_g_terminal()
 
 	command.insert({ L"clear", std::unique_ptr<_command>(new _cmd_clear) });
 	command.insert({ L"help",  std::unique_ptr<_command>(new _cmd_help) });
+	command.insert({ L"test",  std::unique_ptr<_command>(new _cmd_test) });
 }
 
 void _g_terminal::set_clipboard()
@@ -1480,8 +1504,24 @@ void _g_terminal::key_down(ushort key)
 		if (cursor > 0)	cursor--;
 		vis_cur = true;
 		break;
+	case 38: // стрелка вверх
+		if (act_previous_cmd > 0) act_previous_cmd--;
+		if (act_previous_cmd < (i64)previous_cmd.size()) cmd = previous_cmd[act_previous_cmd];
+		cursor = 0;
+		old_cmd_vis_len = -1;
+		selection_begin.x = -1;
+		vis_cur = true;
+		break;
 	case 39: // right
 		if (cursor < (i64)cmd.size()) cursor++;
+		vis_cur = true;
+		break;
+	case 40: // стрелка вниз
+		if (act_previous_cmd < (i64)previous_cmd.size() - 1) act_previous_cmd++;
+		if (act_previous_cmd < (i64)previous_cmd.size()) cmd = previous_cmd[act_previous_cmd];
+		cursor = 0;
+		old_cmd_vis_len = -1;
+		selection_begin.x = -1;
 		vis_cur = true;
 		break;
 	case 45: // insert
