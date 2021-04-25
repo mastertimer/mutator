@@ -1325,22 +1325,66 @@ bool _g_terminal::mouse_wheel2(_xy r)
 void _g_terminal::run_cmd()
 {
 	if (cmd.empty()) return;
-	if (cmd == L"clear")
-		text.clear();
-	else
+
+	std::wstring command_name;
+	std::vector<std::wstring> parameters;
+
+	i64 i0 = cmd.size();
+	// пропуск первых пробелов
+	for (i64 i = 0; i < (i64)cmd.size(); i++)
+		if ((cmd[i] != L' ') && (cmd[i] != L'\t'))
+		{
+			i0 = i;
+			break;
+		}
+	// вычленение command_name
+	for (i64 i = i0; i < (i64)cmd.size(); i++)
+		if ((cmd[i] == L' ') || (cmd[i] == L'\t'))
+		{
+			command_name = cmd.substr(i0, i - i0);
+			break;
+		}
+	if (command_name.empty()) command_name = cmd.substr(i0, cmd.size() - i0); 
+	// вычленение параметров
+//	int rez = 0; // 0 - пробелы
+/*	for (i64 i = i0 + command_name.size(); i < cmd.size(); i++)
+	{
+		wchar_t c = cmd[i];
+		if (rez == 0)
+		{
+			if ((c == L' ') || (c == L'\t')) continue;
+		}
+	}*/
+	if (!command_name.empty())
 	{
 		text.push_back(prefix + cmd);
-		text.push_back(L"команда не опознана!");
+		if (auto cc = command.find(command_name); cc != command.end())
+			cc->second->run(this);
+		else
+			text.push_back(L"команда не найдена");
 	}
 	old_cmd_vis_len = -1;
 	selection_begin.x = -1;
 	cmd.clear();
 }
 
+void _cmd_help::run(_g_terminal* t)
+{
+	for (auto &i: t->command) t->text.push_back(i.first + L" - " + i.second->help());
+}
+
+void _cmd_clear::run(_g_terminal* t)
+{
+	t->text.clear();
+}
+
 _g_terminal::_g_terminal()
 {
 	local_area = { {0, 100}, {0, 100} };
 	key_fokus = true;
+
+	command.insert({ L"clear", std::unique_ptr<_command>(new _cmd_clear) });
+	command.insert({ L"help",  std::unique_ptr<_command>(new _cmd_help) });
 }
 
 void _g_terminal::set_clipboard()
@@ -1386,14 +1430,14 @@ void _g_terminal::set_clipboard()
 		for (i64 i = 0; i < ks; i++)
 		{
 			yy--;
-			if ((yy > y0) && (yy < y1)) result += s.substr(i * cmd_vis_len, cmd_vis_len) + ((i == ks - 1) ? L"\r\n" : L"");
+			if ((yy > y0) && (yy < y1)) result += substr(s, i * cmd_vis_len, cmd_vis_len) + ((i == ks - 1) ? L"\r\n" : L"");
 			if ((yy == y1) && (yy == y0))
 			{
-				result += s.substr(i * cmd_vis_len + x0, x1 - x0 + 1);
+				result += substr(s, i * cmd_vis_len + x0, x1 - x0 + 1);
 				continue;
 			}
-			if (yy == y1) result += s.substr(i * cmd_vis_len + x1, cmd_vis_len - x1) + ((i == ks - 1) ? L"\r\n" : L"");
-			if (yy == y0) result += s.substr(i * cmd_vis_len, x0 + 1) + ((i == ks - 1) ? L"\r\n" : L"");
+			if (yy == y1) result += substr(s, i * cmd_vis_len + x1, cmd_vis_len - x1) + ((i == ks - 1) ? L"\r\n" : L"");
+			if (yy == y0) result += substr(s, i * cmd_vis_len, x0 + 1) + ((i == ks - 1) ? L"\r\n" : L"");
 		}
 	};
 
@@ -1494,6 +1538,7 @@ void _g_terminal::ris2(_trans tr, bool final)
 	i64 x_text = oo.x.min + otst_x;
 	i64 y_cmd = oo.y.max - font_size - otst_y;
 	cmd_vis_len = (oo.x.size() - otst_x * 2 - width_scrollbar) / font_width;
+	if (cmd_vis_len <= 0) cmd_vis_len = 1;
 	i64 ks = (full_cmd.size() + cmd_vis_len) / cmd_vis_len;
 
 	max_lines = (oo.y.size() - otst_y * 2) / font_size; // строк в окне

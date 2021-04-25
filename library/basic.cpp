@@ -456,6 +456,19 @@ std::wstring string_to_wstring(std::string_view s)
 	return res;
 }
 
+std::wstring substr(std::wstring_view s, i64 n, i64 k)
+{
+	if (n >= (i64)s.size()) return L"";
+	if (n < 0)
+	{
+		k += n;
+		n = 0;
+	}
+	if (k < 0) k = 0;
+	if (n + k > (i64)s.size()) k = s.size() - n;
+	return std::wstring(s.data() + n, k);
+}
+
 std::wstring double_to_string(double a, int z)
 {
 	static const double delta[16] = {5E-1, 5E-2,  5E-3,  5E-4,  5E-5,  5E-6,  5E-7,  5E-8,

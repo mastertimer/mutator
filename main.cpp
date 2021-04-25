@@ -173,7 +173,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_KEYUP:
 		if (wParam == VK_CONTROL)
 		{
-			*n_s_ctrl  ->operator i64* () = 1;
+			*n_s_ctrl  ->operator i64* () = 0;
 		}
 		return 0;
 	case WM_CHAR:

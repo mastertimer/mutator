@@ -66,6 +66,7 @@ bool load_file(std::wstring_view fn, std::vector<uchar>& res);
 std::wstring string_to_wstring(std::string_view s);
 std::string wstring_to_string(std::wstring_view b);
 wstr uint64_to_wstr_hex(u64 a);
+std::wstring substr(std::wstring_view s, i64 n, i64 k); // подстрока которая не кидает исключения
 
 std::wstring double_to_string(double a, int z);
 std::string  double_to_astring(double a, int z);
