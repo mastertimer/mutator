@@ -876,7 +876,7 @@ uint brighten(uint c);
 
 struct _wjson
 {
-	_wjson(wstr fn);
+	_wjson(std::wstring_view fn);
 	~_wjson() { end(); }
 
 	_wjson& str(std::string_view name = "", bool lin = false); // стуктура
@@ -921,7 +921,7 @@ struct _rjson
 	int error = 0; // если != 0, файл сломан, все функции сразу должны вылетать
 	bool null = false;
 
-	_rjson(wstr fn);
+	_rjson(std::wstring_view fn);
 
 	bool obj(std::string_view name = ""); // стуктура
 	bool arr(std::string_view name = ""); // массив

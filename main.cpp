@@ -4,7 +4,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-constexpr wchar_t tetfile[] = L"..\\..\\tetrons.txt";
+std::wstring ini_file = L"theme.json"; // находтся в папке с mutator.exe
+
+std::wstring tetfile = L"..\\..\\tetrons.txt"; // загружается из файла настроек
 HCURSOR g_cu = LoadCursor(0, IDC_ARROW); // активный курсор
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,11 +50,10 @@ void paint(HWND hwnd)
 	ReleaseDC(hwnd, hdc);
 }
 
-void init_shift(WPARAM wparam)
+void init_shift(WPARAM wparam) // !!! сделать по аналогии c ctrl
 {
 	*n_s_shift ->operator i64* () = wparam & MK_SHIFT;
 	*n_s_alt   ->operator i64* () = false;
-//	*n_s_ctrl  ->operator i64* () = wparam & MK_CONTROL;
 	*n_s_left  ->operator i64* () = wparam & MK_LBUTTON;
 	*n_s_right ->operator i64* () = wparam & MK_RBUTTON;
 	*n_s_middle->operator i64* () = wparam & MK_MBUTTON;
@@ -215,6 +216,34 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
+void load_theme(std::wstring file_name)
+{
+	bool err = false;
+	{
+		_rjson fs(file_name);
+		fs.read("tetrons", tetfile);
+		i64 cp = 0;
+		fs.read("color_palette", cp);
+		err = fs.error;
+		constexpr int kk = sizeof(color_palette) / sizeof(color_palette[0]);
+		if ((cp < 0) || (cp >= kk)) err = true;
+		if (!err)
+		{
+			cc0 = color_palette[cp][0]; // цвет фона
+			cc1 = color_palette[cp][1]; // цвет 1
+			cc2 = color_palette[cp][2]; // цвет 2
+			cc3 = color_palette[cp][3]; // цвет 3
+			cc4 = color_palette[cp][4]; // цвет 4
+		}
+	}
+	if (err) // если изменился формат, или файла небыло то создается по умолчанию
+	{
+		_wjson fs(file_name);
+		fs.add("tetrons", tetfile);
+		fs.add("color_palette", 0LL);
+	}
+}
+
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 	wchar_t buffer[MAX_PATH];
@@ -222,6 +251,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	std::filesystem::path fn = buffer;
 	fn.remove_filename();
 	exe_path = fn;
+	load_theme(exe_path + ini_file);
 	if (!mutator::start((exe_path + tetfile).c_str())) return 1;
 
 	static TCHAR szWindowClass[] = L"win64app";

@@ -3653,9 +3653,9 @@ _wjson& _wjson::end()
 	return *this;
 }
 
-_wjson::_wjson(wstr fn)
+_wjson::_wjson(std::wstring_view fn)
 {
-	file.open(fn);
+	file.open(fn.data());
 	file << std::setprecision(18);
 	line.push_back(false);
 	str();
@@ -3858,9 +3858,9 @@ _wjson& _wjson::add_mem(std::string_view name, void* b, u64 size)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_rjson::_rjson(wstr fn)
+_rjson::_rjson(std::wstring_view fn)
 {
-	file.open(fn);
+	file.open(fn.data());
 	if (!file.good()) { error = 55; return; }
 	obj();
 }
@@ -4121,7 +4121,9 @@ void _rjson::read_mem(std::string_view name, void* b, u64 size)
 
 void _rjson::read(std::string_view name, std::wstring& b)
 {
-	b = string_to_wstring2(read_string(name));
+	astr ss = read_string(name);
+	if (error || null) return;
+	b = string_to_wstring2(ss);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
