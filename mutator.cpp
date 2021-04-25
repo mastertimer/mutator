@@ -1438,6 +1438,7 @@ namespace mutator
 		master_chosen.push_back(&n_fun_up_middle);     // АБСТРАКТНЫЙ ПРЕДОК функция отжато колесо мышки
 		master_chosen.push_back(&n_timer250);          // АБСТРАКТНЫЙ ПРЕДОК функция отжато колесо мышки
 		master_chosen.push_back(&n_cc0);               // цвет фона
+		master_chosen.push_back(&n_cc2);               // цвет сс2
 
 		return load_from_txt_file(fn);
 	}

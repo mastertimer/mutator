@@ -247,6 +247,7 @@ void load_theme(std::wstring file_name)
 void set_tetrons_colors()
 {
 	*n_cc0->operator i64* () = cc0;
+	*n_cc2->operator i64* () = cc2;
 }
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
