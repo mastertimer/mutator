@@ -1628,7 +1628,7 @@ void _g_terminal::ris2(_trans tr, bool final)
 	if (_area(area_cursor) == master_obl_izm) // перерисовать только курсор
 	{
 		if (area_cursor.empty()) goto finish; // перестраховка
-		master_bm.text(area_cursor.x.min, area_cursor.y.min, cmd.substr(cursor, 1), font_size, c_max, 0xff000000);
+		master_bm.text(area_cursor.x.min, area_cursor.y.min, cmd.substr(cursor, 1), font_size, c_max, c_background);
 		if (visible_cursor) master_bm.fill_rectangle(area_cursor, c_maxx - 0xC0000000);
 		goto finish;
 	}
@@ -1660,7 +1660,7 @@ void _g_terminal::ris2(_trans tr, bool final)
 		if (n < 0) break;
 		if (n >= max_lines) continue;
 		master_bm.text(x_text, y_cmd - n * font_size, full_cmd.substr(i* cmd_vis_len, cmd_vis_len),
-			font_size, c_max, 0xff000000);
+			font_size, c_max, c_background);
 	}
 
 	if (visible_cursor) master_bm.fill_rectangle(area_cursor, c_maxx - 0xC0000000);
@@ -1678,7 +1678,7 @@ void _g_terminal::ris2(_trans tr, bool final)
 			if (n < 0) break;
 			if (n >= max_lines) continue;
 			master_bm.text(x_text, y_cmd - n * font_size, s.substr(j * cmd_vis_len, cmd_vis_len),
-				font_size, c_def, 0xff000000);
+				font_size, c_def, c_background);
 		}
 		if (ks - scrollbar > max_lines) break;
 	}
@@ -2019,7 +2019,7 @@ void _g_edit_int::ris2(_trans tr, bool final)
 	}
 	bool hex = test_flags(n_hex, flag_information);
 	std::wstring s = (hex) ? std::wstring(uint64_to_wstr_hex(*a)) : std::to_wstring(*a);
-	master_bm.text((int)(oo.x.min + 5), (int)(oo.y.min + 1), s.c_str(), sf2, c0, 0xff000000);
+	master_bm.text((int)(oo.x.min + 5), (int)(oo.y.min + 1), s.c_str(), sf2, c0, c_background);
 	if (n_act_key == this)
 	{
 		_isize size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);

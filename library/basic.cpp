@@ -928,7 +928,7 @@ void _bitmap::podg_cc(uint c, uint cf)
 	if (cf != f_cf)
 	{
 		if (cf >> 24 == 0xff) {
-			SetBkColor(hdc, cf);
+			SetBkColor(hdc, cf & 0xffffff);
 			if (f_cf >> 24 != 0xff) SetBkMode(hdc, OPAQUE);
 		}
 		else SetBkMode(hdc, TRANSPARENT);
@@ -3596,7 +3596,8 @@ uint brighten(uint c)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 constexpr uint c_pak0 = 0;          // для сжатия картинок
-constexpr uint c_pak1 = 0xFF208040; // для сжатия картинок
+//constexpr uint c_pak1 = 0xFF208040; // для сжатия картинок
+constexpr uint c_pak1 = 0xffc8c8c8; // для сжатия картинок
 
 _wjson& _wjson::str(std::string_view name, bool lin)
 {

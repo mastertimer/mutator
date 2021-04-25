@@ -5,11 +5,21 @@
 #include "basic.h"
 #include "mathematics.h"
 
+/* классическая тема мутатора
 constexpr uint c_background = 0xFF000000;
 constexpr uint c_maxx       = 0xFFA0FFC0;
 constexpr uint c_max        = 0xFF40FF80;
 constexpr uint c_def        = 0xFF208040;
 constexpr uint c_min        = 0xFF104020;
+constexpr uint c_minn       = 0xFF082010;
+*/
+
+// цвета как в visual studio
+constexpr uint c_background = 0xff1e1e1e;
+constexpr uint c_maxx       = 0xffffffff;
+constexpr uint c_max        = 0xffdcdcaa;
+constexpr uint c_def        = 0xffc8c8c8;
+constexpr uint c_min        = 0xff569cd6;
 constexpr uint c_minn       = 0xFF082010;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
