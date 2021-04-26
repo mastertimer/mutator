@@ -192,6 +192,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return 0;
 	case WM_SIZE:
 		mutator::resize({ LOWORD(lParam), HIWORD(lParam) });
+		return 0;
 	case WM_TIMER:
 		if (!run_timer) return 0;
 		switch (wParam)
