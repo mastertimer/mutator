@@ -44,6 +44,27 @@ constexpr uint color_set[32] = { // набор разных цветов одн�
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+typedef uint _color_palette5[5]; // палитра из 5 цветов, 0-й цвет - фон
+
+// новые схемы можно добавлять
+// удалять нельзя! (чтобы нумерация не сбивалась)
+// изменять схему можно, но только автору, кто её добавлял
+constexpr _color_palette5 color_palette[] = {
+	{0xFF000000, 0xFF208040, 0xFF40FF80, 0xFFA0FFC0, 0xFF104020}, // классическая схема мутатора
+	{0xff1e1e1e, 0xffc8c8c8, 0xffdcdcaa, 0xffffffff, 0xff569cd6}, // тёмная палитра visual studio
+	{0xfff2f1ef, 0xff6e304b, 0xff22161c, 0xffe2ae6c, 0xffa37c82}  // №4299 color.romanuke.com (светлая, сливовая)
+};
+
+// !! номер палитры загружается из файла настроек, и цвета cc0 - cc4 обновляются
+constexpr uint cc00 = 0; // прозрачный цвет
+inline uint cc0 = color_palette[0][0]; // цвет фона
+inline uint cc1 = color_palette[0][1]; // цвет 1
+inline uint cc2 = color_palette[0][2]; // цвет 2
+inline uint cc3 = color_palette[0][3]; // цвет 3
+inline uint cc4 = color_palette[0][4]; // цвет 4
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline std::wstring exe_path; // путь к запущенному exe файлу
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,6 +77,7 @@ inline std::wstring exe_path; // путь к запущенному exe файл
 i64 bit_for_value(u64 k); // k - количество чисел. (1) = 0, (2) = 1, (4) = 2
 
 void set_clipboard_text(astr text);
+void set_clipboard_text(std::wstring_view text);
 void os_pordis(double min, double max, i64 maxN, double& mi, double& step, double min_step = 0.0);
 
 bool save_file(std::wstring_view fn, const char* data, i64 n);
@@ -65,6 +87,7 @@ bool load_file(std::wstring_view fn, std::vector<uchar>& res);
 std::wstring string_to_wstring(std::string_view s);
 std::string wstring_to_string(std::wstring_view b);
 wstr uint64_to_wstr_hex(u64 a);
+std::wstring substr(std::wstring_view s, i64 n, i64 k); // подстрока которая не кидает исключения
 
 std::wstring double_to_string(double a, int z);
 std::string  double_to_astring(double a, int z);
@@ -854,7 +877,7 @@ uint brighten(uint c);
 
 struct _wjson
 {
-	_wjson(wstr fn);
+	_wjson(std::wstring_view fn);
 	~_wjson() { end(); }
 
 	_wjson& str(std::string_view name = "", bool lin = false); // стуктура
@@ -899,7 +922,7 @@ struct _rjson
 	int error = 0; // если != 0, файл сломан, все функции сразу должны вылетать
 	bool null = false;
 
-	_rjson(wstr fn);
+	_rjson(std::wstring_view fn);
 
 	bool obj(std::string_view name = ""); // стуктура
 	bool arr(std::string_view name = ""); // массив

@@ -644,8 +644,8 @@ void _sable_graph::ris2(_trans tr, bool final)
 		}
 	}
 	// рисование сетки
-	uint col_setka      = c_max - 0xE0000000; // цвет сетки
-	uint col_setka_font = c_def;              // цвет подписи сетки
+	uint col_setka      = cc2 - 0xE0000000; // цвет сетки
+	uint col_setka_font = cc1;              // цвет подписи сетки
 	if (time_.size() < 1)
 	{
 		master_bm.line({ a.x.min, a.y.min }, { a.x.max, a.y.max }, 0xFF800000);
@@ -736,7 +736,7 @@ void _sable_graph::ris2(_trans tr, bool final)
 	}
 	// рисование даты
 	master_bm.text16n(std::max(a.x.min, 0.0) + dex + 10, std::max(a.y.min, 0.0) + 10,
-		date_to_ansi_string(mintime).data(), 4, c_max - 0x80000000);
+		date_to_ansi_string(mintime).data(), 4, cc2 - 0x80000000);
 	// рисование количества элементов
 	master_bm.text16n(std::max(a.x.min, 0.0) + dex + 10, std::max(a.y.min, 0.0) + 60,
 		std::to_string(sss.size).data(), 2, 0x60ff0000);

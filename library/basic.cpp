@@ -56,6 +56,26 @@ end:
 	}
 }
 
+void set_clipboard_text(std::wstring_view text)
+{
+	if (OpenClipboard(0))//открываем буфер обмена
+	{
+		HGLOBAL hgBuffer;
+		char* chBuffer;
+		EmptyClipboard(); //очищаем буфер
+		size_t ll = text.size() * 2 + 2;
+		hgBuffer = GlobalAlloc(GMEM_DDESHARE, ll);//выделяем память
+		if (!hgBuffer) goto end;
+		chBuffer = (char*)GlobalLock(hgBuffer); //блокируем память
+		if (!chBuffer) goto end;
+		memcpy(chBuffer, text.data(), ll);
+		GlobalUnlock(hgBuffer);//разблокируем память
+		SetClipboardData(CF_UNICODETEXT, hgBuffer);//помещаем текст в буфер обмена
+	end:
+		CloseClipboard(); //закрываем буфер обмена
+	}
+}
+
 void set_clipboard_text(astr text)
 {
 	if (OpenClipboard(0))//открываем буфер обмена
@@ -434,6 +454,19 @@ std::wstring string_to_wstring(std::string_view s)
 		std::wstring res(s.size(), L' ');
 	for (int i = 0; i < s.size(); i++) res[i] = conv[(uchar)s[i]];
 	return res;
+}
+
+std::wstring substr(std::wstring_view s, i64 n, i64 k)
+{
+	if (n >= (i64)s.size()) return L"";
+	if (n < 0)
+	{
+		k += n;
+		n = 0;
+	}
+	if (k < 0) k = 0;
+	if (n + k > (i64)s.size()) k = s.size() - n;
+	return std::wstring(s.data() + n, k);
 }
 
 std::wstring double_to_string(double a, int z)
@@ -895,7 +928,7 @@ void _bitmap::podg_cc(uint c, uint cf)
 	if (cf != f_cf)
 	{
 		if (cf >> 24 == 0xff) {
-			SetBkColor(hdc, cf);
+			SetBkColor(hdc, cf & 0xffffff);
 			if (f_cf >> 24 != 0xff) SetBkMode(hdc, OPAQUE);
 		}
 		else SetBkMode(hdc, TRANSPARENT);
@@ -3562,9 +3595,6 @@ uint brighten(uint c)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-constexpr uint c_pak0 = 0;          // для сжатия картинок
-constexpr uint c_pak1 = 0xFF208040; // для сжатия картинок
-
 _wjson& _wjson::str(std::string_view name, bool lin)
 {
 	add_start(name) << '{';
@@ -3623,9 +3653,9 @@ _wjson& _wjson::end()
 	return *this;
 }
 
-_wjson::_wjson(wstr fn)
+_wjson::_wjson(std::wstring_view fn)
 {
-	file.open(fn);
+	file.open(fn.data());
 	file << std::setprecision(18);
 	line.push_back(false);
 	str();
@@ -3790,7 +3820,7 @@ _wjson& _wjson::add(std::string_view name, const _picture& b)
 	{
 		pak = true;
 		for (i64 i = 0; i < 576; i++)
-			if ((b.data[i] != c_pak0) && (b.data[i] != c_pak1))
+			if ((b.data[i] != cc00) && (b.data[i] != cc1))
 			{
 				pak = false;
 				break;
@@ -3804,7 +3834,7 @@ _wjson& _wjson::add(std::string_view name, const _picture& b)
 	{
 		uchar a[72] = {};
 		for (i64 i = 0; i < 576; i++)
-			if (b.data[i] == c_pak1)
+			if (b.data[i] == cc1)
 				a[i >> 3] |= (1 << (i & 7));
 		add_mem(a, 72);
 	}
@@ -3828,9 +3858,9 @@ _wjson& _wjson::add_mem(std::string_view name, void* b, u64 size)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_rjson::_rjson(wstr fn)
+_rjson::_rjson(std::wstring_view fn)
 {
-	file.open(fn);
+	file.open(fn.data());
 	if (!file.good()) { error = 55; return; }
 	obj();
 }
@@ -4057,10 +4087,10 @@ void _rjson::read(std::string_view name, _picture& b)
 	end();
 	if (temp.size() == 0) { b.resize({ 0, 0 });	return; }
 	if (temp.size() == 1)
-		if (temp[0].size() == 144) // сжатие кнопок 24x24 (c_def, 0) в будущем сдалать универсальное сжатие картинок
+		if (temp[0].size() == 144) // сжатие кнопок 24x24 (cc1, cc00) в будущем сдалать универсальное сжатие картинок
 		{
 			b.resize({ 24, 24 });
-			b.clear(c_pak0);
+			b.clear(cc00);
 			uchar a[72];
 			if (!string_to_mem(temp[0], a, 72))
 			{
@@ -4069,7 +4099,7 @@ void _rjson::read(std::string_view name, _picture& b)
 			}
 			for (i64 i = 0; i < 576; i++)
 				if (a[i >> 3] & (1 << (i & 7)))
-					b.data[i] = c_pak1;
+					b.data[i] = cc1;
 			return;
 		}
 	int rx = (int)(temp[0].size() / 8);
@@ -4091,7 +4121,9 @@ void _rjson::read_mem(std::string_view name, void* b, u64 size)
 
 void _rjson::read(std::string_view name, std::wstring& b)
 {
-	b = string_to_wstring2(read_string(name));
+	astr ss = read_string(name);
+	if (error || null) return;
+	b = string_to_wstring2(ss);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

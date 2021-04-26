@@ -5,13 +5,6 @@
 #include "basic.h"
 #include "mathematics.h"
 
-constexpr uint c_background = 0xFF000000;
-constexpr uint c_maxx       = 0xFFA0FFC0;
-constexpr uint c_max        = 0xFF40FF80;
-constexpr uint c_def        = 0xFF208040;
-constexpr uint c_min        = 0xFF104020;
-constexpr uint c_minn       = 0xFF082010;
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 enum class _cursor { normal, size_all, hand_point, size_we, size_ns, drag }; // виды курсора
@@ -117,12 +110,13 @@ struct _tetron
 	virtual void add_unique_flags(_tetron* t, u64 flags, bool after = true); // создать уникальную связь
 	virtual void after_create_link(_link* li) {} // выз. после создания связи
 	virtual void before_delete_link(_link* li) {} // выз. перед удалением связи
+	virtual void value_changed() {} // было изменено внутренняя переменная
 	void traversal(_hash_table_tetron* ht, u64 flags, _vector_tetron* lt = 0);
 
 	void copy(_tetron* a); // присвоение содержимого
 	_tetron* copy_plus(); // копировать с хвостами
 
-	template <typename _t> _t* find1(u64 flags); // найти указатель нужного типа на глубине 1, с заданными флагами  
+	template <typename _t> _t* find1(u64 flags, _tetron** base_tetron = nullptr); // найти указатель нужного типа на глубине 1, с заданными флагами  
 	template <typename _t> _t* find_intermediate(_tetron* t, u64 flags_before, u64 flags_after); // промежуточный
 	void find_all_intermediate(_tetron* t, u64 flags_before, u64 flags_after, _vector_id& res); // все промежуточные (у родителей тоже)
 
@@ -231,6 +225,8 @@ inline _id n_mouse_move;        // АБСТРАКТНЫЙ ПРЕДОК  функ
 inline _id n_finish_mouse_move; // АБСТРАКТНЫЙ ПРЕДОК  функция конца перемещения мышки над объектом
 inline _id n_fun_up_middle;     // АБСТРАКТНЫЙ ПРЕДОК  функция отжато колесо мышки
 inline _id n_timer250;          // таймер с периодом 1000
+inline _id n_cc0;               // цвет фона сс0
+inline _id n_cc2;               // цвет сс2
 
 inline _id terminal; // первый попавшийся терминал при чтении файла
 
@@ -409,14 +405,19 @@ template <typename _t> _t* _tetron::find_intermediate(_tetron* t, u64 flags_befo
 	return res;
 }
 
-template <typename _t> _t* _tetron::find1(u64 flags)
+template <typename _t> _t* _tetron::find1(u64 flags, _tetron** base_tetron)
 {
 	for (auto i : link)
 	{
 		_tetron* a = (*i)(this);
 		if (!i->test_flags(this, flags)) continue;
-		if (_t* x = *a) return x;
+		if (_t* x = *a)
+		{
+			if (base_tetron) *base_tetron = a;
+			return x;
+		}
 	}
+	if (base_tetron) *base_tetron = nullptr;
 	return nullptr;
 }
 
@@ -583,7 +584,7 @@ struct _t_trans : public _t_basic_go
 
 struct _t_go : public _t_basic_go
 {
-	//	static constexpr uint c1_default = c_def; // цвет рисования по умолчанию
+	//	static constexpr uint c1_default = cc1; // цвет рисования по умолчанию
 	static constexpr uint c2_default = 0; // цвет фона по умолчанию
 
 	_area local_area; // область только этого объекта
@@ -776,12 +777,12 @@ struct _g_text : public _t_go
 	void  push(_wjson& b)     override { _t_go::push(b);   b.add("s", s); }
 	void  pop(_rjson& b)      override { _t_go::pop(b);    b.read("s", s); }
 
-	operator std::wstring* () override { return &s; }  // !!! нет способа отследить изменение текста
+	operator std::wstring* () override { return &s; }
 	operator _g_text* ()      override { return this; }
 
 	void ris2(_trans tr, bool final) override;
 
-	void set_text(std::wstring_view s2_);
+	void value_changed() override; // было изменено внутренняя переменная
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -992,7 +993,7 @@ struct _g_button : public _t_go
 
 struct _g_color_ring : public _t_go
 {
-	_hsva color = c_def;
+	_hsva color = cc1;
 
 	_g_color_ring() { local_area = { {0, 300}, {0, 300} }; }
 	uchar type() { return 17; }
@@ -1092,7 +1093,7 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename _t>
-_t* find1_plus_gtetron(_tetron* tet, u64 flags)
+_t* find1_plus_gtetron(_tetron* tet, u64 flags, _tetron** base_tetron = nullptr)
 {
 	for (auto i : tet->link)
 	{
@@ -1100,11 +1101,16 @@ _t* find1_plus_gtetron(_tetron* tet, u64 flags)
 		if (!i->test_flags(tet, flags)) continue;
 		if (_g_tetron* g = *a)
 		{
-			_t* t2 = g->find1<_t>(flag_specialty);
+			_t* t2 = g->find1<_t>(flag_specialty, base_tetron);
 			if (t2 != nullptr) return t2;
 		}
-		if (_t* x = *a) return x;
+		if (_t* x = *a)
+		{
+			if (base_tetron) *base_tetron = a;
+			return x;
+		}
 	}
+	if (base_tetron) *base_tetron = nullptr;
 	return nullptr;
 }
 
@@ -1169,14 +1175,31 @@ struct _g_graph : public _t_go
 
 struct _g_terminal : public _t_go
 {
-	std::vector<std::wstring> text;
+	struct _command
+	{
+		virtual void run(_g_terminal *t, std::vector<std::wstring>& parameters) = 0;
+		virtual std::wstring help() = 0;
+		virtual ~_command() {}
+	};
+
+	std::map<std::wstring, std::unique_ptr<_command>> command;
 	std::wstring cmd; // командная строка
+	std::vector<std::wstring> previous_cmd; // база всех вызываемых команд
+
+	i64 act_previous_cmd = 0; // активная предыдущая команда
 	i64 cursor = 0; // позиция курсора в командной строке
 	bool visible_cursor = true;
 	bool insert_mode = true;
 	_iarea area_cursor;
 	i64 scrollbar = 0; // отступ ползунка снизу
+	inline static int font_size = 16; // минимум 12 для читабельности
+	int font_width = 0; // ширина символов
 	inline static std::wstring prefix = L"> ";
+	inline static i64 width_scrollbar = 15; // ширина полосы прокрутки
+	inline static i64 otst_x = 3; // отступ при рисовании
+	inline static i64 otst_y = 2; // отступ при рисовании
+	_ixy selection_begin = { -1LL,0LL }; // номер отображаемой строки и номер символа
+	_ixy selection_end = { 0LL,0LL }; // номер отображаемой строки и номер символа
 
 	_g_terminal();
 	uchar type() override { return 18; }
@@ -1187,15 +1210,42 @@ struct _g_terminal : public _t_go
 	void key_press(ushort key) override;
 	bool mouse_wheel2(_xy r) override;
 	bool mouse_down_left2(_xy r) override;
-	void mouse_up_left2(_xy r) override;
 	void mouse_move_left2(_xy r) override;
 	void run_cmd(); // выволнить введенную команду
+	void add_text(std::wstring_view s); // добавить текст
+	void text_clear() { text.clear(); }
 
 private:
+	std::vector<std::wstring> text;
 	i64 old_cmd_vis_len = -1; // количество символов в строке
 	i64 old_full_lines = 0; // полное количество строк
 	i64 vis_cur = false; // сделать курсор видимым
+	_iinterval y_slider; // пиксельные координаты y ползунка
+	i64 max_lines = 0; // сколько строк помещается на экране
+	double y0_move_slider = -1; // начальный y - перемещения ползунка
+	i64 scrollbar0_move_slider = 0; // начальное положение scrollbar
+	i64 full_lines = 0; // полное количество строк
+	i64 cmd_vis_len = 0; // количество символов по x
 
+	void set_clipboard(); // скопировать выделенный текст в буффер обмена
+};
+
+struct _cmd_clear : public _g_terminal::_command
+{
+	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override;
+	std::wstring help() override { return L"очищение экрана"; }
+};
+
+struct _cmd_help : public _g_terminal::_command
+{
+	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override;
+	std::wstring help() override { return L"вывод справки"; }
+};
+
+struct _cmd_test : public _g_terminal::_command
+{
+	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override;
+	std::wstring help() override { return L"тестовая команда"; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
