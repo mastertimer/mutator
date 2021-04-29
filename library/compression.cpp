@@ -609,7 +609,7 @@ std::vector<uchar> AC_pak32(std::vector<uchar>& A)
 {
 	std::vector<uchar> Re;
 	unsigned int tbit = 0;
-	int L = A.size();
+	int L = (int)A.size();
 	Re.resize(L + 666);
 	unsigned int dv[257], vdv = 257;
 	for (int i = 0; i < 257; i++) dv[i] = 1;
@@ -729,6 +729,74 @@ std::vector<uchar> AC_pak32(std::vector<uchar>& A)
 	return Re;
 }
 
+std::vector<uchar> AC_unpak32(std::vector<uchar>& A)
+{
+	std::vector<uchar> Re;
+	unsigned int tbit = 0;
+	int L = (int)A.size();
+	Re.resize(L + 666);
+	int zp = 0;
+	unsigned int dv[257], vdv = 257;
+	for (int i = 0; i < 257; i++) dv[i] = 1;
+	unsigned int n = 0, dn = 0x80000000, x = 0;
+	for (int i = 1; i <= 31; i++)
+	{
+		x <<= 1;
+		int no = (tbit >> 3);
+		if (no < L)
+			x += (A[no] >> (7 - (tbit & 7))) & 1;
+		else
+			if (no - L > 4) return std::vector<uchar>();
+		tbit++;
+	}
+	for (;;)
+	{
+		unsigned int y;
+		y = ((x - n + 1) * vdv - 1) / dn;
+		int c;
+		unsigned int v = 0;
+		for (c = 0; y >= (v += dv[c]); c++);
+		v -= dv[c];
+		n = n + dn * v / vdv;
+		dn = dn * dv[c] / vdv;
+		for (;;)
+		{
+			if (n + dn <= 0x40000000)
+			{
+			}
+			else
+				if (n >= 0x40000000)
+				{
+					n -= 0x40000000;
+					x -= 0x40000000;
+				}
+				else
+					if ((n >= 0x20000000) && (n + dn <= 0x60000000))
+					{
+						n -= 0x20000000;
+						x -= 0x20000000;
+					}
+					else break;
+			n <<= 1;
+			dn <<= 1;
+			x <<= 1;
+			int no = (tbit >> 3);
+			if (no < L)
+				x += (A[no] >> (7 - (tbit & 7))) & 1;
+			else
+				if (no - L > 4) return std::vector<uchar>();
+			tbit++;
+		}
+		if (c == 256) break;
+		if (zp >= Re.size()) Re.resize(Re.size() * 2);
+		Re[zp] = c;
+		zp++;
+		dv[c]++;
+		vdv++;
+	}
+	Re.resize(zp);
+	return Re;
+}
 
 /*//функция арифметического кодирования
 //max - 512Mb
