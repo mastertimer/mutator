@@ -191,6 +191,7 @@ _bit_vector arithmetic_coding(const std::vector<uchar>& data)
 
 void arithmetic_decoding(_bit_vector& data, std::vector<uchar>& res)
 {
+	data.bit_read = 0;
 	res.clear();
 	if (data.empty()) return;
 	uchar bit_size = data.popn(6);
@@ -310,6 +311,7 @@ void arithmetic_decoding(_bit_vector& data, std::vector<uchar>& res)
 
 void arithmetic_decoding2(_bit_vector& data, std::vector<uchar>& res)
 {
+	data.bit_read = 0;
 	res.clear();
 	if (data.empty()) return;
 	uchar bit_size = data.popn(6);
