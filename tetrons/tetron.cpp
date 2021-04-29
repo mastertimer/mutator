@@ -1422,66 +1422,24 @@ struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
 		t->add_text(L"файл: " + test_file);
-		std::vector<uchar> data, res, data2;
+		std::vector<uchar> data, data2;
+		_bit_vector res;
 		if (!load_file(test_file, data))
 		{
 			t->add_text(L"ошибка загрузки!");
 			return;
 		}
-		t->add_text(L"размер:     " + std::to_wstring(data.size()));
+		t->add_text(L"размер:            " + std::to_wstring(data.size()));
 		double com1 = 0.0, com2 = 0.0;
 		double com = information(data, &com1, &com2);
-		t->add_text(L"информация: " + double_to_string(com, 1) + L" (" + double_to_string(com1, 1) + L" + " +
+		t->add_text(L"информация:        " + double_to_string(com, 1) + L" (" + double_to_string(com1, 1) + L" + " +
 			double_to_string(com2, 1) + L")");
-		res = AC_pak32(data);
-		t->add_text(L"идеал:      " + double_to_string(size_arithmetic_coding(data), 1));
-		t->add_text(L"AC_pak32:   " + std::to_wstring(res.size()));
-		t->add_text(L"разница:    " + double_to_string(res.size() - com, 1));
-		data2 = AC_unpak32(res);
-		if (data != data2) t->add_text(L"!!ошибка!! расжатый файл не равен исходному!");
-	}
-};
-
-struct _cmd_test_arithmetic_coding1 : public _g_terminal::_command
-{
-	std::wstring help() override { return L"тестирование времени арифметического кодирования"; }
-	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
-	{
-		t->add_text(L"файл: " + test_file);
-		std::vector<uchar> data, res, data2;
-		if (!load_file(test_file, data))
-		{
-			t->add_text(L"ошибка загрузки!");
-			return;
-		}
-		t->add_text(L"размер:     " + std::to_wstring(data.size()));
-
-		i64 n = 1;
-		if (!parameters.empty()) n = std::stoi(parameters[0]);
-		if (n < 1) n = 1;
-		t->add_text(std::to_wstring(n) + L" испытаний");
-
-		i64 mindt = 1000000000;
-		i64 maxdt = 0;
-		i64 summdt = 0;
-
-		for (i64 i = 0; i < n; i++)
-		{
-			auto tt = std::chrono::high_resolution_clock::now();
-			res = AC_pak32(data);
-			std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - tt;
-			i64 dtt = dt.count() / 1000000;
-			if (dtt < mindt) mindt = dtt;
-			if (dtt > maxdt) maxdt = dtt;
-			summdt += dtt;
-		}
-
-		t->add_text(L"среднее время, мсек:      " + std::to_wstring(summdt / n));
-		t->add_text(L"минимальное время, мсек:  " + std::to_wstring(mindt));
-		t->add_text(L"максимальное время, мсек: " + std::to_wstring(maxdt));
-
-		t->add_text(L"AC_pak32:   " + std::to_wstring(res.size()));
-		data2 = AC_unpak32(res);
+		res = arithmetic_coding(data);
+		i64 v = (res.size() + 7) / 8;
+		t->add_text(L"идеал:             " + double_to_string(size_arithmetic_coding(data), 1));
+		t->add_text(L"arithmetic_coding: " + std::to_wstring(v));
+		t->add_text(L"разница:           " + double_to_string(v - com, 1));
+		arithmetic_decoding(res, data2);
 		if (data != data2) t->add_text(L"!!ошибка!! расжатый файл не равен исходному!");
 	}
 };
@@ -1530,7 +1488,7 @@ struct _cmd_test_arithmetic_coding2 : public _g_terminal::_command
 	}
 };
 
-struct _cmd_test_arithmetic_coding3 : public _g_terminal::_command
+struct _cmd_test_arithmetic_coding1 : public _g_terminal::_command
 {
 	std::wstring help() override { return L"тестирование времени арифметического кодирования"; }
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
@@ -1586,7 +1544,6 @@ _g_terminal::_g_terminal()
 	command.insert({ L"a",     std::unique_ptr<_command>(new _cmd_test_arithmetic_coding) });
 	command.insert({ L"a1",    std::unique_ptr<_command>(new _cmd_test_arithmetic_coding1) });
 	command.insert({ L"a2",    std::unique_ptr<_command>(new _cmd_test_arithmetic_coding2) });
-	command.insert({ L"a3",    std::unique_ptr<_command>(new _cmd_test_arithmetic_coding3) });
 }
 
 void _g_terminal::set_clipboard()
