@@ -151,11 +151,11 @@ _bit_vector arithmetic_coding(const std::vector<uchar>& data)
 	u64 bit_size = bit_for_value(data.size() + 1);
 	res.pushn(bit_size, 6);
 	res.pushn(data.size(), bit_size);
-	u64 frequency[256]; // частоты
+	u64 frequency[256];
 	for (auto& i: frequency) i = 1;
 	u64 summ_frequency = 256;
-	u64 begin = h0, end = h4; // рабочий диапазон
-	u64 bad_bit = 0; // количество плохих бит
+	u64 begin = h0, end = h4;
+	u64 bad_bit = 0;
 	for (u64 c : data)
 	{
 		u64 chs = 0;
@@ -604,6 +604,131 @@ std::vector<unsigned char> AC_unpak64(std::vector<unsigned char>& A)
 	Re.resize(zp);
 	return Re;
 }
+
+std::vector<uchar> AC_pak32(std::vector<uchar>& A)
+{
+	std::vector<uchar> Re;
+	unsigned int tbit = 0;
+	int L = A.size();
+	Re.resize(L + 666);
+	unsigned int dv[257], vdv = 257;
+	for (int i = 0; i < 257; i++) dv[i] = 1;
+	unsigned int n = 0, dn = 0x80000000;
+	int BrakBit = 0;
+	for (int i = 0; i <= L; i++)
+	{
+		int c;
+		if (i < L) c = A[i];
+		else c = 256;
+		unsigned int v = 0;
+		for (int j = 0; j < c; j++) v += dv[j];
+		n = n + dn * v / vdv;
+		dn = dn * dv[c] / vdv;
+		for (;;)
+		{
+			if (n + dn <= 0x40000000)
+			{
+				int no = (tbit >> 3);
+				if (Re.size() <= no) Re.resize(Re.size() * 2);
+				if ((tbit & 7) == 0) Re[no] = 0;
+				else Re[no] <<= 1;
+				tbit++;
+				while (BrakBit--)
+				{
+					no = (tbit >> 3);
+					if (Re.size() <= no) Re.resize(Re.size() * 2);
+					if ((tbit & 7) == 0) Re[no] = 1;
+					else
+					{
+						Re[no] <<= 1;
+						Re[no]++;
+					}
+					tbit++;
+				}
+				BrakBit = 0;
+			}
+			else
+				if (n >= 0x40000000)
+				{
+					n -= 0x40000000;
+					int no = (tbit >> 3);
+					if (Re.size() <= no) Re.resize(Re.size() * 2);
+					if ((tbit & 7) == 0) Re[no] = 1;
+					else
+					{
+						Re[no] <<= 1;
+						Re[no]++;
+					}
+					tbit++;
+					while (BrakBit--)
+					{
+						no = (tbit >> 3);
+						if (Re.size() <= no) Re.resize(Re.size() * 2);
+						if ((tbit & 7) == 0) Re[no] = 0;
+						else Re[no] <<= 1;
+						tbit++;
+					}
+					BrakBit = 0;
+				}
+				else
+					if ((n >= 0x20000000) && (n + dn <= 0x60000000))
+					{
+						BrakBit++;
+						n -= 0x20000000;
+					}
+					else break;
+			n <<= 1;
+			dn <<= 1;
+		}
+		dv[c]++;
+		vdv++;
+	}
+	BrakBit++;
+	if (n < 0x20000000)
+	{
+		int no = (tbit >> 3);
+		if (Re.size() <= no) Re.resize(Re.size() * 2);
+		if ((tbit & 7) == 0) Re[no] = 0;
+		else Re[no] <<= 1;
+		tbit++;
+		while (BrakBit--)
+		{
+			no = (tbit >> 3);
+			if (Re.size() <= no) Re.resize(Re.size() * 2);
+			if ((tbit & 7) == 0) Re[no] = 1;
+			else
+			{
+				Re[no] <<= 1;
+				Re[no]++;
+			}
+			tbit++;
+		}
+	}
+	else
+	{
+		int no = (tbit >> 3);
+		if (Re.size() <= no) Re.resize(Re.size() * 2);
+		if ((tbit & 7) == 0) Re[no] = 1;
+		else
+		{
+			Re[no] <<= 1;
+			Re[no]++;
+		}
+		tbit++;
+		while (BrakBit--)
+		{
+			no = (tbit >> 3);
+			if (Re.size() <= no) Re.resize(Re.size() * 2);
+			if ((tbit & 7) == 0) Re[no] = 0;
+			else Re[no] <<= 1;
+			tbit++;
+		}
+	}
+	if (tbit & 7) Re[(tbit >> 3)] <<= 8 - (tbit & 7);
+	Re.resize(((tbit - 1) >> 3) + 1);
+	return Re;
+}
+
 
 /*//функция арифметического кодирования
 //max - 512Mb
