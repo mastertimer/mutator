@@ -649,42 +649,6 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 {
 }
 
-void test_compression()
-{
-	std::vector<uchar> data, data2;
-	_bit_vector res;
-	load_file(L"e:\\mutator.cpp", data);
-	show_message("загружено", (i64)data.size());
-
-	uchar kk = 0;
-//	auto t = std::chrono::high_resolution_clock::now();
-	res = arithmetic_coding(data);
-//	std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - t;
-	//	AC_pak64(data, res);
-//	kk = ppm(data, res, 16); // 16
-	show_message("сжатый размер "+ std::to_string(res.size() - (kk > 0)) + "." + std::to_string((int)kk));
-
-	auto t = std::chrono::high_resolution_clock::now();
-	arithmetic_decoding2(res, data2);
-//	data2 = AC_unpak64(res);
-	std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - t;
-	show_message("dt", dt.count() / 1000000);
-	show_message("расжатый размер", (i64)data2.size());
-
-	if (data2.size() != data.size()) return;
-	i64 nerr = -1;
-	for (i64 i = 0; i < (i64)data.size(); i++)
-		if (data[i] != data2[i])
-		{
-			nerr = i;
-			break;
-		}
-	if (nerr < 0)
-		show_message("распаковано верно!");
-	else
-		show_message("ошибка, символ №", nerr);
-}
-
 void test2()
 {
 	double p[256] = { 1 }; // частоты (ненормированные)
@@ -803,7 +767,6 @@ void test2()
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-//	test_compression();
 	test2();
 }
 

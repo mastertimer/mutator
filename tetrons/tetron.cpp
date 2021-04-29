@@ -1437,6 +1437,7 @@ struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 		res = arithmetic_coding(data);
 		i64 v = (res.size() + 7) / 8;
 		t->add_text(L"идеал:             " + double_to_string(size_arithmetic_coding(data), 1));
+		t->add_text(L"");
 		t->add_text(L"arithmetic_coding: " + std::to_wstring(v));
 		t->add_text(L"разница:           " + double_to_string(v - com, 1));
 		arithmetic_decoding(res, data2);
@@ -1574,6 +1575,7 @@ void _g_terminal::set_clipboard()
 	auto fff = [&](const std::wstring &s)
 	{
 		i64 ks = (s.size() + cmd_vis_len - 1) / cmd_vis_len;
+		if (ks == 0) ks = 1;
 		if (yy - 1 < y0) return;
 		if (yy - ks > y1)
 		{
@@ -1725,7 +1727,10 @@ void _g_terminal::ris2(_trans tr, bool final)
 	{
 		full_lines = ks;
 		for (auto s = text.rbegin(); s != text.rend(); s++)
-			full_lines += (s->size() + cmd_vis_len - 1) / cmd_vis_len;
+			if (s->empty())
+				full_lines++;
+			else
+				full_lines += (s->size() + cmd_vis_len - 1) / cmd_vis_len;
 		old_cmd_vis_len = cmd_vis_len;
 		old_full_lines = full_lines;
 	}
@@ -1804,6 +1809,7 @@ void _g_terminal::ris2(_trans tr, bool final)
 	{
 		std::wstring &s = text[i];
 		i64 ks2 = (s.size() + cmd_vis_len - 1) / cmd_vis_len;
+		if (s.empty()) ks2 = 1;
 
 		ks += ks2;
 
