@@ -802,7 +802,9 @@ std::vector<uchar> AC_unpak32(std::vector<uchar>& A)
 	return Re;
 }
 
-double entropy(std::vector<uchar>& a) // простая энтропия в байтах
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+double entropy(std::vector<uchar>& a)
 {
 	if (a.empty()) return 0.0;
 	i64 k[256] = {};
@@ -811,6 +813,28 @@ double entropy(std::vector<uchar>& a) // простая энтропия в ба
 	for (auto i : k) if (i) s += i * log((double)i / a.size());
 	return -s / log(256.0);
 }
+
+double information(std::vector<uchar>& a, double* permutations, double* frequency)
+{
+	if (a.empty()) return 0.0;
+	i64 k[256] = {};
+	for (auto i : a) k[i]++;
+	i64 v = a.size();
+	double s1 = 0.0;
+	for (i64 i = 2; i <= v; i++) s1 += log((double)i);
+	for (auto j : k)
+		for (i64 i = 2; i <= j; i++)
+			s1 -= log((double)i);
+	s1 /= log(256.0);
+	double s2 = 0.0;
+	for (i64 i = 1; i < 256; i++) s2 += log((double)(v + i)) - log((double)i); // 256 - вариантов символов
+	s2 /= log(256.0);
+	if (permutations) *permutations = s1;
+	if (frequency) *frequency = s2;
+	return s1 + s2;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*//функция арифметического кодирования
 //max - 512Mb

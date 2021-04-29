@@ -1414,25 +1414,28 @@ struct _cmd_test : public _g_terminal::_command
 	}
 };
 
+std::wstring test_file = L"e:\\mutator\\tetrons.txt";
+
 struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 {
 	std::wstring help() override { return L"тестирование арифметического кодирования"; }
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
-		std::wstring fn = L"e:\\mutator\\tetrons.txt";
-		t->add_text(L"файл: " + fn);
+		t->add_text(L"файл: " + test_file);
 		std::vector<uchar> data, res, data2;
-		if (!load_file(fn, data))
+		if (!load_file(test_file, data))
 		{
 			t->add_text(L"ошибка загрузки!");
 			return;
 		}
-		t->add_text(L"размер:   " + std::to_wstring(data.size()));
-		double e = entropy(data);
-		t->add_text(L"энтропия: " + double_to_string(e, 1));
+		t->add_text(L"размер:     " + std::to_wstring(data.size()));
+		double com1 = 0.0, com2 = 0.0;
+		double com = information(data, &com1, &com2);
+		t->add_text(L"информация: " + double_to_string(com, 1) + L" (" + double_to_string(com1, 1) + L" + " +
+			double_to_string(com2, 1) + L")");
 		res = AC_pak32(data);
-		t->add_text(L"AC_pak32: " + std::to_wstring(res.size()));
-		t->add_text(L"разница:  " + double_to_string(res.size() - e, 1));
+		t->add_text(L"AC_pak32:   " + std::to_wstring(res.size()));
+		t->add_text(L"разница:    " + double_to_string(res.size() - com, 1));
 		data2 = AC_unpak32(res);
 		if (data == data2)
 			t->add_text(L"сжатие/расжатие идентично.");
