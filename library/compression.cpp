@@ -2,11 +2,15 @@
 
 #include "compression.h"
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 constexpr u64 h0 = 0; // начало
 constexpr u64 h1 = 0x40000000; // четверть
 constexpr u64 h2 = 0x80000000; // половина
 constexpr u64 h3 = 0xc0000000; // 3/4
 constexpr u64 h4 = 0x100000000; // полный
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _ppc
 {
@@ -622,8 +626,8 @@ std::vector<uchar> AC_pak32(std::vector<uchar>& A)
 		else c = 256;
 		unsigned int v = 0;
 		for (int j = 0; j < c; j++) v += dv[j];
-		n = n + dn * v / vdv;
-		dn = dn * dv[c] / vdv;
+		n = n + (u64)dn * v / vdv;
+		dn = (u64)dn * dv[c] / vdv;
 		for (;;)
 		{
 			if (n + dn <= 0x40000000)
@@ -752,13 +756,13 @@ std::vector<uchar> AC_unpak32(std::vector<uchar>& A)
 	for (;;)
 	{
 		unsigned int y;
-		y = ((x - n + 1) * vdv - 1) / dn;
+		y = ((u64)(x - n + 1) * vdv - 1) / dn;
 		int c;
 		unsigned int v = 0;
 		for (c = 0; y >= (v += dv[c]); c++);
 		v -= dv[c];
-		n = n + dn * v / vdv;
-		dn = dn * dv[c] / vdv;
+		n = n + (u64)dn * v / vdv;
+		dn = (u64)dn * dv[c] / vdv;
 		for (;;)
 		{
 			if (n + dn <= 0x40000000)
@@ -796,6 +800,16 @@ std::vector<uchar> AC_unpak32(std::vector<uchar>& A)
 	}
 	Re.resize(zp);
 	return Re;
+}
+
+double entropy(std::vector<uchar>& a) // простая энтропия в байтах
+{
+	if (a.empty()) return 0.0;
+	i64 k[256] = {};
+	for (auto i : a) k[i]++;
+	double s = 0;
+	for (auto i : k) if (i) s += i * log((double)i / a.size());
+	return -s / log(256.0);
 }
 
 /*//функция арифметического кодирования

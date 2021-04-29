@@ -1421,15 +1421,23 @@ struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 	{
 		std::wstring fn = L"e:\\mutator\\tetrons.txt";
 		t->add_text(L"файл: " + fn);
-		std::vector<uchar> data, res;
+		std::vector<uchar> data, res, data2;
 		if (!load_file(fn, data))
 		{
 			t->add_text(L"ошибка загрузки!");
 			return;
 		}
 		t->add_text(L"размер:   " + std::to_wstring(data.size()));
+		double e = entropy(data);
+		t->add_text(L"энтропия: " + double_to_string(e, 1));
 		res = AC_pak32(data);
 		t->add_text(L"AC_pak32: " + std::to_wstring(res.size()));
+		t->add_text(L"разница:  " + double_to_string(res.size() - e, 1));
+		data2 = AC_unpak32(res);
+		if (data == data2)
+			t->add_text(L"сжатие/расжатие идентично.");
+		else
+			t->add_text(L"!!ошибка!! расжатый файл не равен исходному!");
 	}
 };
 
