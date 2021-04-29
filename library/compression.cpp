@@ -834,6 +834,16 @@ double information(std::vector<uchar>& a, double* permutations, double* frequenc
 	return s1 + s2;
 }
 
+double size_arithmetic_coding(std::vector<uchar>& a)
+{
+	double s = 0.0;
+	i64 frequency[256];
+	for (auto& i : frequency) i = 1;
+	i64 vv = 256;
+	for (auto c : a) s += log((double)frequency[c]++ / vv++);
+	return -s / log(256.0);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*//функция арифметического кодирования

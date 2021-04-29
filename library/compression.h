@@ -9,6 +9,7 @@
 double entropy(std::vector<uchar>& a); // простая энтропия в байтах
  // количество информации в байтах сочетания + частоты
 double information(std::vector<uchar>& a, double* permutations = nullptr, double* frequency = nullptr);
+double size_arithmetic_coding(std::vector<uchar>& a); // идеальный размер арифметика = information
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
