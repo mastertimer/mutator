@@ -1517,15 +1517,15 @@ struct _cmd_test_arithmetic_coding1 : public _g_terminal::_command
 			auto tt = std::chrono::high_resolution_clock::now();
 			res = arithmetic_coding(data);
 			std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - tt;
-			i64 dtt = dt.count() / 1000000;
+			i64 dtt = dt.count() / 1000;
 			if (dtt < mindt) mindt = dtt;
 			if (dtt > maxdt) maxdt = dtt;
 			summdt += dtt;
 		}
 
-		t->add_text(L"среднее время, мсек:      " + std::to_wstring(summdt / n));
-		t->add_text(L"минимальное время, мсек:  " + std::to_wstring(mindt));
-		t->add_text(L"максимальное время, мсек: " + std::to_wstring(maxdt));
+		t->add_text(L"среднее время, мксек:      " + std::to_wstring(summdt / n));
+		t->add_text(L"минимальное время, мксек:  " + std::to_wstring(mindt));
+		t->add_text(L"максимальное время, мксек: " + std::to_wstring(maxdt));
 
 		t->add_text(L"arithmetic_coding:   " + std::to_wstring((res.size() + 7) / 8));
 		arithmetic_decoding(res, data2);

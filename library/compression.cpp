@@ -4,10 +4,10 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-constexpr u64 h0 = 0; // начало
-constexpr u64 h1 = 0x40000000; // четверть
-constexpr u64 h2 = 0x80000000; // половина
-constexpr u64 h3 = 0xc0000000; // 3/4
+constexpr u64 h0 =           0; // начало
+constexpr u64 h1 =  0x40000000; // четверть
+constexpr u64 h2 =  0x80000000; // половина
+constexpr u64 h3 =  0xc0000000; // 3/4
 constexpr u64 h4 = 0x100000000; // полный
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -169,9 +169,8 @@ _bit_vector arithmetic_coding(const std::vector<uchar>& data)
 		begin += ed * chs / summ_frequency++;
 		for (;;)
 		{
-			if ((end <= h2) || (begin >= h2))
+			if (u64 bi = (begin >= h2); bi || (end <= h2))
 			{
-				u64 bi = (begin >= h2);
 				res.push1(bi);
 				if (bad_bit) { res.pushnod(bi ^ 1, bad_bit); bad_bit = 0; }
 				begin = (begin - h2 * bi) << 1;
