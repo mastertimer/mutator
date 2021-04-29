@@ -1,5 +1,6 @@
 ﻿#include <chrono>
 
+#include "compression.h"
 #include "tetron.h"
 
 __hash_table<_link> glink;
@@ -1379,27 +1380,58 @@ void _g_terminal::run_cmd()
 	cmd.clear();
 }
 
-void _cmd_help::run(_g_terminal* t, std::vector<std::wstring> &parameters)
-{
-	for (auto &i: t->command) t->add_text(i.first + L" - " + i.second->help());
-}
-
-void _cmd_clear::run(_g_terminal* t, std::vector<std::wstring>& parameters)
-{
-	t->text_clear();
-}
-
-void _cmd_test::run(_g_terminal* t, std::vector<std::wstring>& parameters)
-{
-	for (i64 i = 0; i < (i64)parameters.size(); i++)
-		t->add_text(std::to_wstring(i) + L"й параметр = " + parameters[i]);
-}
-
 void _g_terminal::add_text(std::wstring_view s)
 {
 	text.emplace_back(s);
 	if (text.size() > 20000) text.erase(text.begin(), text.begin() + 10000);
 }
+
+struct _cmd_clear : public _g_terminal::_command
+{
+	std::wstring help() override { return L"очищение экрана"; }
+	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
+	{
+		t->text_clear();
+	}
+};
+
+struct _cmd_help : public _g_terminal::_command
+{
+	std::wstring help() override { return L"вывод справки"; }
+	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
+	{
+		for (auto& i : t->command) t->add_text(i.first + L" - " + i.second->help());
+	}
+};
+
+struct _cmd_test : public _g_terminal::_command
+{
+	std::wstring help() override { return L"тестовая команда"; }
+	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
+	{
+		for (i64 i = 0; i < (i64)parameters.size(); i++)
+			t->add_text(std::to_wstring(i) + L"й параметр = " + parameters[i]);
+	}
+};
+
+struct _cmd_test_arithmetic_coding : public _g_terminal::_command
+{
+	std::wstring help() override { return L"тестирование арифметического кодирования"; }
+	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
+	{
+		std::wstring fn = L"e:\\mutator\\tetrons.txt";
+		t->add_text(L"файл: " + fn);
+		std::vector<uchar> data, res;
+		if (!load_file(fn, data))
+		{
+			t->add_text(L"ошибка загрузки!");
+			return;
+		}
+		t->add_text(L"размер:   " + std::to_wstring(data.size()));
+		res = AC_pak32(data);
+		t->add_text(L"AC_pak32: " + std::to_wstring(res.size()));
+	}
+};
 
 _g_terminal::_g_terminal()
 {
@@ -1409,6 +1441,7 @@ _g_terminal::_g_terminal()
 	command.insert({ L"clear", std::unique_ptr<_command>(new _cmd_clear) });
 	command.insert({ L"help",  std::unique_ptr<_command>(new _cmd_help) });
 	command.insert({ L"test",  std::unique_ptr<_command>(new _cmd_test) });
+	command.insert({ L"a",     std::unique_ptr<_command>(new _cmd_test_arithmetic_coding) });
 }
 
 void _g_terminal::set_clipboard()
@@ -3650,4 +3683,3 @@ void _g_graph::ris2(_trans tr, bool final)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-

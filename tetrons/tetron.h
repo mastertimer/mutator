@@ -1177,8 +1177,8 @@ struct _g_terminal : public _t_go
 {
 	struct _command
 	{
-		virtual void run(_g_terminal *t, std::vector<std::wstring>& parameters) = 0;
 		virtual std::wstring help() = 0;
+		virtual void run(_g_terminal *t, std::vector<std::wstring>& parameters) = 0;
 		virtual ~_command() {}
 	};
 
@@ -1228,24 +1228,6 @@ private:
 	i64 cmd_vis_len = 0; // количество символов по x
 
 	void set_clipboard(); // скопировать выделенный текст в буффер обмена
-};
-
-struct _cmd_clear : public _g_terminal::_command
-{
-	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override;
-	std::wstring help() override { return L"очищение экрана"; }
-};
-
-struct _cmd_help : public _g_terminal::_command
-{
-	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override;
-	std::wstring help() override { return L"вывод справки"; }
-};
-
-struct _cmd_test : public _g_terminal::_command
-{
-	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override;
-	std::wstring help() override { return L"тестовая команда"; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
