@@ -18,7 +18,7 @@ struct _ppc
 	std::map<uchar, _ppc> next;
 };
 
-constexpr double kkk4 = 19.0; // 19.0
+constexpr double kkk4 = 22.0; // 22.0
 
 struct _frequency
 {
