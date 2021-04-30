@@ -1449,7 +1449,7 @@ struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 		for (i64 i = 0; i < n; i++)
 		{
 			auto tt = std::chrono::high_resolution_clock::now();
-			res = arithmetic_coding(data);
+			arithmetic_coding(data, res);
 			std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - tt;
 			i64 dtt = dt.count() / 1000;
 			if (dtt < mindt) mindt = dtt;
@@ -1490,68 +1490,6 @@ struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 	}
 };
 
-struct _cmd_test_arithmetic_coding2 : public _g_terminal::_command
-{
-	std::wstring help() override { return L"тестирование времени арифметического кодирования"; }
-	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
-	{
-		t->add_text(L"файл: " + test_file);
-		std::vector<uchar> data, res, data2;
-		if (!load_file(test_file, data))
-		{
-			t->add_text(L"ошибка загрузки!");
-			return;
-		}
-		t->add_text(L"размер:     " + std::to_wstring(data.size()));
-
-		i64 n = 1;
-		if (!parameters.empty()) n = std::stoi(parameters[0]);
-		if (n < 1) n = 1;
-		t->add_text(std::to_wstring(n) + L" испытаний");
-
-		i64 mindt = 1000000000;
-		i64 maxdt = 0;
-		i64 summdt = 0;
-
-		for (i64 i = 0; i < n; i++)
-		{
-			auto tt = std::chrono::high_resolution_clock::now();
-			AC_pak64(data, res);
-			std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - tt;
-			i64 dtt = dt.count() / 1000;
-			if (dtt < mindt) mindt = dtt;
-			if (dtt > maxdt) maxdt = dtt;
-			summdt += dtt;
-		}
-
-		t->add_text(L"среднее время, мксек:      " + std::to_wstring(summdt / n));
-		t->add_text(L"минимальное время, мксек:  " + std::to_wstring(mindt));
-		t->add_text(L"максимальное время, мксек: " + std::to_wstring(maxdt));
-
-		mindt = 1000000000;
-		maxdt = 0;
-		summdt = 0;
-
-		for (i64 i = 0; i < n; i++)
-		{
-			auto tt = std::chrono::high_resolution_clock::now();
-			data2 = AC_unpak64(res);
-			std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - tt;
-			i64 dtt = dt.count() / 1000;
-			if (dtt < mindt) mindt = dtt;
-			if (dtt > maxdt) maxdt = dtt;
-			summdt += dtt;
-		}
-		if (data == data2)
-			t->add_text(L"расжатие норма");
-		else
-			t->add_text(L"!!ошибка!! расжатый файл не равен исходному!");
-		t->add_text(L"среднее время, мксек:      " + std::to_wstring(summdt / n));
-		t->add_text(L"минимальное время, мксек:  " + std::to_wstring(mindt));
-		t->add_text(L"максимальное время, мксек: " + std::to_wstring(maxdt));
-	}
-};
-
 _g_terminal::_g_terminal()
 {
 	local_area = { {0, 100}, {0, 100} };
@@ -1561,7 +1499,6 @@ _g_terminal::_g_terminal()
 	command.insert({ L"help",  std::unique_ptr<_command>(new _cmd_help) });
 	command.insert({ L"test",  std::unique_ptr<_command>(new _cmd_test) });
 	command.insert({ L"a",     std::unique_ptr<_command>(new _cmd_test_arithmetic_coding) });
-	command.insert({ L"a2",    std::unique_ptr<_command>(new _cmd_test_arithmetic_coding2) });
 }
 
 void _g_terminal::set_clipboard()

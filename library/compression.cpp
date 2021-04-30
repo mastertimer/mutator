@@ -149,9 +149,9 @@ uchar ppm(const std::vector<uchar>& data, std::vector<uchar>& res, u64 g)
 	return r1n;
 }
 
-_bit_vector arithmetic_coding(const std::vector<uchar>& data)
+void arithmetic_coding(const std::vector<uchar>& data, _bit_vector& res)
 {
-	_bit_vector res;
+	res.clear();
 	u64 bit_size = bit_for_value(data.size() + 1);
 	res.pushn(bit_size, 6);
 	res.pushn(data.size(), bit_size);
@@ -186,7 +186,6 @@ _bit_vector arithmetic_coding(const std::vector<uchar>& data)
 	u64 c = ((begin <= h1) && (end >= h2));
 	res.push1(c ^ 1);
 	res.pushnod(c, bad_bit + 1);
-	return res;
 }
 
 void arithmetic_decoding(_bit_vector& data, std::vector<uchar>& res)
@@ -219,187 +218,6 @@ void arithmetic_decoding(_bit_vector& data, std::vector<uchar>& res)
 			x = ((x - delta) << 1) + data.pop1_safely();
 		}
 	}
-}
-
-void AC_pak64(const std::vector<uchar>& data, std::vector<uchar>& res)
-{
-	u64 tbit = 0;
-	i64 L = data.size();
-	res.resize(L + 666);
-	u64 dv[257], vdv = 257;
-	for (i64 i = 0; i < 257; i++) dv[i] = 1;
-	u64 n = 0, dn = 0x80000000;
-	i64 BrakBit = 0;
-	for (i64 i = 0; i <= L; i++)
-	{
-		i64 c = (i < L) ? data[i] : 256;
-		u64 v = 0;
-		for (i64 j = 0; j < c; j++) v += dv[j];
-		n = n + (u64)dn * v / vdv;
-		dn = (u64)dn * dv[c] / vdv;
-		for (;;)
-		{
-			if (n + dn <= 0x40000000)
-			{
-				i64 no = (tbit >> 3);
-				if ((tbit & 7) == 0) res[no] = 0;
-				else res[no] <<= 1;
-				tbit++;
-				while (BrakBit--)
-				{
-					no = (tbit >> 3);
-					if ((tbit & 7) == 0) res[no] = 1;
-					else
-					{
-						res[no] <<= 1;
-						res[no]++;
-					}
-					tbit++;
-				}
-				BrakBit = 0;
-			}
-			else
-				if (n >= 0x40000000)
-				{
-					n -= 0x40000000;
-					i64 no = (tbit >> 3);
-					if ((tbit & 7) == 0) res[no] = 1;
-					else
-					{
-						res[no] <<= 1;
-						res[no]++;
-					}
-					tbit++;
-					while (BrakBit--)
-					{
-						no = (tbit >> 3);
-						if ((tbit & 7) == 0) res[no] = 0;
-						else res[no] <<= 1;
-						tbit++;
-					}
-					BrakBit = 0;
-				}
-				else
-					if ((n >= 0x20000000) && (n + dn <= 0x60000000))
-					{
-						BrakBit++;
-						n -= 0x20000000;
-					}
-					else break;
-			n <<= 1;
-			dn <<= 1;
-		}
-		dv[c]++;
-		vdv++;
-	}
-	BrakBit++;
-	if (n < 0x20000000)
-	{
-		i64 no = (tbit >> 3);
-		if ((tbit & 7) == 0) res[no] = 0;
-		else res[no] <<= 1;
-		tbit++;
-		while (BrakBit--)
-		{
-			no = (tbit >> 3);
-			if ((tbit & 7) == 0) res[no] = 1;
-			else
-			{
-				res[no] <<= 1;
-				res[no]++;
-			}
-			tbit++;
-		}
-	}
-	else
-	{
-		i64 no = (tbit >> 3);
-		if ((tbit & 7) == 0) res[no] = 1;
-		else
-		{
-			res[no] <<= 1;
-			res[no]++;
-		}
-		tbit++;
-		while (BrakBit--)
-		{
-			no = (tbit >> 3);
-			if ((tbit & 7) == 0) res[no] = 0;
-			else res[no] <<= 1;
-			tbit++;
-		}
-	}
-	if (tbit & 7) res[(tbit >> 3)] <<= 8 - (tbit & 7);
-	res.resize(((tbit - 1) >> 3) + 1);
-}
-
-std::vector<unsigned char> AC_unpak64(std::vector<unsigned char>& A)
-{
-	std::vector<unsigned char> Re;
-	u64 tbit = 0;
-	i64 L = A.size();
-	Re.resize(L + 666);
-	i64 zp = 0;
-	u64 dv[257], vdv = 257;
-	for (i64 i = 0; i < 257; i++) dv[i] = 1;
-	u64 n = 0, dn = 0x80000000, x = 0;
-	for (i64 i = 1; i <= 31; i++)
-	{
-		x <<= 1;
-		i64 no = (tbit >> 3) + 1;
-		if (no <= L)
-			x += ((unsigned char)A[no - 1] >> (7 - (tbit & 7))) & 1;
-		else
-			if (no - L > 5) return {};
-		tbit++;
-	}
-	for (;;)
-	{
-		u64 y;
-		y = ((unsigned long long)(x - n + 1) * vdv - 1) / dn;
-		i64 c;
-		u64 v = 0;
-		for (c = 0; y >= (v += dv[c]); c++);
-		v -= dv[c];
-		n = n + (unsigned long long)dn * v / vdv;
-		dn = (unsigned long long)dn * dv[c] / vdv;
-		for (;;)
-		{
-			if (n + dn <= 0x40000000)
-			{
-			}
-			else
-				if (n >= 0x40000000)
-				{
-					n -= 0x40000000;
-					x -= 0x40000000;
-				}
-				else
-					if ((n >= 0x20000000) && (n + dn <= 0x60000000))
-					{
-						n -= 0x20000000;
-						x -= 0x20000000;
-					}
-					else break;
-			n <<= 1;
-			dn <<= 1;
-			x <<= 1;
-			i64 no = (tbit >> 3) + 1;
-			if (no <= L)
-				x += (A[no - 1] >> (7 - (tbit & 7))) & 1;
-			else
-				if (no - L > 5) return {};
-			tbit++;
-		}
-		if (c == 256) break;
-		zp++;
-		if (zp > Re.size()) Re.resize(Re.size() * 2);
-		Re[zp - 1] = c;
-		dv[c]++;
-		vdv++;
-	}
-	Re.resize(zp);
-	return Re;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
