@@ -15,7 +15,6 @@ double size_arithmetic_coding(std::vector<uchar>& a); // идеальный ра
 
 _bit_vector arithmetic_coding(const std::vector<uchar>& data);
 void arithmetic_decoding(_bit_vector& data, std::vector<uchar>& res);
-void arithmetic_decoding2(_bit_vector& data, std::vector<uchar>& res);
 
 uchar ppm(const std::vector<uchar>& data, std::vector<uchar>& res, u64 g = 0);
 

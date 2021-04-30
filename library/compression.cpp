@@ -191,131 +191,10 @@ _bit_vector arithmetic_coding(const std::vector<uchar>& data)
 
 void arithmetic_decoding(_bit_vector& data, std::vector<uchar>& res)
 {
-	data.bit_read = 0;
-	res.clear();
-	if (data.empty()) return;
-	uchar bit_size = data.popn(6);
-	u64 raz = data.popn(bit_size);
-	res.reserve(raz);
-
-	u64 frequency[257]; // частичные суммы
-	for (u64 i = 0; i < 257; i++) frequency[i] = i;
-
-	u64 range[257]; // диапазоны частичных сумм
-	bool irange[257] = {}; // подсчитан ли диапазон частичных сумм?
-
-	u64 begin = h0; // начало рабочего диапазона
-	u64 end = h4; // конец рабочего диапазона
-
-	u64 beging = h0; // начало рабочего диапазона
-	u64 endg = h4; // конец рабочего диапазона
-
-	u64 gl = h4; // активная надбака/убавка
-
-	u64 c0 = 0; // левая граница потенциального символа
-	u64 c1 = 256; // правая граница потенциального символа
-
-	int iii = 0;
-	bool recalc = false;
-
-	for (;;)
-	{
-		uchar bit = data.pop1();
-		gl >>= 1;
-		if (bit) begin += gl; else end -= gl;
-
-		while (true)
-		{
-			if (bit || recalc)
-			{
-				u64 c0_0 = c0;
-				u64 c0_1 = c1 - 1;
-				while (c0_1 > c0_0)
-				{
-					u64 cc = (c0_0 + c0_1 + 1) >> 1;
-					if (!irange[cc])
-					{
-						range[cc] = beging + (endg - beging) * frequency[cc] / frequency[256];
-						irange[cc] = true;
-					}
-					if (begin >= range[cc]) c0_0 = cc; else c0_1 = cc - 1; // ??
-				}
-				c0 = c0_0;
-			}
-			if ((!bit) || recalc)
-			{
-				u64 c1_0 = c0 + 1;
-				u64 c1_1 = c1;
-				while (c1_1 > c1_0)
-				{
-					u64 cc = (c1_0 + c1_1) >> 1;
-					if (!irange[cc])
-					{
-						range[cc] = beging + (endg - beging) * frequency[cc] / frequency[256];
-						irange[cc] = true;
-					}
-					if (end <= range[cc]) c1_1 = cc; else c1_0 = cc + 1; // ??
-				}
-				c1 = c1_0;
-			}
-			recalc = false;
-			if (c1 - c0 > 1) break;
-			recalc = true;
-			res.push_back((uchar)c0);
-			iii++;
-			if (iii == 147289)
-			{
-				size_t rr = res.size();
-				iii++;
-			}
-			if (res.size() == raz) return;
-			if (!irange[c0]) range[c0] = beging + (endg - beging) * frequency[c0] / frequency[256];
-			if (!irange[c1]) range[c1] = beging + (endg - beging) * frequency[c1] / frequency[256];
-			beging = range[c0];
-			endg = range[c1];
-			for (u64 i = 0; i < 257; i++) irange[i] = false;
-			for (u64 i = c1; i < 257; i++) frequency[i]++;
-			c0 = 0;
-			c1 = 256;
-		start:
-			if (endg <= h2)
-			{
-				beging <<= 1;
-				endg <<= 1;
-				begin <<= 1;
-				end <<= 1;
-				gl <<= 1;
-				goto start;
-			}
-			if (beging >= h2)
-			{
-				beging = (beging - h2) << 1;
-				endg = (endg - h2) << 1;
-				begin = (begin - h2) << 1;
-				end = (end - h2) << 1;
-				gl <<= 1;
-				goto start;
-			}
-			if ((beging >= h1) && (endg <= h3))
-			{
-				beging = (beging - h1) << 1;
-				endg = (endg - h1) << 1;
-				begin = (begin - h1) << 1;
-				end = (end - h1) << 1;
-				gl <<= 1;
-				goto start;
-			}
-		}
-	}
-}
-
-void arithmetic_decoding2(_bit_vector& data, std::vector<uchar>& res)
-{
 	res.clear();
 	if (data.empty()) return;
 	data.bit_read = 0;
-	uchar bit_size = data.popn(6);
-	i64 size = data.popn(bit_size);
+	i64 size = data.popn(data.popn(6));
 	res.reserve(size);
 	u64 frequency[256];
 	for (auto& i : frequency) i = 1;
@@ -324,27 +203,20 @@ void arithmetic_decoding2(_bit_vector& data, std::vector<uchar>& res)
 	for (i64 i = 0; i < 32; i++) x = (x << 1) + data.pop1_safely();
 	for (i64 i = 0; i < size; i++)
 	{
-		u64 ed = end - begin;
-		u64 y = ((x - begin + 1) * summ_frequency - 1) / ed;
 		i64 c = 0;
 		u64 chs = 0;
-		while (y >= (chs += frequency[c])) c++;
+		u64 ed = end - begin;
+		for (u64 y = ((x - begin + 1) * summ_frequency - 1) / ed; y >= (chs += frequency[c]); c++);
 		end = begin + ed * chs / summ_frequency;
 		begin += ed * (chs - frequency[c]++) / summ_frequency++;
-		res.push_back((uchar)c);
+		res.push_back(c);
 		for (;;)
 		{
-			if (u64 bi = (begin >= h2); bi || (end <= h2))
-			{
-				begin = (begin - h2 * bi) << 1;
-				end = (end - h2 * bi) << 1;
-				x = ((x - h2 * bi) << 1) + data.pop1_safely();
-				continue;
-			}
-			if ((begin < h1) || (end > h3)) break;
-			begin = (begin - h1) << 1;
-			end = (end - h1) << 1;
-			x = ((x - h1) << 1) + data.pop1_safely();
+			u64 delta = (end <= h2) ? h0 : (begin >= h2) ? h2 : ((begin >= h1) && (end <= h3)) ? h1 : h4;
+			if (delta == h4) break;
+			begin = (begin - delta) << 1;
+			end = (end - delta) << 1;
+			x = ((x - delta) << 1) + data.pop1_safely();
 		}
 	}
 }
