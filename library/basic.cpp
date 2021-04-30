@@ -178,6 +178,15 @@ u64 _bit_vector::pop1() noexcept
 	return ((data[r] >> bi) & 1);
 }
 
+u64 _bit_vector::pop1_safely() noexcept
+{
+	i64 r = bit_read >> 6;
+	uchar bi = bit_read & 63;
+	bit_read++;
+	if (r >= (i64)data.size()) return 0;
+	return ((data[r] >> bi) & 1);
+}
+
 u64 _bit_vector::popn(uchar n) noexcept
 {
 	if (n == 0) return 0;

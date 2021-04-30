@@ -1472,7 +1472,7 @@ struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 		for (i64 i = 0; i < n; i++)
 		{
 			auto tt = std::chrono::high_resolution_clock::now();
-			arithmetic_decoding(res, data2);
+			arithmetic_decoding2(res, data2);
 			std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - tt;
 			i64 dtt = dt.count() / 1000;
 			if (dtt < mindt) mindt = dtt;
