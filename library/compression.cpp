@@ -139,7 +139,7 @@ uchar ppm(const std::vector<uchar>& data, std::vector<uchar>& res, u64 g)
 			bad_bit++;
 			goto start;
 		}
-		for (u64 i = c + 1; i < 257; i++) frequency[i]++;
+		for (u64 j = c + 1; j < 257; j++) frequency[j]++;
 	}
 	uchar c = ((begin <= h1) && (end >= h2));
 	otgruz(c ^ 1);
@@ -148,6 +148,8 @@ uchar ppm(const std::vector<uchar>& data, std::vector<uchar>& res, u64 g)
 	if (r1n) res.push_back(r1 << (8 - r1n));
 	return r1n;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void arithmetic_coding(const std::vector<uchar>& data, _bit_vector& res)
 {

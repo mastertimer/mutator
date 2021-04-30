@@ -1458,8 +1458,8 @@ struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 		}
 
 
-		i64 v = (res.size() + 7) / 8;
-		t->add_text(L"arithmetic_coding: " + std::to_wstring(v));
+		double v = res.size() / 8.0;
+		t->add_text(L"arithmetic_coding: " + double_to_string(v, 1));
 		t->add_text(L"разница:           " + double_to_string(v - com, 1));
 		t->add_text(L"среднее время, мксек:      " + std::to_wstring(summdt / n));
 		t->add_text(L"минимальное время, мксек:  " + std::to_wstring(mindt));
@@ -1490,6 +1490,46 @@ struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 	}
 };
 
+struct _cmd_test_ppm : public _g_terminal::_command
+{
+	std::wstring help() override { return L"тестирование ppm сжатия"; }
+	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
+	{
+		t->add_text(L"файл: " + test_file);
+		std::vector<uchar> data, data2, res;
+		if (!load_file(test_file, data))
+		{
+			t->add_text(L"ошибка загрузки!");
+			return;
+		}
+		t->add_text(L"размер: " + std::to_wstring(data.size()));
+
+		i64 n = 0;
+		if (!parameters.empty()) n = std::stoi(parameters[0]);
+		if (n < 0) n = 0;
+		t->add_text(L"порядок = " + std::to_wstring(n));
+
+		i64 mindt = 1000000000;
+		i64 maxdt = 0;
+		i64 summdt = 0;
+
+		{
+			auto tt = std::chrono::high_resolution_clock::now();
+			ppm(data, res, n);
+			std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - tt;
+			i64 dtt = dt.count() / 1000;
+			if (dtt < mindt) mindt = dtt;
+			if (dtt > maxdt) maxdt = dtt;
+			summdt += dtt;
+		}
+
+		double v = res.size();
+		t->add_text(L"ppm:    " + double_to_string(v, 0));
+		t->add_text(L"время, мксек:  " + std::to_wstring(mindt));
+
+	}
+};
+
 _g_terminal::_g_terminal()
 {
 	local_area = { {0, 100}, {0, 100} };
@@ -1499,6 +1539,7 @@ _g_terminal::_g_terminal()
 	command.insert({ L"help",  std::unique_ptr<_command>(new _cmd_help) });
 	command.insert({ L"test",  std::unique_ptr<_command>(new _cmd_test) });
 	command.insert({ L"a",     std::unique_ptr<_command>(new _cmd_test_arithmetic_coding) });
+	command.insert({ L"ppm",   std::unique_ptr<_command>(new _cmd_test_ppm) });
 }
 
 void _g_terminal::set_clipboard()
