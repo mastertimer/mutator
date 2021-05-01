@@ -4,11 +4,72 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-constexpr u64 h0 =           0; // начало
-constexpr u64 h1 =  0x40000000; // четверть
-constexpr u64 h2 =  0x80000000; // половина
+constexpr u64 h0 =           0; // 0/4
+constexpr u64 h1 =  0x40000000; // 1/4
+constexpr u64 h2 =  0x80000000; // 2/4
 constexpr u64 h3 =  0xc0000000; // 3/4
-constexpr u64 h4 = 0x100000000; // полный
+constexpr u64 h4 = 0x100000000; // 4/4
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+i64 _frequency2::size()
+{
+	i64 s = 0;
+	for (i64 i = 0; i < number; i++) s += frequency[i];
+	return s;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void stir_vector(std::vector<uchar> &v) // перемешать
+{
+	for (i64 i = (i64)v.size() - 1; i > 0; i--) std::swap(v[i], v[rnd(i + 1)]);
+}
+
+std::vector<uchar> generate_vector(_frequency2& f)
+{
+	std::vector<uchar> res;
+	res.reserve(f.size());
+	for (i64 i = 0; i < f.number; i++) res.insert(res.end(), f.frequency[i], i);
+	for (i64 i = (i64)res.size() - 1; i > 0; i--) std::swap(res[i], res[rnd(i + 1)]);
+	return res;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+constexpr double kkk4 = 22.0; // 22.0
+
+struct _frequency
+{
+	double frequency[256];
+
+	void start() noexcept
+	{
+		for (int i = 0; i < 256; i++) frequency[i] = kkk4 / 256.0;
+	}
+
+	void norm()
+	{
+		double s = 0;
+		for (int i = 0; i < 256; i++) s += frequency[i];
+		s = kkk4 / s;
+		for (int i = 0; i < 256; i++) frequency[i] *= s;
+	}
+
+	void norm(u64 rr, u64* f)
+	{
+		double s = 0;
+		for (int i = 0; i < 256; i++) s += frequency[i];
+		s = rr / s;
+		f[0] = 0;
+		for (int i = 1; i <= 256; i++)
+		{
+			u64 a = (u64)(frequency[i - 1] * s);
+			if (a == 0) a = 1;
+			f[i] = f[i - 1] + a;
+		}
+	}
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -17,39 +78,6 @@ struct _ppc
 	u64 frequency = 0;
 	std::map<uchar, _ppc> next;
 };
-
-constexpr double kkk4 = 22.0; // 22.0
-
-struct _frequency
-{
-	double frequency[256];
-
-	void start() noexcept { for (int i = 0; i < 256; i++) frequency[i] = kkk4 / 256.0; }
-	void norm();
-	void norm(u64 rr, u64* f);
-};
-
-void _frequency::norm(u64 rr, u64* f)
-{
-	double s = 0;
-	for (int i = 0; i < 256; i++) s += frequency[i];
-	s = rr / s;
-	f[0] = 0;
-	for (int i = 1; i <= 256; i++)
-	{
-		u64 a = (u64)(frequency[i - 1] * s);
-		if (a == 0) a = 1;
-		f[i] = f[i - 1] + a;
-	}
-}
-
-void _frequency::norm()
-{
-	double s = 0;
-	for (int i = 0; i < 256; i++) s += frequency[i];
-	s = kkk4 / s;
-	for (int i = 0; i < 256; i++) frequency[i] *= s;
-}
 
 uchar ppm(const std::vector<uchar>& data, std::vector<uchar>& res, u64 g)
 {

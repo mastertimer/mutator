@@ -6,6 +6,19 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+struct _frequency2
+{
+	i64 frequency[256] = {};
+	i64 number = 256;
+
+	i64 size();
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void stir_vector(std::vector<uchar>& v); // перемешать
+std::vector<uchar> generate_vector(_frequency2& f);
+
 double entropy(std::vector<uchar>& a); // простая энтропия в байтах
  // количество информации в байтах сочетания + частоты
 double information(std::vector<uchar>& a, double* permutations = nullptr, double* frequency = nullptr);

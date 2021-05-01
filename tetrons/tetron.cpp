@@ -1407,11 +1407,30 @@ struct _cmd_help : public _g_terminal::_command
 
 struct _cmd_test : public _g_terminal::_command
 {
-	std::wstring help() override { return L"тестовая команда"; }
+	std::wstring help() override { return L"тестирование перемешивания"; }
+
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
-		for (i64 i = 0; i < (i64)parameters.size(); i++)
-			t->add_text(std::to_wstring(i) + L"й параметр = " + parameters[i]);
+		_frequency2 f;
+		f.number = 2;
+		f.frequency[0] = 3;
+		f.frequency[1] = 1;
+		std::vector<uchar> v;
+		i64 k1[4] = {};
+		i64 n = 1;
+		if (!parameters.empty()) n = std::stoi(parameters[0]);
+		for (i64 i = 0; i < n; i++)
+		{
+			v = generate_vector(f);
+			k1[0] += v[0];
+			k1[1] += v[1];
+			k1[2] += v[2];
+			k1[3] += v[3];
+		}
+		t->add_text(L"0 = " + std::to_wstring(k1[0]));
+		t->add_text(L"1 = " + std::to_wstring(k1[1]));
+		t->add_text(L"2 = " + std::to_wstring(k1[2]));
+		t->add_text(L"3 = " + std::to_wstring(k1[3]));
 	}
 };
 
