@@ -1509,6 +1509,35 @@ struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 	}
 };
 
+struct _cmd_test_arithmetic_coding2 : public _g_terminal::_command
+{
+	std::wstring help() override { return L"тестирование арифметического кодирования"; }
+	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
+	{
+		t->add_text(L"файл: " + test_file);
+		std::vector<uchar> data, data2;
+		_bit_vector res;
+		if (!load_file(test_file, data))
+		{
+			t->add_text(L"ошибка загрузки!");
+			return;
+		}
+		double f0 = 0.01;
+		t->add_text(L"размер: " + std::to_wstring(data.size()));
+		t->add_text(L"идеал1: " + double_to_string(size_arithmetic_coding(data), 1));
+		t->add_text(L"идеал0: " + double_to_string(size_arithmetic_coding(data, f0), 1));
+
+		i64 n = 1;
+		if (!parameters.empty()) n = std::stoi(parameters[0]);
+
+		for (i64 i = 0; i < n; i++)
+		{
+			stir_vector(data);
+			t->add_text(L"идеал:  " + double_to_string(size_arithmetic_coding(data, f0), 1));
+		}
+	}
+};
+
 struct _cmd_test_ppm : public _g_terminal::_command
 {
 	std::wstring help() override { return L"тестирование ppm сжатия"; }
@@ -1558,6 +1587,7 @@ _g_terminal::_g_terminal()
 	command.insert({ L"help",  std::unique_ptr<_command>(new _cmd_help) });
 	command.insert({ L"test",  std::unique_ptr<_command>(new _cmd_test) });
 	command.insert({ L"a",     std::unique_ptr<_command>(new _cmd_test_arithmetic_coding) });
+	command.insert({ L"aa",     std::unique_ptr<_command>(new _cmd_test_arithmetic_coding2) });
 	command.insert({ L"ppm",   std::unique_ptr<_command>(new _cmd_test_ppm) });
 }
 

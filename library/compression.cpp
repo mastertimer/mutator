@@ -182,6 +182,7 @@ uchar ppm(const std::vector<uchar>& data, std::vector<uchar>& res, u64 g)
 void arithmetic_coding(const std::vector<uchar>& data, _bit_vector& res)
 {
 	res.clear();
+	if (data.empty()) return;
 	u64 bit_size = bit_for_value(data.size() + 1);
 	res.pushn(bit_size, 6);
 	res.pushn(data.size(), bit_size);
@@ -282,13 +283,13 @@ double information(std::vector<uchar>& a, double* permutations, double* frequenc
 	return s1 + s2;
 }
 
-double size_arithmetic_coding(std::vector<uchar>& a)
+double size_arithmetic_coding(std::vector<uchar>& a, double frequency0)
 {
 	double s = 0.0;
-	i64 frequency[256];
-	for (auto& i : frequency) i = 1;
-	i64 vv = 256;
-	for (auto c : a) s += log((double)frequency[c]++ / vv++);
+	double frequency[256];
+	for (auto& i : frequency) i = frequency0;
+	double vv = 256 * frequency0;
+	for (auto c : a) s += log(frequency[c]++ / vv++);
 	return -s / log(256.0);
 }
 
