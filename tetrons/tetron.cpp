@@ -1587,7 +1587,7 @@ _g_terminal::_g_terminal()
 	command.insert({ L"help",  std::unique_ptr<_command>(new _cmd_help) });
 	command.insert({ L"test",  std::unique_ptr<_command>(new _cmd_test) });
 	command.insert({ L"a",     std::unique_ptr<_command>(new _cmd_test_arithmetic_coding) });
-	command.insert({ L"aa",     std::unique_ptr<_command>(new _cmd_test_arithmetic_coding2) });
+	command.insert({ L"aa",    std::unique_ptr<_command>(new _cmd_test_arithmetic_coding2) });
 	command.insert({ L"ppm",   std::unique_ptr<_command>(new _cmd_test_ppm) });
 }
 
