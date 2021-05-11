@@ -18,9 +18,6 @@
       <Extensions>
       </Extensions>
     </Filter>
-    <Filter Include="Исходные файлы\tetrons">
-      <UniqueIdentifier>{5d139b6f-a1b4-4d53-be87-17b3c598c452}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -44,11 +41,11 @@
     <ClCompile Include="sable\mediator.cpp">
       <Filter>Исходные файлы\sable</Filter>
     </ClCompile>
-    <ClCompile Include="tetrons\tetron.cpp">
-      <Filter>Исходные файлы\tetrons</Filter>
-    </ClCompile>
     <ClCompile Include="library\compression.cpp">
       <Filter>Исходные файлы\library</Filter>
+    </ClCompile>
+    <ClCompile Include="tetron.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -67,9 +64,6 @@
     <ClInclude Include="sable\sable_stat.h">
       <Filter>Исходные файлы\sable</Filter>
     </ClInclude>
-    <ClInclude Include="tetrons\tetron.h">
-      <Filter>Исходные файлы\tetrons</Filter>
-    </ClInclude>
     <ClInclude Include="mutator.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
@@ -78,6 +72,9 @@
     </ClInclude>
     <ClInclude Include="library\compression.h">
       <Filter>Исходные файлы\library</Filter>
+    </ClInclude>
+    <ClInclude Include="tetron.h">
+      <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -107,7 +107,7 @@
       <BrowseInformation>false</BrowseInformation>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir);sable;library;tetrons</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);sable;library</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4100;4244</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -149,7 +149,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);sable;library;tetrons</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);sable;library</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4100;4244</DisableSpecificWarnings>
       <AdditionalUsingDirectories>
       </AdditionalUsingDirectories>
@@ -170,7 +170,7 @@
     <ClCompile Include="sable\mediator.cpp" />
     <ClCompile Include="sable\sable.cpp" />
     <ClCompile Include="sable\sable_stat.cpp" />
-    <ClCompile Include="tetrons\tetron.cpp" />
+    <ClCompile Include="tetron.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\basic.h" />
@@ -181,7 +181,7 @@
     <ClInclude Include="sable\mediator.h" />
     <ClInclude Include="sable\sable.h" />
     <ClInclude Include="sable\sable_stat.h" />
-    <ClInclude Include="tetrons\tetron.h" />
+    <ClInclude Include="tetron.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mutator.rc" />
