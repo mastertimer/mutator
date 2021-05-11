@@ -6,7 +6,7 @@
 
 std::wstring ini_file = L"theme.json"; // находтся в папке с mutator.exe
 
-std::wstring tetfile = L"..\\..\\tetrons.txt"; // загружается из файла настроек
+std::wstring tetfile = L"..\\..\\data\\tetrons.txt"; // загружается из ini_file
 HCURSOR g_cu = LoadCursor(0, IDC_ARROW); // активный курсор
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
