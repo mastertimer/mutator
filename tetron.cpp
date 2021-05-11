@@ -1431,13 +1431,23 @@ double ratio_entropy2(double p, double k) // во сколько раз энтр
 	return entropy2(p, k) / entropy01(p);
 }
 
+double f1(double p)
+{
+	return ratio_entropy2(p, 0.82);
+}
+
 struct _cmd_test : public _g_terminal::_command
 {
 	std::wstring help() override { return L"тестирование перемешивания"; }
 
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
-		t->add_text(std::to_wstring(ratio_entropy2(0.7, 0.8)));
+		std::vector<double> m = minimum(f1, {0.0, 1.0});
+		for (auto i : m) t->add_text(double_to_string(i, 13) + L" " + double_to_string(f1(i), 13));
+		t->add_text(L"---");
+		m = minimum(f1, { 0.0, 1.0 }, 5);
+		for (auto i : m) t->add_text(double_to_string(i, 13) + L" " + double_to_string(f1(i), 13));
+		t->add_text(L"---");
 	}
 };
 

@@ -4,6 +4,53 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+constexpr double calculation_accuracy = 1e-13;
+
+// точный минимум в окрестности точки
+double exact_minimum(std::function<double(double)> fun, double x, double dx)
+{
+	double epsilon = abs(x - dx) * calculation_accuracy;
+	double epsilon2 = abs(x + dx) * calculation_accuracy;
+	if (epsilon2 > epsilon) epsilon = epsilon2;
+	double fx = fun(x);
+	while (dx > epsilon)
+	{
+		dx *= 0.5;
+		double fm1 = fun(x - dx);
+		double fp1 = fun(x + dx);
+		if ((fx <= fm1) && (fx <= fp1)) continue;
+		if (fm1 <= fp1)
+		{
+			fx = fm1;
+			x = x - dx;
+		}
+		else
+		{
+			fx = fp1;
+			x = x + dx;
+		}
+	}
+	return x;
+}
+
+std::vector<double> minimum(std::function<double(double)> fun, _interval a, i64 n)
+{
+	std::vector<double> res;
+	double dx = a.length() / n;
+	double f_2 = fun(a.min + dx * 0.5);
+	double f_1 = fun(a.min + dx * 1.5);
+	for (double x = a.min + dx * 2.5; x < a.max; x += dx)
+	{
+		double f = fun(x);
+		if ((f_1 <= f_2) && (f_1 <= f))	res.push_back(exact_minimum(fun, x - dx, dx));
+		f_2 = f_1;
+		f_1 = f;
+	}
+	return res;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 i64 _multi_interval::find(double a)
 {
 	i64 l = border.size();
