@@ -1371,7 +1371,13 @@ void _g_terminal::run_cmd()
 		previous_cmd.push_back(cmd);
 		act_previous_cmd = previous_cmd.size();
 		if (auto cc = command.find(command_name); cc != command.end())
+		{
+			auto tt = std::chrono::high_resolution_clock::now();
 			cc->second->run(this, parameters);
+			std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - tt;
+			i64 dtt = dt.count() / 1000000;
+			text.push_back(L"время выполнения " + std::to_wstring(dtt) + L" мсек");
+		}
 		else
 			text.push_back(L"команда не найдена");
 	}
@@ -1405,36 +1411,37 @@ struct _cmd_help : public _g_terminal::_command
 	}
 };
 
+const double kln2 = -1.0 / log(2.0);
+
+// p - реальная вероятность
+// k - оценочная вероятность
+
+double entropy01(double p) // энтропия 01: p(1) = p, p(0) = 1-p
+{
+	return kln2 * (p * log(p) + (1.0 - p) * log(1.0 - p));
+}
+
+double entropy2(double p, double k) // энтропия второго символа по предсказанию
+{
+	return kln2 * (p * (p * log(k) + (1.0 - p) * log(1.0 - k)) + (1.0 - p) * (p * log(1.0 - k) + (1.0 - p) * log(k)));
+}
+
+double ratio_entropy2(double p, double k) // во сколько раз энтропия хуже идеальной
+{
+	return entropy2(p, k) / entropy01(p);
+}
+
 struct _cmd_test : public _g_terminal::_command
 {
 	std::wstring help() override { return L"тестирование перемешивания"; }
 
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
-		_frequency2 f;
-		f.number = 2;
-		f.frequency[0] = 3;
-		f.frequency[1] = 1;
-		std::vector<uchar> v;
-		i64 k1[4] = {};
-		i64 n = 1;
-		if (!parameters.empty()) n = std::stoi(parameters[0]);
-		for (i64 i = 0; i < n; i++)
-		{
-			v = generate_vector(f);
-			k1[0] += v[0];
-			k1[1] += v[1];
-			k1[2] += v[2];
-			k1[3] += v[3];
-		}
-		t->add_text(L"0 = " + std::to_wstring(k1[0]));
-		t->add_text(L"1 = " + std::to_wstring(k1[1]));
-		t->add_text(L"2 = " + std::to_wstring(k1[2]));
-		t->add_text(L"3 = " + std::to_wstring(k1[3]));
+		t->add_text(std::to_wstring(ratio_entropy2(0.7, 0.8)));
 	}
 };
 
-std::wstring test_file = L"e:\\mutator\\tetrons.txt";
+std::wstring test_file = L"e:\\mutator\\data\\t110521.txt";
 
 struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 {
@@ -1505,7 +1512,6 @@ struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 		t->add_text(L"среднее время, мксек:      " + std::to_wstring(summdt / n));
 		t->add_text(L"минимальное время, мксек:  " + std::to_wstring(mindt));
 		t->add_text(L"максимальное время, мксек: " + std::to_wstring(maxdt));
-
 	}
 };
 
