@@ -2,7 +2,7 @@
 /.vs
 /.vscode
 *.user
-/sable/cen_bak
-/sable/mmm.txt
-/sable/base.c2
-/sable/*.bin
+/data/cen_bak
+/data/mmm.txt
+/data/base.c2
+/data/*.bin

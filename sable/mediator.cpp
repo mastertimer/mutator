@@ -4,7 +4,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-constexpr wchar_t mmm_file[] = L"..\\..\\sable\\mmm.txt";
+constexpr wchar_t mmm_file[] = L"..\\..\\data\\mmm.txt";
 
 std::wstring mmm1 = L"1";
 std::wstring mmm2 = L"2";

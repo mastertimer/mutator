@@ -32,8 +32,8 @@ max(rnd)  |   1.058        58       1.00097
 #include "mediator.h"
 #include "sable.h"
 
-constexpr wchar_t sss_file[]   = L"..\\..\\sable\\base.c2";
-constexpr wchar_t index_file[] = L"..\\..\\sable\\index.bin";
+constexpr wchar_t sss_file[]   = L"..\\..\\data\\base.c2";
+constexpr wchar_t index_file[] = L"..\\..\\data\\index.bin";
 
 _sable_graph *graph = nullptr; // график
 
