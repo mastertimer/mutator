@@ -7,6 +7,12 @@
 // нахождение всех минимумов функции fun на интервале a, (n - стартовое количество разбиений)
 std::vector<double> minimum(std::function<double(double)> fun, _interval a, i64 n = 10007);
 
+// подсчет количества минимумов
+i64 number_minimum(std::function<double(double)> fun, _interval a, i64 n = 10007);
+
+// граница между 1 и многими минимумами
+double only1min(std::function<double(double, double)> fun, _interval a, _interval b, i64 na = 10007, i64 nb = 101);
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _multi_interval //      примерно ~~      |   | |      |  |    |           ||| |    -> [)[)[)[]

@@ -49,6 +49,32 @@ std::vector<double> minimum(std::function<double(double)> fun, _interval a, i64 
 	return res;
 }
 
+double only1min(std::function<double(double, double)> fun, _interval a, _interval b, i64 na, i64 nb)
+{
+	double dx = b.length() / nb;
+	bool f_1 = minimum([&](double p) { return fun(p, b.min + dx * 0.5); }, a, na).size() == 1;
+	double xn = 0, xk = 0;
+	for (double x = a.min + dx * 1.5; x < a.max; x += dx)
+	{
+		bool f = minimum([&](double p) { return fun(p, x); }, a, na).size() == 1;
+		if (f ^ f_1)
+		{
+			xn = x - dx;
+			xk = x;
+			break;
+		}
+		f_1 = f;
+	}
+	if (xn == xk) return 0;
+	double epsilon = abs(xn) * calculation_accuracy;
+	double epsilon2 = abs(xk) * calculation_accuracy;
+	if (epsilon2 > epsilon) epsilon = epsilon2;
+	while (xk - xn > epsilon)
+	{
+		double x = (xn + xn) * 0.5;
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 i64 _multi_interval::find(double a)
