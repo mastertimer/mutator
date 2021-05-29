@@ -404,7 +404,7 @@ void sable_fun1(_g_terminal* t)
 	t->add_text(L"размер 1 сжатой записи:   " + double_to_wstring(double(size_pak) / sss.size, 1));
 	t->add_text(L"размер структуры _prices: " + std::to_wstring(sizeof(_prices)));
 	t->add_text(L"размер структуры _supply_and_demand: " + std::to_wstring(sizeof(_supply_and_demand)));
-	_prices c;
+/*	_prices c;
 	i64 kk = 0;
 	i64 b = 0;
 	i64 m = 0;
@@ -418,7 +418,7 @@ void sable_fun1(_g_terminal* t)
 	}
 	t->add_text(L"kk =  " + std::to_wstring(kk));
 	t->add_text(L"b =  " + std::to_wstring(b));
-	t->add_text(L"m =  " + std::to_wstring(m));
+	t->add_text(L"m =  " + std::to_wstring(m));*/
 }
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)

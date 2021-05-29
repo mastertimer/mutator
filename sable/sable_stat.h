@@ -32,6 +32,17 @@ struct _supply_and_demand // предложение и спрос
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+struct _prices;
+	
+struct _stock_statistics
+{
+	void push_back(const _supply_and_demand& c) { sad.push_back(c); }
+
+private:
+	std::vector<_supply_and_demand> sad;
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _prices // массив спроса предложения с удобными типами
 {
@@ -43,6 +54,7 @@ struct _prices // массив спроса предложения с удобн
 	bool empty() const noexcept { return (time == 0); } // проверка на пустоту 
 	bool operator==(const _prices& p) const noexcept; // время не учитывается при сравнении
 	bool operator!=(const _prices& p) const noexcept; // время не учитывается при сравнении
+	operator _supply_and_demand();
 
 	time_t time_to_minute() { return time - (time % 60); } // обнулить секунды
 	i64 time_hour();
@@ -161,6 +173,7 @@ struct _cdf3 // структура частот для сжатия малого
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-inline _sable_stat sss;// сжатые цены
+inline _sable_stat sss; // сжатые цены
+inline _stock_statistics stock_statistics; // новые сжатые цены
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -7,6 +7,20 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+_prices::operator _supply_and_demand()
+{
+	_supply_and_demand result;
+	result.time = time;
+	for (i64 i = 0; i < roffer; i++)
+	{
+		result.demand.offer[i].price = buy[i].value;
+		result.demand.offer[i].number = buy[i].number;
+		result.supply.offer[i].price = sale[i].value;
+		result.supply.offer[i].number = sale[i].number;
+	}
+	return result;
+}
+
 bool _prices::operator==(const _prices& p) const noexcept
 {
 	for (i64 i = 0; i < roffer; i++)
