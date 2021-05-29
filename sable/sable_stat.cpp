@@ -35,6 +35,14 @@ i64 _prices::time_minute()
 	return t3.tm_min;
 }
 
+i64 _prices::max_number()
+{
+	i64 result = 0;
+	for (auto i : buy) if (i.number > result) result = i.number;
+	for (auto i : sale) if (i.number > result) result = i.number;
+	return result;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 namespace

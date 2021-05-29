@@ -478,7 +478,7 @@ std::wstring substr(std::wstring_view s, i64 n, i64 k)
 	return std::wstring(s.data() + n, k);
 }
 
-std::wstring double_to_string(double a, int z)
+std::wstring double_to_wstring(double a, int z)
 {
 	static const double delta[16] = {5E-1, 5E-2,  5E-3,  5E-4,  5E-5,  5E-6,  5E-7,  5E-8,
 	                                 5E-9, 5E-10, 5E-11, 5E-12, 5E-13, 5E-14, 5E-15, 5E-16};
@@ -505,7 +505,7 @@ std::wstring double_to_string(double a, int z)
 	return s;
 }
 
-std::string double_to_astring(double a, int z)
+std::string double_to_string(double a, int z)
 {
 	static const double delta[16] = { 5E-1, 5E-2, 5E-3, 5E-4, 5E-5, 5E-6, 5E-7, 5E-8, 5E-9, 5E-10, 5E-11, 5E-12, 5E-13,
 		5E-14, 5E-15, 5E-16 };

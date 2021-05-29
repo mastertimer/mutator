@@ -395,6 +395,16 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 //	graph->curve2.push_back(new _spectr_curve);
 }
 
+void sable_fun1(_g_terminal* t)
+{
+	fun13(nullptr, nullptr, 0);
+	t->add_text(L"количество цен: " + std::to_wstring(sss.size));
+	i64 size_pak = (sss.data.size() + 7) / 8;
+	t->add_text(L"сжатый размер: " + std::to_wstring(size_pak));
+	t->add_text(L"размер 1 сжатой записи:   " + double_to_wstring(double(size_pak) / sss.size, 1));
+	t->add_text(L"размер структуры _prices: " + std::to_wstring(sizeof(_prices)));
+}
+
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	for (_frozen i(n_timer1000, flag_run); i; i++)
@@ -663,8 +673,8 @@ void _sable_graph::ris2(_trans tr, bool final)
 		{
 			double yy = a.y.max - (y - y_.min) * a.y.length() / (y_.max - y_.min);
 			master_bm.line({ a.x.min + dex, yy }, { a.x.max - dex, yy }, col_setka);
-			master_bm.text16(std::max(a.x.min, 0.0) + 2, (i64)(yy - 6), double_to_astring(y, 2), col_setka_font);
-			master_bm.text16(std::min((i64)a.x.max, master_bm.size.x) - dex, (i64)(yy - 6), double_to_astring(y, 2),
+			master_bm.text16(std::max(a.x.min, 0.0) + 2, (i64)(yy - 6), double_to_string(y, 2), col_setka_font);
+			master_bm.text16(std::min((i64)a.x.max, master_bm.size.x) - dex, (i64)(yy - 6), double_to_string(y, 2),
 				col_setka_font);
 		}
 	}

@@ -892,7 +892,7 @@ void _t_go::ris(_trans tr, bool final)
 		_area oo = tr(local_area);
 		if (oo.x.min < 0) oo.x.min = 0;
 		if (oo.y.min < 0) oo.y.min = 0;
-		std::wstring s = double_to_string(t.count() / 1000000.0, 2);
+		std::wstring s = double_to_wstring(t.count() / 1000000.0, 2);
 		master_bm.text((int)(oo.x.min + 1), (int)oo.y.min, s.c_str(), 13, cc2, 0x00000000);
 	}
 }
@@ -1443,11 +1443,23 @@ struct _cmd_test : public _g_terminal::_command
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
 		std::vector<double> m = minimum(f1, {0.0, 1.0});
-		for (auto i : m) t->add_text(double_to_string(i, 13) + L" " + double_to_string(f1(i), 13));
+		for (auto i : m) t->add_text(double_to_wstring(i, 13) + L" " + double_to_wstring(f1(i), 13));
 		t->add_text(L"---");
 		m = minimum(f1, { 0.0, 1.0 }, 5);
-		for (auto i : m) t->add_text(double_to_string(i, 13) + L" " + double_to_string(f1(i), 13));
+		for (auto i : m) t->add_text(double_to_wstring(i, 13) + L" " + double_to_wstring(f1(i), 13));
 		t->add_text(L"---");
+	}
+};
+
+void sable_fun1(_g_terminal* t);
+
+struct _cmd_load_sable_stat : public _g_terminal::_command
+{
+	std::wstring help() override { return L"тестирование перемешивания"; }
+
+	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
+	{
+		sable_fun1(t);
 	}
 };
 
@@ -1469,9 +1481,9 @@ struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 		t->add_text(L"размер:            " + std::to_wstring(data.size()));
 		double com1 = 0.0, com2 = 0.0;
 		double com = information(data, &com1, &com2);
-		t->add_text(L"информация:        " + double_to_string(com, 1) + L" (" + double_to_string(com1, 1) + L" + " +
-			double_to_string(com2, 1) + L")");
-		t->add_text(L"идеал:             " + double_to_string(size_arithmetic_coding(data), 1));
+		t->add_text(L"информация:        " + double_to_wstring(com, 1) + L" (" + double_to_wstring(com1, 1) + L" + " +
+			double_to_wstring(com2, 1) + L")");
+		t->add_text(L"идеал:             " + double_to_wstring(size_arithmetic_coding(data), 1));
 
 		i64 n = 1;
 		if (!parameters.empty()) n = std::stoi(parameters[0]);
@@ -1495,8 +1507,8 @@ struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 
 
 		double v = res.size() / 8.0;
-		t->add_text(L"arithmetic_coding: " + double_to_string(v, 1));
-		t->add_text(L"разница:           " + double_to_string(v - com, 1));
+		t->add_text(L"arithmetic_coding: " + double_to_wstring(v, 1));
+		t->add_text(L"разница:           " + double_to_wstring(v - com, 1));
 		t->add_text(L"среднее время, мксек:      " + std::to_wstring(summdt / n));
 		t->add_text(L"минимальное время, мксек:  " + std::to_wstring(mindt));
 		t->add_text(L"максимальное время, мксек: " + std::to_wstring(maxdt));
@@ -1540,8 +1552,8 @@ struct _cmd_test_arithmetic_coding2 : public _g_terminal::_command
 		}
 		double f0 = 0.01;
 		t->add_text(L"размер: " + std::to_wstring(data.size()));
-		t->add_text(L"идеал1: " + double_to_string(size_arithmetic_coding(data), 1));
-		t->add_text(L"идеал0: " + double_to_string(size_arithmetic_coding(data, f0), 1));
+		t->add_text(L"идеал1: " + double_to_wstring(size_arithmetic_coding(data), 1));
+		t->add_text(L"идеал0: " + double_to_wstring(size_arithmetic_coding(data, f0), 1));
 
 		i64 n = 1;
 		if (!parameters.empty()) n = std::stoi(parameters[0]);
@@ -1549,7 +1561,7 @@ struct _cmd_test_arithmetic_coding2 : public _g_terminal::_command
 		for (i64 i = 0; i < n; i++)
 		{
 			stir_vector(data);
-			t->add_text(L"идеал:  " + double_to_string(size_arithmetic_coding(data, f0), 1));
+			t->add_text(L"идеал:  " + double_to_wstring(size_arithmetic_coding(data, f0), 1));
 		}
 	}
 };
@@ -1588,7 +1600,7 @@ struct _cmd_test_ppm : public _g_terminal::_command
 		}
 
 		double v = res.size();
-		t->add_text(L"ppm:    " + double_to_string(v, 0));
+		t->add_text(L"ppm:    " + double_to_wstring(v, 0));
 		t->add_text(L"время, мксек:  " + std::to_wstring(mindt));
 
 	}
@@ -1605,6 +1617,7 @@ _g_terminal::_g_terminal()
 	command.insert({ L"a",     std::unique_ptr<_command>(new _cmd_test_arithmetic_coding) });
 	command.insert({ L"aa",    std::unique_ptr<_command>(new _cmd_test_arithmetic_coding2) });
 	command.insert({ L"ppm",   std::unique_ptr<_command>(new _cmd_test_ppm) });
+	command.insert({ L"1",     std::unique_ptr<_command>(new _cmd_load_sable_stat) });
 }
 
 void _g_terminal::set_clipboard()
@@ -2108,7 +2121,7 @@ void _g_edit_double::ris2(_trans tr, bool final)
 	uint c0 = get_c();
 	int sf2 = (int)(13 * tr.scale + 0.5);
 	if (sf2 < 5) return;
-	std::wstring s = double_to_string(a, 2);
+	std::wstring s = double_to_wstring(a, 2);
 
 	master_bm.text((int)(oo.x.min + 5), (int)(oo.y.min + 1), s.c_str(), sf2, c0, cc0);
 	if (n_act_key == this)
@@ -2129,7 +2142,7 @@ void _g_edit_double::key_down(ushort key)
 		}
 		return;
 	}
-	std::wstring s = double_to_string(a, 2);
+	std::wstring s = double_to_wstring(a, 2);
 	if (key == 8) // backspace
 	{
 		if ((cursor > 0) && (cursor < (int)s.size() - 2))
@@ -2170,7 +2183,7 @@ void _g_edit_double::key_press(ushort key)
 {
 	if ((key < L'0') || (key > L'9')) return;
 	cha_area();
-	std::wstring s = double_to_string(a, 2);
+	std::wstring s = double_to_wstring(a, 2);
 	if (cursor == s.size()) return;
 	i64 b = (i64)a;
 	if (cursor == s.size() - 1)
@@ -3788,8 +3801,8 @@ void _g_graph::ris2(_trans tr, bool final)
 			os_pordis(minx, maxx, maxN, mi, step);
 			int zn = (int)(-log10(step * 1.1) + 1);
 			if (zn < 0) zn = 0;
-			i64 dex = std::max(master_bm.size_text16(double_to_astring(minx, zn)).x,
-				master_bm.size_text16(double_to_astring(maxx, zn)).x) + 4;
+			i64 dex = std::max(master_bm.size_text16(double_to_string(minx, zn)).x,
+				master_bm.size_text16(double_to_string(maxx, zn)).x) + 4;
 			maxN = a.x.length() / dex; // 2-е приближение
 			if (maxN > 1)
 			{
@@ -3800,7 +3813,7 @@ void _g_graph::ris2(_trans tr, bool final)
 				{
 					double xx = (x - minx) * kx;
 					master_bm.line({ i64(xx + a.x.min), (i64)a.y.min }, { i64(xx + a.x.min), (i64)a.y.max }, col_setka);
-					std::string s = double_to_astring(x, zn);
+					std::string s = double_to_string(x, zn);
 					_isize l = master_bm.size_text16(s);
 					if (xx < a.x.length() - 50)	master_bm.text16(a.x.min + xx - l.x / 2, std::max(a.y.min, 0.0),
 						s, col_font);
@@ -3824,7 +3837,7 @@ void _g_graph::ris2(_trans tr, bool final)
 			{
 				double yy = (y - miny) * ky;
 				master_bm.line({ (i64)a.x.min, i64(a.y.max - yy) }, { (i64)a.x.max, i64(a.y.max - yy) }, col_setka);
-				std::string s = double_to_astring(y, zn);
+				std::string s = double_to_string(y, zn);
 				_isize l = master_bm.size_text16(s);
 				if (a.y.length() - yy > 16) master_bm.text16(std::max(a.x.min, 0.0) + 2, a.y.max - yy - 6, s, col_font);
 				if (yy > 16) master_bm.text16(std::min((i64)a.x.max, master_bm.size.x) - l.x - 2, a.y.max - yy - 6,

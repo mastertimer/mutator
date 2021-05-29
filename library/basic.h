@@ -86,8 +86,8 @@ std::string wstring_to_string(std::wstring_view b);
 wstr uint64_to_wstr_hex(u64 a);
 std::wstring substr(std::wstring_view s, i64 n, i64 k); // подстрока которая не кидает исключения
 
-std::wstring double_to_string(double a, int z);
-std::string  double_to_astring(double a, int z);
+std::wstring double_to_wstring(double a, int z);
+std::string  double_to_string(double a, int z);
 
 void show_message(std::string_view s, i64 b);
 void show_message(std::string_view s, double b);
@@ -204,7 +204,7 @@ struct _bit_vector // вектор с побитовой записью / чте
 	u64 pop1() noexcept; // прочитать 1 бит
 	u64 pop1_safely() noexcept; // прочитать 1 бит (безопасно)
 	u64 popn(uchar n) noexcept; // прочитать n бит
-	i64 size() const noexcept { return (i64)data.size() * 64 - (64 - bit); }
+	i64 size() const noexcept { return (i64)data.size() * 64 - (64 - bit); } // в битах!!!
 	bool empty() const noexcept { return (size() == 0); }
 	void resize(i64 v);
 	void clear() { data.clear(); bit = 64; bit_read = 0; }
