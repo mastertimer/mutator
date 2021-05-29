@@ -43,6 +43,14 @@ i64 _prices::max_number()
 	return result;
 }
 
+i64 _prices::brak()
+{
+	i64 result = 0;
+	for (auto i : buy) if (i.number > 65535) result++;
+	for (auto i : sale) if (i.number > 65535) result++;
+	return result;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 namespace
