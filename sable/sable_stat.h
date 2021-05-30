@@ -12,6 +12,8 @@ struct _offer
 {
 	int price;
 	int number;
+
+	bool operator!=(const _offer p) const { return (price != p.price) || (number != p.number); }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -19,6 +21,8 @@ struct _offer
 struct _offers
 {
 	_offer offer[roffer];
+
+	bool operator==(const _offers& p) const;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,15 +32,16 @@ struct _supply_and_demand // предложение и спрос
 	_offers demand; // желающие купить
 	_offers supply; // желающие продать
 	time_t time;
+
+	bool operator==(const _supply_and_demand& p) const; // время не учитывается при сравнении
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _prices;
-	
 struct _stock_statistics
 {
 	void push_back(const _supply_and_demand& c) { sad.push_back(c); }
+	const std::vector<_supply_and_demand>& operator*() const { return sad; }
 
 private:
 	std::vector<_supply_and_demand> sad;
@@ -61,6 +66,40 @@ struct _prices // массив спроса предложения с удобн
 	i64 time_minute();
 	i64 max_number(); // макисмальный number
 	i64 brak(); // количество больших цен
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct _compression_stock_statistics
+{
+	struct _info_pak // дополнительная информация для упаковки
+	{
+		bool ok = false;   // есть данные
+		int r = 0;     // общий размер
+		int r_pro = 0; // размер продаж
+		int r_pok = 0; // размер покупок
+	};
+
+	i64 size = 0; // количество записей
+	_supply_and_demand back{}; // последние цены
+	_bit_vector data; // сжатые данные
+	static constexpr time_t old_dtime = 160; // !!!!!разность времени, после которого цены считаются устаревшими
+
+	_compression_stock_statistics(const _stock_statistics &ss) { for (auto& i : *ss) add(i); }
+
+	bool add(const _supply_and_demand& c); // добавить цены (сжать)
+
+private:
+	std::vector<i64> udata; // указатель на место сжатых данных кратных step_pak_cc
+	std::vector<_offer> base_buy; // база покупки для записи (первых 20 - последние цены)
+	std::vector<_offer> base_sale; // база продажи для записи (первых 20 - последние цены)
+	static constexpr i64 step_pak_cc = 100; // период ключевых цен
+	_info_pak ip_last, ip_n; // дополнительная информация
+
+	bool add0(const _supply_and_demand& c); // не дельта!
+	bool add1(const _supply_and_demand& c); // дельта
+	bool add12(const _offer* v1, std::vector<_offer>& v0, i64 izm);
+	bool coding_delta_number(i64 a, i64 b);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -174,6 +213,6 @@ struct _cdf3 // структура частот для сжатия малого
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 inline _sable_stat sss; // сжатые цены
-inline _stock_statistics stock_statistics; // новые сжатые цены
+inline _stock_statistics stock_statistics; // посекундные цены
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

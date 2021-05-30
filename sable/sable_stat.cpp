@@ -7,6 +7,21 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+bool _offers::operator==(const _offers& p) const
+{
+	for (i64 i = 0; i < roffer; i++) if (offer[i] != p.offer[i]) return false;
+	return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool _supply_and_demand::operator==(const _supply_and_demand& p) const
+{
+	return (demand == p.demand) && (supply == p.supply);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 _prices::operator _supply_and_demand()
 {
 	_supply_and_demand result;
@@ -260,6 +275,28 @@ i64 calc_delta_del_add(const _one_stat* c, const std::vector<_one_stat>& v)
 	return -((i64)v.size());
 }
 
+i64 calc_delta_del_add(const _offer* c, const std::vector<_offer>& v)
+{
+	if (c[0].price == v[0].price) return 0;
+	if (c[1].price > c[0].price)
+	{
+		if (c[0].price < v[0].price)
+		{
+			for (i64 i = 1; i < roffer; i++) if (c[i].price >= v[0].price) return i;
+			return roffer;
+		}
+		for (i64 i = 1; i < (i64)v.size(); i++) if (v[i].price >= c[0].price) return -i;
+		return -((i64)v.size());
+	}
+	if (c[0].price > v[0].price)
+	{
+		for (i64 i = 1; i < roffer; i++) if (c[i].price <= v[0].price) return i;
+		return roffer;
+	}
+	for (i64 i = 1; i < (i64)v.size(); i++) if (v[i].price <= c[0].price) return -i;
+	return -((i64)v.size());
+}
+
 i64 calc_delta_del_add1(const _one_stat* c, const std::vector<_one_stat>& v, i64 n)
 {
 	if (c[n].value == v[n].value) return 0;
@@ -272,6 +309,18 @@ i64 calc_delta_del_add1(const _one_stat* c, const std::vector<_one_stat>& v, i64
 	return -1;
 }
 
+i64 calc_delta_del_add1(const _offer* c, const std::vector<_offer>& v, i64 n)
+{
+	if (c[n].price == v[n].price) return 0;
+	if (c[1].price > c[0].price)
+	{
+		if (c[n].price < v[n].price) return 1;
+		return -1;
+	}
+	if (c[n].price > v[n].price) return 1;
+	return -1;
+}
+
 i64 calc_series_value(const _one_stat* c, const std::vector<_one_stat>& v, i64 n)
 {
 	i64 k = std::min(roffer, (i64)v.size());
@@ -279,7 +328,20 @@ i64 calc_series_value(const _one_stat* c, const std::vector<_one_stat>& v, i64 n
 	return k - n;
 }
 
+i64 calc_series_value(const _offer* c, const std::vector<_offer>& v, i64 n)
+{
+	i64 k = std::min(roffer, (i64)v.size());
+	for (i64 i = n; i < k; i++) if (c[i].price != v[i].price) return i - n;
+	return k - n;
+}
+
 i64 calc_series_number(const _one_stat* c, const std::vector<_one_stat>& v, i64 n, i64 k)
+{
+	for (i64 i = n; i < k; i++) if (c[i].number != v[i].number) return i - n;
+	return k - n;
+}
+
+i64 calc_series_number(const _offer* c, const std::vector<_offer>& v, i64 n, i64 k)
 {
 	for (i64 i = n; i < k; i++) if (c[i].number != v[i].number) return i - n;
 	return k - n;
@@ -760,6 +822,244 @@ void _sable_stat::clear()
 	read_n = -666;
 	ip_last.ok = false;
 	ip_n.ok = false;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool _compression_stock_statistics::add0(const _supply_and_demand& c)
+{
+	ip_last.ok = false;
+	data.pushn(c.demand.offer[roffer - 1].price, 16);
+	for (i64 i = roffer - 1; i >= 0; i--)
+	{
+		if (i != roffer - 1)
+		{
+			if (!f_delta.coding(c.demand.offer[i].price - c.demand.offer[i + 1].price, data)) return false;
+		}
+		if (!f_number.coding(c.demand.offer[i].number, data)) return false;
+	}
+	if (!nnd.coding(c.supply.offer[0].price - c.demand.offer[0].price, data)) return false;
+	for (i64 i = 0; i < roffer; i++)
+	{
+		if (i != 0)
+		{
+			if (!f_delta.coding(c.supply.offer[i].price - c.supply.offer[i - 1].price, data)) return false;
+		}
+		if (!f_number.coding(c.supply.offer[i].number, data)) return false;
+	}
+	base_buy.resize(roffer);
+	base_sale.resize(roffer);
+	for (i64 i = 0; i < roffer; i++)
+	{
+		base_buy[i] = c.demand.offer[i];
+		base_sale[i] = c.supply.offer[i];
+	}
+	return true;
+}
+
+bool _compression_stock_statistics::coding_delta_number(i64 a, i64 b)
+{
+	if (a <= 66) return ttrr1.coding(b - a, data); // 25 %
+	if (a <= 200) return ttrr2.coding(b - a, data); // 25 %
+	if (a <= 318) return ttrr3.coding(b - a, data); // 25 %
+	return ttrr4.coding(b - a, data); // 25 %
+}
+
+bool _compression_stock_statistics::add12(const _offer* v1, std::vector<_offer>& v0, i64 izm)
+{
+	i64 kk = (v1[1].price > v1[0].price) ? -1 : 1;
+	if (!nnds.coding(izm, data)) return false;
+	i64 n = 0;
+	i64 tip = izm;
+	if (izm == 0)
+	{
+		n = calc_series_value(v1, v0, 0);
+		if (!nnse0.coding(n, data)) return false;
+		for (i64 i = 0; i < n;)
+		{
+			i64 ser = calc_series_number(v1, v0, i, n);
+			if (!nnse200[n - i].coding(ser, data)) return false;
+			i += ser;
+			if (i >= n) break;
+			if (!coding_delta_number(v0[i].number, v1[i].number)) return false;
+			v0[i].number = v1[i].number;
+			i++;
+		}
+	}
+	if (izm < 0)
+	{
+		i64 lv = (v0.begin() - (izm + 1))->price;
+		v0.erase(v0.begin(), v0.begin() - izm);
+		i64 n2 = calc_series_value(v1, v0, 0);
+		if (!nnsegg[std::min((i64)v0.size(), roffer)].coding(n2, data)) return false;
+		if (n2 == 0)
+		{
+			if (!f_delta.coding((lv - v1[0].price) * kk, data))	return false;
+			if (!f_number.coding(v1[0].number, data)) return false;
+			v0.insert(v0.begin(), v1[0]);
+			n = 1;
+		}
+		else
+		{
+			n = n2;
+			for (i64 i = 0; i < n;)
+			{
+				i64 ser = calc_series_number(v1, v0, i, n);
+				if (!nnse200[n - i].coding(ser, data)) return false;
+				i += ser;
+				if (i >= n) break;
+				if (!coding_delta_number(v0[i].number, v1[i].number)) return false;
+				v0[i].number = v1[i].number;
+				i++;
+			}
+			tip = 0;
+		}
+	}
+	if (izm > 0)
+	{
+		v0.insert(v0.begin(), izm, {});
+		for (i64 i = izm - 1; i >= 0; i--) // кодируется как c add0
+		{
+			if (!f_delta.coding((v1[i].price - v0[i + 1].price) * kk, data)) return false;
+			if (!f_number.coding(v1[i].number, data)) return false;
+			v0[i] = v1[i];
+		}
+		n = izm;
+		i64 n2 = calc_series_value(v1, v0, n);
+		if (!nnsegg[std::min((i64)v0.size(), roffer) - n].coding(n2, data)) return false;
+		if (n2 == 0)
+			v0.erase(v0.begin() + n);
+		else
+		{
+			n2 += n;
+			for (i64 i = n; i < n2;)
+			{
+				i64 ser = calc_series_number(v1, v0, i, n2);
+				if (!nnse200[n2 - i].coding(ser, data)) return false;
+				i += ser;
+				if (i >= n2) break;
+				if (!coding_delta_number(v0[i].number, v1[i].number)) return false;
+				v0[i].number = v1[i].number;
+				i++;
+			}
+			n = n2;
+			tip = 0;
+		}
+	}
+	while (n < roffer)
+	{
+		if (n >= (i64)v0.size())
+		{
+			v0.resize(roffer);
+			for (; n < roffer; n++)
+			{
+				v0[n] = v1[n];
+				if (!f_delta.coding((v1[n - 1].price - v1[n].price) * kk, data)) return false;
+				if (!f_number.coding(v1[n].number, data)) return false;
+			}
+			break;
+		}
+		if (tip == 0)
+		{
+			i64 buy_izm2 = calc_delta_del_add1(v1, v0, n);
+			data.push1(buy_izm2 < 0);
+			if (buy_izm2 < 0)
+				v0.erase(v0.begin() + n);
+			else
+			{
+				v0.insert(v0.begin() + n, v1[n]);
+				if (!f_delta.coding((v1[n - 1].price - v1[n].price) * kk, data)) return false;
+				if (!f_number.coding(v1[n].number, data)) return false;
+				n++;
+			}
+			tip = 1;
+			continue;
+		}
+		i64 n2 = calc_series_value(v1, v0, n);
+		if (!nnsegg[std::min((i64)v0.size(), roffer) - n].coding(n2, data)) return false;
+		if (n2 > 0)
+		{
+			n2 += n;
+			for (i64 i = n; i < n2;)
+			{
+				i64 ser = calc_series_number(v1, v0, i, n2);
+				if (!nnse200[n2 - i].coding(ser, data)) return false;
+				i += ser;
+				if (i >= n2) break;
+				if (!coding_delta_number(v0[i].number, v1[i].number)) return false;
+				v0[i].number = v1[i].number;
+				i++;
+			}
+			n = n2;
+		}
+		tip = 0;
+	}
+	return true;
+}
+
+bool _compression_stock_statistics::add1(const _supply_and_demand& c)
+{
+	ip_last.ok = true;
+	i64 buy_izm = calc_delta_del_add(c.demand.offer, base_buy);
+	i64 sale_izm = calc_delta_del_add(c.supply.offer, base_sale);
+	if (std::max(abs(buy_izm), abs(sale_izm)) > 12)
+	{
+		data.push1(0);
+		return add0(c);
+	}
+	data.push1(1);
+
+	std::vector<_offer> bbuy = base_buy;
+	std::vector<_offer> bsale = base_sale;
+
+	i64 aa0 = data.size();
+	if (!add12(c.demand.offer, bbuy, buy_izm)) return false;
+	i64 aa1 = data.size();
+	if (!add12(c.supply.offer, bsale, sale_izm)) return false;
+
+	ip_last.r = int(data.size() - aa0);
+	ip_last.r_pok = int(aa1 - aa0);
+	ip_last.r_pro = int(data.size() - aa1);
+
+	base_buy = std::move(bbuy);
+	base_sale = std::move(bsale);
+	return true;
+}
+
+bool _compression_stock_statistics::add(const _supply_and_demand& c)
+{
+	if (c == back) return true; // с большой вероятностью данные устарели
+	if (c.time < back.time) return true; // цены из прошлого не принимаются!
+	auto s_data = data.size();
+	if (size % step_pak_cc == 0)
+	{
+		udata.push_back(data.size());
+		data.pushn(c.time, 31);
+		if (!add0(c))
+		{
+			udata.pop_back();
+			goto err;
+		}
+	}
+	else
+	{
+		time_t dt = c.time - back.time;
+		if (dt == 1) data.push1(0); else { data.push1(1); data.pushn(dt, 31); }
+		if (dt > old_dtime)
+		{
+			if (!add0(c)) goto err;
+		}
+		else
+		{
+			if (!add1(c)) goto err;
+		}
+	}
+	size++;
+	back = c;
+	return true;
+err:
+	data.resize(s_data);
+	return false; // ошибка кодирования, нужно исправлять!!
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
