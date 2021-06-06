@@ -38,10 +38,15 @@ struct _supply_and_demand // предложение и спрос
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+struct _compression_stock_statistics;
+
 struct _stock_statistics
 {
 	void push_back(const _supply_and_demand& c) { sad.push_back(c); }
 	const std::vector<_supply_and_demand>& operator*() const { return sad; }
+	const std::vector<_supply_and_demand>* operator->() const { return &sad; }
+	const _supply_and_demand& operator[](i64 n) const { return sad[n]; }
+	void operator=(_compression_stock_statistics& cs);
 
 private:
 	std::vector<_supply_and_demand> sad;
@@ -59,6 +64,7 @@ struct _prices // массив спроса предложения с удобн
 	bool empty() const noexcept { return (time == 0); } // проверка на пустоту 
 	bool operator==(const _prices& p) const noexcept; // время не учитывается при сравнении
 	bool operator!=(const _prices& p) const noexcept; // время не учитывается при сравнении
+	bool operator!=(const _supply_and_demand& p) const noexcept;
 	operator _supply_and_demand();
 
 	time_t time_to_minute() { return time - (time % 60); } // обнулить секунды
@@ -83,9 +89,10 @@ struct _compression_stock_statistics
 	i64 size = 0; // количество записей
 	_supply_and_demand back{}; // последние цены
 	_bit_vector data; // сжатые данные
-	static constexpr time_t old_dtime = 160; // !!!!!разность времени, после которого цены считаются устаревшими
+	static constexpr time_t old_dtime = 160; // !!!!!разность времени, после которого цены считаются устаревшими -- !!!убрать!!!
 
 	_compression_stock_statistics(const _stock_statistics &ss) { for (auto& i : *ss) add(i); }
+	_compression_stock_statistics(std::wstring_view fn) { load_from_file(fn); }
 
 	bool add(const _supply_and_demand& c); // добавить цены (сжать)
 	bool read(i64 n, _supply_and_demand& c, _info_pak* inf = nullptr); // прочитать цены (расжать)

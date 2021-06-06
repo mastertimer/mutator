@@ -402,7 +402,7 @@ void sable_fun1(_g_terminal* t)
 	t->add_text(L"количество цен: " + std::to_wstring(sss.size));
 	i64 size_pak = (sss.data.size() + 7) / 8;
 	t->add_text(L"сжатый размер: " + std::to_wstring(size_pak));
-	t->add_text(L"размер сжатой   записи:  " + double_to_wstring(double(size_pak) / sss.size, 1));
+	t->add_text(L"размер   сжатой записи:  " + double_to_wstring(double(size_pak) / sss.size, 1));
 	t->add_text(L"размер несжатой записи: " + std::to_wstring(sizeof(_supply_and_demand)));
 	_prices c;
 	for (i64 i = 0; i < sss.size; i++)
@@ -412,7 +412,37 @@ void sable_fun1(_g_terminal* t)
 	}
 	_compression_stock_statistics cs(stock_statistics);
 	cs.save_to_file(exe_path + sss2_file);
-//	sss.save_to_file((exe_path + sss2_file).c_str());
+}
+
+void sable_fun2(_g_terminal* t)
+{
+	fun13(nullptr, nullptr, 0);
+	t->add_text(L"количество цен: " + std::to_wstring(sss.size));
+	i64 size_pak = (sss.data.size() + 7) / 8;
+	t->add_text(L"сжатый размер: " + std::to_wstring(size_pak));
+	t->add_text(L"размер   сжатой записи:  " + double_to_wstring(double(size_pak) / sss.size, 1));
+	_compression_stock_statistics cs(exe_path + sss2_file);
+	t->add_text(L"количество цен: " + std::to_wstring(cs.size));
+	size_pak = (cs.data.size() + 7) / 8;
+	t->add_text(L"сжатый размер: " + std::to_wstring(size_pak));
+	t->add_text(L"размер   сжатой записи:  " + double_to_wstring(double(size_pak) / cs.size, 1));
+	stock_statistics = cs;
+	if (sss.size != stock_statistics->size())
+	{
+		t->add_text(L"несовпадение количества!! ");
+		return;
+	}
+	_prices c;
+	for (i64 i = 0; i < sss.size; i++)
+	{
+		sss.read(i, c);
+		if (c != stock_statistics[i])
+		{
+			t->add_text(L"не совпало!! ");
+			return;
+		}
+	}
+	t->add_text(L"OK полное совадение! ");
 }
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)

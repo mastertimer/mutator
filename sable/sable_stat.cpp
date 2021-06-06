@@ -36,6 +36,15 @@ _prices::operator _supply_and_demand()
 	return result;
 }
 
+bool _prices::operator!=(const _supply_and_demand& p) const noexcept
+{
+	if (time != p.time) return true;
+	for (i64 i = 0; i < roffer; i++)
+		if ((buy[i].number != p.demand.offer[i].number) || (sale[i].number != p.supply.offer[i].number)||
+			(buy[i].value != p.demand.offer[i].price) || (sale[i].value != p.supply.offer[i].price)) return true;
+	return false;
+}
+
 bool _prices::operator==(const _prices& p) const noexcept
 {
 	for (i64 i = 0; i < roffer; i++)
@@ -826,6 +835,19 @@ void _sable_stat::clear()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void _stock_statistics::operator=(_compression_stock_statistics& cs)
+{
+	sad.clear();
+	sad.reserve(cs.size);
+	_supply_and_demand c;
+	for (i64 i = 0; i < cs.size; i++)
+	{
+		cs.read(i, c);
+		sad.push_back(c);
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 i64  _compression_stock_statistics::decoding_delta_number(i64 a)
 {
 	if (a <= 66) return a + ttrr1.decoding(data); // 25 %

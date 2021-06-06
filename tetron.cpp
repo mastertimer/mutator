@@ -1452,14 +1452,25 @@ struct _cmd_test : public _g_terminal::_command
 };
 
 void sable_fun1(_g_terminal* t);
+void sable_fun2(_g_terminal* t);
 
 struct _cmd_load_sable_stat : public _g_terminal::_command
 {
-	std::wstring help() override { return L"тестирование перемешивания"; }
+	std::wstring help() override { return L"конвертация статистики"; }
 
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
 		sable_fun1(t);
+	}
+};
+
+struct _cmd_test_stat : public _g_terminal::_command
+{
+	std::wstring help() override { return L"сравнение статистик"; }
+
+	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
+	{
+		sable_fun2(t);
 	}
 };
 
@@ -1618,6 +1629,7 @@ _g_terminal::_g_terminal()
 	command.insert({ L"aa",    std::unique_ptr<_command>(new _cmd_test_arithmetic_coding2) });
 	command.insert({ L"ppm",   std::unique_ptr<_command>(new _cmd_test_ppm) });
 	command.insert({ L"1",     std::unique_ptr<_command>(new _cmd_load_sable_stat) });
+	command.insert({ L"2",     std::unique_ptr<_command>(new _cmd_test_stat) });
 }
 
 void _g_terminal::set_clipboard()
