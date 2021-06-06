@@ -1056,14 +1056,7 @@ bool _compression_stock_statistics::read(i64 n, _supply_and_demand& c)
 		else
 			dt = data.popn(31);
 		c.time = read_cc.time + dt;
-		if (dt > old_dtime)
-		{
-			if (!read0(c)) return false;
-		}
-		else
-		{
-			if (!read1(c)) return false;
-		}
+		if (!read1(c)) return false;
 	}
 	read_cc = c;
 	read_n = n;
@@ -1306,14 +1299,7 @@ bool _compression_stock_statistics::add(const _supply_and_demand& c)
 	{
 		time_t dt = c.time - back.time;
 		if (dt == 1) data.push1(0); else { data.push1(1); data.pushn(dt, 31); }
-		if (dt > old_dtime)
-		{
-			if (!add0(c)) goto err;
-		}
-		else
-		{
-			if (!add1(c)) goto err;
-		}
+		if (!add1(c)) goto err;
 	}
 	size++;
 	back = c;

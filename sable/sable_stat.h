@@ -81,7 +81,6 @@ struct _compression_stock_statistics
 	i64 size = 0; // количество записей
 	_supply_and_demand back{}; // последние цены
 	_bit_vector data; // сжатые данные
-	static constexpr time_t old_dtime = 160; // !!!!!разность времени, после которого цены считаются устаревшими -- !!!убрать!!!
 
 	_compression_stock_statistics(const _stock_statistics &ss) { for (auto& i : *ss) add(i); }
 	_compression_stock_statistics(std::wstring_view fn) { load_from_file(fn); }
