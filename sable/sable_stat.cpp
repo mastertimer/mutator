@@ -858,7 +858,6 @@ i64  _compression_stock_statistics::decoding_delta_number(i64 a)
 
 bool _compression_stock_statistics::read0(_supply_and_demand& c)
 {
-	ip_n.ok = false;
 	c.demand.offer[roffer - 1].price = data.popn(16);
 	for (i64 i = roffer - 1; i >= 0; i--)
 	{
@@ -884,13 +883,8 @@ bool _compression_stock_statistics::read0(_supply_and_demand& c)
 bool _compression_stock_statistics::read1(_supply_and_demand& c)
 {
 	if (data.pop1() == 0) return read0(c);
-	auto aa0 = data.bit_read;
 	if (!read12(c.demand.offer, base_buy_r)) return false;
-	auto aa1 = data.bit_read;
 	if (!read12(c.supply.offer, base_sale_r)) return false;
-	ip_n.r = int(data.bit_read - aa0);
-	ip_n.r_pok = int(aa1 - aa0);
-	ip_n.r_pro = int(data.bit_read - aa1);
 	return true;
 }
 
@@ -1024,20 +1018,17 @@ bool _compression_stock_statistics::read12(_offer* v1, std::vector<_offer>& v0)
 	return true;
 }
 
-bool _compression_stock_statistics::read(i64 n, _supply_and_demand& c, _info_pak* inf)
+bool _compression_stock_statistics::read(i64 n, _supply_and_demand& c)
 {
-	if (inf) inf->ok = false;
 	if ((n < 0) || (n >= size)) return false;
 	if (n == read_n)
 	{
 		c = read_cc;
-		if (inf) *inf = ip_n;
 		return true;
 	}
 	if (n == size - 1)
 	{
 		c = back;
-		if (inf) *inf = ip_last;
 		return true;
 	}
 	if (read_n + 1 != n)
@@ -1049,10 +1040,9 @@ bool _compression_stock_statistics::read(i64 n, _supply_and_demand& c, _info_pak
 			read_n = k * step_pak_cc - 1;
 		}
 		bool r = false;
-		while (read_n < n) r = read(read_n + 1, c, inf);
+		while (read_n < n) r = read(read_n + 1, c);
 		return r;
 	}
-	ip_n.ok = false;
 	if (n % step_pak_cc == 0)
 	{
 		c.time = data.popn(31);
@@ -1072,13 +1062,11 @@ bool _compression_stock_statistics::read(i64 n, _supply_and_demand& c, _info_pak
 		}
 		else
 		{
-			if (dt == 1) ip_n.ok = true;
 			if (!read1(c)) return false;
 		}
 	}
 	read_cc = c;
 	read_n = n;
-	if (inf) *inf = ip_n;
 	return true;
 }
 
@@ -1105,13 +1093,10 @@ void _compression_stock_statistics::load_from_file(std::wstring_view fn)
 	mem >> base_buy;
 	mem >> base_sale;
 	read_n = -666;
-	ip_last.ok = false;
-	ip_n.ok = false;
 }
 
 bool _compression_stock_statistics::add0(const _supply_and_demand& c)
 {
-	ip_last.ok = false;
 	data.pushn(c.demand.offer[roffer - 1].price, 16);
 	for (i64 i = roffer - 1; i >= 0; i--)
 	{
@@ -1282,7 +1267,6 @@ bool _compression_stock_statistics::add12(const _offer* v1, std::vector<_offer>&
 
 bool _compression_stock_statistics::add1(const _supply_and_demand& c)
 {
-	ip_last.ok = true;
 	i64 buy_izm = calc_delta_del_add(c.demand.offer, base_buy);
 	i64 sale_izm = calc_delta_del_add(c.supply.offer, base_sale);
 	if (std::max(abs(buy_izm), abs(sale_izm)) > 12)
@@ -1295,14 +1279,8 @@ bool _compression_stock_statistics::add1(const _supply_and_demand& c)
 	std::vector<_offer> bbuy = base_buy;
 	std::vector<_offer> bsale = base_sale;
 
-	i64 aa0 = data.size();
 	if (!add12(c.demand.offer, bbuy, buy_izm)) return false;
-	i64 aa1 = data.size();
 	if (!add12(c.supply.offer, bsale, sale_izm)) return false;
-
-	ip_last.r = int(data.size() - aa0);
-	ip_last.r_pok = int(aa1 - aa0);
-	ip_last.r_pro = int(data.size() - aa1);
 
 	base_buy = std::move(bbuy);
 	base_sale = std::move(bsale);

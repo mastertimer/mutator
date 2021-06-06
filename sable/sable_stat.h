@@ -78,14 +78,6 @@ struct _prices // массив спроса предложения с удобн
 
 struct _compression_stock_statistics
 {
-	struct _info_pak // дополнительная информация для упаковки
-	{
-		bool ok = false;   // есть данные
-		int r = 0;     // общий размер
-		int r_pro = 0; // размер продаж
-		int r_pok = 0; // размер покупок
-	};
-
 	i64 size = 0; // количество записей
 	_supply_and_demand back{}; // последние цены
 	_bit_vector data; // сжатые данные
@@ -95,7 +87,7 @@ struct _compression_stock_statistics
 	_compression_stock_statistics(std::wstring_view fn) { load_from_file(fn); }
 
 	bool add(const _supply_and_demand& c); // добавить цены (сжать)
-	bool read(i64 n, _supply_and_demand& c, _info_pak* inf = nullptr); // прочитать цены (расжать)
+	bool read(i64 n, _supply_and_demand& c); // прочитать цены (расжать)
 	void save_to_file(std::wstring_view fn);
 	void load_from_file(std::wstring_view fn);
 
@@ -108,7 +100,6 @@ private:
 	static constexpr i64 step_pak_cc = 100; // период ключевых цен
 	_supply_and_demand read_cc{}; // последние прочитанные цены
 	i64 read_n = -666; // номер последних прочитанных цен
-	_info_pak ip_last, ip_n; // дополнительная информация
 
 	bool add0(const _supply_and_demand& c); // не дельта!
 	bool add1(const _supply_and_demand& c); // дельта

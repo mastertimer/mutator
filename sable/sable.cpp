@@ -427,7 +427,7 @@ void sable_fun2(_g_terminal* t)
 	t->add_text(L"сжатый размер: " + std::to_wstring(size_pak));
 	t->add_text(L"размер   сжатой записи:  " + double_to_wstring(double(size_pak) / cs.size, 1));
 	stock_statistics = cs;
-	if (sss.size != stock_statistics->size())
+	if (sss.size != (i64)stock_statistics->size())
 	{
 		t->add_text(L"несовпадение количества!! ");
 		return;
