@@ -826,6 +826,33 @@ void _sable_stat::clear()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void _compression_stock_statistics::save_to_file(std::wstring_view fn)
+{
+	_stack mem;
+	data.save(mem);
+	mem << size;
+	mem.push_data(&back, sizeof(back));
+	mem << udata;
+	mem << base_buy;
+	mem << base_sale;
+	mem.save_to_file(fn);
+}
+
+void _compression_stock_statistics::load_from_file(std::wstring_view fn)
+{
+	_stack mem;
+	if (!mem.load_from_file(fn)) return;
+	data.load(mem);
+	mem >> size;
+	mem >> back;
+	mem >> udata;
+	mem >> base_buy;
+	mem >> base_sale;
+	read_n = -666;
+	ip_last.ok = false;
+	ip_n.ok = false;
+}
+
 bool _compression_stock_statistics::add0(const _supply_and_demand& c)
 {
 	ip_last.ok = false;

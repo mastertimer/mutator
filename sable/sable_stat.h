@@ -88,12 +88,15 @@ struct _compression_stock_statistics
 	_compression_stock_statistics(const _stock_statistics &ss) { for (auto& i : *ss) add(i); }
 
 	bool add(const _supply_and_demand& c); // добавить цены (сжать)
+	void save_to_file(std::wstring_view fn);
+	void load_from_file(std::wstring_view fn);
 
 private:
 	std::vector<i64> udata; // указатель на место сжатых данных кратных step_pak_cc
 	std::vector<_offer> base_buy; // база покупки для записи (первых 20 - последние цены)
 	std::vector<_offer> base_sale; // база продажи для записи (первых 20 - последние цены)
 	static constexpr i64 step_pak_cc = 100; // период ключевых цен
+	i64 read_n = -666; // номер последних прочитанных цен
 	_info_pak ip_last, ip_n; // дополнительная информация
 
 	bool add0(const _supply_and_demand& c); // не дельта!
