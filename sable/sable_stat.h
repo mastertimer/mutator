@@ -88,6 +88,7 @@ struct _compression_stock_statistics
 	_compression_stock_statistics(const _stock_statistics &ss) { for (auto& i : *ss) add(i); }
 
 	bool add(const _supply_and_demand& c); // добавить цены (сжать)
+	bool read(i64 n, _supply_and_demand& c, _info_pak* inf = nullptr); // прочитать цены (расжать)
 	void save_to_file(std::wstring_view fn);
 	void load_from_file(std::wstring_view fn);
 
@@ -95,7 +96,10 @@ private:
 	std::vector<i64> udata; // указатель на место сжатых данных кратных step_pak_cc
 	std::vector<_offer> base_buy; // база покупки для записи (первых 20 - последние цены)
 	std::vector<_offer> base_sale; // база продажи для записи (первых 20 - последние цены)
+	std::vector<_offer> base_buy_r; // база покупки для чтения (первых 20 - последние цены)
+	std::vector<_offer> base_sale_r; // база продажи для чтения (первых 20 - последние цены)
 	static constexpr i64 step_pak_cc = 100; // период ключевых цен
+	_supply_and_demand read_cc{}; // последние прочитанные цены
 	i64 read_n = -666; // номер последних прочитанных цен
 	_info_pak ip_last, ip_n; // дополнительная информация
 
@@ -103,6 +107,10 @@ private:
 	bool add1(const _supply_and_demand& c); // дельта
 	bool add12(const _offer* v1, std::vector<_offer>& v0, i64 izm);
 	bool coding_delta_number(i64 a, i64 b);
+	i64  decoding_delta_number(i64 a);
+	bool read0(_supply_and_demand& c);
+	bool read1(_supply_and_demand& c);
+	bool read12(_offer* v1, std::vector<_offer>& v0);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

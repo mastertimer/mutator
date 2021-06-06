@@ -33,6 +33,7 @@ max(rnd)  |   1.058        58       1.00097
 #include "sable.h"
 
 constexpr wchar_t sss_file[]   = L"..\\..\\data\\base.c2";
+constexpr wchar_t sss2_file[] = L"..\\..\\data\\base.c3";
 constexpr wchar_t index_file[] = L"..\\..\\data\\index.bin";
 
 _sable_graph *graph = nullptr; // график
@@ -401,15 +402,17 @@ void sable_fun1(_g_terminal* t)
 	t->add_text(L"количество цен: " + std::to_wstring(sss.size));
 	i64 size_pak = (sss.data.size() + 7) / 8;
 	t->add_text(L"сжатый размер: " + std::to_wstring(size_pak));
-	t->add_text(L"размер 1 сжатой записи:   " + double_to_wstring(double(size_pak) / sss.size, 1));
-	t->add_text(L"размер структуры _prices: " + std::to_wstring(sizeof(_prices)));
-	t->add_text(L"размер структуры _supply_and_demand: " + std::to_wstring(sizeof(_supply_and_demand)));
+	t->add_text(L"размер сжатой   записи:  " + double_to_wstring(double(size_pak) / sss.size, 1));
+	t->add_text(L"размер несжатой записи: " + std::to_wstring(sizeof(_supply_and_demand)));
 	_prices c;
 	for (i64 i = 0; i < sss.size; i++)
 	{
 		sss.read(i, c);
 		stock_statistics.push_back(c);
 	}
+	_compression_stock_statistics cs(stock_statistics);
+	cs.save_to_file(exe_path + sss2_file);
+//	sss.save_to_file((exe_path + sss2_file).c_str());
 }
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)

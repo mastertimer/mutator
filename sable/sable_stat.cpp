@@ -826,6 +826,240 @@ void _sable_stat::clear()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+i64  _compression_stock_statistics::decoding_delta_number(i64 a)
+{
+	if (a <= 66) return a + ttrr1.decoding(data); // 25 %
+	if (a <= 200) return a + ttrr2.decoding(data); // 25 %
+	if (a <= 318) return a + ttrr3.decoding(data); // 25 %
+	return a + ttrr4.decoding(data); // 25 %
+}
+
+bool _compression_stock_statistics::read0(_supply_and_demand& c)
+{
+	ip_n.ok = false;
+	c.demand.offer[roffer - 1].price = data.popn(16);
+	for (i64 i = roffer - 1; i >= 0; i--)
+	{
+		if (i != roffer - 1) c.demand.offer[i].price = c.demand.offer[i + 1].price + f_delta.decoding(data);
+		c.demand.offer[i].number = f_number.decoding(data);
+	}
+	c.supply.offer[0].price = c.demand.offer[0].price + nnd.decoding(data);
+	for (i64 i = 0; i < roffer; i++)
+	{
+		if (i != 0) c.supply.offer[i].price = c.supply.offer[i - 1].price + f_delta.decoding(data);
+		c.supply.offer[i].number = f_number.decoding(data);
+	}
+	base_buy_r.resize(roffer);
+	base_sale_r.resize(roffer);
+	for (i64 i = 0; i < roffer; i++)
+	{
+		base_buy_r[i] = c.demand.offer[i];
+		base_sale_r[i] = c.supply.offer[i];
+	}
+	return true;
+}
+
+bool _compression_stock_statistics::read1(_supply_and_demand& c)
+{
+	if (data.pop1() == 0) return read0(c);
+	auto aa0 = data.bit_read;
+	if (!read12(c.demand.offer, base_buy_r)) return false;
+	auto aa1 = data.bit_read;
+	if (!read12(c.supply.offer, base_sale_r)) return false;
+	ip_n.r = int(data.bit_read - aa0);
+	ip_n.r_pok = int(aa1 - aa0);
+	ip_n.r_pro = int(data.bit_read - aa1);
+	return true;
+}
+
+bool _compression_stock_statistics::read12(_offer* v1, std::vector<_offer>& v0)
+{
+	i64 kk = (v0[1].price > v0[0].price) ? -1 : 1;
+	i64 izm = nnds.decoding(data);
+	i64 n = 0;
+	i64 tip = izm;
+	if (izm == 0)
+	{
+		n = nnse0.decoding(data);
+		for (i64 i = 0; i < n;)
+		{
+			i64 ser = nnse200[n - i].decoding(data);
+			for (i64 j = i; j < i + ser; j++) v1[j] = v0[j];
+			i += ser;
+			if (i >= n) break;
+			v1[i].price = v0[i].price;
+			v1[i].number = decoding_delta_number(v0[i].number);
+			v0[i].number = v1[i].number;
+			i++;
+		}
+	}
+	if (izm < 0)
+	{
+		i64 lv = (v0.begin() - (izm + 1))->price;
+		v0.erase(v0.begin(), v0.begin() - izm);
+		i64 n2 = nnsegg[std::min((i64)v0.size(), roffer)].decoding(data);
+		if (n2 == 0)
+		{
+			v1[0].price = lv - kk * f_delta.decoding(data);
+			v1[0].number = f_number.decoding(data);
+			v0.insert(v0.begin(), v1[0]);
+			n = 1;
+		}
+		else
+		{
+			n = n2;
+			for (i64 i = 0; i < n;)
+			{
+				i64 ser = nnse200[n - i].decoding(data);
+				for (i64 j = i; j < i + ser; j++) v1[j] = v0[j];
+				i += ser;
+				if (i >= n) break;
+				v1[i].price = v0[i].price;
+				v1[i].number = decoding_delta_number(v0[i].number);
+				v0[i].number = v1[i].number;
+				i++;
+			}
+			tip = 0;
+		}
+	}
+	if (izm > 0)
+	{
+		v0.insert(v0.begin(), izm, {});
+		for (i64 i = izm - 1; i >= 0; i--) // кодируется как c add0
+		{
+			v1[i].price = v0[i + 1].price + kk * f_delta.decoding(data);
+			v1[i].number = f_number.decoding(data);
+			v0[i] = v1[i];
+		}
+		n = izm;
+		i64 n2 = nnsegg[std::min((i64)v0.size(), roffer) - n].decoding(data);
+		if (n2 == 0)
+			v0.erase(v0.begin() + n);
+		else
+		{
+			n2 += n;
+			for (i64 i = n; i < n2;)
+			{
+				i64 ser = nnse200[n2 - i].decoding(data);
+				for (i64 j = i; j < i + ser; j++) v1[j] = v0[j];
+				i += ser;
+				if (i >= n2) break;
+				v1[i].price = v0[i].price;
+				v1[i].number = decoding_delta_number(v0[i].number);
+				v0[i].number = v1[i].number;
+				i++;
+			}
+			n = n2;
+			tip = 0;
+		}
+	}
+	while (n < roffer)
+	{
+		if (n >= (i64)v0.size())
+		{
+			v0.resize(roffer);
+			for (; n < roffer; n++)
+			{
+				v1[n].price = v1[n - 1].price - kk * f_delta.decoding(data);
+				v1[n].number = f_number.decoding(data);
+				v0[n] = v1[n];
+			}
+			break;
+		}
+		if (tip == 0)
+		{
+			if (data.pop1())
+				v0.erase(v0.begin() + n);
+			else
+			{
+				v1[n].price = v1[n - 1].price - kk * f_delta.decoding(data);
+				v1[n].number = f_number.decoding(data);
+				v0.insert(v0.begin() + n, v1[n]);
+				n++;
+			}
+			tip = 1;
+			continue;
+		}
+		i64 n2 = nnsegg[std::min((i64)v0.size(), roffer) - n].decoding(data);
+		if (n2 > 0)
+		{
+			n2 += n;
+			for (i64 i = n; i < n2;)
+			{
+				i64 ser = nnse200[n2 - i].decoding(data);
+				for (i64 j = i; j < i + ser; j++) v1[j] = v0[j];
+				i += ser;
+				if (i >= n2) break;
+				v1[i].price = v0[i].price;
+				v1[i].number = decoding_delta_number(v0[i].number);
+				v0[i].number = v1[i].number;
+				i++;
+			}
+			n = n2;
+		}
+		tip = 0;
+	}
+	return true;
+}
+
+bool _compression_stock_statistics::read(i64 n, _supply_and_demand& c, _info_pak* inf)
+{
+	if (inf) inf->ok = false;
+	if ((n < 0) || (n >= size)) return false;
+	if (n == read_n)
+	{
+		c = read_cc;
+		if (inf) *inf = ip_n;
+		return true;
+	}
+	if (n == size - 1)
+	{
+		c = back;
+		if (inf) *inf = ip_last;
+		return true;
+	}
+	if (read_n + 1 != n)
+	{
+		i64 k = n / step_pak_cc;
+		if ((read_n > n) || (read_n <= k * step_pak_cc - 1))
+		{
+			data.bit_read = udata[k];
+			read_n = k * step_pak_cc - 1;
+		}
+		bool r = false;
+		while (read_n < n) r = read(read_n + 1, c, inf);
+		return r;
+	}
+	ip_n.ok = false;
+	if (n % step_pak_cc == 0)
+	{
+		c.time = data.popn(31);
+		if (!read0(c)) return false;
+	}
+	else
+	{
+		time_t dt;
+		if (data.pop1() == 0)
+			dt = 1;
+		else
+			dt = data.popn(31);
+		c.time = read_cc.time + dt;
+		if (dt > old_dtime)
+		{
+			if (!read0(c)) return false;
+		}
+		else
+		{
+			if (dt == 1) ip_n.ok = true;
+			if (!read1(c)) return false;
+		}
+	}
+	read_cc = c;
+	read_n = n;
+	if (inf) *inf = ip_n;
+	return true;
+}
+
 void _compression_stock_statistics::save_to_file(std::wstring_view fn)
 {
 	_stack mem;
