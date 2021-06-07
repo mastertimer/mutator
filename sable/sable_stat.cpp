@@ -848,6 +848,7 @@ void _stock_statistics::operator=(_compression_stock_statistics& cs)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 i64  _compression_stock_statistics::decoding_delta_number(i64 a)
 {
 	if (a <= 66) return a + ttrr1.decoding(data); // 25 %
@@ -1020,30 +1021,8 @@ bool _compression_stock_statistics::read12(_offer* v1, std::vector<_offer>& v0)
 
 bool _compression_stock_statistics::read(i64 n, _supply_and_demand& c)
 {
-	if ((n < 0) || (n >= size)) return false;
-	if (n == read_n)
-	{
-		c = read_cc;
-		return true;
-	}
-	if (n == size - 1)
-	{
-		c = back;
-		return true;
-	}
-	if (read_n + 1 != n)
-	{
-		i64 k = n / step_pak_cc;
-		if ((read_n > n) || (read_n <= k * step_pak_cc - 1))
-		{
-			data.bit_read = udata[k];
-			read_n = k * step_pak_cc - 1;
-		}
-		bool r = false;
-		while (read_n < n) r = read(read_n + 1, c);
-		return r;
-	}
-	if (n % step_pak_cc == 0)
+	if (read_n + 1 != n) return false;
+	if (n == 0)
 	{
 		c.time = data.popn(31);
 		if (!read0(c)) return false;
@@ -1085,7 +1064,7 @@ void _compression_stock_statistics::load_from_file(std::wstring_view fn)
 	mem >> udata;
 	mem >> base_buy;
 	mem >> base_sale;
-	read_n = -666;
+	read_n = -1;
 }
 
 bool _compression_stock_statistics::add0(const _supply_and_demand& c)
@@ -1285,7 +1264,7 @@ bool _compression_stock_statistics::add(const _supply_and_demand& c)
 	if (c == back) return true; // с большой вероятностью данные устарели
 	if (c.time < back.time) return true; // цены из прошлого не принимаются!
 	auto s_data = data.size();
-	if (size % step_pak_cc == 0)
+	if (size == 0)
 	{
 		udata.push_back(data.size());
 		data.pushn(c.time, 31);

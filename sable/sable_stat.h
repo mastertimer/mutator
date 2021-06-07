@@ -96,9 +96,8 @@ private:
 	std::vector<_offer> base_sale; // база продажи для записи (первых 20 - последние цены)
 	std::vector<_offer> base_buy_r; // база покупки для чтения (первых 20 - последние цены)
 	std::vector<_offer> base_sale_r; // база продажи для чтения (первых 20 - последние цены)
-	static constexpr i64 step_pak_cc = 100; // период ключевых цен
 	_supply_and_demand read_cc{}; // последние прочитанные цены
-	i64 read_n = -666; // номер последних прочитанных цен
+	i64 read_n = -1; // номер последних прочитанных цен
 
 	bool add0(const _supply_and_demand& c); // не дельта!
 	bool add1(const _supply_and_demand& c); // дельта
