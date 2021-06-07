@@ -47,6 +47,7 @@ struct _stock_statistics
 	const std::vector<_supply_and_demand>* operator->() const { return &sad; }
 	const _supply_and_demand& operator[](i64 n) const { return sad[n]; }
 	void operator=(_compression_stock_statistics& cs);
+	void save_to_file(std::wstring_view fn);
 
 private:
 	std::vector<_supply_and_demand> sad;
@@ -81,6 +82,7 @@ struct _compression_stock_statistics
 	i64 size = 0; // количество записей
 	_bit_vector data; // сжатые данные
 
+	_compression_stock_statistics() = default;
 	_compression_stock_statistics(const _stock_statistics &ss) { for (auto& i : *ss) add(i); }
 	_compression_stock_statistics(std::wstring_view fn) { load_from_file(fn); }
 

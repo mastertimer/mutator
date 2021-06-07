@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <map>
 #include <ctime>
+#include <thread>
 
 #include "sable_stat.h"
 
@@ -834,6 +835,25 @@ void _sable_stat::clear()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void _stock_statistics::save_to_file(std::wstring_view fn)
+{
+	constexpr i64 number_thread = 4;
+	_compression_stock_statistics cs[number_thread];
+	std::vector<std::thread> threads;
+
+	auto fun = [](_compression_stock_statistics* co, _supply_and_demand* sad, i64 k)
+	{
+		for (i64 i = 0; i < k; i++) co->add(sad[i]);
+	};
+
+	for (i64 i = 0; i < number_thread; i++)
+	{
+		threads.emplace_back(fun, &cs[i], &sad[sad.size() * i / number_thread],
+			(sad.size() * (i + 1) / number_thread) - (sad.size() * i / number_thread));
+	}
+	for (auto& th : threads) th.join();
+}
 
 void _stock_statistics::push_back(const _supply_and_demand& c)
 {
