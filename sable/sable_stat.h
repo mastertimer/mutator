@@ -86,7 +86,7 @@ struct _compression_stock_statistics
 	_compression_stock_statistics(std::wstring_view fn) { load_from_file(fn); }
 
 	bool add(const _supply_and_demand& c); // добавить цены (сжать)
-	bool read(i64 n, _supply_and_demand& c); // прочитать цены (расжать)
+	bool read(_supply_and_demand& c); // прочитать цены (расжать)
 	void save_to_file(std::wstring_view fn);
 	void load_from_file(std::wstring_view fn);
 
@@ -96,8 +96,7 @@ private:
 	std::vector<_offer> base_sale; // база продажи для записи (первых 20 - последние цены)
 	std::vector<_offer> base_buy_r; // база покупки для чтения (первых 20 - последние цены)
 	std::vector<_offer> base_sale_r; // база продажи для чтения (первых 20 - последние цены)
-	_supply_and_demand read_cc{}; // последние прочитанные цены
-	i64 read_n = -1; // номер последних прочитанных цен
+	time_t time_read = 0; // время прочитанных цен
 
 	bool add0(const _supply_and_demand& c); // не дельта!
 	bool add1(const _supply_and_demand& c); // дельта

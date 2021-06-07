@@ -842,7 +842,7 @@ void _stock_statistics::operator=(_compression_stock_statistics& cs)
 	_supply_and_demand c;
 	for (i64 i = 0; i < cs.size; i++)
 	{
-		cs.read(i, c);
+		cs.read(c);
 		sad.push_back(c);
 	}
 }
@@ -1019,10 +1019,9 @@ bool _compression_stock_statistics::read12(_offer* v1, std::vector<_offer>& v0)
 	return true;
 }
 
-bool _compression_stock_statistics::read(i64 n, _supply_and_demand& c)
+bool _compression_stock_statistics::read(_supply_and_demand& c)
 {
-	if (read_n + 1 != n) return false;
-	if (n == 0)
+	if (time_read == 0)
 	{
 		c.time = data.popn(31);
 		if (!read0(c)) return false;
@@ -1034,11 +1033,10 @@ bool _compression_stock_statistics::read(i64 n, _supply_and_demand& c)
 			dt = 1;
 		else
 			dt = data.popn(31);
-		c.time = read_cc.time + dt;
+		c.time = time_read + dt;
 		if (!read1(c)) return false;
 	}
-	read_cc = c;
-	read_n = n;
+	time_read = c.time;
 	return true;
 }
 
@@ -1064,7 +1062,7 @@ void _compression_stock_statistics::load_from_file(std::wstring_view fn)
 	mem >> udata;
 	mem >> base_buy;
 	mem >> base_sale;
-	read_n = -1;
+	time_read = 0;
 }
 
 bool _compression_stock_statistics::add0(const _supply_and_demand& c)
