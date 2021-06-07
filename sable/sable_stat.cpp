@@ -871,12 +871,12 @@ bool _compression_stock_statistics::read0(_supply_and_demand& c)
 		if (i != 0) c.supply.offer[i].price = c.supply.offer[i - 1].price + f_delta.decoding(data);
 		c.supply.offer[i].number = f_number.decoding(data);
 	}
-	base_buy_r.resize(roffer);
-	base_sale_r.resize(roffer);
+	base_buy.resize(roffer);
+	base_sale.resize(roffer);
 	for (i64 i = 0; i < roffer; i++)
 	{
-		base_buy_r[i] = c.demand.offer[i];
-		base_sale_r[i] = c.supply.offer[i];
+		base_buy[i] = c.demand.offer[i];
+		base_sale[i] = c.supply.offer[i];
 	}
 	return true;
 }
@@ -884,8 +884,8 @@ bool _compression_stock_statistics::read0(_supply_and_demand& c)
 bool _compression_stock_statistics::read1(_supply_and_demand& c)
 {
 	if (data.pop1() == 0) return read0(c);
-	if (!read12(c.demand.offer, base_buy_r)) return false;
-	if (!read12(c.supply.offer, base_sale_r)) return false;
+	if (!read12(c.demand.offer, base_buy)) return false;
+	if (!read12(c.supply.offer, base_sale)) return false;
 	return true;
 }
 
@@ -1021,7 +1021,7 @@ bool _compression_stock_statistics::read12(_offer* v1, std::vector<_offer>& v0)
 
 bool _compression_stock_statistics::read(_supply_and_demand& c)
 {
-	if (time_read == 0)
+	if (back_time == 0)
 	{
 		c.time = data.popn(31);
 		if (!read0(c)) return false;
@@ -1033,10 +1033,10 @@ bool _compression_stock_statistics::read(_supply_and_demand& c)
 			dt = 1;
 		else
 			dt = data.popn(31);
-		c.time = time_read + dt;
+		c.time = back_time + dt;
 		if (!read1(c)) return false;
 	}
-	time_read = c.time;
+	back_time = c.time;
 	return true;
 }
 
@@ -1045,9 +1045,6 @@ void _compression_stock_statistics::save_to_file(std::wstring_view fn)
 	_stack mem;
 	data.save(mem);
 	mem << size;
-	mem.push_data(&back, sizeof(back));
-	mem << base_buy;
-	mem << base_sale;
 	mem.save_to_file(fn);
 }
 
@@ -1057,10 +1054,7 @@ void _compression_stock_statistics::load_from_file(std::wstring_view fn)
 	if (!mem.load_from_file(fn)) return;
 	data.load(mem);
 	mem >> size;
-	mem >> back;
-	mem >> base_buy;
-	mem >> base_sale;
-	time_read = 0;
+	back_time = 0;
 }
 
 bool _compression_stock_statistics::add0(const _supply_and_demand& c)
@@ -1255,10 +1249,18 @@ bool _compression_stock_statistics::add1(const _supply_and_demand& c)
 	return true;
 }
 
+bool _compression_stock_statistics::repeat(const _supply_and_demand& c)
+{
+	if ((base_buy.size() < roffer) || (base_sale.size() < roffer)) return false;
+	for (i64 i = 0; i < roffer; i++)
+		if ((c.demand.offer[i] != base_buy[i]) || (c.supply.offer[i] != base_sale[i])) return false;
+	return true;
+}
+
 bool _compression_stock_statistics::add(const _supply_and_demand& c)
 {
-	if (c == back) return true; // с большой вероятностью данные устарели
-	if (c.time < back.time) return true; // цены из прошлого не принимаются!
+	if (repeat(c)) return true; // с большой вероятностью данные устарели
+	if (c.time < back_time) return true; // цены из прошлого не принимаются!
 	auto s_data = data.size();
 	if (size == 0)
 	{
@@ -1267,12 +1269,12 @@ bool _compression_stock_statistics::add(const _supply_and_demand& c)
 	}
 	else
 	{
-		time_t dt = c.time - back.time;
+		time_t dt = c.time - back_time;
 		if (dt == 1) data.push1(0); else { data.push1(1); data.pushn(dt, 31); }
 		if (!add1(c)) goto err;
 	}
 	size++;
-	back = c;
+	back_time = c.time;
 	return true;
 err:
 	data.resize(s_data);

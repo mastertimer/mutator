@@ -79,7 +79,6 @@ struct _prices // массив спроса предложения с удобн
 struct _compression_stock_statistics
 {
 	i64 size = 0; // количество записей
-	_supply_and_demand back{}; // последние цены
 	_bit_vector data; // сжатые данные
 
 	_compression_stock_statistics(const _stock_statistics &ss) { for (auto& i : *ss) add(i); }
@@ -91,11 +90,9 @@ struct _compression_stock_statistics
 	void load_from_file(std::wstring_view fn);
 
 private:
-	std::vector<_offer> base_buy; // база покупки для записи (первых 20 - последние цены)
-	std::vector<_offer> base_sale; // база продажи для записи (первых 20 - последние цены)
-	std::vector<_offer> base_buy_r; // база покупки для чтения (первых 20 - последние цены)
-	std::vector<_offer> base_sale_r; // база продажи для чтения (первых 20 - последние цены)
-	time_t time_read = 0; // время прочитанных цен
+	std::vector<_offer> base_buy; // база покупки (первых 20 - последние цены)
+	std::vector<_offer> base_sale; // база продажи (первых 20 - последние цены)
+	time_t back_time = 0; // время прочитанных цен
 
 	bool add0(const _supply_and_demand& c); // не дельта!
 	bool add1(const _supply_and_demand& c); // дельта
@@ -105,6 +102,7 @@ private:
 	bool read0(_supply_and_demand& c);
 	bool read1(_supply_and_demand& c);
 	bool read12(_offer* v1, std::vector<_offer>& v0);
+	bool repeat(const _supply_and_demand& c);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
