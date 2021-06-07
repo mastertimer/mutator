@@ -1046,7 +1046,6 @@ void _compression_stock_statistics::save_to_file(std::wstring_view fn)
 	data.save(mem);
 	mem << size;
 	mem.push_data(&back, sizeof(back));
-	mem << udata;
 	mem << base_buy;
 	mem << base_sale;
 	mem.save_to_file(fn);
@@ -1059,7 +1058,6 @@ void _compression_stock_statistics::load_from_file(std::wstring_view fn)
 	data.load(mem);
 	mem >> size;
 	mem >> back;
-	mem >> udata;
 	mem >> base_buy;
 	mem >> base_sale;
 	time_read = 0;
@@ -1264,13 +1262,8 @@ bool _compression_stock_statistics::add(const _supply_and_demand& c)
 	auto s_data = data.size();
 	if (size == 0)
 	{
-		udata.push_back(data.size());
 		data.pushn(c.time, 31);
-		if (!add0(c))
-		{
-			udata.pop_back();
-			goto err;
-		}
+		if (!add0(c)) goto err;
 	}
 	else
 	{

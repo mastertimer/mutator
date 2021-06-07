@@ -91,7 +91,6 @@ struct _compression_stock_statistics
 	void load_from_file(std::wstring_view fn);
 
 private:
-	std::vector<i64> udata; // указатель на место сжатых данных кратных step_pak_cc
 	std::vector<_offer> base_buy; // база покупки для записи (первых 20 - последние цены)
 	std::vector<_offer> base_sale; // база продажи для записи (первых 20 - последние цены)
 	std::vector<_offer> base_buy_r; // база покупки для чтения (первых 20 - последние цены)
