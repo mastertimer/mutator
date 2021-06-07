@@ -835,6 +835,16 @@ void _sable_stat::clear()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void _stock_statistics::push_back(const _supply_and_demand& c)
+{
+	if (!sad.empty())
+	{
+		if (c == sad.back()) return;
+//		if (c.time <= sad.back().time) return;
+	}
+	sad.push_back(c);
+}
+
 void _stock_statistics::operator=(_compression_stock_statistics& cs)
 {
 	sad.clear();
@@ -1249,18 +1259,8 @@ bool _compression_stock_statistics::add1(const _supply_and_demand& c)
 	return true;
 }
 
-bool _compression_stock_statistics::repeat(const _supply_and_demand& c)
-{
-	if ((base_buy.size() < roffer) || (base_sale.size() < roffer)) return false;
-	for (i64 i = 0; i < roffer; i++)
-		if ((c.demand.offer[i] != base_buy[i]) || (c.supply.offer[i] != base_sale[i])) return false;
-	return true;
-}
-
 bool _compression_stock_statistics::add(const _supply_and_demand& c)
 {
-	if (repeat(c)) return true; // с большой вероятностью данные устарели
-	if (c.time < back_time) return true; // цены из прошлого не принимаются!
 	auto s_data = data.size();
 	if (size == 0)
 	{

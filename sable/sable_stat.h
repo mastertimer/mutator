@@ -42,7 +42,7 @@ struct _compression_stock_statistics;
 
 struct _stock_statistics
 {
-	void push_back(const _supply_and_demand& c) { sad.push_back(c); }
+	void push_back(const _supply_and_demand& c);
 	const std::vector<_supply_and_demand>& operator*() const { return sad; }
 	const std::vector<_supply_and_demand>* operator->() const { return &sad; }
 	const _supply_and_demand& operator[](i64 n) const { return sad[n]; }
@@ -102,7 +102,6 @@ private:
 	bool read0(_supply_and_demand& c);
 	bool read1(_supply_and_demand& c);
 	bool read12(_offer* v1, std::vector<_offer>& v0);
-	bool repeat(const _supply_and_demand& c);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

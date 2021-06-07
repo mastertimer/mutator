@@ -409,6 +409,7 @@ void sable_fun1(_g_terminal* t)
 	{
 		sss.read(i, c);
 		stock_statistics.push_back(c);
+		if (rnd(100) == 13) stock_statistics.push_back(c);
 	}
 	_compression_stock_statistics cs(stock_statistics);
 	cs.save_to_file(exe_path + sss2_file);
