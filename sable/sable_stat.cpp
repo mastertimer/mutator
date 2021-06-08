@@ -838,7 +838,7 @@ void _sable_stat::clear()
 
 void _stock_statistics::save_to_file(std::wstring_view fn)
 {
-	constexpr i64 number_thread = 4;
+	constexpr i64 number_thread = 16;
 	_compression_stock_statistics cs[number_thread];
 	std::vector<std::thread> threads;
 
@@ -853,6 +853,10 @@ void _stock_statistics::save_to_file(std::wstring_view fn)
 			(sad.size() * (i + 1) / number_thread) - (sad.size() * i / number_thread));
 	}
 	for (auto& th : threads) th.join();
+	_stack mem;
+	mem << number_thread;
+	for (i64 i = 0; i < number_thread; i++)	cs[i].push_to(mem);
+	mem.save_to_file(fn);
 }
 
 void _stock_statistics::push_back(const _supply_and_demand& c)
@@ -1068,6 +1072,18 @@ bool _compression_stock_statistics::read(_supply_and_demand& c)
 	}
 	back_time = c.time;
 	return true;
+}
+
+void _compression_stock_statistics::push_to(_stack& mem)
+{
+	data.save(mem);
+	mem << size;
+}
+
+void _compression_stock_statistics::pop_from(_stack& mem)
+{
+	data.load(mem);
+	mem >> size;
 }
 
 void _compression_stock_statistics::save_to_file(std::wstring_view fn)

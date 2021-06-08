@@ -90,6 +90,8 @@ struct _compression_stock_statistics
 	bool read(_supply_and_demand& c); // прочитать цены (расжать)
 	void save_to_file(std::wstring_view fn);
 	void load_from_file(std::wstring_view fn);
+	void push_to(_stack& mem);
+	void pop_from(_stack& mem);
 
 private:
 	std::vector<_offer> base_buy; // база покупки (первых 20 - последние цены)
