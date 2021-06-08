@@ -425,12 +425,15 @@ void sable_fun2(_g_terminal* t)
 	i64 size_pak = (sss.data.size() + 7) / 8;
 	t->add_text(L"сжатый размер: " + std::to_wstring(size_pak));
 	t->add_text(L"размер   сжатой записи:  " + double_to_wstring(double(size_pak) / sss.size, 1));
-	_compression_stock_statistics cs(exe_path + sss2_file);
+	t->start_timer();
+/*	_compression_stock_statistics cs(exe_path + sss2_file);
 	t->add_text(L"количество цен: " + std::to_wstring(cs.size));
 	size_pak = (cs.data.size() + 7) / 8;
 	t->add_text(L"сжатый размер: " + std::to_wstring(size_pak));
 	t->add_text(L"размер   сжатой записи:  " + double_to_wstring(double(size_pak) / cs.size, 1));
-	stock_statistics = cs;
+	stock_statistics = cs;*/
+	stock_statistics.load_from_file(exe_path + sss2_file);
+	t->stop_timer(L"время загрузки и распаковки");
 	if (sss.size != (i64)stock_statistics->size())
 	{
 		t->add_text(L"несовпадение количества!! ");
