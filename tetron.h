@@ -1214,9 +1214,12 @@ struct _g_terminal : public _t_go
 	void run_cmd(); // выволнить введенную команду
 	void add_text(std::wstring_view s); // добавить текст
 	void text_clear() { text.clear(); }
+	void start_timer();
+	void stop_timer(std::wstring_view s);
 
 private:
 	std::vector<std::wstring> text;
+	std::vector<decltype(std::chrono::high_resolution_clock::now())> timer;
 	i64 old_cmd_vis_len = -1; // количество символов в строке
 	i64 old_full_lines = 0; // полное количество строк
 	i64 vis_cur = false; // сделать курсор видимым

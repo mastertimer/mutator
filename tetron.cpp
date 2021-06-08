@@ -1258,6 +1258,20 @@ void _g_rect::ris2(_trans tr, bool final)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void _g_terminal::start_timer()
+{
+	timer.push_back(std::chrono::high_resolution_clock::now());
+}
+
+void _g_terminal::stop_timer(std::wstring_view s)
+{
+	if (timer.empty()) return;
+	std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - timer.back();
+	timer.pop_back();
+	double dtt = dt.count() / 1.0e9;
+	text.push_back(std::wstring(s) + L": " + double_to_wstring(dtt, 6) + L" сек");
+}
+
 bool _g_terminal::mouse_down_left2(_xy r)
 {
 	y0_move_slider = -1;
@@ -1372,11 +1386,9 @@ void _g_terminal::run_cmd()
 		act_previous_cmd = previous_cmd.size();
 		if (auto cc = command.find(command_name); cc != command.end())
 		{
-			auto tt = std::chrono::high_resolution_clock::now();
+			start_timer();
 			cc->second->run(this, parameters);
-			std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - tt;
-			i64 dtt = dt.count() / 1000000;
-			text.push_back(L"время выполнения " + std::to_wstring(dtt) + L" мсек");
+			stop_timer(L"время выполнения");
 		}
 		else
 			text.push_back(L"команда не найдена");

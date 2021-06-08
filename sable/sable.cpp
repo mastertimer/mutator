@@ -411,8 +411,10 @@ void sable_fun1(_g_terminal* t)
 		stock_statistics.push_back(c);
 		if (rnd(100) == 13) stock_statistics.push_back(c);
 	}
+	t->start_timer();
 	_compression_stock_statistics cs(stock_statistics);
 	cs.save_to_file(exe_path + sss2_file);
+	t->stop_timer(L"время сжатия и сохранения");
 }
 
 void sable_fun2(_g_terminal* t)
