@@ -48,8 +48,10 @@ struct _stock_statistics
 	const _supply_and_demand& operator[](i64 n) const { return sad[n]; }
 	void operator=(_compression_stock_statistics& cs);
 	void save_to_file(std::wstring_view fn);
+	void load_from_file(std::wstring_view fn);
 
 private:
+	static const i64 number_thread = 16; // !! 16, не менять!!
 	std::vector<_supply_and_demand> sad;
 };
 
