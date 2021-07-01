@@ -34,6 +34,8 @@ struct _supply_and_demand // предложение и спрос
 	time_t time;
 
 	bool operator==(const _supply_and_demand& p) const; // время не учитывается при сравнении
+
+	time_t time_to_minute() const { return time - (time % 60); } // обнулить секунды
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,6 +44,8 @@ struct _compression_stock_statistics;
 
 struct _stock_statistics
 {
+	static constexpr double c_unpak = 0.01; // распаковка цен
+
 	void push_back(const _supply_and_demand& c);
 	const std::vector<_supply_and_demand>& operator*() const { return sad; }
 	const std::vector<_supply_and_demand>* operator->() const { return &sad; }

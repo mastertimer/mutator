@@ -113,6 +113,35 @@ struct _index_data // все коэффициенты
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+struct _index2           // разнообразные минутные коэффициенты
+{
+	_iinterval ncc;     // диапазон цен
+	i64    time = 0; // время (с обнуленной секундой (time%60 = 0))
+	double min = 0; // минимальная цена
+	double max = 0; // макимальная цена
+	double first = 0; // первая цена
+	double last = 0; // последняя цена
+	double c3_buy = 0; // цена покупки на 3-й секунде
+	double c3_sale = 0; // цена продажи на 3-й секунде
+	double minmin = 0; // минимальная цена минимального спроса ([19])
+	double maxmax = 0; // максимальная цена максимального предложения ([19])
+	i64    v_r = 0; // количество слагаемых
+	double r_pok = 0; // средний размер покупки
+	double r_pro = 0; // средний размер продажи
+	double cc = 0; // средняя цена
+	double cc_buy = 0; // средняя цена покупки
+	double cc_sale = 0; // средняя цена продажи
+};
+
+struct _index_data2 // все коэффициенты
+{
+	std::vector<_index2> data; // поминутный вектор
+
+	bool update(); // обновить ранные, вызывать после обновления sss2
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 _index_data index; // все расчетные данные
 
 //_basic_curve* super_oracle = nullptr; // оракул для предсказания
@@ -797,6 +826,100 @@ void _sable_graph::ris2(_trans tr, bool final)
 	// рисование количества элементов
 	master_bm.text16n(std::max(a.x.min, 0.0) + dex + 10, std::max(a.y.min, 0.0) + 60,
 		std::to_string(sss.size).data(), 2, 0x60ff0000);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool _index_data2::update()
+{
+	i64 vcc = 0;
+	if (!data.empty()) vcc = data.back().ncc.max;
+	if (vcc == stock_statistics->size()) return false; // ничего не изменилось
+	if (vcc > stock_statistics->size())
+	{
+		data.clear(); // обработанных данных больше, чем исходных, потому пусть будет полный перерасчет
+		vcc = 0;
+	}
+	if (stock_statistics->size() < 2) return false; // мало данных для обработки
+	i64 back_minute = stock_statistics->back().time_to_minute();
+	if (!data.empty())
+	{
+		if (back_minute == data.back().time + 1) return false; // еще рано
+		if (back_minute <= data.back().time) // так быть не должно, полный перерасчет
+		{
+			data.clear();
+			vcc = 0;
+		}
+	}
+	if (stock_statistics->size() - vcc < 2) return false; // мало данных для обработки
+	time_t t = 0;
+	_index2 cp;
+	for (i64 i = vcc; i < stock_statistics->size(); i++)
+	{
+		const _supply_and_demand& cc = stock_statistics[i];
+		time_t t2 = cc.time_to_minute();
+		if (t2 == t)
+		{
+			double aa = (cc.buy[0].value + cc.sale[0].value) * (stock_statistics.c_unpak * 0.5);
+			if (aa < cp.min) cp.min = aa;
+			if (aa > cp.max) cp.max = aa;
+			if (cc.buy[roffer - 1].value * stock_statistics.c_unpak < cp.minmin) cp.minmin = cc.buy[roffer - 1].value * stock_statistics.c_unpak;
+			if (cc.sale[roffer - 1].value * stock_statistics.c_unpak > cp.maxmax) cp.maxmax = cc.sale[roffer - 1].value * stock_statistics.c_unpak;
+			cp.ncc.max++;
+			cp.last = aa;
+			cp.cc_buy += cc.buy[0].value;
+			cp.cc_sale += cc.sale[0].value;
+			if (cc.time % 60 == 3)
+			{
+				cp.c3_buy = cc.buy[0].value * stock_statistics.c_unpak;
+				cp.c3_sale = cc.sale[0].value * stock_statistics.c_unpak;
+			}
+			if (inf.ok)
+			{
+				cp.v_r++;
+				cp.r_pok += inf.r_pok;
+				cp.r_pro += inf.r_pro;
+			}
+			continue;
+		}
+		if (t != 0)
+		{
+			if (cp.v_r > 1)
+			{
+				cp.r_pok /= cp.v_r;
+				cp.r_pro /= cp.v_r;
+			}
+			cp.cc_buy *= stock_statistics.c_unpak / cp.ncc.size();
+			cp.cc_sale *= stock_statistics.c_unpak / cp.ncc.size();
+			cp.cc = (cp.cc_buy + cp.cc_sale) * 0.5;
+			data.push_back(cp);
+		}
+		if (t2 == back_minute) break; // последнюю минуту пока не трогать
+		t = t2;
+		cp.time = t;
+		cp.ncc.min = i;
+		cp.ncc.max = i + 1;
+		cp.max = cp.min = cp.last = cp.first = (cc.buy[0].value + cc.sale[0].value) * (stock_statistics.c_unpak * 0.5);
+		cp.minmin = cc.buy[roffer - 1].value * stock_statistics.c_unpak;
+		cp.maxmax = cc.sale[roffer - 1].value * stock_statistics.c_unpak;
+		cp.cc_buy = cc.buy[0].value;
+		cp.cc_sale = cc.sale[0].value;
+		cp.c3_buy = cc.buy[0].value * stock_statistics.c_unpak;
+		cp.c3_sale = cc.sale[0].value * stock_statistics.c_unpak;
+		if (inf.ok)
+		{
+			cp.v_r = 1;
+			cp.r_pok = inf.r_pok;
+			cp.r_pro = inf.r_pro;
+		}
+		else
+		{
+			cp.v_r = 0;
+			cp.r_pok = 0;
+			cp.r_pro = 0;
+		}
+	}
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
