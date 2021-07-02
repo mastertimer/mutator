@@ -34,7 +34,6 @@ max(rnd)  |   1.058        58       1.00097
 
 constexpr wchar_t sss_file[]   = L"..\\..\\data\\base.c2";
 constexpr wchar_t sss2_file[] = L"..\\..\\data\\base.c3";
-constexpr wchar_t index_file[] = L"..\\..\\data\\index.bin";
 
 _sable_graph *graph = nullptr; // график
 
@@ -384,7 +383,7 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 
 void sable_fun1(_g_terminal* t)
 {
-	fun13(nullptr, nullptr, 0);
+/*	fun13(nullptr, nullptr, 0);
 	t->add_text(L"количество цен: " + std::to_wstring(sss.size));
 	i64 size_pak = (sss.data.size() + 7) / 8;
 	t->add_text(L"сжатый размер: " + std::to_wstring(size_pak));
@@ -401,23 +400,17 @@ void sable_fun1(_g_terminal* t)
 //	_compression_stock_statistics cs(stock_statistics);
 //	cs.save_to_file(exe_path + sss2_file);
 	stock_statistics.save_to_file(exe_path + sss2_file);
-	t->stop_timer(L"время сжатия и сохранения");
+	t->stop_timer(L"время сжатия и сохранения");*/
 }
 
 void sable_fun2(_g_terminal* t)
 {
-	fun13(nullptr, nullptr, 0);
+/*	fun13(nullptr, nullptr, 0);
 	t->add_text(L"количество цен: " + std::to_wstring(sss.size));
 	i64 size_pak = (sss.data.size() + 7) / 8;
 	t->add_text(L"сжатый размер: " + std::to_wstring(size_pak));
 	t->add_text(L"размер   сжатой записи:  " + double_to_wstring(double(size_pak) / sss.size, 1));
 	t->start_timer();
-/*	_compression_stock_statistics cs(exe_path + sss2_file);
-	t->add_text(L"количество цен: " + std::to_wstring(cs.size));
-	size_pak = (cs.data.size() + 7) / 8;
-	t->add_text(L"сжатый размер: " + std::to_wstring(size_pak));
-	t->add_text(L"размер   сжатой записи:  " + double_to_wstring(double(size_pak) / cs.size, 1));
-	stock_statistics = cs;*/
 	stock_statistics.load_from_file(exe_path + sss2_file);
 	t->stop_timer(L"время загрузки и распаковки");
 	if (sss.size != (i64)stock_statistics->size())
@@ -435,7 +428,7 @@ void sable_fun2(_g_terminal* t)
 			return;
 		}
 	}
-	t->add_text(L"OK полное совадение! ");
+	t->add_text(L"OK полное совадение! ");*/
 }
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)
