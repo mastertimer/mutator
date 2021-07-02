@@ -125,9 +125,6 @@ struct _index2           // разнообразные минутные коэф
 	double c3_sale = 0; // цена продажи на 3-й секунде
 	double minmin = 0; // минимальная цена минимального спроса ([19])
 	double maxmax = 0; // максимальная цена максимального предложения ([19])
-	i64    v_r = 0; // количество слагаемых
-	double r_pok = 0; // средний размер покупки
-	double r_pro = 0; // средний размер продажи
 	double cc = 0; // средняя цена
 	double cc_buy = 0; // средняя цена покупки
 	double cc_sale = 0; // средняя цена продажи
@@ -834,8 +831,8 @@ bool _index_data2::update()
 {
 	i64 vcc = 0;
 	if (!data.empty()) vcc = data.back().ncc.max;
-	if (vcc == stock_statistics->size()) return false; // ничего не изменилось
-	if (vcc > stock_statistics->size())
+	if (vcc == (i64)stock_statistics->size()) return false; // ничего не изменилось
+	if (vcc > (i64)stock_statistics->size())
 	{
 		data.clear(); // обработанных данных больше, чем исходных, потому пусть будет полный перерасчет
 		vcc = 0;
@@ -854,41 +851,30 @@ bool _index_data2::update()
 	if (stock_statistics->size() - vcc < 2) return false; // мало данных для обработки
 	time_t t = 0;
 	_index2 cp;
-	for (i64 i = vcc; i < stock_statistics->size(); i++)
+	for (i64 i = vcc; i < (i64)stock_statistics->size(); i++)
 	{
 		const _supply_and_demand& cc = stock_statistics[i];
 		time_t t2 = cc.time_to_minute();
 		if (t2 == t)
 		{
-			double aa = (cc.buy[0].value + cc.sale[0].value) * (stock_statistics.c_unpak * 0.5);
+			double aa = ((i64)cc.demand.offer[0].price + cc.supply.offer[0].price) * (stock_statistics.c_unpak * 0.5);
 			if (aa < cp.min) cp.min = aa;
 			if (aa > cp.max) cp.max = aa;
-			if (cc.buy[roffer - 1].value * stock_statistics.c_unpak < cp.minmin) cp.minmin = cc.buy[roffer - 1].value * stock_statistics.c_unpak;
-			if (cc.sale[roffer - 1].value * stock_statistics.c_unpak > cp.maxmax) cp.maxmax = cc.sale[roffer - 1].value * stock_statistics.c_unpak;
+			if (cc.demand.offer[roffer - 1].price * stock_statistics.c_unpak < cp.minmin) cp.minmin = cc.demand.offer[roffer - 1].price * stock_statistics.c_unpak;
+			if (cc.supply.offer[roffer - 1].price * stock_statistics.c_unpak > cp.maxmax) cp.maxmax = cc.supply.offer[roffer - 1].price * stock_statistics.c_unpak;
 			cp.ncc.max++;
 			cp.last = aa;
-			cp.cc_buy += cc.buy[0].value;
-			cp.cc_sale += cc.sale[0].value;
+			cp.cc_buy += cc.demand.offer[0].price;
+			cp.cc_sale += cc.supply.offer[0].price;
 			if (cc.time % 60 == 3)
 			{
-				cp.c3_buy = cc.buy[0].value * stock_statistics.c_unpak;
-				cp.c3_sale = cc.sale[0].value * stock_statistics.c_unpak;
-			}
-			if (inf.ok)
-			{
-				cp.v_r++;
-				cp.r_pok += inf.r_pok;
-				cp.r_pro += inf.r_pro;
+				cp.c3_buy = cc.demand.offer[0].price * stock_statistics.c_unpak;
+				cp.c3_sale = cc.supply.offer[0].price * stock_statistics.c_unpak;
 			}
 			continue;
 		}
 		if (t != 0)
 		{
-			if (cp.v_r > 1)
-			{
-				cp.r_pok /= cp.v_r;
-				cp.r_pro /= cp.v_r;
-			}
 			cp.cc_buy *= stock_statistics.c_unpak / cp.ncc.size();
 			cp.cc_sale *= stock_statistics.c_unpak / cp.ncc.size();
 			cp.cc = (cp.cc_buy + cp.cc_sale) * 0.5;
@@ -899,25 +885,13 @@ bool _index_data2::update()
 		cp.time = t;
 		cp.ncc.min = i;
 		cp.ncc.max = i + 1;
-		cp.max = cp.min = cp.last = cp.first = (cc.buy[0].value + cc.sale[0].value) * (stock_statistics.c_unpak * 0.5);
-		cp.minmin = cc.buy[roffer - 1].value * stock_statistics.c_unpak;
-		cp.maxmax = cc.sale[roffer - 1].value * stock_statistics.c_unpak;
-		cp.cc_buy = cc.buy[0].value;
-		cp.cc_sale = cc.sale[0].value;
-		cp.c3_buy = cc.buy[0].value * stock_statistics.c_unpak;
-		cp.c3_sale = cc.sale[0].value * stock_statistics.c_unpak;
-		if (inf.ok)
-		{
-			cp.v_r = 1;
-			cp.r_pok = inf.r_pok;
-			cp.r_pro = inf.r_pro;
-		}
-		else
-		{
-			cp.v_r = 0;
-			cp.r_pok = 0;
-			cp.r_pro = 0;
-		}
+		cp.max = cp.min = cp.last = cp.first = ((i64)cc.demand.offer[0].price + cc.supply.offer[0].price) * (stock_statistics.c_unpak * 0.5);
+		cp.minmin = cc.demand.offer[roffer - 1].price * stock_statistics.c_unpak;
+		cp.maxmax = cc.supply.offer[roffer - 1].price * stock_statistics.c_unpak;
+		cp.cc_buy = cc.demand.offer[0].price;
+		cp.cc_sale = cc.supply.offer[0].price;
+		cp.c3_buy = cc.demand.offer[0].price * stock_statistics.c_unpak;
+		cp.c3_sale = cc.supply.offer[0].price * stock_statistics.c_unpak;
 	}
 	return true;
 }
