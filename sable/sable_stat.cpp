@@ -1137,16 +1137,16 @@ bool _compression_stock_statistics::add0(const _supply_and_demand& c)
 	{
 		if (i != roffer - 1)
 		{
-			if (!f_delta.coding(c.demand.offer[i].price - c.demand.offer[i + 1].price, data)) return false;
+			if (!f_delta.coding((i64)c.demand.offer[i].price - c.demand.offer[i + 1].price, data)) return false;
 		}
 		if (!f_number.coding(c.demand.offer[i].number, data)) return false;
 	}
-	if (!nnd.coding(c.supply.offer[0].price - c.demand.offer[0].price, data)) return false;
+	if (!nnd.coding((i64)c.supply.offer[0].price - c.demand.offer[0].price, data)) return false;
 	for (i64 i = 0; i < roffer; i++)
 	{
 		if (i != 0)
 		{
-			if (!f_delta.coding(c.supply.offer[i].price - c.supply.offer[i - 1].price, data)) return false;
+			if (!f_delta.coding((i64)c.supply.offer[i].price - c.supply.offer[i - 1].price, data)) return false;
 		}
 		if (!f_number.coding(c.supply.offer[i].number, data)) return false;
 	}
@@ -1223,7 +1223,7 @@ bool _compression_stock_statistics::add12(const _offer* v1, std::vector<_offer>&
 		v0.insert(v0.begin(), izm, {});
 		for (i64 i = izm - 1; i >= 0; i--) // кодируется как c add0
 		{
-			if (!f_delta.coding((v1[i].price - v0[i + 1].price) * kk, data)) return false;
+			if (!f_delta.coding(((i64)v1[i].price - v0[i + 1].price) * kk, data)) return false;
 			if (!f_number.coding(v1[i].number, data)) return false;
 			v0[i] = v1[i];
 		}
@@ -1257,7 +1257,7 @@ bool _compression_stock_statistics::add12(const _offer* v1, std::vector<_offer>&
 			for (; n < roffer; n++)
 			{
 				v0[n] = v1[n];
-				if (!f_delta.coding((v1[n - 1].price - v1[n].price) * kk, data)) return false;
+				if (!f_delta.coding(((i64)v1[n - 1].price - v1[n].price) * kk, data)) return false;
 				if (!f_number.coding(v1[n].number, data)) return false;
 			}
 			break;
@@ -1271,7 +1271,7 @@ bool _compression_stock_statistics::add12(const _offer* v1, std::vector<_offer>&
 			else
 			{
 				v0.insert(v0.begin() + n, v1[n]);
-				if (!f_delta.coding((v1[n - 1].price - v1[n].price) * kk, data)) return false;
+				if (!f_delta.coding(((i64)v1[n - 1].price - v1[n].price) * kk, data)) return false;
 				if (!f_number.coding(v1[n].number, data)) return false;
 				n++;
 			}

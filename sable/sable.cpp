@@ -140,6 +140,7 @@ struct _index_data2 // все коэффициенты
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 _index_data index; // все расчетные данные
+_index_data2 index2; // все расчетные данные
 
 //_basic_curve* super_oracle = nullptr; // оракул для предсказания
 
@@ -476,6 +477,39 @@ void sable_fun2(_g_terminal* t)
 		}
 	}
 	t->add_text(L"OK полное совадение! ");
+	t->start_timer();
+	index2.update();
+	t->stop_timer(L"время минутных коэффициентов:");
+	if (index.data.size() != index2.data.size())
+	{
+		t->add_text(L"несовпадение количества индекса!! ");
+		return;
+	}
+	for (i64 i = 0; i < (i64)index.data.size(); i++)
+	{
+		const auto &a = index.data[i];
+		const auto &b = index2.data[i];
+		if (
+			(a.ncc != b.ncc)||
+			(a.time != b.time) ||
+			(a.min != b.min) ||
+			(a.max != b.max) ||
+			(a.first != b.first) ||
+			(a.last != b.last) ||
+			(a.c3_buy != b.c3_buy) ||
+			(a.c3_sale != b.c3_sale) ||
+			(a.minmin != b.minmin) ||
+			(a.maxmax != b.maxmax) ||
+			(a.cc != b.cc) ||
+			(a.cc_buy != b.cc_buy) ||
+			(a.cc_sale != b.cc_sale)
+			)
+		{
+			t->add_text(L"не совпало!! ");
+			return;
+		}
+	}
+	t->add_text(L"OK полное совадение минутного индекса! ");
 }
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)
