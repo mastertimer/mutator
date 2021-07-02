@@ -94,9 +94,6 @@ struct _index           // разнообразные минутные коэф�
 	double c3_sale = 0; // цена продажи на 3-й секунде
 	double minmin  = 0; // минимальная цена минимального спроса ([19])
 	double maxmax  = 0; // максимальная цена максимального предложения ([19])
-	i64    v_r     = 0; // количество слагаемых
-	double r_pok   = 0; // средний размер покупки
-	double r_pro   = 0; // средний размер продажи
 	double cc      = 0; // средняя цена
 	double cc_buy  = 0; // средняя цена покупки
 	double cc_sale = 0; // средняя цена продажи
@@ -106,41 +103,12 @@ struct _index_data // все коэффициенты
 {
 	std::vector<_index> data; // поминутный вектор
 
-	bool update(); // обновить ранные, вызывать после обновления sss
-	void start(); // начальная инициализация
-	void save_to_file();
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct _index2           // разнообразные минутные коэффициенты
-{
-	_iinterval ncc;     // диапазон цен
-	i64    time = 0; // время (с обнуленной секундой (time%60 = 0))
-	double min = 0; // минимальная цена
-	double max = 0; // макимальная цена
-	double first = 0; // первая цена
-	double last = 0; // последняя цена
-	double c3_buy = 0; // цена покупки на 3-й секунде
-	double c3_sale = 0; // цена продажи на 3-й секунде
-	double minmin = 0; // минимальная цена минимального спроса ([19])
-	double maxmax = 0; // максимальная цена максимального предложения ([19])
-	double cc = 0; // средняя цена
-	double cc_buy = 0; // средняя цена покупки
-	double cc_sale = 0; // средняя цена продажи
-};
-
-struct _index_data2 // все коэффициенты
-{
-	std::vector<_index2> data; // поминутный вектор
-
 	bool update(); // обновить ранные, вызывать после обновления sss2
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 _index_data index; // все расчетные данные
-_index_data2 index2; // все расчетные данные
 
 //_basic_curve* super_oracle = nullptr; // оракул для предсказания
 
@@ -170,16 +138,6 @@ struct _prices_curve2 : public _basic_curve // посекундный спрос
 
 	void draw(i64 n, _area area) override; // нарисовать 1 элемент
 	_interval get_y(i64 n) override; // дипазон рисования по y
-};
-
-struct _nervous_curve : public _basic_curve // нервозные шарики
-{
-	void draw(i64 n, _area area) override; // нарисовать 1 элемент
-};
-
-struct _compression_curve : public _basic_curve // гистограмма степени сжатия
-{
-	void draw(i64 n, _area area) override; // нарисовать 1 элемент
 };
 
 struct _linear_oracle_curve : public _basic_curve // линейный предсказатель
@@ -401,6 +359,7 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 	static bool first = true; if (!first) return; first = false;
 
 	sss.load_from_file((exe_path + sss_file).c_str());
+	stock_statistics.load_from_file(exe_path + sss2_file);
 
 	if (!graph) return;
 	if (!graph->find1<_g_scrollbar>(flag_part))
@@ -411,7 +370,7 @@ void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 	}
 	graph->cha_area();
 
-	index.start();
+	index.update();
 	graph->curve2.push_back(new _candle_curve);
 	graph->curve2.push_back(new _prices_curve2);
 //	graph->curve2.push_back(new _prices_curve);
@@ -477,39 +436,6 @@ void sable_fun2(_g_terminal* t)
 		}
 	}
 	t->add_text(L"OK полное совадение! ");
-	t->start_timer();
-	index2.update();
-	t->stop_timer(L"время минутных коэффициентов:");
-	if (index.data.size() != index2.data.size())
-	{
-		t->add_text(L"несовпадение количества индекса!! ");
-		return;
-	}
-	for (i64 i = 0; i < (i64)index.data.size(); i++)
-	{
-		const auto &a = index.data[i];
-		const auto &b = index2.data[i];
-		if (
-			(a.ncc != b.ncc)||
-			(a.time != b.time) ||
-			(a.min != b.min) ||
-			(a.max != b.max) ||
-			(a.first != b.first) ||
-			(a.last != b.last) ||
-			(a.c3_buy != b.c3_buy) ||
-			(a.c3_sale != b.c3_sale) ||
-			(a.minmin != b.minmin) ||
-			(a.maxmax != b.maxmax) ||
-			(a.cc != b.cc) ||
-			(a.cc_buy != b.cc_buy) ||
-			(a.cc_sale != b.cc_sale)
-			)
-		{
-			t->add_text(L"не совпало!! ");
-			return;
-		}
-	}
-	t->add_text(L"OK полное совадение минутного индекса! ");
 }
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)
@@ -632,7 +558,6 @@ void fun30(_tetron* tt0, _tetron* tt, u64 flags)
 void fun31(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	sss.save_to_file((exe_path + sss_file).c_str());
-	index.save_to_file();
 }
 
 void fun35(_tetron* tt0, _tetron* tt, u64 flags)
@@ -861,7 +786,7 @@ void _sable_graph::ris2(_trans tr, bool final)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool _index_data2::update()
+bool _index_data::update()
 {
 	i64 vcc = 0;
 	if (!data.empty()) vcc = data.back().ncc.max;
@@ -884,7 +809,7 @@ bool _index_data2::update()
 	}
 	if (stock_statistics->size() - vcc < 2) return false; // мало данных для обработки
 	time_t t = 0;
-	_index2 cp;
+	_index cp;
 	for (i64 i = vcc; i < (i64)stock_statistics->size(); i++)
 	{
 		const _supply_and_demand& cc = stock_statistics[i];
@@ -926,116 +851,6 @@ bool _index_data2::update()
 		cp.cc_sale = cc.supply.offer[0].price;
 		cp.c3_buy = cc.demand.offer[0].price * stock_statistics.c_unpak;
 		cp.c3_sale = cc.supply.offer[0].price * stock_statistics.c_unpak;
-	}
-	return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void _index_data::save_to_file()
-{
-	_stack mem;
-	mem << data;
-	mem.save_to_file(exe_path + index_file);
-}
-
-void _index_data::start()
-{
-	_stack mem;
-	if (mem.load_from_file(exe_path + index_file)) mem >> data;
-	update();
-}
-
-bool _index_data::update()
-{
-	i64 vcc = 0;
-	if (!data.empty()) vcc = data.back().ncc.max;
-	if (vcc == sss.size) return false; // ничего не изменилось
-	if (vcc > sss.size)
-	{
-		data.clear(); // обработанных данных больше, чем исходных, потому пусть будет полный перерасчет
-		vcc = 0;
-	}
-	if (sss.size < 2) return false; // мало данных для обработки
-	i64 back_minute = sss.back.time_to_minute();
-	if (!data.empty())
-	{
-		if (back_minute == data.back().time + 1) return false; // еще рано
-		if (back_minute <= data.back().time) // так быть не должно, полный перерасчет
-		{
-			data.clear();
-			vcc = 0;
-		}
-	}
-	if (sss.size - vcc < 2) return false; // мало данных для обработки
-	_prices cc;
-	time_t t = 0;
-	_index cp;
-	for (i64 i = vcc; i < sss.size; i++)
-	{
-		_sable_stat::_info_pak inf;
-		sss.read(i, cc, &inf);
-		time_t t2 = cc.time_to_minute();
-		if (t2 == t)
-		{
-			double aa = (cc.buy[0].value + cc.sale[0].value) * (sss.c_unpak * 0.5);
-			if (aa < cp.min) cp.min = aa;
-			if (aa > cp.max) cp.max = aa;
-			if (cc.buy[roffer - 1].value * sss.c_unpak < cp.minmin) cp.minmin = cc.buy[roffer - 1].value * sss.c_unpak;
-			if (cc.sale[roffer-1].value * sss.c_unpak > cp.maxmax) cp.maxmax = cc.sale[roffer - 1].value * sss.c_unpak;
-			cp.ncc.max++;
-			cp.last = aa;
-			cp.cc_buy += cc.buy[0].value;
-			cp.cc_sale += cc.sale[0].value;
-			if (cc.time % 60 == 3)
-			{
-				cp.c3_buy = cc.buy[0].value * sss.c_unpak;
-				cp.c3_sale = cc.sale[0].value * sss.c_unpak;
-			}
-			if (inf.ok)
-			{
-				cp.v_r++;
-				cp.r_pok += inf.r_pok;
-				cp.r_pro += inf.r_pro;
-			}
-			continue;
-		}
-		if (t != 0)
-		{
-			if (cp.v_r > 1)
-			{
-				cp.r_pok /= cp.v_r;
-				cp.r_pro /= cp.v_r;
-			}
-			cp.cc_buy *= sss.c_unpak / cp.ncc.size();
-			cp.cc_sale *= sss.c_unpak / cp.ncc.size();
-			cp.cc = (cp.cc_buy + cp.cc_sale) * 0.5;
-			data.push_back(cp);
-		}
-		if (t2 == back_minute) break; // последнюю минуту пока не трогать
-		t = t2;
-		cp.time = t;
-		cp.ncc.min = i;
-		cp.ncc.max = i + 1;
-		cp.max = cp.min = cp.last = cp.first = (cc.buy[0].value + cc.sale[0].value) * (sss.c_unpak * 0.5);
-		cp.minmin = cc.buy[roffer - 1].value * sss.c_unpak;
-		cp.maxmax = cc.sale[roffer - 1].value * sss.c_unpak;
-		cp.cc_buy = cc.buy[0].value;
-		cp.cc_sale = cc.sale[0].value;
-		cp.c3_buy = cc.buy[0].value * sss.c_unpak;
-		cp.c3_sale = cc.sale[0].value * sss.c_unpak;
-		if (inf.ok)
-		{
-			cp.v_r = 1;
-			cp.r_pok = inf.r_pok;
-			cp.r_pro = inf.r_pro;
-		}
-		else
-		{
-			cp.v_r = 0;
-			cp.r_pok = 0;
-			cp.r_pro = 0;
-		}
 	}
 	return true;
 }
@@ -1345,136 +1160,6 @@ _interval _prices_curve2::get_y(i64 n)
 {
 	auto a = &index.data[n];
 	return { a->minmin - sss.c_unpak, a->maxmax };
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-struct _latest_events // последние события !!! для нервозных предсказателей !!! удалить, если их уже нет !!!
-{
-	char event[4]; // [0] - последнее событие
-	int minute[4]; // на какой минуте случилось
-	double   x[4]; // значения
-
-	int start() // ща будет рост в X минут
-	{
-		if ((minute[2] == 2) && (event[0] == event[1]) && (event[0] == event[2])) // триплет
-		{
-			if (event[0] == 1) return 70;
-			if (event[0] == 2) // фиолетовый
-				if ((x[0] > x[1]) && (x[1] > x[2]))	return 13;
-			if (event[0] == 3)
-			{
-				if ((x[0] > x[1]) && (x[1] > x[2]))	return 40;
-				if ((x[0] < x[1]) && (x[1] < x[2]))	return 90;
-			}
-			//		if (event_[0] == 4) return 120;  //голубой
-			if (event[0] == 6) return 60;   //зеленый
-			return 0;
-		}
-		if ((minute[1] == 1) && (event[0] == event[1])) // дуплет
-		{
-			if (event[0] == 2) // фиолетовый
-			{
-				if (event[2] == 5) return 100; //песочный
-				if ((event[2] == 4) && (event[3] == 4)) return 40;
-			}
-			return 0;
-		}
-		return 0;
-	}
-
-	bool stop() // ща будет падение
-	{
-		if ((event[0] == 5) && (event[1] == 5) && (minute[1] == 1)) return true; // песочный
-		return false;
-	}
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-_latest_events get_latest_events(i64 nn)
-{
-	const i64 k = 4;
-	_latest_events e;
-	e.event[0] = e.event[1] = e.event[2] = e.event[3] = 0;
-	e.minute[0] = e.minute[1] = e.minute[2] = e.minute[3] = 0;
-	e.x[0] = e.x[1] = e.x[2] = e.x[3] = 0.0;
-	if (nn < 10) return e;
-	i64 ii = std::max(k, nn - 40);
-	int ee = 0;
-	for (i64 n = nn; n >= ii; n--)
-	{
-		if ((i64)index.data[n].time - index.data[n - k].time != k * 60) continue;
-		bool rost_pro = true;
-		bool rost_pok = true;
-		bool pade_pro = true;
-		bool pade_pok = true;
-		for (i64 i = n - k; i < n; i++)
-		{
-			if (index.data[i].r_pro >= index.data[i + 1].r_pro) rost_pro = false;
-			if (index.data[i].r_pok >= index.data[i + 1].r_pok) rost_pok = false;
-			if (index.data[i].r_pro <= index.data[i + 1].r_pro) pade_pro = false;
-			if (index.data[i].r_pok <= index.data[i + 1].r_pok) pade_pok = false;
-		}
-		char a = 0;
-		if ((rost_pro || rost_pok) && (pade_pro || pade_pok))
-			a = 7;
-		else
-		{
-			if (rost_pok) a += 1;
-			if (rost_pro) a += 2;
-			if (pade_pro || pade_pok) a += 3;
-			if (pade_pok) a += 1;
-			if (pade_pro) a += 2;
-		}
-		if (a == 0) continue;
-		e.event[ee] = a;
-		e.minute[ee] = (int)(nn - n);
-		e.x[ee] = (index.data[n].first + index.data[n].last) * 0.5;
-		ee++;
-		if (ee == 4) break;
-	}
-	return e;
-}
-
-void _nervous_curve::draw(i64 n, _area area)
-{
-	const i64 k = 4;
-	if (n < k) return;
-	if ((i64)index.data[n].time - index.data[n - k].time != k * 60) return;
-	bool rost_pro = true;
-	bool rost_pok = true;
-	bool pade_pro = true;
-	bool pade_pok = true;
-	for (i64 i = n - k; i < n; i++)
-	{
-		if (index.data[i].r_pro >= index.data[i + 1].r_pro) rost_pro = false;
-		if (index.data[i].r_pok >= index.data[i + 1].r_pok) rost_pok = false;
-		if (index.data[i].r_pro <= index.data[i + 1].r_pro) pade_pro = false;
-		if (index.data[i].r_pok <= index.data[i + 1].r_pok) pade_pok = false;
-	}
-	uint c = 0xFF808080;
-
-	if (rost_pro) c += 0x70;
-	if (rost_pok) c += 0x700000;
-	if (pade_pro) c -= 0x70;
-	if (pade_pok) c -= 0x700000;
-
-	double r = area.x.length() * 0.5 * 2;
-	if (get_latest_events(n).start())
-	{
-		c = 0xFFFF0000;
-		r *= 2;
-	}
-
-	if (c == 0xFF808080) return;
-	master_bm.fill_ring(area.center(), r, r * 0.1, c, c);
-}
-
-i64 prediction1(i64 n)
-{
-	// return i64(rnd(15000) == 13) * 60; // случайный
-	if (index.data.size() < 10) return 0;
-	return get_latest_events(n).start();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1846,54 +1531,6 @@ _interval _spectr_curve::get_y(i64 n)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void _compression_curve::draw(i64 n, _area area)
-{
-	//	if ((zn[n].r_pro > zn[n].r_pok * 1.8) || (zn[n].r_pok > zn[n].r_pro * 1.8))
-	{
-		double ry = y_graph.length() * 0.5;
-		double y1 = y_graph(0.5);
-		_interval xx = area.x;
-		area.x = { xx.min, xx(0.5) };
-		area.y = { y1 - ry * index.data[n].r_pro * 0.004, y1 };
-		master_bm.fill_rectangle(area, 0x60FF0000);
-		area.x = { xx(0.5), xx.max };
-		area.y = { y1 - ry * index.data[n].r_pok * 0.004, y1 };
-		master_bm.fill_rectangle(area, 0x603030FF);
-	}
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void test_linear_prediction3()
-{
-	constexpr i64 prediction_basis = 10;
-	constexpr i64 prediction_depth = 1;
-	std::vector<i64> sm;
-	sm.push_back((i64)(&((_index*)0)->r_pok));
-	sm.push_back((i64)(&((_index*)0)->r_pro));
-	_label_statistics ls;
-	ls.prediction_basis = prediction_basis;
-	ls.prediction_depth = prediction_depth;
-	ls.calc();
-	_matrix kk = calc_vector_prediction(prediction_basis, ls, &sm);
-	i64 n = 0;
-	double s = 0; // модуль разницы
-	double s2 = 0; // квадрат разницы
-	for (i64 i = 1; i < (i64)index.data.size(); i++)
-	{
-		double pr = prediction(i, kk, prediction_depth, &sm);
-		if (pr == 0) continue;
-		n++;
-		double r = abs(pr - index.data[i].cc);
-		s += r;
-		s2 += r * r;
-	}
-	s /= n;
-	s2 = sqrt(s2 / n);
-	show_message("s", s);
-	show_message("s2", s2);
-}
 
 void calc_all_prediction(std::function<i64(i64)> o, i64& vv, double& k)
 {
