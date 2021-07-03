@@ -1323,14 +1323,15 @@ namespace mutator
 
 	void resize(_isize r)
 	{
-		static auto prev_size = _isize{1200, 800};
-		_t_trans* kor = *n_ko;
-		kor->cha_area(kor->calc_area());
-		kor->trans.offset.x += (double)(r.x - prev_size.x) / 2;
-		kor->trans.offset.y += (double)(r.y - prev_size.y) / 2;
-		kor->cha_area(kor->calc_area());
-		n_move_all->run(0, n_move_all, flag_run);
-		master_obl_izm = r;  // обновить экран
+		static auto prev_size = _isize{ 1200, 800 };
+		if (prev_size != _isize{ 1200, 800 })
+		{
+			_t_trans* kor = *n_ko;
+			kor->trans.offset.x += (double)(r.x - prev_size.x) / 2;
+			kor->trans.offset.y += (double)(r.y - prev_size.y) / 2;
+			n_move_all->run(0, n_move_all, flag_run);
+			master_obl_izm = r;  // обновить экран
+		}
 		prev_size = r;
 	}
 
