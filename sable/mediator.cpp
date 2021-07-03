@@ -259,7 +259,7 @@ i64 to_int(const std::wstring& s) // преобразование в число 
 	return r;
 }
 
-int _recognize::test_image(_prices* pr)
+int _recognize::test_image(_supply_and_demand* pr)
 {
 	find_text13(0xFF0000FF); // синим цветом покупки
 	if (elem.size() != roffer * 2) return 3;
@@ -270,10 +270,10 @@ int _recognize::test_image(_prices* pr)
 		if (a <= pre) return 4;
 		pre = a;
 		if ((a < 1) || (a > 65000)) return 5;
-		pr->buy[roffer - 1 - i].value = static_cast<ushort>(a);
+		pr->demand.offer[roffer - 1 - i].price = static_cast<ushort>(a);
 		a = to_int(elem[i * 2i64 + 1i64].s);
 		if ((a < 1) || (a > 2000000000)) return 6;
-		pr->buy[roffer - 1 - i].number = static_cast<int>(a);
+		pr->demand.offer[roffer - 1 - i].number = static_cast<int>(a);
 	}
 	find_red_text13(24); // красным цветом продажи
 	if (elem.size() != roffer * 2) return 7;
@@ -283,15 +283,15 @@ int _recognize::test_image(_prices* pr)
 		if (a <= pre) return 8;
 		pre = a;
 		if ((a < 1) || (a > 65000)) return 9;
-		pr->sale[i].value = static_cast<ushort>(a);
+		pr->supply.offer[i].price = static_cast<ushort>(a);
 		a = to_int(elem[i * 2i64 + 1i64].s);
 		if ((a < 1) || (a > 2000000000)) return 10;
-		pr->sale[i].number = static_cast<int>(a);
+		pr->supply.offer[i].number = static_cast<int>(a);
 	}
 	return 0;
 }
 
-int _recognize::read_prices_from_screen(_prices* pr)
+int _recognize::read_prices_from_screen(_supply_and_demand* pr)
 {
 	load_mmm();
 	HWND w = FindWindow(0, mmm3.c_str());
@@ -311,10 +311,10 @@ int _recognize::read_prices_from_screen(_prices* pr)
 		if (a <= pre) return 4;
 		pre = a;
 		if ((a < 1) || (a > 65000)) return 5;
-		pr->buy[roffer - 1 - i].value = static_cast<ushort>(a);
+		pr->demand.offer[roffer - 1 - i].price = static_cast<ushort>(a);
 		a = to_int(elem[i * 2 + 1].s);
 		if ((a < 1) || (a > 2000000000)) return 6;
-		pr->buy[roffer - 1 - i].number = static_cast<int>(a);
+		pr->demand.offer[roffer - 1 - i].number = static_cast<int>(a);
 	}
 	find_red_text13(24); // красным цветом продажи
 	if (elem.size() != roffer * 2) return 7;
@@ -324,10 +324,10 @@ int _recognize::read_prices_from_screen(_prices* pr)
 		if (a <= pre) return 8;
 		pre = a;
 		if ((a < 1) || (a > 65000)) return 9;
-		pr->sale[i].value = static_cast<ushort>(a);
+		pr->supply.offer[i].price = static_cast<ushort>(a);
 		a = to_int(elem[i * 2 + 1].s);
 		if ((a < 1) || (a > 2000000000)) return 10;
-		pr->sale[i].number = static_cast<int>(a);
+		pr->supply.offer[i].number = static_cast<int>(a);
 	}
 	return 0;
 }

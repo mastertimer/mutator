@@ -38,6 +38,8 @@ struct _supply_and_demand // предложение и спрос
 	void clear()       noexcept { time = 0; } // метка пустого прайса
 	bool empty() const noexcept { return (time == 0); } // проверка на пустоту 
 	time_t time_to_minute() const { return time - (time % 60); } // обнулить секунды
+	i64 time_hour();
+	i64 time_minute();
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

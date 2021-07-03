@@ -38,7 +38,7 @@ struct _recognize // распознавание с экрана
 	std::vector<_area_string> elem; // элементы
 
 	_recognize(); // конструктор
-	int read_prices_from_screen(_prices* pr); // прочитать цены с экрана (0 - без ошибок)
+	int read_prices_from_screen(_supply_and_demand* pr); // прочитать цены с экрана (0 - без ошибок)
 	int read_vvod_zaya(); // найти и распознать окно ввода заявки. возращает ошибку
 	int read_vnimanie_prodaza(); // найти и распознать окно подтвержения продажи. возращает ошибку
 	int read_vnimanie_pokupka(); // найти и распознать окно подтвержения продажи. возращает ошибку
@@ -50,7 +50,7 @@ struct _recognize // распознавание с экрана
 	bool find_window_prices(RECT* rr); // координаты окна цен
 	int find_elem(std::wstring_view s); // найти текст среди элементов
 	int find_elem_kusok(wstr s); // найти кусок текста среди элементов
-	int test_image(_prices* pr); // тестовый поиск на готовой картинке
+	int test_image(_supply_and_demand* pr); // тестовый поиск на готовой картинке
 
 private:
 	_kusok_bukva bu; // дерево алфавита для распознавания

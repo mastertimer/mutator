@@ -446,7 +446,7 @@ int vrema_prodat =  0; // время когда нужно продать
 void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (zamok_pokupki) return;
-	_prices a;
+	_supply_and_demand a;
 	int ok = recognize.read_prices_from_screen(&a);
 	if (ok != 0)
 	{
