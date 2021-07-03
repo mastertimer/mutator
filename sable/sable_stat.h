@@ -35,6 +35,8 @@ struct _supply_and_demand // предложение и спрос
 
 	bool operator==(const _supply_and_demand& p) const; // время не учитывается при сравнении
 
+	void clear()       noexcept { time = 0; } // метка пустого прайса
+	bool empty() const noexcept { return (time == 0); } // проверка на пустоту 
 	time_t time_to_minute() const { return time - (time % 60); } // обнулить секунды
 };
 
@@ -45,6 +47,7 @@ struct _compression_stock_statistics;
 struct _stock_statistics
 {
 	static constexpr double c_unpak = 0.01; // распаковка цен
+	static constexpr double c_pak = 100; // упаковка цен
 
 	void push_back(const _supply_and_demand& c);
 	const std::vector<_supply_and_demand>& operator*() const { return sad; }
@@ -53,6 +56,7 @@ struct _stock_statistics
 	void operator=(_compression_stock_statistics& cs);
 	void save_to_file(std::wstring_view fn);
 	void load_from_file(std::wstring_view fn);
+	i64 size() const { return sad.size(); }
 
 private:
 	static const i64 number_thread = 16; // !! 16, не менять!!
@@ -224,7 +228,7 @@ struct _cdf3 // структура частот для сжатия малого
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-inline _sable_stat sss; // сжатые цены
+inline _sable_stat sss666; // сжатые цены
 inline _stock_statistics stock_statistics; // посекундные цены
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
