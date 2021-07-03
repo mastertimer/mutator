@@ -67,28 +67,6 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _prices // массив спроса предложения с удобными типами
-{
-	_one_stat buy[roffer];  // предложение покупки (порядок с самого выгодного)
-	_one_stat sale[roffer]; // предложение продажи (порядок с самого выгодного)
-	time_t    time;         // время
-
-	void clear()       noexcept { time = 0; } // метка пустого прайса
-	bool empty() const noexcept { return (time == 0); } // проверка на пустоту 
-	bool operator==(const _prices& p) const noexcept; // время не учитывается при сравнении
-	bool operator!=(const _prices& p) const noexcept; // время не учитывается при сравнении
-	bool operator!=(const _supply_and_demand& p) const noexcept;
-	operator _supply_and_demand();
-
-	time_t time_to_minute() { return time - (time % 60); } // обнулить секунды
-	i64 time_hour();
-	i64 time_minute();
-	i64 max_number(); // макисмальный number
-	i64 brak(); // количество больших цен
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 struct _compression_stock_statistics
 {
 	i64 size = 0; // количество записей
