@@ -18,6 +18,9 @@
       <Extensions>
       </Extensions>
     </Filter>
+    <Filter Include="Исходные файлы\stock">
+      <UniqueIdentifier>{5d5e97c9-7d36-430b-9833-5e718f4e4c94}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -47,6 +50,12 @@
     <ClCompile Include="tetron.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="stock\compression_stock_statistics.cpp">
+      <Filter>Исходные файлы\stock</Filter>
+    </ClCompile>
+    <ClCompile Include="stock\stock_basic.cpp">
+      <Filter>Исходные файлы\stock</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\basic.h">
@@ -75,6 +84,12 @@
     </ClInclude>
     <ClInclude Include="tetron.h">
       <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="stock\compression_stock_statistics.h">
+      <Filter>Исходные файлы\stock</Filter>
+    </ClInclude>
+    <ClInclude Include="stock\stock_basic.h">
+      <Filter>Исходные файлы\stock</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

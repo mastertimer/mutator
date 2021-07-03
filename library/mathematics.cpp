@@ -69,10 +69,11 @@ double only1min(std::function<double(double, double)> fun, _interval a, _interva
 	double epsilon = abs(xn) * calculation_accuracy;
 	double epsilon2 = abs(xk) * calculation_accuracy;
 	if (epsilon2 > epsilon) epsilon = epsilon2;
-	while (xk - xn > epsilon)
+/*	while (xk - xn > epsilon)
 	{
 		double x = (xn + xn) * 0.5;
-	}
+	}*/
+	return 0;//!!!!!!!!!!!!!!!!
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
