@@ -120,52 +120,6 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _sable_stat // статистика цен, сжатая  (в 2 раза меньше, в 3 раза медленней предыдущей версии)
-{
-	struct _info_pak // дополнительная информация для упаковки
-	{
-		bool ok = false;   // есть данные
-		int r = 0;     // общий размер
-		int r_pro = 0; // размер продаж
-		int r_pok = 0; // размер покупок
-	};
-
-	i64 size = 0; // количество записей
-	_prices back{}; // последние цены
-	_bit_vector data; // сжатые данные
-	static constexpr time_t old_dtime = 160; // разность времени, после которого цены считаются устаревшими
-	static constexpr double c_unpak = 0.01; // распаковка цен
-	static constexpr double c_pak = 100; // упаковка цен
-
-	bool add(const _prices& c); // добавить цены (сжать)
-	bool read(i64 n, _prices& c, _info_pak* inf = nullptr); // прочитать цены (расжать)
-	void save_to_file(wstr fn);
-	void load_from_file(wstr fn);
-	void clear(); // удалить все данные
-
-private:
-	std::vector<i64> udata; // указатель на место сжатых данных кратных step_pak_cc
-	std::vector<_one_stat> base_buy; // база покупки для записи (первых 20 - последние цены)
-	std::vector<_one_stat> base_sale; // база продажи для записи (первых 20 - последние цены)
-	std::vector<_one_stat> base_buy_r; // база покупки для чтения (первых 20 - последние цены)
-	std::vector<_one_stat> base_sale_r; // база продажи для чтения (первых 20 - последние цены)
-	static constexpr i64 step_pak_cc = 100; // период ключевых цен
-	_prices read_cc{}; // последние прочитанные цены
-	i64 read_n = -666; // номер последних прочитанных цен
-	_info_pak ip_last, ip_n; // дополнительная информация
-
-	bool add0(const _prices& c); // не дельта!
-	bool add1(const _prices& c); // дельта
-	bool add12(const _one_stat* v1, std::vector<_one_stat>& v0, i64 izm);
-	bool coding_delta_number(i64 a, i64 b);
-	i64  decoding_delta_number(i64 a);
-	bool read0(_prices& c);
-	bool read1(_prices& c);
-	bool read12(_one_stat* v1, std::vector<_one_stat>& v0);
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 struct _cdf // структура частот для сжатия чисел с переменным количеством бит
 {
 	struct _frequency
@@ -228,7 +182,6 @@ struct _cdf3 // структура частот для сжатия малого
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-inline _sable_stat sss666; // сжатые цены
 inline _stock_statistics stock_statistics; // посекундные цены
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
