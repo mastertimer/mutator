@@ -1,4 +1,4 @@
-#include <sstream>
+п»ї#include <sstream>
 #include <algorithm>
 #include <map>
 
@@ -7,64 +7,64 @@
 
 namespace
 {
-	struct _cdf // структура частот для сжатия чисел с переменным количеством бит
+	struct _cdf // СЃС‚СЂСѓРєС‚СѓСЂР° С‡Р°СЃС‚РѕС‚ РґР»СЏ СЃР¶Р°С‚РёСЏ С‡РёСЃРµР» СЃ РїРµСЂРµРјРµРЅРЅС‹Рј РєРѕР»РёС‡РµСЃС‚РІРѕРј Р±РёС‚
 	{
 		struct _frequency
 		{
-			i64   first = 0; // первое число кодируемое
-			uchar bit = 0; // количество дополнительных бит
-			u64   prefix = 0; // обязательные биты (ограничены 1)
+			i64   first = 0; // РїРµСЂРІРѕРµ С‡РёСЃР»Рѕ РєРѕРґРёСЂСѓРµРјРѕРµ
+			uchar bit = 0; // РєРѕР»РёС‡РµСЃС‚РІРѕ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹С… Р±РёС‚
+			u64   prefix = 0; // РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ Р±РёС‚С‹ (РѕРіСЂР°РЅРёС‡РµРЅС‹ 1)
 		};
 
 		struct _mapf
 		{
-			i64    first = 0;  // первое число кодируемое
-			uchar  bit = 0;  // количество дополнительных бит
-			_mapf* next[2] = {}; // следующие ветви
+			i64    first = 0;  // РїРµСЂРІРѕРµ С‡РёСЃР»Рѕ РєРѕРґРёСЂСѓРµРјРѕРµ
+			uchar  bit = 0;  // РєРѕР»РёС‡РµСЃС‚РІРѕ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹С… Р±РёС‚
+			_mapf* next[2] = {}; // СЃР»РµРґСѓСЋС‰РёРµ РІРµС‚РІРё
 
 			~_mapf() { delete next[0]; delete next[1]; }
 		};
 
-		std::vector<_frequency> fr; // распредление интервалов
-		_mapf frd; // дерево декодирования
-		_basic_statistics* bst = nullptr; // для переподбора
+		std::vector<_frequency> fr; // СЂР°СЃРїСЂРµРґР»РµРЅРёРµ РёРЅС‚РµСЂРІР°Р»РѕРІ
+		_mapf frd; // РґРµСЂРµРІРѕ РґРµРєРѕРґРёСЂРѕРІР°РЅРёСЏ
+		_basic_statistics* bst = nullptr; // РґР»СЏ РїРµСЂРµРїРѕРґР±РѕСЂР°
 
 		_cdf() = default;
 		_cdf(const std::vector<_frequency>& a, _basic_statistics* b = nullptr);
 
 		void clear() { fr.clear(); }
-		bool coding(i64 a, _bit_vector& bs) const noexcept; // закодировать число в битовый поток (return false если ошибка)
-		i64  decoding(_bit_vector& bs) const noexcept; // декодировать число из битового потока
-		void calc(const _statistics& st, i64 n, i64 min_value, i64 max_value); // n - количество интервалов
-		void to_clipboard(); // скопировать в буффер обмена
-	//	double calc_size1(const _statistics& st); // сколько в битах (в среднем) будет весить одно число
+		bool coding(i64 a, _bit_vector& bs) const noexcept; // Р·Р°РєРѕРґРёСЂРѕРІР°С‚СЊ С‡РёСЃР»Рѕ РІ Р±РёС‚РѕРІС‹Р№ РїРѕС‚РѕРє (return false РµСЃР»Рё РѕС€РёР±РєР°)
+		i64  decoding(_bit_vector& bs) const noexcept; // РґРµРєРѕРґРёСЂРѕРІР°С‚СЊ С‡РёСЃР»Рѕ РёР· Р±РёС‚РѕРІРѕРіРѕ РїРѕС‚РѕРєР°
+		void calc(const _statistics& st, i64 n, i64 min_value, i64 max_value); // n - РєРѕР»РёС‡РµСЃС‚РІРѕ РёРЅС‚РµСЂРІР°Р»РѕРІ
+		void to_clipboard(); // СЃРєРѕРїРёСЂРѕРІР°С‚СЊ РІ Р±СѓС„С„РµСЂ РѕР±РјРµРЅР°
+	//	double calc_size1(const _statistics& st); // СЃРєРѕР»СЊРєРѕ РІ Р±РёС‚Р°С… (РІ СЃСЂРµРґРЅРµРј) Р±СѓРґРµС‚ РІРµСЃРёС‚СЊ РѕРґРЅРѕ С‡РёСЃР»Рѕ
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	struct _cdf3 // структура частот для сжатия малого количества чисел с переменным количеством бит
+	struct _cdf3 // СЃС‚СЂСѓРєС‚СѓСЂР° С‡Р°СЃС‚РѕС‚ РґР»СЏ СЃР¶Р°С‚РёСЏ РјР°Р»РѕРіРѕ РєРѕР»РёС‡РµСЃС‚РІР° С‡РёСЃРµР» СЃ РїРµСЂРµРјРµРЅРЅС‹Рј РєРѕР»РёС‡РµСЃС‚РІРѕРј Р±РёС‚
 	{
 		struct _mapf
 		{
-			i64    first = 0;  // число кодируемое
-			_mapf* next[2] = {}; // следующие ветви
+			i64    first = 0;  // С‡РёСЃР»Рѕ РєРѕРґРёСЂСѓРµРјРѕРµ
+			_mapf* next[2] = {}; // СЃР»РµРґСѓСЋС‰РёРµ РІРµС‚РІРё
 
 			~_mapf() { delete next[0]; delete next[1]; }
 		};
 
 		i64 start = 0;
-		std::vector<u64> prefix; // нужный префикс
-		_mapf frd; // дерево декодирования
-		_basic_statistics* bst = nullptr; // для переподбора
+		std::vector<u64> prefix; // РЅСѓР¶РЅС‹Р№ РїСЂРµС„РёРєСЃ
+		_mapf frd; // РґРµСЂРµРІРѕ РґРµРєРѕРґРёСЂРѕРІР°РЅРёСЏ
+		_basic_statistics* bst = nullptr; // РґР»СЏ РїРµСЂРµРїРѕРґР±РѕСЂР°
 
 		_cdf3() = default;
 		_cdf3(i64 start_, const std::vector<u64>& a, _basic_statistics* b = nullptr);
 
 		void clear() { prefix.clear(); }
-		bool coding(i64 a, _bit_vector& bs) const noexcept; // закодировать число в битовый поток (return false если ошибка)
-		i64  decoding(_bit_vector& bs) const noexcept; // декодировать число из битового потока
-		void calc(const _statistics& st, i64 min_value, i64 max_value); // построить дерево хаффмана
-		void to_clipboard(); // скопировать в буффер обмена
+		bool coding(i64 a, _bit_vector& bs) const noexcept; // Р·Р°РєРѕРґРёСЂРѕРІР°С‚СЊ С‡РёСЃР»Рѕ РІ Р±РёС‚РѕРІС‹Р№ РїРѕС‚РѕРє (return false РµСЃР»Рё РѕС€РёР±РєР°)
+		i64  decoding(_bit_vector& bs) const noexcept; // РґРµРєРѕРґРёСЂРѕРІР°С‚СЊ С‡РёСЃР»Рѕ РёР· Р±РёС‚РѕРІРѕРіРѕ РїРѕС‚РѕРєР°
+		void calc(const _statistics& st, i64 min_value, i64 max_value); // РїРѕСЃС‚СЂРѕРёС‚СЊ РґРµСЂРµРІРѕ С…Р°С„С„РјР°РЅР°
+		void to_clipboard(); // СЃРєРѕРїРёСЂРѕРІР°С‚СЊ РІ Р±СѓС„С„РµСЂ РѕР±РјРµРЅР°
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -96,7 +96,7 @@ namespace
 
 	const _cdf3 nnse0(1, { 14, 12, 26, 16, 34, 114, 104, 146, 152, 200, 136, 338, 440, 472, 344, 312, 376, 504, 466, 3 });
 
-	const _cdf3 nnse200[21] = { _cdf3() , // исправить
+	const _cdf3 nnse200[21] = { _cdf3() , // РёСЃРїСЂР°РІРёС‚СЊ
 		_cdf3(0, {3, 2}), // 1
 		_cdf3(0, {3, 4, 6}), // 2
 		_cdf3(0, {3, 12, 8, 6}), // 3
@@ -183,7 +183,7 @@ namespace
 		{261, 6, 233}, {325, 6, 136}, {389, 7, 120}, {500, 0, 925}, {501, 7, 139}, {629, 8, 122}, {885, 8, 182},
 		{1141, 10, 502}, {2165, 24, 3741}, {10000001, 0, 1} });
 
-	static const _cdf3 nnsegg[21] = { _cdf3() , // исправить
+	static const _cdf3 nnsegg[21] = { _cdf3() , // РёСЃРїСЂР°РІРёС‚СЊ
 		_cdf3(0, {2, 3}), // 1
 		_cdf3(0, {6, 4, 3}), // 2
 		_cdf3(0, {6, 12, 8, 3}), // 3
@@ -334,7 +334,7 @@ void _cdf::calc(const _statistics& st, i64 n, i64 min_value, i64 max_value)
 		i64 r = (right.k + left.k) * bit_for_value(right.o.max - left.o.min);
 		return r - r0;
 	};
-	// uu - простые интервалы длиной 1, или с количеством 0
+	// uu - РїСЂРѕСЃС‚С‹Рµ РёРЅС‚РµСЂРІР°Р»С‹ РґР»РёРЅРѕР№ 1, РёР»Рё СЃ РєРѕР»РёС‡РµСЃС‚РІРѕРј 0
 	std::vector<_uuu> ee;
 	_uuu a;
 	i64 pr;
@@ -352,7 +352,7 @@ void _cdf::calc(const _statistics& st, i64 n, i64 min_value, i64 max_value)
 	{
 		if (i.value > max_value) break;
 		if (i.value < min_value) continue;
-		if (i.value > pr) // нули
+		if (i.value > pr) // РЅСѓР»Рё
 		{
 			a.o = { pr, i.value };
 			a.k = 0;
@@ -380,7 +380,7 @@ void _cdf::calc(const _statistics& st, i64 n, i64 min_value, i64 max_value)
 	};
 
 	std::multimap<i64, _2uuu> xxx;
-	// подготовка стартовых пар интервалов отсортированных по минимум потерь при объединении
+	// РїРѕРґРіРѕС‚РѕРІРєР° СЃС‚Р°СЂС‚РѕРІС‹С… РїР°СЂ РёРЅС‚РµСЂРІР°Р»РѕРІ РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅРЅС‹С… РїРѕ РјРёРЅРёРјСѓРј РїРѕС‚РµСЂСЊ РїСЂРё РѕР±СЉРµРґРёРЅРµРЅРёРё
 	std::multimap<i64, _2uuu>::iterator pr_it;
 	for (i64 i = 1; i < (i64)ee.size(); i++)
 	{
@@ -398,13 +398,13 @@ void _cdf::calc(const _statistics& st, i64 n, i64 min_value, i64 max_value)
 		pr_it = it;
 	}
 	pr_it->second.right = pr_it;
-	// схлопывание пар интервалов, пока их не останется n-1
+	// СЃС…Р»РѕРїС‹РІР°РЅРёРµ РїР°СЂ РёРЅС‚РµСЂРІР°Р»РѕРІ, РїРѕРєР° РёС… РЅРµ РѕСЃС‚Р°РЅРµС‚СЃСЏ n-1
 	while ((i64)xxx.size() >= n)
 	{
-		auto a_ = xxx.begin(); // минимальная пара
+		auto a_ = xxx.begin(); // РјРёРЅРёРјР°Р»СЊРЅР°СЏ РїР°СЂР°
 		auto aa = a_->second;
-		auto i = aa.left; // левая пара
-		auto j = aa.right; // правая пара
+		auto i = aa.left; // Р»РµРІР°СЏ РїР°СЂР°
+		auto j = aa.right; // РїСЂР°РІР°СЏ РїР°СЂР°
 		aa.u1.k += aa.u2.k;
 		aa.u1.o.max = aa.u2.o.max;
 		aa.u1.bit = bit_for_value(aa.u1.o.size());
@@ -440,14 +440,14 @@ void _cdf::calc(const _statistics& st, i64 n, i64 min_value, i64 max_value)
 			i->second.right = (jna) ? j : i;
 		xxx.erase(a_);
 	}
-	// подкотовка отсортированных интервалов
+	// РїРѕРґРєРѕС‚РѕРІРєР° РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅРЅС‹С… РёРЅС‚РµСЂРІР°Р»РѕРІ
 	std::map<i64, _uuu> xxx2;
 	for (auto& i : xxx)
 	{
 		xxx2[i.second.u1.o.min] = i.second.u1;
 		xxx2[i.second.u2.o.min] = i.second.u2;
 	}
-	// заполнение массива частот
+	// Р·Р°РїРѕР»РЅРµРЅРёРµ РјР°СЃСЃРёРІР° С‡Р°СЃС‚РѕС‚
 	auto ii = xxx2.begin();
 	for (i64 i = 0; i < n; i++)
 	{
@@ -459,7 +459,7 @@ void _cdf::calc(const _statistics& st, i64 n, i64 min_value, i64 max_value)
 	fr[n].first = max_value + 1;
 	fr[n].bit = 0;
 	fr[n].prefix = 1;
-	// коррекция - дозаполнение маленьких интервалов, за счет больших соседей
+	// РєРѕСЂСЂРµРєС†РёСЏ - РґРѕР·Р°РїРѕР»РЅРµРЅРёРµ РјР°Р»РµРЅСЊРєРёС… РёРЅС‚РµСЂРІР°Р»РѕРІ, Р·Р° СЃС‡РµС‚ Р±РѕР»СЊС€РёС… СЃРѕСЃРµРґРµР№
 	for (i64 i = 0; i < n - 1; i++)
 	{
 		i64 delta = (1ll << fr[i].bit) - (fr[i + 1].first - fr[i].first);
@@ -468,17 +468,17 @@ void _cdf::calc(const _statistics& st, i64 n, i64 min_value, i64 max_value)
 			if (fr[i].bit < fr[i - 1].bit)
 			{
 				fr[i].first -= delta;
-				fr[i - 1].bit = bit_for_value(fr[i].first - fr[i - 1].first); // вдруг уменьшилось??
+				fr[i - 1].bit = bit_for_value(fr[i].first - fr[i - 1].first); // РІРґСЂСѓРі СѓРјРµРЅСЊС€РёР»РѕСЃСЊ??
 				continue;
 			}
 		if (fr[i].bit <= fr[i + 1].bit)
 		{
 			fr[i + 1].first += delta;
-			fr[i + 1].bit = bit_for_value(fr[i + 2].first - fr[i + 1].first); // вдруг уменьшилось??
+			fr[i + 1].bit = bit_for_value(fr[i + 2].first - fr[i + 1].first); // РІРґСЂСѓРі СѓРјРµРЅСЊС€РёР»РѕСЃСЊ??
 			continue;
 		}
 	}
-	// вычисление префикса
+	// РІС‹С‡РёСЃР»РµРЅРёРµ РїСЂРµС„РёРєСЃР°
 	std::multimap<i64, std::vector<i64>> xxx3;
 	for (i64 i = 0; i < n; i++) xxx3.insert({ st.number(fr[i].first, fr[i + 1].first), {i} });
 	while (xxx3.size() > 1)
@@ -528,7 +528,7 @@ void _cdf3::to_clipboard()
 bool _cdf3::coding(i64 a, _bit_vector& bs) const noexcept
 {
 	if ((a < start) || (a - start >= (i64)prefix.size())) return false;
-	if (bst) bst->push(a); // для переподбора
+	if (bst) bst->push(a); // РґР»СЏ РїРµСЂРµРїРѕРґР±РѕСЂР°
 	bs.pushn1(prefix[a - start]);
 	return true;
 }
@@ -546,7 +546,7 @@ void _cdf3::calc(const _statistics& st, i64 min_value, i64 max_value)
 	i64 n = max_value - min_value + 1;
 	prefix.resize(n);
 	for (auto& i : prefix) i = 1;
-	// вычисление префикса
+	// РІС‹С‡РёСЃР»РµРЅРёРµ РїСЂРµС„РёРєСЃР°
 	std::multimap<i64, std::vector<i64>> xxx3;
 	for (i64 i = 0; i < n; i++) xxx3.insert({ st[start + i], {i} });
 	while (xxx3.size() > 1)
@@ -660,7 +660,7 @@ bool _compression_stock_statistics::read12(_offer* v1, std::vector<_offer>& v0)
 	if (izm > 0)
 	{
 		v0.insert(v0.begin(), izm, {});
-		for (i64 i = izm - 1; i >= 0; i--) // кодируется как c add0
+		for (i64 i = izm - 1; i >= 0; i--) // РєРѕРґРёСЂСѓРµС‚СЃСЏ РєР°Рє c add0
 		{
 			v1[i].price = v0[i + 1].price + kk * f_delta.decoding(data);
 			v1[i].number = f_number.decoding(data);
@@ -861,7 +861,7 @@ bool _compression_stock_statistics::add12(const _offer* v1, std::vector<_offer>&
 	if (izm > 0)
 	{
 		v0.insert(v0.begin(), izm, {});
-		for (i64 i = izm - 1; i >= 0; i--) // кодируется как c add0
+		for (i64 i = izm - 1; i >= 0; i--) // РєРѕРґРёСЂСѓРµС‚СЃСЏ РєР°Рє c add0
 		{
 			if (!f_delta.coding(((i64)v1[i].price - v0[i + 1].price) * kk, data)) return false;
 			if (!f_number.coding(v1[i].number, data)) return false;
@@ -981,7 +981,7 @@ bool _compression_stock_statistics::add(const _supply_and_demand& c)
 	return true;
 err:
 	data.resize(s_data);
-	return false; // ошибка кодирования, нужно исправлять!!
+	return false; // РѕС€РёР±РєР° РєРѕРґРёСЂРѕРІР°РЅРёСЏ, РЅСѓР¶РЅРѕ РёСЃРїСЂР°РІР»СЏС‚СЊ!!
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

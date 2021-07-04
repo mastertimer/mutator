@@ -1,4 +1,4 @@
-#include <ctime>
+﻿#include <ctime>
 #include <thread>
 
 #include "stock_statistics.h"

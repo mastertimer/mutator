@@ -1,24 +1,24 @@
-#pragma once
+п»ї#pragma once
 
 #include "stock_basic.h"
 
 struct _compression_stock_statistics
 {
-	i64 size = 0; // количество записей
-	_bit_vector data; // сжатые данные
+	i64 size = 0; // РєРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РїРёСЃРµР№
+	_bit_vector data; // СЃР¶Р°С‚С‹Рµ РґР°РЅРЅС‹Рµ
 
-	bool add(const _supply_and_demand& c); // добавить цены (сжать)
-	bool read(_supply_and_demand& c); // прочитать цены (расжать)
+	bool add(const _supply_and_demand& c); // РґРѕР±Р°РІРёС‚СЊ С†РµРЅС‹ (СЃР¶Р°С‚СЊ)
+	bool read(_supply_and_demand& c); // РїСЂРѕС‡РёС‚Р°С‚СЊ С†РµРЅС‹ (СЂР°СЃР¶Р°С‚СЊ)
 	void push_to(_stack& mem);
 	void pop_from(_stack& mem);
 
 private:
-	std::vector<_offer> base_buy; // база покупки (первых 20 - последние цены)
-	std::vector<_offer> base_sale; // база продажи (первых 20 - последние цены)
-	time_t back_time = 0; // время прочитанных цен
+	std::vector<_offer> base_buy; // Р±Р°Р·Р° РїРѕРєСѓРїРєРё (РїРµСЂРІС‹С… 20 - РїРѕСЃР»РµРґРЅРёРµ С†РµРЅС‹)
+	std::vector<_offer> base_sale; // Р±Р°Р·Р° РїСЂРѕРґР°Р¶Рё (РїРµСЂРІС‹С… 20 - РїРѕСЃР»РµРґРЅРёРµ С†РµРЅС‹)
+	time_t back_time = 0; // РІСЂРµРјСЏ РїСЂРѕС‡РёС‚Р°РЅРЅС‹С… С†РµРЅ
 
-	bool add0(const _supply_and_demand& c); // не дельта!
-	bool add1(const _supply_and_demand& c); // дельта
+	bool add0(const _supply_and_demand& c); // РЅРµ РґРµР»СЊС‚Р°!
+	bool add1(const _supply_and_demand& c); // РґРµР»СЊС‚Р°
 	bool add12(const _offer* v1, std::vector<_offer>& v0, i64 izm);
 	bool coding_delta_number(i64 a, i64 b);
 	i64  decoding_delta_number(i64 a);

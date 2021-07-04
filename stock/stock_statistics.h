@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 
 #include "compression_stock_statistics.h"
 
@@ -6,8 +6,8 @@
 
 struct _stock_statistics
 {
-	static constexpr double c_unpak = 0.01; // распаковка цен
-	static constexpr double c_pak = 100; // упаковка цен
+	static constexpr double c_unpak = 0.01; // СЂР°СЃРїР°РєРѕРІРєР° С†РµРЅ
+	static constexpr double c_pak = 100; // СѓРїР°РєРѕРІРєР° С†РµРЅ
 
 	void push_back(const _supply_and_demand& c);
 	const std::vector<_supply_and_demand>& operator*() const { return sad; }
@@ -19,10 +19,10 @@ struct _stock_statistics
 	i64 size() const { return sad.size(); }
 
 private:
-	static const i64 number_thread = 16; // !! 16, не менять!!
+	static const i64 number_thread = 16; // !! 16, РЅРµ РјРµРЅСЏС‚СЊ!!
 	std::vector<_supply_and_demand> sad;
 };
 
-inline _stock_statistics stock_statistics; // посекундные цены
+inline _stock_statistics stock_statistics; // РїРѕСЃРµРєСѓРЅРґРЅС‹Рµ С†РµРЅС‹
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
