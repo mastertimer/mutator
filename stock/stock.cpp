@@ -28,6 +28,7 @@ max(rnd)  |   1.058        58       1.00097
 #include <chrono>
 #include <deque>
 
+#include "t_function.h"
 #include "mediator.h"
 #include "stock.h"
 

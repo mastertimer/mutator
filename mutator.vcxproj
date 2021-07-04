@@ -107,7 +107,7 @@
       <BrowseInformation>false</BrowseInformation>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir);library;stock</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);library;stock;tetrons</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4100;4244</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -149,7 +149,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);library;stock</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);library;stock;tetrons</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4100;4244</DisableSpecificWarnings>
       <AdditionalUsingDirectories>
       </AdditionalUsingDirectories>
@@ -172,7 +172,8 @@
     <ClCompile Include="stock\stock.cpp" />
     <ClCompile Include="stock\stock_basic.cpp" />
     <ClCompile Include="stock\stock_statistics.cpp" />
-    <ClCompile Include="tetron.cpp" />
+    <ClCompile Include="tetrons\tetron.cpp" />
+    <ClCompile Include="tetrons\t_function.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\basic.h" />
@@ -185,7 +186,8 @@
     <ClInclude Include="stock\stock.h" />
     <ClInclude Include="stock\stock_basic.h" />
     <ClInclude Include="stock\stock_statistics.h" />
-    <ClInclude Include="tetron.h" />
+    <ClInclude Include="tetrons\tetron.h" />
+    <ClInclude Include="tetrons\t_function.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mutator.rc" />

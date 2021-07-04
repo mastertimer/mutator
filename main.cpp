@@ -1,5 +1,6 @@
 ﻿#include <filesystem>
 
+#include "tetron.h"
 #include "mutator.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -211,6 +212,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		SetTimer(hWnd, 2, 250, 0); // более быстрый, без отрисовки
 		return 0;
 	case WM_DESTROY:
+		run_before_del_link = false; // разобраться почему без этого - ошибка
 		KillTimer(hWnd, 1);
 		KillTimer(hWnd, 2);
 		PostQuitMessage(0);

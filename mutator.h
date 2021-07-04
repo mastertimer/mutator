@@ -1,10 +1,10 @@
 ﻿#pragma once
 
-#include "tetron.h"
+#include "basic.h"
 
 namespace mutator
 {
-	double get_main_scale(); // главный масштаб
+	double get_main_scale();
 	void save_to_txt_file(wstr fn);
 	bool start(wstr fn);
 	void resize(_isize r);

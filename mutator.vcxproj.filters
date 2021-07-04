@@ -18,6 +18,9 @@
     <Filter Include="Исходные файлы\stock">
       <UniqueIdentifier>{5d5e97c9-7d36-430b-9833-5e718f4e4c94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\tetrons">
+      <UniqueIdentifier>{5094bb71-0e68-406b-8a8c-30558c4e4b1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -35,9 +38,6 @@
     <ClCompile Include="library\compression.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
-    <ClCompile Include="tetron.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="stock\compression_stock_statistics.cpp">
       <Filter>Исходные файлы\stock</Filter>
     </ClCompile>
@@ -52,6 +52,12 @@
     </ClCompile>
     <ClCompile Include="stock\mediator.cpp">
       <Filter>Исходные файлы\stock</Filter>
+    </ClCompile>
+    <ClCompile Include="tetrons\tetron.cpp">
+      <Filter>Исходные файлы\tetrons</Filter>
+    </ClCompile>
+    <ClCompile Include="tetrons\t_function.cpp">
+      <Filter>Исходные файлы\tetrons</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -70,9 +76,6 @@
     <ClInclude Include="library\compression.h">
       <Filter>Исходные файлы\library</Filter>
     </ClInclude>
-    <ClInclude Include="tetron.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="stock\compression_stock_statistics.h">
       <Filter>Исходные файлы\stock</Filter>
     </ClInclude>
@@ -87,6 +90,12 @@
     </ClInclude>
     <ClInclude Include="stock\mediator.h">
       <Filter>Исходные файлы\stock</Filter>
+    </ClInclude>
+    <ClInclude Include="tetrons\tetron.h">
+      <Filter>Исходные файлы\tetrons</Filter>
+    </ClInclude>
+    <ClInclude Include="tetrons\t_function.h">
+      <Filter>Исходные файлы\tetrons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
