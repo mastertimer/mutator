@@ -32,9 +32,6 @@
     <ClCompile Include="sable\sable.cpp">
       <Filter>Исходные файлы\sable</Filter>
     </ClCompile>
-    <ClCompile Include="sable\sable_stat.cpp">
-      <Filter>Исходные файлы\sable</Filter>
-    </ClCompile>
     <ClCompile Include="library\basic.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
@@ -56,6 +53,9 @@
     <ClCompile Include="stock\stock_basic.cpp">
       <Filter>Исходные файлы\stock</Filter>
     </ClCompile>
+    <ClCompile Include="stock\stock_statistics.cpp">
+      <Filter>Исходные файлы\stock</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\basic.h">
@@ -68,9 +68,6 @@
       <Filter>Исходные файлы\sable</Filter>
     </ClInclude>
     <ClInclude Include="sable\sable.h">
-      <Filter>Исходные файлы\sable</Filter>
-    </ClInclude>
-    <ClInclude Include="sable\sable_stat.h">
       <Filter>Исходные файлы\sable</Filter>
     </ClInclude>
     <ClInclude Include="mutator.h">
@@ -89,6 +86,9 @@
       <Filter>Исходные файлы\stock</Filter>
     </ClInclude>
     <ClInclude Include="stock\stock_basic.h">
+      <Filter>Исходные файлы\stock</Filter>
+    </ClInclude>
+    <ClInclude Include="stock\stock_statistics.h">
       <Filter>Исходные файлы\stock</Filter>
     </ClInclude>
   </ItemGroup>

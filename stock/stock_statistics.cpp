@@ -1,9 +1,7 @@
-﻿#include <ctime>
+#include <ctime>
 #include <thread>
 
-#include "sable_stat.h"
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#include "stock_statistics.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -62,7 +60,7 @@ void _stock_statistics::push_back(const _supply_and_demand& c)
 	if (!sad.empty())
 	{
 		if (c == sad.back()) return;
-//		if (c.time <= sad.back().time) return;
+		//		if (c.time <= sad.back().time) return;
 	}
 	sad.push_back(c);
 }

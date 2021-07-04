@@ -169,9 +169,9 @@
     <ClCompile Include="mutator.cpp" />
     <ClCompile Include="sable\mediator.cpp" />
     <ClCompile Include="sable\sable.cpp" />
-    <ClCompile Include="sable\sable_stat.cpp" />
     <ClCompile Include="stock\compression_stock_statistics.cpp" />
     <ClCompile Include="stock\stock_basic.cpp" />
+    <ClCompile Include="stock\stock_statistics.cpp" />
     <ClCompile Include="tetron.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -182,9 +182,9 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="sable\mediator.h" />
     <ClInclude Include="sable\sable.h" />
-    <ClInclude Include="sable\sable_stat.h" />
     <ClInclude Include="stock\compression_stock_statistics.h" />
     <ClInclude Include="stock\stock_basic.h" />
+    <ClInclude Include="stock\stock_statistics.h" />
     <ClInclude Include="tetron.h" />
   </ItemGroup>
   <ItemGroup>
