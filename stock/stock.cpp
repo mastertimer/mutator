@@ -431,7 +431,7 @@ void sable_fun2(_g_terminal* t)
 i64 can_trade    = -6; // разрешенное количество сделок (купить-продать = 2 сделки), отрицательное - неактивно
 int vrema_prodat =  0; // время когда нужно продать
 
-void fun16(_tetron* tt0, _tetron* tt, u64 flags)
+void scan_supply_and_demand()
 {
 	if (zamok_pokupki) return;
 	_supply_and_demand a;
@@ -499,13 +499,12 @@ void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 	fu->run(0, fu, flag_run);
 }
 
-void fun19(_tetron* tt0, _tetron* tt, u64 flags)
+void change_can_trade(bool can)
 {
-	_g_button* b = *tt0;
-	can_trade = (b->checked) ? abs(can_trade) : -abs(can_trade);
+	can_trade = (can) ? abs(can_trade) : -abs(can_trade);
 }
 
-void fun20(_tetron* tt0, _tetron* tt, u64 flags)
+void buy_shares()
 {
 	if (zamok_pokupki) return;
 	zamok_pokupki = true;
@@ -513,7 +512,7 @@ void fun20(_tetron* tt0, _tetron* tt, u64 flags)
 	fu->run(0, fu, flag_run);
 }
 
-void fun21(_tetron* tt0, _tetron* tt, u64 flags)
+void sell_shares()
 {
 	if (zamok_pokupki) return;
 	zamok_pokupki = true;
@@ -521,31 +520,21 @@ void fun21(_tetron* tt0, _tetron* tt, u64 flags)
 	fu->run(0, fu, flag_run);
 }
 
-void fun22(_tetron* tt0, _tetron* tt, u64 flags)
+void expand_elements_graph()
 {
 	graph->size_el++;
 	graph->cha_area();
 }
 
-void fun30(_tetron* tt0, _tetron* tt, u64 flags)
+void narrow_graph_elements()
 {
 	if (graph->size_el > 1) graph->size_el--;
 	graph->cha_area();
 }
 
-void fun31(_tetron* tt0, _tetron* tt, u64 flags)
+void save_stock_statistics()
 {
 	stock_statistics.save_to_file(exe_path + sss2_file);
-}
-
-void fun35(_tetron* tt0, _tetron* tt, u64 flags)
-{
-	buy_stock(tt, true);
-}
-
-void fun36(_tetron* tt0, _tetron* tt, u64 flags)
-{
-	buy_stock(tt, false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

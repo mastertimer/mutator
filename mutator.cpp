@@ -32,6 +32,7 @@
 #include <chrono>
 
 #include "stock.h"
+#include "mediator.h"
 #include "tetron.h"
 #include "compression.h"
 #include "mutator.h"
@@ -517,6 +518,11 @@ void fun15(_tetron* tt0, _tetron* tt, u64 flags)
 	if (b->checked) n_timer1000->add_flags(new _t_function(16), flag_run);
 }
 
+void fun16(_tetron* tt0, _tetron* tt, u64 flags)
+{
+	scan_supply_and_demand();
+}
+
 void fun17(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (!tt0) return;
@@ -565,13 +571,26 @@ void fun18(_tetron* tt0, _tetron* tt, u64 flags)
 	a->cha_area();
 }
 
-void fun19(_tetron* tt0, _tetron* tt, u64 flags);
+void fun19(_tetron* tt0, _tetron* tt, u64 flags)
+{
+	_g_button* b = *tt0;
+	change_can_trade(b->checked);
+}
 
-void fun20(_tetron* tt0, _tetron* tt, u64 flags);
+void fun20(_tetron* tt0, _tetron* tt, u64 flags)
+{
+	buy_shares();
+}
 
-void fun21(_tetron* tt0, _tetron* tt, u64 flags);
+void fun21(_tetron* tt0, _tetron* tt, u64 flags)
+{
+	sell_shares();
+}
 
-void fun22(_tetron* tt0, _tetron* tt, u64 flags);
+void fun22(_tetron* tt0, _tetron* tt, u64 flags)
+{
+	expand_elements_graph();
+}
 
 void fun23(_tetron* tt0, _tetron* tt, u64 flags)
 {
@@ -660,7 +679,15 @@ void fun29(_tetron* tt0, _tetron* tt, u64 flags)
 	master_obl_izm = { {0.0, (double)master_bm.size.x}, {0.0, (double)master_bm.size.y} };
 }
 
-void fun30(_tetron* tt0, _tetron* tt, u64 flags);
+void fun30(_tetron* tt0, _tetron* tt, u64 flags)
+{
+	narrow_graph_elements();
+}
+
+void fun31(_tetron* tt0, _tetron* tt, u64 flags)
+{
+	save_stock_statistics();
+}
 
 void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 {
@@ -791,9 +818,15 @@ void fun34(_tetron* tt0, _tetron* tt, u64 flags)
 {
 }
 
-void fun35(_tetron* tt0, _tetron* tt, u64 flags);
+void fun35(_tetron* tt0, _tetron* tt, u64 flags)
+{
+	buy_stock(tt, true);
+}
 
-void fun36(_tetron* tt0, _tetron* tt, u64 flags);
+void fun36(_tetron* tt0, _tetron* tt, u64 flags)
+{
+	buy_stock(tt, false);
+}
 
 void fun37(_tetron* tt0, _tetron* tt, u64 flags)
 {

@@ -44,7 +44,13 @@ void calc_all_prediction(std::function<i64(i64)> o, i64& vv, double& k);
 void calc_delta_price(i64 delta_minute, _basic_statistics& bs);
 
 void start_stock();
-void fun16(_tetron* tt0, _tetron* tt, u64 flags);
-void fun31(_tetron* tt0, _tetron* tt, u64 flags);
+void scan_supply_and_demand();
+void save_stock_statistics();
+void change_can_trade(bool);
+void buy_shares();
+void sell_shares();
+void expand_elements_graph();
+void narrow_graph_elements();
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
