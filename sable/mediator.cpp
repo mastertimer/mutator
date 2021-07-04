@@ -262,22 +262,22 @@ i64 to_int(const std::wstring& s) // преобразование в число 
 int _recognize::test_image(_supply_and_demand* pr)
 {
 	find_text13(0xFF0000FF); // синим цветом покупки
-	if (elem.size() != roffer * 2) return 3;
+	if (elem.size() != size_offer * 2) return 3;
 	i64 pre = 0;
-	for (int i = 0; i < roffer; i++)
+	for (int i = 0; i < size_offer; i++)
 	{
 		i64 a = to_int(elem[i * 2i64].s);
 		if (a <= pre) return 4;
 		pre = a;
 		if ((a < 1) || (a > 65000)) return 5;
-		pr->demand.offer[roffer - 1 - i].price = static_cast<ushort>(a);
+		pr->demand.offer[size_offer - 1 - i].price = static_cast<ushort>(a);
 		a = to_int(elem[i * 2i64 + 1i64].s);
 		if ((a < 1) || (a > 2000000000)) return 6;
-		pr->demand.offer[roffer - 1 - i].number = static_cast<int>(a);
+		pr->demand.offer[size_offer - 1 - i].number = static_cast<int>(a);
 	}
 	find_red_text13(24); // красным цветом продажи
-	if (elem.size() != roffer * 2) return 7;
-	for (int i = 0; i < roffer; i++)
+	if (elem.size() != size_offer * 2) return 7;
+	for (int i = 0; i < size_offer; i++)
 	{
 		i64 a = to_int(elem[i * 2i64].s);
 		if (a <= pre) return 8;
@@ -302,23 +302,23 @@ int _recognize::read_prices_from_screen(_supply_and_demand* pr)
 	pr->time = time(0);
 	image.grab_ecran_oo2(w2);
 	find_text13(0xFF0000FF); // синим цветом покупки
-	if (elem.size() != roffer * 2) return 3;
+	if (elem.size() != size_offer * 2) return 3;
 	i64 pre = 0;
-	for (i64 i = 0; i < roffer; i++)
+	for (i64 i = 0; i < size_offer; i++)
 	{
 		std::wstring swe = elem[i * 2].s;
 		i64 a = to_int(swe);
 		if (a <= pre) return 4;
 		pre = a;
 		if ((a < 1) || (a > 65000)) return 5;
-		pr->demand.offer[roffer - 1 - i].price = static_cast<ushort>(a);
+		pr->demand.offer[size_offer - 1 - i].price = static_cast<ushort>(a);
 		a = to_int(elem[i * 2 + 1].s);
 		if ((a < 1) || (a > 2000000000)) return 6;
-		pr->demand.offer[roffer - 1 - i].number = static_cast<int>(a);
+		pr->demand.offer[size_offer - 1 - i].number = static_cast<int>(a);
 	}
 	find_red_text13(24); // красным цветом продажи
-	if (elem.size() != roffer * 2) return 7;
-	for (i64 i = 0; i < roffer; i++)
+	if (elem.size() != size_offer * 2) return 7;
+	for (i64 i = 0; i < size_offer; i++)
 	{
 		i64 a = to_int(elem[i * 2].s);
 		if (a <= pre) return 8;

@@ -4,7 +4,7 @@
 
 bool _offers::operator==(const _offers& p) const
 {
-	for (i64 i = 0; i < roffer; i++) if (offer[i] != p.offer[i]) return false;
+	for (i64 i = 0; i < size_offer; i++) if (offer[i] != p.offer[i]) return false;
 	return true;
 }
 

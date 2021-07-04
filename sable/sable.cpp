@@ -690,7 +690,7 @@ void _sable_graph::ris2(_trans tr, bool final)
 	if (maxN > 1)
 	{
 		double mi, step;
-		os_pordis(y_.min, y_.max, maxN, mi, step, stock_statistics.c_unpak);
+		os_pordis(y_.min, y_.max, maxN, mi, step, c_unpak);
 		for (double y = mi; y < y_.max; y += step)
 		{
 			double yy = a.y.max - (y - y_.min) * a.y.length() / (y_.max - y_.min);
@@ -806,26 +806,26 @@ bool _index_data::update()
 		time_t t2 = cc.time_to_minute();
 		if (t2 == t)
 		{
-			double aa = ((i64)cc.demand.offer[0].price + cc.supply.offer[0].price) * (stock_statistics.c_unpak * 0.5);
+			double aa = ((i64)cc.demand.offer[0].price + cc.supply.offer[0].price) * (c_unpak * 0.5);
 			if (aa < cp.min) cp.min = aa;
 			if (aa > cp.max) cp.max = aa;
-			if (cc.demand.offer[roffer - 1].price * stock_statistics.c_unpak < cp.minmin) cp.minmin = cc.demand.offer[roffer - 1].price * stock_statistics.c_unpak;
-			if (cc.supply.offer[roffer - 1].price * stock_statistics.c_unpak > cp.maxmax) cp.maxmax = cc.supply.offer[roffer - 1].price * stock_statistics.c_unpak;
+			if (cc.demand.offer[size_offer - 1].price * c_unpak < cp.minmin) cp.minmin = cc.demand.offer[size_offer - 1].price * c_unpak;
+			if (cc.supply.offer[size_offer - 1].price * c_unpak > cp.maxmax) cp.maxmax = cc.supply.offer[size_offer - 1].price * c_unpak;
 			cp.ncc.max++;
 			cp.last = aa;
 			cp.cc_buy += cc.demand.offer[0].price;
 			cp.cc_sale += cc.supply.offer[0].price;
 			if (cc.time % 60 == 3)
 			{
-				cp.c3_buy = cc.demand.offer[0].price * stock_statistics.c_unpak;
-				cp.c3_sale = cc.supply.offer[0].price * stock_statistics.c_unpak;
+				cp.c3_buy = cc.demand.offer[0].price * c_unpak;
+				cp.c3_sale = cc.supply.offer[0].price * c_unpak;
 			}
 			continue;
 		}
 		if (t != 0)
 		{
-			cp.cc_buy *= stock_statistics.c_unpak / cp.ncc.size();
-			cp.cc_sale *= stock_statistics.c_unpak / cp.ncc.size();
+			cp.cc_buy *= c_unpak / cp.ncc.size();
+			cp.cc_sale *= c_unpak / cp.ncc.size();
 			cp.cc = (cp.cc_buy + cp.cc_sale) * 0.5;
 			data.push_back(cp);
 		}
@@ -834,13 +834,13 @@ bool _index_data::update()
 		cp.time = t;
 		cp.ncc.min = i;
 		cp.ncc.max = i + 1;
-		cp.max = cp.min = cp.last = cp.first = ((i64)cc.demand.offer[0].price + cc.supply.offer[0].price) * (stock_statistics.c_unpak * 0.5);
-		cp.minmin = cc.demand.offer[roffer - 1].price * stock_statistics.c_unpak;
-		cp.maxmax = cc.supply.offer[roffer - 1].price * stock_statistics.c_unpak;
+		cp.max = cp.min = cp.last = cp.first = ((i64)cc.demand.offer[0].price + cc.supply.offer[0].price) * (c_unpak * 0.5);
+		cp.minmin = cc.demand.offer[size_offer - 1].price * c_unpak;
+		cp.maxmax = cc.supply.offer[size_offer - 1].price * c_unpak;
 		cp.cc_buy = cc.demand.offer[0].price;
 		cp.cc_sale = cc.supply.offer[0].price;
-		cp.c3_buy = cc.demand.offer[0].price * stock_statistics.c_unpak;
-		cp.c3_sale = cc.supply.offer[0].price * stock_statistics.c_unpak;
+		cp.c3_buy = cc.demand.offer[0].price * c_unpak;
+		cp.c3_sale = cc.supply.offer[0].price * c_unpak;
 	}
 	return true;
 }
@@ -850,10 +850,10 @@ bool _index_data::update()
 void _candle_curve::draw(i64 n, _area area)
 {
 	auto aa = &index.data[n];
-	double min_ = aa->min * stock_statistics.c_unpak;
-	double max_ = aa->max * stock_statistics.c_unpak;
-	double first_ = aa->first * stock_statistics.c_unpak;
-	double last_ = aa->last * stock_statistics.c_unpak;
+	double min_ = aa->min * c_unpak;
+	double max_ = aa->max * c_unpak;
+	double first_ = aa->first * c_unpak;
+	double last_ = aa->last * c_unpak;
 
 	_iinterval xx = area.x;
 	xx.min++;
@@ -895,9 +895,7 @@ _interval _candle_curve::get_y(i64 n)
 void _prices_curve::draw(i64 n, _area area)
 {
 	static _supply_and_demand pri[61]; // цены
-	static double min, max; // разброс по y
-	min = 0;
-	max = stock_statistics.c_unpak;
+	double min, max; // разброс по y
 	for (auto& i : pri) i.clear();
 
 	for (i64 i = index.data[n].ncc.min; i < index.data[n].ncc.max; i++)
@@ -945,7 +943,7 @@ void _prices_curve::draw(i64 n, _area area)
 		if (part_ss[ii].empty()) part_ss[ii] = stock_statistics[i];
 		pri[part_ss[ii].time % 60] = part_ss[ii];
 	}
-	min = index.data[n].minmin - stock_statistics.c_unpak;
+	min = index.data[n].minmin - c_unpak;
 	max = index.data[n].maxmax;
 	_iinterval xx = area.x;
 	xx.min++;
@@ -981,10 +979,10 @@ void _prices_curve::draw(i64 n, _area area)
 		{
 			//		xx1++;
 		}
-		for (int j = roffer - 1; j >= 0; j--)
+		for (int j = size_offer - 1; j >= 0; j--)
 		{
-			double ce = pri[ss_].supply.offer[j].price * stock_statistics.c_unpak;
-			_iinterval yy(area.y.min + (max - ce) * ddy / dd, area.y.min + (max - ce + stock_statistics.c_unpak) * ddy / dd);
+			double ce = pri[ss_].supply.offer[j].price * c_unpak;
+			_iinterval yy(area.y.min + (max - ce) * ddy / dd, area.y.min + (max - ce + c_unpak) * ddy / dd);
 			yy.min++;
 			yy.max--;
 			if (yy.empty()) continue;
@@ -993,10 +991,10 @@ void _prices_curve::draw(i64 n, _area area)
 			uint cc = (q << 8) + (q << 16) + 0x60000000;
 			master_bm.fill_rectangle({ {xx1, xx2}, yy }, cc);
 		}
-		for (int j = 0; j < roffer; j++)
+		for (int j = 0; j < size_offer; j++)
 		{
-			double ce = pri[ss_].demand.offer[j].price * stock_statistics.c_unpak;
-			_iinterval yy(area.y.min + (max - ce) * ddy / dd, area.y.min + (max - ce + stock_statistics.c_unpak) * ddy / dd);
+			double ce = pri[ss_].demand.offer[j].price * c_unpak;
+			_iinterval yy(area.y.min + (max - ce) * ddy / dd, area.y.min + (max - ce + c_unpak) * ddy / dd);
 			yy.min++;
 			yy.max--;
 			if (yy.empty()) continue;
@@ -1011,7 +1009,7 @@ void _prices_curve::draw(i64 n, _area area)
 _interval _prices_curve::get_y(i64 n)
 {
 	auto a = &index.data[n];
-	return { a->minmin - stock_statistics.c_unpak, a->maxmax };
+	return { a->minmin - c_unpak, a->maxmax };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1019,9 +1017,7 @@ _interval _prices_curve::get_y(i64 n)
 void _prices_curve2::draw(i64 n, _area area)
 {
 	static _supply_and_demand pri[61]; // цены
-	static double min, max; // разброс по y
-	min = 0;
-	max = stock_statistics.c_unpak;
+	double min, max; // разброс по y
 	for (auto& i : pri) i.clear();
 
 	for (i64 i = index.data[n].ncc.min; i < index.data[n].ncc.max; i++)
@@ -1069,7 +1065,7 @@ void _prices_curve2::draw(i64 n, _area area)
 		if (part_ss[ii].empty()) part_ss[ii] = stock_statistics[i];
 		pri[part_ss[ii].time % 60] = part_ss[ii];
 	}
-	min = index.data[n].minmin - stock_statistics.c_unpak;
+	min = index.data[n].minmin - c_unpak;
 	max = index.data[n].maxmax;
 	_iinterval xx = area.x;
 	xx.min++;
@@ -1106,12 +1102,12 @@ void _prices_curve2::draw(i64 n, _area area)
 		{
 			//		xx1++;
 		}
-		for (int j = roffer - 1; j >= 0; j--)
+		for (int j = size_offer - 1; j >= 0; j--)
 		{
 			auto os = pri[ss_].supply.offer[j].price % 10;
 			if ((os != 1) && (os != 4)) continue;
-			double ce = pri[ss_].supply.offer[j].price * stock_statistics.c_unpak;
-			_iinterval yy(area.y.min + (max - ce) * ddy / dd, area.y.min + (max - ce + stock_statistics.c_unpak) * ddy / dd);
+			double ce = pri[ss_].supply.offer[j].price * c_unpak;
+			_iinterval yy(area.y.min + (max - ce) * ddy / dd, area.y.min + (max - ce + c_unpak) * ddy / dd);
 			yy.min++;
 			yy.max--;
 			if (yy.empty()) continue;
@@ -1124,7 +1120,7 @@ void _prices_curve2::draw(i64 n, _area area)
 			}
 			if (cc != 0x40ffffff) master_bm.fill_rectangle({ {xx1, xx2}, yy }, cc);
 		}
-/*		for (int j = 0; j < roffer; j++)
+/*		for (int j = 0; j < size_offer; j++)
 		{
 			double ce = pri[ss_].buy[j].value * sss.c_unpak;
 			_iinterval yy(area.y.min + (max - ce) * ddy / dd, area.y.min + (max - ce + sss.c_unpak) * ddy / dd);
@@ -1149,7 +1145,7 @@ void _prices_curve2::draw(i64 n, _area area)
 _interval _prices_curve2::get_y(i64 n)
 {
 	auto a = &index.data[n];
-	return { a->minmin - stock_statistics.c_unpak, a->maxmax };
+	return { a->minmin - c_unpak, a->maxmax };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1178,7 +1174,7 @@ void calc_delta_price(i64 delta_minute, _basic_statistics &bs)
 	for (i64 i = delta_minute; i < (i64)index.data.size(); i++)
 	{
 		if (index.data[i].time - index.data[i - delta_minute].time != delta_minute * 60) continue;
-		double d = (index.data[i].cc - index.data[i - delta_minute].cc) * stock_statistics.c_pak;
+		double d = (index.data[i].cc - index.data[i - delta_minute].cc) * c_pak;
 		if (d > 0) d += 0.5; else d -= 0.5; // для правильного округления
 		bs.push(d);
 	}
