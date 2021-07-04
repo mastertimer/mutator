@@ -31,7 +31,7 @@
 #include <sstream>
 #include <chrono>
 
-#include "sable.h"
+#include "stock.h"
 #include "tetron.h"
 #include "compression.h"
 #include "mutator.h"
@@ -483,6 +483,11 @@ void fun12(_tetron* tt0, _tetron* tt, u64 flags)
 	delete a;
 }
 
+void fun13(_tetron* tt0, _tetron* tt, u64 flags)
+{
+	start_stock();
+}
+
 void fun14(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	i64* nn = tt->find1<i64>(flag_part);
@@ -498,6 +503,18 @@ void fun14(_tetron* tt0, _tetron* tt, u64 flags)
 	n_act = a;
 	smena_avt();
 	tt->_tetron::run(0, n_act, flags);
+}
+
+void fun15(_tetron* tt0, _tetron* tt, u64 flags)
+{
+	for (_frozen i(n_timer1000, flag_run); i; i++)
+	{
+		_t_function* f = *i;
+		if (!f) continue;
+		if (f->a == 16) delete f;
+	}
+	_g_button* b = *tt0;
+	if (b->checked) n_timer1000->add_flags(new _t_function(16), flag_run);
 }
 
 void fun17(_tetron* tt0, _tetron* tt, u64 flags)

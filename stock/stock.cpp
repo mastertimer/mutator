@@ -29,7 +29,7 @@ max(rnd)  |   1.058        58       1.00097
 #include <deque>
 
 #include "mediator.h"
-#include "sable.h"
+#include "stock.h"
 
 constexpr wchar_t sss2_file[] = L"..\\..\\data\\base.c3";
 
@@ -351,7 +351,7 @@ void _svertka::InitKoSg(double _Si, i64 ki1)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void fun13(_tetron* tt0, _tetron* tt, u64 flags)
+void start_stock()
 {
 	static bool first = true; if (!first) return; first = false;
 
@@ -426,18 +426,6 @@ void sable_fun2(_g_terminal* t)
 		}
 	}
 	t->add_text(L"OK полное совадение! ");*/
-}
-
-void fun15(_tetron* tt0, _tetron* tt, u64 flags)
-{
-	for (_frozen i(n_timer1000, flag_run); i; i++)
-	{
-		_t_function* f = *i;
-		if (!f) continue;
-		if (f->a == 16) delete f;
-	}
-	_g_button* b = *tt0;
-	if (b->checked) n_timer1000->add_flags(new _t_function(16), flag_run);
 }
 
 i64 can_trade    = -6; // разрешенное количество сделок (купить-продать = 2 сделки), отрицательное - неактивно

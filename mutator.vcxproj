@@ -107,7 +107,7 @@
       <BrowseInformation>false</BrowseInformation>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir);sable;library;stock</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);library;stock</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4100;4244</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -149,7 +149,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);sable;library;stock</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);library;stock</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4100;4244</DisableSpecificWarnings>
       <AdditionalUsingDirectories>
       </AdditionalUsingDirectories>
@@ -167,9 +167,9 @@
     <ClCompile Include="library\mathematics.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mutator.cpp" />
-    <ClCompile Include="sable\mediator.cpp" />
-    <ClCompile Include="sable\sable.cpp" />
     <ClCompile Include="stock\compression_stock_statistics.cpp" />
+    <ClCompile Include="stock\mediator.cpp" />
+    <ClCompile Include="stock\stock.cpp" />
     <ClCompile Include="stock\stock_basic.cpp" />
     <ClCompile Include="stock\stock_statistics.cpp" />
     <ClCompile Include="tetron.cpp" />
@@ -180,9 +180,9 @@
     <ClInclude Include="library\mathematics.h" />
     <ClInclude Include="mutator.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="sable\mediator.h" />
-    <ClInclude Include="sable\sable.h" />
     <ClInclude Include="stock\compression_stock_statistics.h" />
+    <ClInclude Include="stock\mediator.h" />
+    <ClInclude Include="stock\stock.h" />
     <ClInclude Include="stock\stock_basic.h" />
     <ClInclude Include="stock\stock_statistics.h" />
     <ClInclude Include="tetron.h" />
