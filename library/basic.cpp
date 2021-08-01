@@ -3829,7 +3829,7 @@ _wjson& _wjson::add(std::string_view name, const _picture& b)
 	{
 		pak = true;
 		for (i64 i = 0; i < 576; i++)
-			if ((b.data[i] != cc00) && (b.data[i] != cc1))
+			if ((b.data[i] != c00) && (b.data[i] != cc1))
 			{
 				pak = false;
 				break;
@@ -4096,10 +4096,10 @@ void _rjson::read(std::string_view name, _picture& b)
 	end();
 	if (temp.size() == 0) { b.resize({ 0, 0 });	return; }
 	if (temp.size() == 1)
-		if (temp[0].size() == 144) // сжатие кнопок 24x24 (cc1, cc00) в будущем сдалать универсальное сжатие картинок
+		if (temp[0].size() == 144) // сжатие кнопок 24x24 (cc1, c00) в будущем сдалать универсальное сжатие картинок
 		{
 			b.resize({ 24, 24 });
-			b.clear(cc00);
+			b.clear(c00);
 			uchar a[72];
 			if (!string_to_mem(temp[0], a, 72))
 			{

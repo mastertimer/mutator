@@ -5,8 +5,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-std::wstring ini_file = L"theme.json"; // находтся в папке с mutator.exe
-
 std::wstring tetfile = L"..\\..\\data\\tetrons.txt"; // загружается из ini_file
 HCURSOR g_cu = LoadCursor(0, IDC_ARROW); // активный курсор
 
@@ -221,40 +219,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
-void load_theme(std::wstring file_name)
-{
-	bool err = false;
-	{
-		_rjson fs(file_name);
-		fs.read("tetrons", tetfile);
-		i64 cp = 0;
-		fs.read("color_palette", cp);
-		err = fs.error;
-		constexpr int kk = sizeof(color_palette) / sizeof(color_palette[0]);
-		if ((cp < 0) || (cp >= kk)) err = true;
-		if (!err)
-		{
-			cc0 = color_palette[cp][0]; // цвет фона
-			cc1 = color_palette[cp][1]; // цвет 1
-			cc2 = color_palette[cp][2]; // цвет 2
-			cc3 = color_palette[cp][3]; // цвет 3
-			cc4 = color_palette[cp][4]; // цвет 4
-		}
-	}
-	if (err) // если изменился формат, или файла небыло то создается по умолчанию
-	{
-		_wjson fs(file_name);
-		fs.add("tetrons", tetfile);
-		fs.add("color_palette", 0LL);
-	}
-}
-
-void set_tetrons_colors()
-{
-	*n_cc0->operator i64* () = cc0;
-	*n_cc2->operator i64* () = cc2;
-}
-
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 	wchar_t buffer[MAX_PATH];
@@ -262,9 +226,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	std::filesystem::path fn = buffer;
 	fn.remove_filename();
 	exe_path = fn;
-	load_theme(exe_path + ini_file);
 	if (!mutator::start((exe_path + tetfile).c_str())) return 1;
-	set_tetrons_colors();
 
 	static TCHAR szWindowClass[] = L"win64app";
 	WNDCLASSEX wcex;
