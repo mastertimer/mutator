@@ -78,18 +78,6 @@ double only1min(std::function<double(double, double)> fun, _interval a, _interva
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-i64 _multi_interval::find(double a)
-{
-	i64 l = border.size();
-	if (l < 2) return -1; // должно быть минимум 2 границы
-	i64 n = upper_bound(border.begin(), border.end(), a) - border.begin();
-	if (n < l) return n - 1; // для n = 0 -> -1 так и получается
-	if (border.back() != a) return -1;
-	return l - 2;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 void _matrix::operator=(_matrix&& a) noexcept
 {
 	if (data) delete[] data;

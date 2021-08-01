@@ -15,19 +15,6 @@ double only1min(std::function<double(double, double)> fun, _interval a, _interva
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _multi_interval //      примерно ~~      |   | |      |  |    |           ||| |    -> [)[)[)[]
-{
-	std::vector<double> border; // границы
-
-	_multi_interval() = default;
-	_multi_interval(const std::vector<double>& a) : border(a) {}
-
-	i64 count() { if (border.empty()) return 0; return border.size() - 1; } // количество интервалов
-	i64 find(double a); // найти номер интервала, в котором лежит число
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 struct _matrix;
 
 struct matrix_column // столбец матрицы
