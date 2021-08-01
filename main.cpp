@@ -5,33 +5,24 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-std::wstring tetfile = L"..\\..\\data\\tetrons.txt"; // загружается из ini_file
-HCURSOR g_cu = LoadCursor(0, IDC_ARROW); // активный курсор
+std::wstring tetfile = L"..\\..\\data\\tetrons.txt";
+
+const HCURSOR cursors[u64(_cursor::vcursor)] = { LoadCursor(0, IDC_ARROW), LoadCursor(0, IDC_SIZEALL),
+	LoadCursor(0, IDC_HAND), LoadCursor(0, IDC_SIZEWE), LoadCursor(0, IDC_SIZENS), LoadCursor(0, IDC_UPARROW) };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void set_cursorx(_cursor x)
+void set_cursor(_cursor x)
 {
 	if (x == g_cursor) return;
-	HCURSOR cu = 0;
-	if (x == _cursor::normal)     cu = LoadCursor(0, IDC_ARROW);
-	if (x == _cursor::size_all)   cu = LoadCursor(0, IDC_SIZEALL);
-	if (x == _cursor::hand_point) cu = LoadCursor(0, IDC_HAND);
-	if (x == _cursor::size_we)    cu = LoadCursor(0, IDC_SIZEWE);
-	if (x == _cursor::size_ns)    cu = LoadCursor(0, IDC_SIZENS);
-	if (x == _cursor::drag)       cu = LoadCursor(0, IDC_UPARROW);
-	if (cu)
-	{
-		SetCursor(cu);
-		g_cu = cu;
-	}
 	g_cursor = x;
+	SetCursor(cursors[u64(x)]);
 }
 
 void change_window_text(HWND hwnd)
 {
 	static std::wstring s_old;
-	wchar_t             s[100];
+	wchar_t s[100];
 	swprintf(s, 100, L"%d  %4.1e", all_tetron.size, mutator::get_main_scale());
 	if (s_old == s) return;
 	s_old = s;
@@ -68,7 +59,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_SETCURSOR:
 		if (LOWORD(lParam) == HTCLIENT)
 		{
-			SetCursor(g_cu);
+			SetCursor(cursors[u64(g_cursor)]);
 			return true;
 		}
 		break;
@@ -248,7 +239,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	if (!hWnd) return 3;
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
-	set_cursorx((*n_perenos->operator i64 * ()) ? _cursor::size_all : _cursor::normal);
+	set_cursor((*n_perenos->operator i64 * ()) ? _cursor::size_all : _cursor::normal);
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0))
 	{

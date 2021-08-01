@@ -967,7 +967,7 @@ bool _t_go::mouse_move(_trans tr, bool final)
 					_t_go* xx = *n_go_move;
 					if (xx)
 					{
-						if (n_ramk2 == xx) set_cursorx(_cursor::normal); else xx->mouse_finish_move();
+						if (n_ramk2 == xx) set_cursor(_cursor::normal); else xx->mouse_finish_move();
 					}
 				}
 				n_go_move = this;

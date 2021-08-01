@@ -95,7 +95,7 @@ void smena_avt()
 	if (n_act)
 		fun03(0, 0, 0);
 	else
-		set_cursorx((*n_perenos->operator i64 * ()) ? (_cursor::size_all) : ((*n_s_right->operator i64 * ()) ?
+		set_cursor((*n_perenos->operator i64 * ()) ? (_cursor::size_all) : ((*n_s_right->operator i64 * ()) ?
 			_cursor::hand_point : _cursor::normal));
 }
 
@@ -113,7 +113,7 @@ void master_mouse_move(_xy r)
 				{
 					if (n_go_move) n_go_move->operator _t_go* ()->mouse_finish_move();
 					n_go_move = n_ramk2;
-					set_cursorx(_cursor::drag);
+					set_cursor(_cursor::drag);
 				}
 				return;
 			}
@@ -125,7 +125,7 @@ void master_mouse_move(_xy r)
 			_t_go* xx = *n_go_move;
 			if (xx)
 			{
-				if (n_ramk2 == xx) set_cursorx(_cursor::normal); else xx->mouse_finish_move();
+				if (n_ramk2 == xx) set_cursor(_cursor::normal); else xx->mouse_finish_move();
 			}
 			n_go_move = 0ULL;
 		}
@@ -200,7 +200,7 @@ void fun01(_tetron* tt0, _tetron* tt, u64 flags) // нажата правая к
 //		oko->MouseDownLeftRight(oko->mouse_xy_);
 		return;
 	}
-	set_cursorx(_cursor::hand_point);
+	set_cursor(_cursor::hand_point);
 	n_ko->operator _t_basic_go* ()->set_t_trans(n_ramk, 0);
 	n_pot_act = 0ULL;
 	n_move->run(0, n_move, flags);
@@ -329,12 +329,12 @@ void fun03(_tetron* tt0, _tetron* tt, u64 flags)
 		_area pr = { {a.x.max - 5, a.x.max}, {a.y(0.1), a.y(0.9)} };
 		_area ni = { {a.x(0.1), a.x(0.9)}, {a.y.max - 5, a.y.max} };
 		if (pr.test(to))
-			set_cursorx(_cursor::size_we);
+			set_cursor(_cursor::size_we);
 		else
 			if (ni.test(to))
-				set_cursorx(_cursor::size_ns);
+				set_cursor(_cursor::size_ns);
 			else
-				set_cursorx(_cursor::drag);
+				set_cursor(_cursor::drag);
 	}
 	master_mouse_move(to);
 }
@@ -633,7 +633,7 @@ void fun27(_tetron* tt0, _tetron* tt, u64 flags)
 void fun28(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	*n_perenos->operator i64* () = !(*n_perenos->operator i64 * ());
-	set_cursorx((*n_perenos->operator i64 * ()) ? (_cursor::size_all) : ((*n_s_right->operator i64 * ()) ?
+	set_cursor((*n_perenos->operator i64 * ()) ? (_cursor::size_all) : ((*n_s_right->operator i64 * ()) ?
 		_cursor::hand_point : _cursor::normal));
 
 	if ((!*n_perenos->operator i64 * ()) && (n_act))
