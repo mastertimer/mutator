@@ -1,4 +1,4 @@
-#include "stock.h"
+п»ї#include "stock.h"
 #include "mediator.h"
 #include "t_function.h"
 
@@ -6,7 +6,7 @@
 
 namespace
 {
-	_stack clipboard; // буфер обмена
+	_stack clipboard; // Р±СѓС„РµСЂ РѕР±РјРµРЅР°
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -75,7 +75,7 @@ void smena_avt()
 			}
 	}
 	else
-	{ //!!! продублировано из шубы
+	{ //!!! РїСЂРѕРґСѓР±Р»РёСЂРѕРІР°РЅРѕ РёР· С€СѓР±С‹
 		_g_rect* rr = *n_ramk2;
 		uint c1 = 0, c2 = 0;
 		if (rr != nullptr)
@@ -149,7 +149,7 @@ void init_shuba()
 	}
 	_g_tetron* a = new _g_tetron;
 	a->add_flags(n_pot_act, flag_specialty);
-	a->local_area.x.min -= 27; //чтоб на заморачиваться с транформацией
+	a->local_area.x.min -= 27; //С‡С‚РѕР± РЅР° Р·Р°РјРѕСЂР°С‡РёРІР°С‚СЊСЃСЏ СЃ С‚СЂР°РЅС„РѕСЂРјР°С†РёРµР№
 	a->local_area.x.max -= 27;
 	n_ramk->add_flags(a, flag_part + flag_sub_go);
 }
@@ -192,11 +192,11 @@ void find_ris_pot_act()
 		n_ko->operator _t_basic_go* ()->set_t_trans(n_ramk, 0);
 }
 
-void fun01(_tetron* tt0, _tetron* tt, u64 flags) // нажата правая кнопка мышки
+void fun01(_tetron* tt0, _tetron* tt, u64 flags) // РЅР°Р¶Р°С‚Р° РїСЂР°РІР°СЏ РєРЅРѕРїРєР° РјС‹С€РєРё
 {
 	if (*n_perenos->operator i64 * ()) return;
 	if (*n_s_left->operator i64 * ())
-	{ // правая при зажатой левой
+	{ // РїСЂР°РІР°СЏ РїСЂРё Р·Р°Р¶Р°С‚РѕР№ Р»РµРІРѕР№
 //		oko->MouseDownLeftRight(oko->mouse_xy_);
 		return;
 	}
@@ -229,7 +229,7 @@ void fun03(_tetron* tt0, _tetron* tt, u64 flags)
 	{
 		if (!*n_s_left->operator i64 * ())
 		{
-			n_up_left->run(0, n_up_left, flag_run); // или fun06()??
+			n_up_left->run(0, n_up_left, flag_run); // РёР»Рё fun06()??
 			return;
 		}
 		n_tani->operator _t_go* ()->mouse_move_left2(master_trans_go.inverse(to));
@@ -248,10 +248,10 @@ void fun03(_tetron* tt0, _tetron* tt, u64 flags)
 			mouse_xy_pr = mouse_xy;
 			n_move_all->run(0, n_move_all, flag_run);
 		}
-		return; // закомментировать - колесо будет работать, но курсор будет сбрасываться при выделении
+		return; // Р·Р°РєРѕРјРјРµРЅС‚РёСЂРѕРІР°С‚СЊ - РєРѕР»РµСЃРѕ Р±СѓРґРµС‚ СЂР°Р±РѕС‚Р°С‚СЊ, РЅРѕ РєСѓСЂСЃРѕСЂ Р±СѓРґРµС‚ СЃР±СЂР°СЃС‹РІР°С‚СЊСЃСЏ РїСЂРё РІС‹РґРµР»РµРЅРёРё
 	}
 	if (*n_s_right->operator i64 * ())
-	{ // зажато правая - выделение
+	{ // Р·Р°Р¶Р°С‚Рѕ РїСЂР°РІР°СЏ - РІС‹РґРµР»РµРЅРёРµ
 		find_ris_pot_act();
 		return;
 	}
@@ -266,7 +266,7 @@ void fun03(_tetron* tt0, _tetron* tt, u64 flags)
 			{
 				_t_basic_go* raa = *n_act;
 				_t_trans* rat2 = (raa) ? raa->ttrans() : nullptr;
-				if (rat2) // пока запрещено, потом возможно надо менять local_area??
+				if (rat2) // РїРѕРєР° Р·Р°РїСЂРµС‰РµРЅРѕ, РїРѕС‚РѕРј РІРѕР·РјРѕР¶РЅРѕ РЅР°РґРѕ РјРµРЅСЏС‚СЊ local_area??
 				{
 					_trans t2 = ra->oko_trans() / rat->trans;
 					rat->trans.offset.x += (mouse_xy.x - mouse_xy_pr.x) / t2.scale;
@@ -294,7 +294,7 @@ void fun03(_tetron* tt0, _tetron* tt, u64 flags)
 					t2 = ra->oko_trans();
 					double q = ra->local_area.x.max;
 					ra->local_area.x.max += (mouse_xy.x - mouse_xy_pr.x) / t2.scale;
-					if (ra->local_area.x.max <= ra->local_area.x.min) ra->local_area.x.max = q; // или выделять нулевую ширину
+					if (ra->local_area.x.max <= ra->local_area.x.min) ra->local_area.x.max = q; // РёР»Рё РІС‹РґРµР»СЏС‚СЊ РЅСѓР»РµРІСѓСЋ С€РёСЂРёРЅСѓ
 					ra->area_definite = false;
 					ra->add_area();
 					ra->resize();
@@ -315,7 +315,7 @@ void fun03(_tetron* tt0, _tetron* tt, u64 flags)
 					t2 = ra->oko_trans();
 					double q = ra->local_area.y.max;
 					ra->local_area.y.max += (mouse_xy.y - mouse_xy_pr.y) / t2.scale;
-					if (ra->local_area.y.max <= ra->local_area.y.min) ra->local_area.y.max = q; // или выделять нулевую ширину
+					if (ra->local_area.y.max <= ra->local_area.y.min) ra->local_area.y.max = q; // РёР»Рё РІС‹РґРµР»СЏС‚СЊ РЅСѓР»РµРІСѓСЋ С€РёСЂРёРЅСѓ
 					ra->area_definite = false;
 					ra->add_area();
 					ra->resize();
@@ -396,7 +396,7 @@ void fun06(_tetron* tt0, _tetron* tt, u64 flags)
 	n_tani = 0ULL;
 }
 
-void fun07(_tetron* tt0, _tetron* tt, u64 flags) // отжата правая кнопка мышки
+void fun07(_tetron* tt0, _tetron* tt, u64 flags) // РѕС‚Р¶Р°С‚Р° РїСЂР°РІР°СЏ РєРЅРѕРїРєР° РјС‹С€РєРё
 {
 	if (*n_perenos->operator i64 * ()) return;
 	if (n_go_move == n_ramk2) n_go_move = 0ULL;
@@ -431,7 +431,7 @@ void fun10(_tetron* tt0, _tetron* tt, u64 flags)
 	_t_int* a = tt->find1<_t_int>(flag_information2);
 	if (a)
 		for (_frozen i(tt, flag_information); i; i++) tt0->del_flags(i, a->a);
-	tt->_tetron::run(0, tt, flags); // продолжить выполнение
+	tt->_tetron::run(0, tt, flags); // РїСЂРѕРґРѕР»Р¶РёС‚СЊ РІС‹РїРѕР»РЅРµРЅРёРµ
 }
 
 void fun11(_tetron* tt0, _tetron* tt, u64 flags)
@@ -439,7 +439,7 @@ void fun11(_tetron* tt0, _tetron* tt, u64 flags)
 	_t_int* a = tt->find1<_t_int>(flag_information2);
 	if (a)
 		for (_frozen i(tt, flag_information); i; i++) tt0->add_flags(i, a->a);
-	tt->_tetron::run(0, tt, flags); // продолжить выполнение
+	tt->_tetron::run(0, tt, flags); // РїСЂРѕРґРѕР»Р¶РёС‚СЊ РІС‹РїРѕР»РЅРµРЅРёРµ
 }
 
 void fun12(_tetron* tt0, _tetron* tt, u64 flags)
@@ -511,7 +511,7 @@ void fun17(_tetron* tt0, _tetron* tt, u64 flags)
 void fun18(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	if (!tt0) return;
-	_g_tetron* g = *tt0; // можно только оттуда вызывать 
+	_g_tetron* g = *tt0; // РјРѕР¶РЅРѕ С‚РѕР»СЊРєРѕ РѕС‚С‚СѓРґР° РІС‹Р·С‹РІР°С‚СЊ 
 	if (!g) return;
 	_t_trans* aa = g->find1<_t_trans>((flag_sub_go + flag_part) << 32);
 	if (!aa) return;
@@ -534,7 +534,7 @@ void fun18(_tetron* tt0, _tetron* tt, u64 flags)
 	}
 	else
 		if (det)
-		{ // !! опасно если объект зациклен
+		{ // !! РѕРїР°СЃРЅРѕ РµСЃР»Рё РѕР±СЉРµРєС‚ Р·Р°С†РёРєР»РµРЅ
 			det->clear_go_rod();
 			delete_hvost(det, true);
 		}
@@ -625,7 +625,7 @@ void fun27(_tetron* tt0, _tetron* tt, u64 flags)
 	_t_trans* kor = *n_ko;
 	kor->cha_area(kor->calc_area());
 	kor->trans.MasToch(tr, 1 / kor->trans.scale);
-	kor->trans.scale = 1; // точно единица
+	kor->trans.scale = 1; // С‚РѕС‡РЅРѕ РµРґРёРЅРёС†Р°
 	kor->cha_area(kor->calc_area());
 	n_move_all->run(0, n_move_all, flag_run);
 }
@@ -663,18 +663,23 @@ void fun32(_tetron* tt0, _tetron* tt, u64 flags)
 {
 }
 
+void show_message(std::string_view s, double b)
+{
+	MessageBoxA(0, ((std::string)s + " = " + std::to_string(b)).c_str(), "РёРЅС„РѕСЂРјР°С†РёСЏ", MB_OK | MB_TASKMODAL);
+}
+
 void test2()
 {
-	double p[256] = { 1 }; // частоты (ненормированные)
+	double p[256] = { 1 }; // С‡Р°СЃС‚РѕС‚С‹ (РЅРµРЅРѕСЂРјРёСЂРѕРІР°РЅРЅС‹Рµ)
 	for (i64 i = 1; i < 21; i++) p[i] = 0.0064;
 
-	constexpr i64 n = 1000000; // длина последовательности
+	constexpr i64 n = 1000000; // РґР»РёРЅР° РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё
 
 	double s = 0;
 	for (auto i : p) s += i;
 	for (auto& i : p) i /= s;
 
-	i64 c[256]; // количество символов
+	i64 c[256]; // РєРѕР»РёС‡РµСЃС‚РІРѕ СЃРёРјРІРѕР»РѕРІ
 	i64 ss = 0;
 	for (i64 i = 255; i > 0; i--)
 	{
@@ -683,7 +688,7 @@ void test2()
 	}
 	c[0] = n - ss;
 
-	double e0 = 0; // идеальный размер
+	double e0 = 0; // РёРґРµР°Р»СЊРЅС‹Р№ СЂР°Р·РјРµСЂ
 	for (auto i : c)
 		if (i > 0)
 			e0 += i * log(((double)i) / n);
@@ -695,11 +700,11 @@ void test2()
 	std::vector<uchar> a;
 
 	i64 nn = n;
-	while (nn) // пока не исчерпаны цифры
+	while (nn) // РїРѕРєР° РЅРµ РёСЃС‡РµСЂРїР°РЅС‹ С†РёС„СЂС‹
 	{
 		i64 ii = rnd(nn);
 		i64 q = 0;
-		for (i64 i = 0; i < 256; i++) // i - сработавший символ
+		for (i64 i = 0; i < 256; i++) // i - СЃСЂР°Р±РѕС‚Р°РІС€РёР№ СЃРёРјРІРѕР»
 		{
 			q += c[i];
 			if (ii >= q) continue;
@@ -716,9 +721,9 @@ void test2()
 		for (auto& i : pp) i = k;
 		double summ_pp = k * 256;
 
-		double e = 0; // реальный размер
+		double e = 0; // СЂРµР°Р»СЊРЅС‹Р№ СЂР°Р·РјРµСЂ
 
-		for (auto i : a) // сгенерированная заранее последовательность
+		for (auto i : a) // СЃРіРµРЅРµСЂРёСЂРѕРІР°РЅРЅР°СЏ Р·Р°СЂР°РЅРµРµ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ
 		{
 			e += log(pp[i] / summ_pp);
 			pp[i]++;
@@ -728,7 +733,7 @@ void test2()
 		return (e - e0) / 8;
 	};
 
-	// подбор идельного k
+	// РїРѕРґР±РѕСЂ РёРґРµР»СЊРЅРѕРіРѕ k
 	double dk = 2;
 	double k = 1;
 	double e = calc_de(k);
@@ -752,7 +757,7 @@ void test2()
 		}
 		break;
 	}
-	// еще разочек
+	// РµС‰Рµ СЂР°Р·РѕС‡РµРє
 	dk = 1.02;
 	for (;;)
 	{
@@ -929,9 +934,9 @@ void fun52(_tetron* tt0, _tetron* tt, u64 flags)
 }
 
 void fun53(_tetron* tt0, _tetron* tt, u64 flags)
-{ // !! флаги читать из параметра
+{ // !! С„Р»Р°РіРё С‡РёС‚Р°С‚СЊ РёР· РїР°СЂР°РјРµС‚СЂР°
 	for (_frozen i(tt, flag_information); i; i++) i->add_unique_flags(tt0, flag_specialty);
-	tt->_tetron::run(0, tt, flags); // продолжить выполнение
+	tt->_tetron::run(0, tt, flags); // РїСЂРѕРґРѕР»Р¶РёС‚СЊ РІС‹РїРѕР»РЅРµРЅРёРµ
 }
 
 void fun54(_tetron* tt0, _tetron* tt, u64 flags)
@@ -943,7 +948,7 @@ void fun54(_tetron* tt0, _tetron* tt, u64 flags)
 		if (*master_chosen[i])
 			(*master_chosen[i])->traversal(ht, 0);
 	int v = 0;
-	_tetron* b = nullptr; // пример функции
+	_tetron* b = nullptr; // РїСЂРёРјРµСЂ С„СѓРЅРєС†РёРё
 	for (auto& i : *ht)
 	{
 		_tetron* a = i.tetron;
@@ -952,7 +957,7 @@ void fun54(_tetron* tt0, _tetron* tt, u64 flags)
 		v++;
 		b = a;
 	}
-	MessageBox(0, (L"найдено функций: " + std::to_wstring(v)).c_str(), L"упс", MB_OK | MB_TASKMODAL);
+	MessageBox(0, (L"РЅР°Р№РґРµРЅРѕ С„СѓРЅРєС†РёР№: " + std::to_wstring(v)).c_str(), L"СѓРїСЃ", MB_OK | MB_TASKMODAL);
 	if (b)
 	{
 		n_act = b;
@@ -980,7 +985,7 @@ void fun56(_tetron* tt0, _tetron* tt, u64 flags)
 	_stack mem;
 	mem.load_from_file(L"tetron.act");
 	a->pop(&mem);
-	a->run(0, a, flag_run); // чтоб восстановился
+	a->run(0, a, flag_run); // С‡С‚РѕР± РІРѕСЃСЃС‚Р°РЅРѕРІРёР»СЃСЏ
 }
 
 void fun57(_tetron* tt0, _tetron* tt, u64 flags)
@@ -990,7 +995,7 @@ void fun57(_tetron* tt0, _tetron* tt, u64 flags)
 	if ((g1 == nullptr) || (g2 == nullptr)) return;
 	_tetron* t2 = g2->find1<_tetron>(flag_specialty);
 	g1->add_unique_flags(t2, flag_specialty);
-	tt->_tetron::run(0, tt, flags); // продолжить выполнение
+	tt->_tetron::run(0, tt, flags); // РїСЂРѕРґРѕР»Р¶РёС‚СЊ РІС‹РїРѕР»РЅРµРЅРёРµ
 }
 
 void fun58(_tetron* tt0, _tetron* tt, u64 flags)
@@ -1025,7 +1030,7 @@ void fun60(_tetron* tt0, _tetron* tt, u64 flags)
 	if (g == nullptr) return;
 	_tetron* a = g->find1<_tetron>(flag_specialty);
 	if (a == nullptr) return;
-	if (_t_basic_go* g_ = *a) g_->clear_go_rod(); // всегда ли?
+	if (_t_basic_go* g_ = *a) g_->clear_go_rod(); // РІСЃРµРіРґР° Р»Рё?
 	delete_hvost(a, true);
 	g->run(0, g, flag_run);
 }
@@ -1113,70 +1118,70 @@ void _t_function::run(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	switch (a)
 	{
-	case  1: fun01(tt0, tt, flags); return; // нажата правая кнопка мышки
-	case  2: fun02(tt0, tt, flags); return; // нажато колесо мышки
-	case  3: fun03(tt0, tt, flags); return; // перемещение указателя мышки
-	case  4: fun04(tt0, tt, flags); return; // поворот колеса мышки
-	case  5: fun05(tt0, tt, flags); return; // нажата левая кнопка мышки
-	case  6: fun06(tt0, tt, flags); return; // отжата левая кнопка мышки
-	case  7: fun07(tt0, tt, flags); return; // отжата правая кнопка мышки
-	case  8: fun08(tt0, tt, flags); return; // нажата кнопка клавиатуры
-	case  9: fun09(tt0, tt, flags); return; // введен символ с клавиатуры
-	case 10: fun10(tt0, tt, flags); return; // ! к вызывающему удалить флаги(inf2) к тетронам(inf1)
-	case 11: fun11(tt0, tt, flags); return; // ! к вызывающему добавить флаги(inf2) к тетронам(inf1)
-	case 12: fun12(tt0, tt, flags); return; // отжато колесо мышки
-	case 13: fun13(tt0, tt, flags); return; // загрузка цен
-	case 14: fun14(tt0, tt, flags); return; // создать графический объект
-	case 15: fun15(tt0, tt, flags); return; // переключение режима сканирования цен
-	case 16: fun16(tt0, tt, flags); return; // сканирование цен
-	case 17: fun17(tt0, tt, flags); return; // перетаскивание гвоздя активного объекта
-	case 18: fun18(tt0, tt, flags); return; // НОВОЕ изменение активного тетрона
-	case 19: fun19(tt0, tt, flags); return; // режим торговли
-	case 20: fun20(tt0, tt, flags); return; // кнопка купить акции
-	case 21: fun21(tt0, tt, flags); return; // кнопка продать акции
+	case  1: fun01(tt0, tt, flags); return; // РЅР°Р¶Р°С‚Р° РїСЂР°РІР°СЏ РєРЅРѕРїРєР° РјС‹С€РєРё
+	case  2: fun02(tt0, tt, flags); return; // РЅР°Р¶Р°С‚Рѕ РєРѕР»РµСЃРѕ РјС‹С€РєРё
+	case  3: fun03(tt0, tt, flags); return; // РїРµСЂРµРјРµС‰РµРЅРёРµ СѓРєР°Р·Р°С‚РµР»СЏ РјС‹С€РєРё
+	case  4: fun04(tt0, tt, flags); return; // РїРѕРІРѕСЂРѕС‚ РєРѕР»РµСЃР° РјС‹С€РєРё
+	case  5: fun05(tt0, tt, flags); return; // РЅР°Р¶Р°С‚Р° Р»РµРІР°СЏ РєРЅРѕРїРєР° РјС‹С€РєРё
+	case  6: fun06(tt0, tt, flags); return; // РѕС‚Р¶Р°С‚Р° Р»РµРІР°СЏ РєРЅРѕРїРєР° РјС‹С€РєРё
+	case  7: fun07(tt0, tt, flags); return; // РѕС‚Р¶Р°С‚Р° РїСЂР°РІР°СЏ РєРЅРѕРїРєР° РјС‹С€РєРё
+	case  8: fun08(tt0, tt, flags); return; // РЅР°Р¶Р°С‚Р° РєРЅРѕРїРєР° РєР»Р°РІРёР°С‚СѓСЂС‹
+	case  9: fun09(tt0, tt, flags); return; // РІРІРµРґРµРЅ СЃРёРјРІРѕР» СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
+	case 10: fun10(tt0, tt, flags); return; // ! Рє РІС‹Р·С‹РІР°СЋС‰РµРјСѓ СѓРґР°Р»РёС‚СЊ С„Р»Р°РіРё(inf2) Рє С‚РµС‚СЂРѕРЅР°Рј(inf1)
+	case 11: fun11(tt0, tt, flags); return; // ! Рє РІС‹Р·С‹РІР°СЋС‰РµРјСѓ РґРѕР±Р°РІРёС‚СЊ С„Р»Р°РіРё(inf2) Рє С‚РµС‚СЂРѕРЅР°Рј(inf1)
+	case 12: fun12(tt0, tt, flags); return; // РѕС‚Р¶Р°С‚Рѕ РєРѕР»РµСЃРѕ РјС‹С€РєРё
+	case 13: fun13(tt0, tt, flags); return; // Р·Р°РіСЂСѓР·РєР° С†РµРЅ
+	case 14: fun14(tt0, tt, flags); return; // СЃРѕР·РґР°С‚СЊ РіСЂР°С„РёС‡РµСЃРєРёР№ РѕР±СЉРµРєС‚
+	case 15: fun15(tt0, tt, flags); return; // РїРµСЂРµРєР»СЋС‡РµРЅРёРµ СЂРµР¶РёРјР° СЃРєР°РЅРёСЂРѕРІР°РЅРёСЏ С†РµРЅ
+	case 16: fun16(tt0, tt, flags); return; // СЃРєР°РЅРёСЂРѕРІР°РЅРёРµ С†РµРЅ
+	case 17: fun17(tt0, tt, flags); return; // РїРµСЂРµС‚Р°СЃРєРёРІР°РЅРёРµ РіРІРѕР·РґСЏ Р°РєС‚РёРІРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
+	case 18: fun18(tt0, tt, flags); return; // РќРћР’РћР• РёР·РјРµРЅРµРЅРёРµ Р°РєС‚РёРІРЅРѕРіРѕ С‚РµС‚СЂРѕРЅР°
+	case 19: fun19(tt0, tt, flags); return; // СЂРµР¶РёРј С‚РѕСЂРіРѕРІР»Рё
+	case 20: fun20(tt0, tt, flags); return; // РєРЅРѕРїРєР° РєСѓРїРёС‚СЊ Р°РєС†РёРё
+	case 21: fun21(tt0, tt, flags); return; // РєРЅРѕРїРєР° РїСЂРѕРґР°С‚СЊ Р°РєС†РёРё
 	case 22: fun22(tt0, tt, flags); return; // size_el++
-	case 23: fun23(tt0, tt, flags); return; // открыть картинку
-	case 24: fun24(tt0, tt, flags); return; // центрирование графического объекта постоянно висячим
-	case 25: fun25(tt0, tt, flags); return; // задать размер GPicture
-	case 26: fun26(tt0, tt, flags); return; // отпускание гвоздя активного объекта
-	case 27: fun27(tt0, tt, flags); return; // глобальный масштаб = 1
-	case 28: fun28(tt0, tt, flags); return; // смена режима переноса
-	case 29: fun29(tt0, tt, flags); return; // смена режима отображения времени
+	case 23: fun23(tt0, tt, flags); return; // РѕС‚РєСЂС‹С‚СЊ РєР°СЂС‚РёРЅРєСѓ
+	case 24: fun24(tt0, tt, flags); return; // С†РµРЅС‚СЂРёСЂРѕРІР°РЅРёРµ РіСЂР°С„РёС‡РµСЃРєРѕРіРѕ РѕР±СЉРµРєС‚Р° РїРѕСЃС‚РѕСЏРЅРЅРѕ РІРёСЃСЏС‡РёРј
+	case 25: fun25(tt0, tt, flags); return; // Р·Р°РґР°С‚СЊ СЂР°Р·РјРµСЂ GPicture
+	case 26: fun26(tt0, tt, flags); return; // РѕС‚РїСѓСЃРєР°РЅРёРµ РіРІРѕР·РґСЏ Р°РєС‚РёРІРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
+	case 27: fun27(tt0, tt, flags); return; // РіР»РѕР±Р°Р»СЊРЅС‹Р№ РјР°СЃС€С‚Р°Р± = 1
+	case 28: fun28(tt0, tt, flags); return; // СЃРјРµРЅР° СЂРµР¶РёРјР° РїРµСЂРµРЅРѕСЃР°
+	case 29: fun29(tt0, tt, flags); return; // СЃРјРµРЅР° СЂРµР¶РёРјР° РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РІСЂРµРјРµРЅРё
 	case 30: fun30(tt0, tt, flags); return; // size_el--
-	case 31: fun31(tt0, tt, flags); return; // сохраниние цен
+	case 31: fun31(tt0, tt, flags); return; // СЃРѕС…СЂР°РЅРёРЅРёРµ С†РµРЅ
 	case 32: fun32(tt0, tt, flags); return;
-	case 33: fun33(tt0, tt, flags); return; // РАЗНОЕ
+	case 33: fun33(tt0, tt, flags); return; // Р РђР—РќРћР•
 	case 34: fun34(tt0, tt, flags); return;
-	case 35: fun35(tt0, tt, flags); return; // купить акции
-	case 36: fun36(tt0, tt, flags); return; // продать акции
-	case 37: fun37(tt0, tt, flags); return; // ! создать тетрон
-	case 38: fun38(tt0, tt, flags); return; // ! присвоить внутренние значения
-	case 39: fun39(tt0, tt, flags); return; // задать масштаб графического объекта
-	case 40: fun40(tt0, tt, flags); return; // ! выполнить от лица параметров
-	case 41: fun41(tt0, tt, flags); return; // ! выполнить tt0
+	case 35: fun35(tt0, tt, flags); return; // РєСѓРїРёС‚СЊ Р°РєС†РёРё
+	case 36: fun36(tt0, tt, flags); return; // РїСЂРѕРґР°С‚СЊ Р°РєС†РёРё
+	case 37: fun37(tt0, tt, flags); return; // ! СЃРѕР·РґР°С‚СЊ С‚РµС‚СЂРѕРЅ
+	case 38: fun38(tt0, tt, flags); return; // ! РїСЂРёСЃРІРѕРёС‚СЊ РІРЅСѓС‚СЂРµРЅРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ
+	case 39: fun39(tt0, tt, flags); return; // Р·Р°РґР°С‚СЊ РјР°СЃС€С‚Р°Р± РіСЂР°С„РёС‡РµСЃРєРѕРіРѕ РѕР±СЉРµРєС‚Р°
+	case 40: fun40(tt0, tt, flags); return; // ! РІС‹РїРѕР»РЅРёС‚СЊ РѕС‚ Р»РёС†Р° РїР°СЂР°РјРµС‚СЂРѕРІ
+	case 41: fun41(tt0, tt, flags); return; // ! РІС‹РїРѕР»РЅРёС‚СЊ tt0
 	case 42: fun42(tt0, tt, flags); return;
 	case 43: fun43(tt0, tt, flags); return;
 	case 44: fun44(tt0, tt, flags); return;
 	case 45: fun45(tt0, tt, flags); return;
 	case 46: fun46(tt0, tt, flags); return;
-	case 47: fun47(tt0, tt, flags); return; // залить картинку цветом
-	case 48: fun48(tt0, tt, flags); return; // рисование на картинке
+	case 47: fun47(tt0, tt, flags); return; // Р·Р°Р»РёС‚СЊ РєР°СЂС‚РёРЅРєСѓ С†РІРµС‚РѕРј
+	case 48: fun48(tt0, tt, flags); return; // СЂРёСЃРѕРІР°РЅРёРµ РЅР° РєР°СЂС‚РёРЅРєРµ
 	case 49: fun49(tt0, tt, flags); return;
-	case 50: fun50(tt0, tt, flags); return; // занести картинку в буффер обмена
+	case 50: fun50(tt0, tt, flags); return; // Р·Р°РЅРµСЃС‚Рё РєР°СЂС‚РёРЅРєСѓ РІ Р±СѓС„С„РµСЂ РѕР±РјРµРЅР°
 	case 51: fun51(tt0, tt, flags); return;
-	case 52: fun52(tt0, tt, flags); return; // извлечь данные из буфера обмена в активный тетрон
-	case 53: fun53(tt0, tt, flags); return; // ! создать уникальную связь - к параметром добавить вызывающего
-	case 54: fun54(tt0, tt, flags); return; // поиск функций
-	case 55: fun55(tt0, tt, flags); return; // сохранить активный тетрон в файл
-	case 56: fun56(tt0, tt, flags); return; // загрузить активный тетрон из файла
-	case 57: fun57(tt0, tt, flags); return; // копировать ссылку из GTetron в GTetron
-	case 58: fun58(tt0, tt, flags); return; // создать связь
-	case 59: fun59(tt0, tt, flags); return; // удалить активный тетрон
-	case 60: fun60(tt0, tt, flags); return; // удалить активный тетрон с хвостами
-	case 61: fun61(tt0, tt, flags); return; // выполнить активный тетрон
-	case 62: fun62(tt0, tt, flags); return; // копировать активный графический тетрон с хвостами
-	case 63: fun63(tt0, tt, flags); return; // удалить связь
-	case 64: fun64(tt0, tt, flags); return; // изменить связь
-	case 65: fun65(tt0, tt, flags); return; // создать тетрон
+	case 52: fun52(tt0, tt, flags); return; // РёР·РІР»РµС‡СЊ РґР°РЅРЅС‹Рµ РёР· Р±СѓС„РµСЂР° РѕР±РјРµРЅР° РІ Р°РєС‚РёРІРЅС‹Р№ С‚РµС‚СЂРѕРЅ
+	case 53: fun53(tt0, tt, flags); return; // ! СЃРѕР·РґР°С‚СЊ СѓРЅРёРєР°Р»СЊРЅСѓСЋ СЃРІСЏР·СЊ - Рє РїР°СЂР°РјРµС‚СЂРѕРј РґРѕР±Р°РІРёС‚СЊ РІС‹Р·С‹РІР°СЋС‰РµРіРѕ
+	case 54: fun54(tt0, tt, flags); return; // РїРѕРёСЃРє С„СѓРЅРєС†РёР№
+	case 55: fun55(tt0, tt, flags); return; // СЃРѕС…СЂР°РЅРёС‚СЊ Р°РєС‚РёРІРЅС‹Р№ С‚РµС‚СЂРѕРЅ РІ С„Р°Р№Р»
+	case 56: fun56(tt0, tt, flags); return; // Р·Р°РіСЂСѓР·РёС‚СЊ Р°РєС‚РёРІРЅС‹Р№ С‚РµС‚СЂРѕРЅ РёР· С„Р°Р№Р»Р°
+	case 57: fun57(tt0, tt, flags); return; // РєРѕРїРёСЂРѕРІР°С‚СЊ СЃСЃС‹Р»РєСѓ РёР· GTetron РІ GTetron
+	case 58: fun58(tt0, tt, flags); return; // СЃРѕР·РґР°С‚СЊ СЃРІСЏР·СЊ
+	case 59: fun59(tt0, tt, flags); return; // СѓРґР°Р»РёС‚СЊ Р°РєС‚РёРІРЅС‹Р№ С‚РµС‚СЂРѕРЅ
+	case 60: fun60(tt0, tt, flags); return; // СѓРґР°Р»РёС‚СЊ Р°РєС‚РёРІРЅС‹Р№ С‚РµС‚СЂРѕРЅ СЃ С…РІРѕСЃС‚Р°РјРё
+	case 61: fun61(tt0, tt, flags); return; // РІС‹РїРѕР»РЅРёС‚СЊ Р°РєС‚РёРІРЅС‹Р№ С‚РµС‚СЂРѕРЅ
+	case 62: fun62(tt0, tt, flags); return; // РєРѕРїРёСЂРѕРІР°С‚СЊ Р°РєС‚РёРІРЅС‹Р№ РіСЂР°С„РёС‡РµСЃРєРёР№ С‚РµС‚СЂРѕРЅ СЃ С…РІРѕСЃС‚Р°РјРё
+	case 63: fun63(tt0, tt, flags); return; // СѓРґР°Р»РёС‚СЊ СЃРІСЏР·СЊ
+	case 64: fun64(tt0, tt, flags); return; // РёР·РјРµРЅРёС‚СЊ СЃРІСЏР·СЊ
+	case 65: fun65(tt0, tt, flags); return; // СЃРѕР·РґР°С‚СЊ С‚РµС‚СЂРѕРЅ
 	}
 }

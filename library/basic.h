@@ -81,15 +81,6 @@ std::wstring substr(std::wstring_view s, i64 n, i64 k); // подстрока к
 std::wstring double_to_wstring(double a, int z);
 std::string  double_to_string(double a, int z);
 
-void show_message(std::string_view s, i64 b);
-void show_message(std::string_view s, double b);
-void show_message(std::string_view s);
-void show_message(std::wstring_view s);
-void show_message(i64 s);
-void show_message(u64 s);
-void show_message(i64 a, i64 b);
-void show_message(double s);
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _rnd
