@@ -90,7 +90,7 @@ _recognize::_recognize()
 			if ((size.x > bm_[nf].size.x) || (size.y > bm_[nf].size.y))
 				bm_[nf].resize({ std::max(size.x, bm_[nf].size.x), std::max(size.y, bm_[nf].size.y) });
 			bm_[nf].clear(0);
-			bm_[nf].text(0, 0, ss_.data(), 8, 0xffffff, 0);
+			bm_[nf].text({ 0LL, 0LL }, ss_.data(), 8, 0xffffff, 0);
 			ZeroMemory(aa, sizeof(ushort) * size.x);
 			for (i64 j = size.y - 1; j >= 0; j--)
 			{

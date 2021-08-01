@@ -569,7 +569,8 @@ struct _isize // [0...x), [0...y)
 	bool   empty()   const noexcept { return ((x <= 0) || (y <= 0)); }
 	i64    square()  const noexcept { return ((x <= 0) || (y <= 0)) ? 0 : (x * y); }
 	_xy    center()  const noexcept { return { x * 0.5, y * 0.5 }; }
-	_isize correct() const noexcept { if ((x <= 0) || (y <= 0)) return { 0, 0 }; return { x, y }; } // для удобства
+	_isize correct() const noexcept { if ((x <= 0) || (y <= 0)) return { 0, 0 }; return { x, y }; }
+	inline _iarea move(_ixy d) const noexcept;
 
 	bool operator==(_isize s) const noexcept { return (x == s.x) && (y == s.y); }
 	bool operator!=(_isize s) const noexcept { return (x != s.x) || (y != s.y); }
@@ -644,8 +645,6 @@ struct _iarea
 
 	_iarea move(_ixy d) const noexcept { return { {x.min + d.x, x.max + d.x}, {y.min + d.y, y.max + d.y} }; }
 };
-
-inline _iarea move(_isize b, _ixy d) { return { {d.x, b.x + d.x}, {d.y, b.y + d.y} }; }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -774,7 +773,7 @@ struct _picture
 
 	void line(_ixy p1, _ixy p2, uint c, bool rep = false); // линия rep - полное замещение цвета
 	void lines(_xy p1, _xy p2, double l, uint c); // точная линия заданной толщины
-	void text16(i64 x, i64 y, std::string_view st, uint c); // простой текст высотой 16
+	void text16(_ixy p, std::string_view st, uint c); // простой текст высотой 16
 	void text16n(i64 x, i64 y, astr s, i64 n, uint c); // простой текст высотой 16*n
 	static _isize size_text16(std::string_view s, i64 n = 1); // размер текста *n
 	void froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2 = 0);
@@ -827,8 +826,8 @@ struct _bitmap : public _picture
 
 	bool resize(_isize wh);
 
-	void text(int x, int y, std::wstring_view s, int h, uint c, uint bg);
-	void text(int x, int y, std::string_view s, int h, uint c, uint bg);
+	void text(_ixy p, std::wstring_view s, int h, uint c, uint bg);
+	void text(_ixy p, std::string_view s, int h, uint c, uint bg);
 	_isize size_text(std::wstring_view s, int h);
 	_isize size_text(std::string_view s, int h);
 
@@ -944,5 +943,12 @@ private:
 
 	astr read_just_string();
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+_iarea _isize::move(_ixy d) const noexcept
+{
+	return { {d.x, d.x + x}, {d.y, d.y + y} };
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -893,7 +893,7 @@ void _t_go::ris(_trans tr, bool final)
 		if (oo.x.min < 0) oo.x.min = 0;
 		if (oo.y.min < 0) oo.y.min = 0;
 		std::wstring s = double_to_wstring(t.count() / 1000000.0, 2);
-		master_bm.text((int)(oo.x.min + 1), (int)oo.y.min, s.c_str(), 13, cc2, 0x00000000);
+		master_bm.text({ (i64)(oo.x.min + 1), (i64)oo.y.min }, s.c_str(), 13, cc2, 0x00000000);
 	}
 }
 
@@ -1865,7 +1865,7 @@ void _g_terminal::ris2(_trans tr, bool final)
 	if (_area(area_cursor) == master_obl_izm) // перерисовать только курсор
 	{
 		if (area_cursor.empty()) goto finish; // перестраховка
-		master_bm.text(area_cursor.x.min, area_cursor.y.min, cmd.substr(cursor, 1), font_size, cc2, cc0);
+		master_bm.text({ area_cursor.x.min, area_cursor.y.min }, cmd.substr(cursor, 1), font_size, cc2, cc0);
 		if (visible_cursor) master_bm.fill_rectangle(area_cursor, cc3 - 0xC0000000);
 		goto finish;
 	}
@@ -1896,7 +1896,7 @@ void _g_terminal::ris2(_trans tr, bool final)
 		i64 n = ks - 1 - i - scrollbar;
 		if (n < 0) break;
 		if (n >= max_lines) continue;
-		master_bm.text(x_text, y_cmd - n * font_size, full_cmd.substr(i* cmd_vis_len, cmd_vis_len),
+		master_bm.text({ x_text, y_cmd - n * font_size }, full_cmd.substr(i * cmd_vis_len, cmd_vis_len),
 			font_size, cc2, cc0);
 	}
 
@@ -1915,7 +1915,7 @@ void _g_terminal::ris2(_trans tr, bool final)
 			i64 n = ks - 1 - j - scrollbar;
 			if (n < 0) break;
 			if (n >= max_lines) continue;
-			master_bm.text(x_text, y_cmd - n * font_size, s.substr(j * cmd_vis_len, cmd_vis_len),
+			master_bm.text({ x_text, y_cmd - n * font_size }, s.substr(j * cmd_vis_len, cmd_vis_len),
 				font_size, cc1, cc0);
 		}
 		if (ks - scrollbar > max_lines) break;
@@ -1994,7 +1994,7 @@ void _g_text::ris2(_trans tr, bool final)
 {
 	int sf = (int)(13 * tr.scale + 0.5);
 	if (sf < 5) return;
-	master_bm.text((int)tr.offset.x, (int)tr.offset.y, s.c_str(), sf, get_c(), get_c2());
+	master_bm.text(tr.offset, s.c_str(), sf, get_c(), get_c2());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2147,7 +2147,7 @@ void _g_edit_double::ris2(_trans tr, bool final)
 	if (sf2 < 5) return;
 	std::wstring s = double_to_wstring(a, 2);
 
-	master_bm.text((int)(oo.x.min + 5), (int)(oo.y.min + 1), s.c_str(), sf2, c0, cc0);
+	master_bm.text({ (i64)(oo.x.min + 5), (i64)(oo.y.min + 1) }, s.c_str(), sf2, c0, cc0);
 	if (n_act_key == this)
 	{
 		_isize size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
@@ -2257,7 +2257,7 @@ void _g_edit_int::ris2(_trans tr, bool final)
 	}
 	bool hex = test_flags(n_hex, flag_information);
 	std::wstring s = (hex) ? std::wstring(uint64_to_wstr_hex(*a)) : std::to_wstring(*a);
-	master_bm.text((int)(oo.x.min + 5), (int)(oo.y.min + 1), s.c_str(), sf2, c0, cc0);
+	master_bm.text({ (i64)(oo.x.min + 5), (i64)(oo.y.min + 1) }, s.c_str(), sf2, c0, cc0);
 	if (n_act_key == this)
 	{
 		_isize size = master_bm.size_text(s.substr(/*first_+*/ 0, cursor /*-first_*/).c_str(), sf2);
@@ -2426,7 +2426,7 @@ void _g_edit_string::ris2(_trans tr, bool final)
 					first--;
 				}
 		}
-		master_bm.text((int)(oo.x.min + 5), (int)oo.y.min, s->substr(first, len2).c_str(), sf, c0, 0);
+		master_bm.text({ (i64)(oo.x.min + 5), (i64)oo.y.min }, s->substr(first, len2).c_str(), sf, c0, 0);
 		if (first > 0)        master_bm.line({ oo.x.min + 2, oo.y.min }, { oo.x.min + 2, oo.y.max }, 0xFF30C0F0);
 		if (len2 < l - first) master_bm.line({ oo.x.max - 2, oo.y.min }, { oo.x.max - 2, oo.y.max }, 0xFF30C0F0);
 	}
@@ -2543,7 +2543,7 @@ void _g_edit_multi_string::ris2(_trans tr, bool final)
 	for (i64 i = 0; i < k; i++)
 	{
 		i64 ii = first + i;
-		master_bm.text((int)(oo.x.min + 4 * tr.scale), (int)(oo.y.min + (i * 16LL + 4) * tr.scale),
+		master_bm.text({ (i64)(oo.x.min + 4 * tr.scale), (i64)(oo.y.min + (i * 16LL + 4) * tr.scale) },
 			str->line[ii].c_str(), sf, cc1, 0);
 	}
 	if (first) master_bm.line({ oo.x.min + 2 * tr.scale, oo.y.min + 2 * tr.scale },
@@ -2826,15 +2826,15 @@ void _g_button::RisIco(astr kod, const char* s)
 		dy = 7;
 	}
 	astr ss = s;
-	int y = y0;
+	i64 y = y0;
 	for (astr i = s; *i; i++)
 		if (*i == '\n')
 		{
-			picture.text16(0, y, ss, cc1);
+			picture.text16({ 0LL, y }, ss, cc1);
 			y += dy;
 			ss = i + 1;
 		}
-	picture.text16(0, y, ss, cc1);
+	picture.text16({ 0LL, y }, ss, cc1);
 }
 
 void _g_button::ris2(_trans tr, bool final)
@@ -3078,7 +3078,7 @@ void _g_list_link::ris2(_trans tr, bool final)
 		//			s += L" " + IntToString(nn);
 		s = std::to_wstring(ii) + L". " + s;
 		uint color = cc1;
-		master_bm.text((int)(oo.x.min + 4 * tr.scale), (int)(oo.y.min + (i * 16.0 + 4) * tr.scale), s.c_str(), sf,
+		master_bm.text({ (i64)(oo.x.min + 4 * tr.scale), (i64)(oo.y.min + (i * 16.0 + 4) * tr.scale) }, s.c_str(), sf,
 			color, 0);
 	}
 	if (first) master_bm.line({ oo.x.min + 2 * tr.scale, oo.y.min + 2 * tr.scale },
@@ -3140,7 +3140,7 @@ void _g1list::ris2(_trans tr, bool final)
 	}
 	int sf = (int)(13 * tr.scale + 0.5);
 	if (sf < 1) return;
-	master_bm.text((int)(oo2.x.min + 4), (int)(oo2.y.min + 1), s->s.c_str(), sf, c, 0);
+	master_bm.text({ (i64)(oo2.x.min + 4), (i64)(oo2.y.min + 1) }, s->s.c_str(), sf, c, 0);
 	if (rez1) return;
 	bool start = false;
 	int dx = 0;
@@ -3152,7 +3152,7 @@ void _g1list::ris2(_trans tr, bool final)
 		if (start)
 		{
 			dx--;
-			master_bm.text((int)(oo2.x.min + 4), (int)(oo2.y.min + dx * 16.0 * tr.scale),
+			master_bm.text({ (i64)(oo2.x.min + 4), (i64)(oo2.y.min + dx * 16.0 * tr.scale) },
 				a->operator std::wstring * ()->c_str(), sf, c, 0);
 		}
 		if (link[i]->test_flags(this, flag_specialty)) start = true; // если будет несколько - будут проблемы
@@ -3167,7 +3167,7 @@ void _g1list::ris2(_trans tr, bool final)
 		if (start)
 		{
 			dx++;
-			master_bm.text((int)(oo2.x.min + 4), (int)(oo2.y.min + dx * 16.0 * tr.scale),
+			master_bm.text({ (i64)(oo2.x.min + 4), (i64)(oo2.y.min + dx * 16.0 * tr.scale) },
 				a->operator std::wstring * ()->c_str(), sf, c, 0);
 		}
 		if (i->test_flags(this, flag_specialty)) start = true; // если будет несколько - будут проблемы
@@ -3839,9 +3839,9 @@ void _g_graph::ris2(_trans tr, bool final)
 					master_bm.line({ i64(xx + a.x.min), (i64)a.y.min }, { i64(xx + a.x.min), (i64)a.y.max }, col_setka);
 					std::string s = double_to_string(x, zn);
 					_isize l = master_bm.size_text16(s);
-					if (xx < a.x.length() - 50)	master_bm.text16(a.x.min + xx - l.x / 2, std::max(a.y.min, 0.0),
+					if (xx < a.x.length() - 50)	master_bm.text16({ a.x.min + xx - l.x / 2, std::max(a.y.min, 0.0) },
 						s, col_font);
-					if (xx > 50) master_bm.text16(a.x.min + xx - l.x / 2, std::min((i64)a.y.max, master_bm.size.y) - 13,
+					if (xx > 50) master_bm.text16({ a.x.min + xx - l.x / 2, std::min((i64)a.y.max, master_bm.size.y) - 13 },
 						s, col_font);
 				}
 			}
@@ -3863,8 +3863,8 @@ void _g_graph::ris2(_trans tr, bool final)
 				master_bm.line({ (i64)a.x.min, i64(a.y.max - yy) }, { (i64)a.x.max, i64(a.y.max - yy) }, col_setka);
 				std::string s = double_to_string(y, zn);
 				_isize l = master_bm.size_text16(s);
-				if (a.y.length() - yy > 16) master_bm.text16(std::max(a.x.min, 0.0) + 2, a.y.max - yy - 6, s, col_font);
-				if (yy > 16) master_bm.text16(std::min((i64)a.x.max, master_bm.size.x) - l.x - 2, a.y.max - yy - 6,
+				if (a.y.length() - yy > 16) master_bm.text16({ std::max(a.x.min, 0.0) + 2, a.y.max - yy - 6 }, s, col_font);
+				if (yy > 16) master_bm.text16({ std::min((i64)a.x.max, master_bm.size.x) - l.x - 2, a.y.max - yy - 6 },
 					s, col_font);
 			}
 		}
@@ -3880,7 +3880,7 @@ void _g_graph::ris2(_trans tr, bool final)
 			if (j.caption == "") continue;
 			y += 16;
 			uint cc = (ng < _countof(color_set)) ? color_set[ng] : cc2;
-			master_bm.text16(x, y, j.caption, cc);
+			master_bm.text16({ x, y }, j.caption, cc);
 			master_bm.lines({ x - 20.0, y + 6.0 }, { x - 4.0, y + 6.0 }, j.width, cc);
 		}
 

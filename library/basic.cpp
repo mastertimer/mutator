@@ -883,18 +883,22 @@ _bitmap::~_bitmap()
 	data = 0; // чтобы ~Picture не выругался
 }
 
-void _bitmap::text(int x, int y, std::wstring_view s, int h, uint c, uint bg)
+void _bitmap::text(_ixy p, std::wstring_view s, int h, uint c, uint bg)
 {
+	auto text_area = size_text(s, h).move(p) & area;
+	if (text_area.empty()) return;
 	podg_font(h);
 	podg_cc(c, bg);
-	TextOutW(hdc, x, y, s.data(), (int)s.size());
+	TextOutW(hdc, p.x, p.y, s.data(), (int)s.size());
 }
 
-void _bitmap::text(int x, int y, std::string_view s, int h, uint c, uint bg)
+void _bitmap::text(_ixy p, std::string_view s, int h, uint c, uint bg)
 {
+	auto text_area = size_text(s, h).move(p) & area;
+	if (text_area.empty()) return;
 	podg_font(h);
 	podg_cc(c, bg);
-	TextOutA(hdc, x, y, s.data(), (int)s.size());
+	TextOutA(hdc, p.x, p.y, s.data(), (int)s.size());
 }
 
 _isize _bitmap::size_text(std::wstring_view s, int h)
@@ -1022,7 +1026,7 @@ void _picture::set_transparent() noexcept
 
 void _picture::draw(_ixy r, _picture& bm)
 {
-	_iarea b = move(bm.size, r) & area;
+	_iarea b = bm.size.move(r) & area;
 	if (b.empty()) return;
 	if (!bm.transparent)
 	{
@@ -1698,8 +1702,9 @@ constexpr ushort font16[256][lx2] = { {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
    {2016, 1152, 1152, 1152, 768, 0, 2016}, {2016, 1152, 1152, 1152, 768}, {576, 1056, 1184, 1184, 960},
    {2016, 128, 960, 1056, 1056, 1056, 960}, {1216, 800, 288, 288, 2016} };
 
-_isize  _picture::size_text16(std::string_view s, i64 n)
+_isize _picture::size_text16(std::string_view s, i64 n)
 {
+	constexpr i64 ly = 13;
 	i64 l = 0;
 	i64 probel = 0;
 	for (auto c : s)
@@ -1707,7 +1712,7 @@ _isize  _picture::size_text16(std::string_view s, i64 n)
 		probel = (c == ' ') ? 4 : 1;
 		l += probel;
 		const ushort* ss = font16[(uchar)(c)];
-		int           lx = lx2;
+		int lx = lx2;
 		for (int j = lx - 1; j >= 0; j--)
 		{
 			if (ss[j]) break;
@@ -1716,16 +1721,13 @@ _isize  _picture::size_text16(std::string_view s, i64 n)
 		l += lx;
 	}
 	l -= probel;
-	return { l * n, 13 * n };
+	return { l * n, ly * n };
 }
 
 void _picture::text16n(i64 x, i64 y, astr s, i64 n, uint c)
 {
-	if (n <= 1)
-	{
-		if (n == 1) text16(x, y, s, c);
-		return;
-	}
+	if (n < 1) return;
+	if (n == 1) return text16({ x, y }, s, c);
 	constexpr int ly = 13;
 	if ((y >= area.y.max) || (y + ly * n <= area.y.min)) return;
 	uint kk = 255 - (c >> 24);
@@ -1744,9 +1746,9 @@ void _picture::text16n(i64 x, i64 y, astr s, i64 n, uint c)
 	if (y + ly * n > area.y.max) j1 = (area.y.max - y) / n;
 	while ((*s) && (*s != '\n') && (x < area.x.max))
 	{
-		i64         probel = (*s == 32) ? 4 : 1;
+		i64 probel = (*s == 32) ? 4 : 1;
 		const ushort* ss = font16[(uchar)(*s++)];
-		i64         lx = lx2;
+		i64 lx = lx2;
 		for (i64 j = lx - 1; j >= 0; j--)
 		{
 			if (ss[j]) break;
@@ -1837,10 +1839,11 @@ void _picture::text16n(i64 x, i64 y, astr s, i64 n, uint c)
 	}
 }
 
-void _picture::text16(i64 x, i64 y, std::string_view st, uint c)
+void _picture::text16(_ixy p, std::string_view st, uint c)
 {
+	auto text_area = size_text16(st).move(p) & area;
+	if (text_area.empty()) return;
 	constexpr int ly = 13;
-	if ((y >= area.y.max) || (y + ly <= area.y.min)) return;
 	uint kk = 255 - (c >> 24);
 	if (kk == 0xFF) return; // полностью прозрачная
 	uint k2 = 256 - kk;
@@ -1853,11 +1856,11 @@ void _picture::text16(i64 x, i64 y, std::string_view st, uint c)
 
 	i64 j0 = 0;
 	i64 j1 = ly;
-	if (y < area.y.min) j0 = area.y.min - y;
-	if (y + ly > area.y.max) j1 = area.y.max - y;
+	if (p.y < area.y.min) j0 = area.y.min - p.y;
+	if (p.y + ly > area.y.max) j1 = area.y.max - p.y;
 	for (auto s: st)
 	{
-		if (x >= area.x.max) break;
+		if (p.x >= area.x.max) break;
 		i64 probel = (s == 32) ? 4 : 1;
 		const ushort* ss = font16[(uchar)s];
 		i64 lx = lx2;
@@ -1866,22 +1869,22 @@ void _picture::text16(i64 x, i64 y, std::string_view st, uint c)
 			if (ss[j]) break;
 			lx--;
 		}
-		if (x + lx <= 0)
+		if (p.x + lx <= 0)
 		{
-			x += lx + probel;
+			p.x += lx + probel;
 			continue;
 		}
 		i64 i0 = 0;
 		i64 i1_ = lx;
-		if (x < area.x.min) i0 = area.x.min - x;
-		if (x + lx > area.x.max) i1_ = area.x.max - x;
+		if (p.x < area.x.min) i0 = area.x.min - p.x;
+		if (p.x + lx > area.x.max) i1_ = area.x.max - p.x;
 		for (i64 j = j0; j < j1; j++)
 		{
 			ushort        mask = (ushort(1) << j);
 			const ushort* ss2 = ss;
 			if (kk == 0)
 			{
-				uint* c2 = &data[(y + j) * size.x + x + i0];
+				uint* c2 = &data[(p.y + j) * size.x + p.x + i0];
 				for (i64 i = i0; i < i1_; i++)
 				{
 					if (*ss2++ & mask) *c2 = c;
@@ -1890,7 +1893,7 @@ void _picture::text16(i64 x, i64 y, std::string_view st, uint c)
 			}
 			else
 			{
-				uchar* c2 = (uchar*)&data[(y + j) * size.x + x + i0];
+				uchar* c2 = (uchar*)&data[(p.y + j) * size.x + p.x + i0];
 				if (!transparent)
 				{
 					for (i64 i = i0; i < i1_; i++)
@@ -1923,7 +1926,7 @@ void _picture::text16(i64 x, i64 y, std::string_view st, uint c)
 				}
 			}
 		}
-		x += lx + probel;
+		p.x += lx + probel;
 	}
 }
 
