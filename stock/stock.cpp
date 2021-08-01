@@ -198,23 +198,6 @@ struct _multi_linear_oracle_curve : public _basic_curve // мульти лине
 	void draw(i64 n, _area area) override; // нарисовать 1 элемент
 };
 
-struct _multi_spectr_linear
-{
-	std::vector<_linear_n> linear;
-
-	void calc(_iinterval prediction_basis, i64 prediction_depth, std::vector<i64>* sm);
-};
-
-struct _multi_multi_linear_oracle_curve : public _basic_curve // мульти мульти линейный предсказатель
-{
-	static constexpr i64 prediction_depth = 35; // глубина предсказания 35 минут
-	static constexpr i64 max_prediction_basis = 65; // база предсказания 60 минут
-
-	_multi_spectr_linear sl; // вектора коэффициентов
-
-	void draw(i64 n, _area area) override; // нарисовать 1 элемент
-};
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _koora // коофициенты разложения
@@ -375,7 +358,6 @@ void start_stock()
 //	graph->curve2.push_back(new _compression_curve);
 //	graph->curve2.push_back(new _linear_oracle_curve);
 //	graph->curve2.push_back(new _multi_linear_oracle_curve);
-//	graph->curve2.push_back(new _multi_multi_linear_oracle_curve);
 //	graph->curve2.push_back(new _spectr_curve);
 }
 
@@ -1076,14 +1058,8 @@ void _prices_curve2::draw(i64 n, _area area)
 		if (pri[ss_].empty()) continue;
 		i64 xx1 = xx.min + dx * i / kol;
 		i64 xx2 = xx.min + dx * (i + 1) / kol - 1;
-		if (pri[ss_].supply.offer[3].price < pri[ss_].demand.offer[3].price)
-		{
-			//		xx1++;
-		}
 		for (int j = size_offer - 1; j >= 0; j--)
 		{
-			auto os = pri[ss_].supply.offer[j].price % 10;
-			if ((os != 1) && (os != 4)) continue;
 			double ce = pri[ss_].supply.offer[j].price * c_unpak;
 			_iinterval yy(area.y.min + (max - ce) * ddy / dd, area.y.min + (max - ce + c_unpak) * ddy / dd);
 			yy.min++;
@@ -1098,24 +1074,6 @@ void _prices_curve2::draw(i64 n, _area area)
 			}
 			if (cc != 0x40ffffff) master_bm.fill_rectangle({ {xx1, xx2}, yy }, cc);
 		}
-/*		for (int j = 0; j < size_offer; j++)
-		{
-			double ce = pri[ss_].buy[j].value * sss.c_unpak;
-			_iinterval yy(area.y.min + (max - ce) * ddy / dd, area.y.min + (max - ce + sss.c_unpak) * ddy / dd);
-			yy.min++;
-			yy.max--;
-			if (yy.empty()) continue;
-
-			uint cc = 0x40ffffff;
-			if (ss_pr >= 0)
-			{
-				if (pri[ss_].buy[j].number > pri[ss_pr].buy[j].number) cc = 0xc04040ff;
-				if (pri[ss_].buy[j].number < pri[ss_pr].buy[j].number) cc = 0x70ffff00;
-			}
-
-
-			master_bm.fill_rectangle({ {xx1, xx2}, yy }, cc);
-		}*/
 		ss_pr = ss_;
 	}
 }
@@ -1329,52 +1287,7 @@ void _spectr_linear::calc(_iinterval prediction_basis, i64 prediction_depth, std
 	}
 }
 
-void _multi_spectr_linear::calc(_iinterval prediction_basis, i64 prediction_depth, std::vector<i64>* sm)
-{
-	_label_statistics ls;
-	ls.prediction_basis = prediction_basis.max - 1;
-	ls.prediction_depth = prediction_depth;
-	ls.calc();
-	linear.clear();
-	for (i64 i = prediction_basis.min; i < prediction_basis.max; i++)
-	{
-		_linear_n ln;
-		ln.prediction_basis = i;
-		ln.prediction_depth = prediction_depth;
-		calc_multi_vector_prediction(i, ls, sm, ln.kk);
-		linear.push_back(ln);
-	}
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void _multi_multi_linear_oracle_curve::draw(i64 n, _area area)
-{
-	std::vector<i64> sm;
-	//	sm.push_back((i64)(&((_index*)0)->r_pok));
-	//	sm.push_back((i64)(&((_index*)0)->r_pro));
-	if (sl.linear.empty()) sl.calc({ 1i64, max_prediction_basis + 1 }, prediction_depth, &sm);
-	i64 rr = sl.linear.size();
-	for (i64 i = 0; i < rr; i++)
-	{
-		double y0;
-		_matrix pr = prediction_multi(n, sl.linear[i].kk, sl.linear[i].prediction_depth, &sm, y0);
-		for (i64 j = 0; j < pr.size.y; j++)
-		{
-			double y1 = y0 + ispe[sl.linear[i].prediction_depth].border[j];
-			double y2 = y0 + ispe[sl.linear[i].prediction_depth].border[j+1];
-			if (j == 0) y1 = y0 - 2.5; // 2.5 взято просто так, чтобы график не весь закрашивался
-			if (j == pr.size.y - 1) y2 = y0 + 2.5; // 2.5 взято просто так, чтобы график не весь закрашивался
-			double yy1 = y_graph.max - (y1 - y_graph_re.min) * y_graph.length() / (y_graph_re.max - y_graph_re.min);
-			double yy2 = y_graph.max - (y2 - y_graph_re.min) * y_graph.length() / (y_graph_re.max - y_graph_re.min);
-			i64 k = pr[j][0] * 255;
-			if (k < 0) k = 0;
-			if (k > 255) k = 255;
-			k <<= 24;
-			master_bm.fill_rectangle({ {area.x(double(i) / rr), area.x((i + 1.0) / rr)}, {yy2, yy1} }, (k + 0xffffff));
-		}
-	}
-}
 
 void _multi_linear_oracle_curve::draw(i64 n, _area area)
 {
