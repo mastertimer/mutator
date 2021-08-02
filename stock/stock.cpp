@@ -19,7 +19,7 @@
 #include "mediator.h"
 #include "stock.h"
 
-constexpr wchar_t sss2_file[] = L"..\\..\\data\\base.c3";
+constexpr wchar_t file_stock_statistics[] = L"..\\..\\data\\base.c3";
 
 _sable_graph *graph = nullptr; // график
 
@@ -40,9 +40,6 @@ struct _index           // разнообразные минутные коэф�
 	double c3_sale = 0; // цена продажи на 3-й секунде
 	double minmin  = 0; // минимальная цена минимального спроса ([19])
 	double maxmax  = 0; // максимальная цена максимального предложения ([19])
-	double cc      = 0; // средняя цена
-	double cc_buy  = 0; // средняя цена покупки
-	double cc_sale = 0; // средняя цена продажи
 };
 
 struct _index_data // все коэффициенты
@@ -103,29 +100,13 @@ struct _label_statistics
 	void calc();
 };
 
-struct _linear1
-{
-	i64 prediction_depth = 1; // глубина предсказания 35 минут
-	i64 prediction_basis = 65; // база предсказания 60 минут
-
-	_matrix kk; // вектор коэффициентов
-};
-
-struct _linear_n
-{
-	i64 prediction_depth = 1; // глубина предсказания 35 минут
-	i64 prediction_basis = 65; // база предсказания 60 минут
-
-	std::vector<_matrix> kk; // вектора коэффициентов для каждого из интервалов
-};
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void start_stock()
 {
 	static bool first = true; if (!first) return; first = false;
 
-	stock_statistics.load_from_file(exe_path + sss2_file);
+	stock_statistics.load_from_file(exe_path + file_stock_statistics);
 
 	if (!graph) return;
 	if (!graph->find1<_g_scrollbar>(flag_part))
@@ -298,7 +279,7 @@ void narrow_graph_elements()
 
 void save_stock_statistics()
 {
-	stock_statistics.save_to_file(exe_path + sss2_file);
+	stock_statistics.save_to_file(exe_path + file_stock_statistics);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -554,8 +535,6 @@ bool _index_data::update()
 			if (cc.supply.offer[size_offer - 1].price * c_unpak > cp.maxmax) cp.maxmax = cc.supply.offer[size_offer - 1].price * c_unpak;
 			cp.ncc.max++;
 			cp.last = aa;
-			cp.cc_buy += cc.demand.offer[0].price;
-			cp.cc_sale += cc.supply.offer[0].price;
 			if (cc.time % 60 == 3)
 			{
 				cp.c3_buy = cc.demand.offer[0].price * c_unpak;
@@ -565,9 +544,6 @@ bool _index_data::update()
 		}
 		if (t != 0)
 		{
-			cp.cc_buy *= c_unpak / cp.ncc.size();
-			cp.cc_sale *= c_unpak / cp.ncc.size();
-			cp.cc = (cp.cc_buy + cp.cc_sale) * 0.5;
 			data.push_back(cp);
 		}
 		if (t2 == back_minute) break; // последнюю минуту пока не трогать
@@ -578,8 +554,6 @@ bool _index_data::update()
 		cp.max = cp.min = cp.last = cp.first = ((i64)cc.demand.offer[0].price + cc.supply.offer[0].price) * (c_unpak * 0.5);
 		cp.minmin = cc.demand.offer[size_offer - 1].price * c_unpak;
 		cp.maxmax = cc.supply.offer[size_offer - 1].price * c_unpak;
-		cp.cc_buy = cc.demand.offer[0].price;
-		cp.cc_sale = cc.supply.offer[0].price;
 		cp.c3_buy = cc.demand.offer[0].price * c_unpak;
 		cp.c3_sale = cc.supply.offer[0].price * c_unpak;
 	}
@@ -883,14 +857,6 @@ void _label_statistics::calc()
 			data.pop_front();
 		}
 	}
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-_interval _basic_curve::get_y(i64 n)
-{
-	auto a = &index.data[n];
-	return { a->cc, a->cc };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

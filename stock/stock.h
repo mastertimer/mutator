@@ -7,7 +7,7 @@
 struct _basic_curve // база для кривых
 {
 	virtual void draw(i64 n, _area area) = 0; // нарисовать 1 элемент
-	virtual _interval get_y(i64 n); // дипазон рисования по y
+	virtual _interval get_y(i64 n) = 0; // дипазон рисования по y
 	virtual ~_basic_curve() {}
 };
 
