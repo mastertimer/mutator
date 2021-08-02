@@ -23,9 +23,6 @@ constexpr wchar_t file_stock_statistics[] = L"..\\..\\data\\base.c3";
 
 _sable_graph *graph = nullptr; // график
 
-_interval y_graph; // координата у на картинке
-_interval y_graph_re; // реальная координата y
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _index           // разнообразные минутные коэффициенты
@@ -42,16 +39,7 @@ struct _index           // разнообразные минутные коэф�
 	double maxmax  = 0; // максимальная цена максимального предложения ([19])
 };
 
-struct _index_data // все коэффициенты
-{
-	std::vector<_index> data; // поминутный вектор
-
-	bool update(); // обновить ранные, вызывать после обновления sss2
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-_index_data index; // все расчетные данные
+std::vector<_index> index_data; // поминутный вектор все коэффициенты
 
 //_basic_curve* super_oracle = nullptr; // оракул для предсказания
 
@@ -85,20 +73,67 @@ struct _prices_curve2 : public _basic_curve // посекундный спрос
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _label_statistics
+bool update_index_data()
 {
-	struct _lppn // номера для статистики предсказаний
+	i64 vcc = 0;
+	if (!index_data.empty()) vcc = index_data.back().ncc.max;
+	if (vcc == (i64)stock_statistics->size()) return false; // ничего не изменилось
+	if (vcc > (i64)stock_statistics->size())
 	{
-		i64 start_basis = 0; // номер первого элемента базиса
-		i64 n = 0; // номер элемента, который предсказывается
-	};
-
-	i64 prediction_depth = 1; // глубина предсказания 35 минут
-	i64 prediction_basis = 65; // база предсказания 60 минут
-	std::vector<_lppn> label;
-
-	void calc();
-};
+		index_data.clear(); // обработанных данных больше, чем исходных, потому пусть будет полный перерасчет
+		vcc = 0;
+	}
+	if (stock_statistics->size() < 2) return false; // мало данных для обработки
+	i64 back_minute = stock_statistics->back().time_to_minute();
+	if (!index_data.empty())
+	{
+		if (back_minute == index_data.back().time + 1) return false; // еще рано
+		if (back_minute <= index_data.back().time) // так быть не должно, полный перерасчет
+		{
+			index_data.clear();
+			vcc = 0;
+		}
+	}
+	if (stock_statistics->size() - vcc < 2) return false; // мало данных для обработки
+	time_t t = 0;
+	_index cp;
+	for (i64 i = vcc; i < (i64)stock_statistics->size(); i++)
+	{
+		const _supply_and_demand& cc = stock_statistics[i];
+		time_t t2 = cc.time_to_minute();
+		if (t2 == t)
+		{
+			double aa = ((i64)cc.demand.offer[0].price + cc.supply.offer[0].price) * (c_unpak * 0.5);
+			if (aa < cp.min) cp.min = aa;
+			if (aa > cp.max) cp.max = aa;
+			if (cc.demand.offer[size_offer - 1].price * c_unpak < cp.minmin) cp.minmin = cc.demand.offer[size_offer - 1].price * c_unpak;
+			if (cc.supply.offer[size_offer - 1].price * c_unpak > cp.maxmax) cp.maxmax = cc.supply.offer[size_offer - 1].price * c_unpak;
+			cp.ncc.max++;
+			cp.last = aa;
+			if (cc.time % 60 == 3)
+			{
+				cp.c3_buy = cc.demand.offer[0].price * c_unpak;
+				cp.c3_sale = cc.supply.offer[0].price * c_unpak;
+			}
+			continue;
+		}
+		if (t != 0)
+		{
+			index_data.push_back(cp);
+		}
+		if (t2 == back_minute) break; // последнюю минуту пока не трогать
+		t = t2;
+		cp.time = t;
+		cp.ncc.min = i;
+		cp.ncc.max = i + 1;
+		cp.max = cp.min = cp.last = cp.first = ((i64)cc.demand.offer[0].price + cc.supply.offer[0].price) * (c_unpak * 0.5);
+		cp.minmin = cc.demand.offer[size_offer - 1].price * c_unpak;
+		cp.maxmax = cc.supply.offer[size_offer - 1].price * c_unpak;
+		cp.c3_buy = cc.demand.offer[0].price * c_unpak;
+		cp.c3_sale = cc.supply.offer[0].price * c_unpak;
+	}
+	return true;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -117,7 +152,7 @@ void start_stock()
 	}
 	graph->cha_area();
 
-	index.update();
+	update_index_data();
 	graph->curve2.push_back(new _candle_curve);
 	graph->curve2.push_back(new _prices_curve2);
 //	graph->curve2.push_back(new _prices_curve);
@@ -196,7 +231,7 @@ void scan_supply_and_demand()
 		return;
 	}
 	stock_statistics.push_back(a);
-	index.update();
+	update_index_data();
 
 	graph->run(nullptr, graph, flag_run);
 
@@ -342,7 +377,6 @@ std::string date_to_ansi_string(time_t time)
 void _sable_graph::ris2(_trans tr, bool final)
 {
 	_area a = tr(local_area);
-	y_graph = a.y;
 	_interval y_; // диапазон у (grid)
 	static std::vector<time_t> time_; // отсчеты времени (grid)
 
@@ -357,7 +391,7 @@ void _sable_graph::ris2(_trans tr, bool final)
 	if (k_el < 1) return;
 	double r_el = a.x.length() / k_el;
 
-	i64 n = index.data.size();
+	i64 n = index_data.size();
 	if (n == 0) return;
 	v_vib = n - 1;
 	if (v_vib < 0) v_vib = 0;
@@ -370,7 +404,7 @@ void _sable_graph::ris2(_trans tr, bool final)
 	for (i64 i = 0; i < k_el; i++)
 	{
 		i64 ii = i + vib;
-		if (ii >= (i64)index.data.size()) break;
+		if (ii >= (i64)index_data.size()) break;
 		for (i64 j = 0; j < ll2; j++)
 		{
 			_interval il = curve2[j]->get_y(ii);
@@ -380,14 +414,13 @@ void _sable_graph::ris2(_trans tr, bool final)
 	}
 	if (zmin == zmax) zmax = zmin + 1.0;
 	y_ = { zmin, zmax };
-	y_graph_re = y_;
 	time_.clear();
 	// 2-й проход - рисование
 	for (i64 i = 0; i < k_el; i++)
 	{
 		i64 ii = i + vib;
-		if (ii >= (i64)index.data.size()) break;
-		time_.push_back(index.data[ii].time);
+		if (ii >= (i64)index_data.size()) break;
+		time_.push_back(index_data[ii].time);
 		for (i64 j = 0; j < ll2; j++)
 		{
 			_interval il = curve2[j]->get_y(ii);
@@ -498,73 +531,9 @@ void _sable_graph::ris2(_trans tr, bool final)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool _index_data::update()
-{
-	i64 vcc = 0;
-	if (!data.empty()) vcc = data.back().ncc.max;
-	if (vcc == (i64)stock_statistics->size()) return false; // ничего не изменилось
-	if (vcc > (i64)stock_statistics->size())
-	{
-		data.clear(); // обработанных данных больше, чем исходных, потому пусть будет полный перерасчет
-		vcc = 0;
-	}
-	if (stock_statistics->size() < 2) return false; // мало данных для обработки
-	i64 back_minute = stock_statistics->back().time_to_minute();
-	if (!data.empty())
-	{
-		if (back_minute == data.back().time + 1) return false; // еще рано
-		if (back_minute <= data.back().time) // так быть не должно, полный перерасчет
-		{
-			data.clear();
-			vcc = 0;
-		}
-	}
-	if (stock_statistics->size() - vcc < 2) return false; // мало данных для обработки
-	time_t t = 0;
-	_index cp;
-	for (i64 i = vcc; i < (i64)stock_statistics->size(); i++)
-	{
-		const _supply_and_demand& cc = stock_statistics[i];
-		time_t t2 = cc.time_to_minute();
-		if (t2 == t)
-		{
-			double aa = ((i64)cc.demand.offer[0].price + cc.supply.offer[0].price) * (c_unpak * 0.5);
-			if (aa < cp.min) cp.min = aa;
-			if (aa > cp.max) cp.max = aa;
-			if (cc.demand.offer[size_offer - 1].price * c_unpak < cp.minmin) cp.minmin = cc.demand.offer[size_offer - 1].price * c_unpak;
-			if (cc.supply.offer[size_offer - 1].price * c_unpak > cp.maxmax) cp.maxmax = cc.supply.offer[size_offer - 1].price * c_unpak;
-			cp.ncc.max++;
-			cp.last = aa;
-			if (cc.time % 60 == 3)
-			{
-				cp.c3_buy = cc.demand.offer[0].price * c_unpak;
-				cp.c3_sale = cc.supply.offer[0].price * c_unpak;
-			}
-			continue;
-		}
-		if (t != 0)
-		{
-			data.push_back(cp);
-		}
-		if (t2 == back_minute) break; // последнюю минуту пока не трогать
-		t = t2;
-		cp.time = t;
-		cp.ncc.min = i;
-		cp.ncc.max = i + 1;
-		cp.max = cp.min = cp.last = cp.first = ((i64)cc.demand.offer[0].price + cc.supply.offer[0].price) * (c_unpak * 0.5);
-		cp.minmin = cc.demand.offer[size_offer - 1].price * c_unpak;
-		cp.maxmax = cc.supply.offer[size_offer - 1].price * c_unpak;
-		cp.c3_buy = cc.demand.offer[0].price * c_unpak;
-		cp.c3_sale = cc.supply.offer[0].price * c_unpak;
-	}
-	return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 void _candle_curve::draw(i64 n, _area area)
 {
-	auto aa = &index.data[n];
+	auto aa = &index_data[n];
 	double min_ = aa->min * c_unpak;
 	double max_ = aa->max * c_unpak;
 	double first_ = aa->first * c_unpak;
@@ -601,7 +570,7 @@ void _candle_curve::draw(i64 n, _area area)
 
 _interval _candle_curve::get_y(i64 n)
 {
-	auto a = &index.data[n];
+	auto a = &index_data[n];
 	return { a->min, a->max };
 }
 
@@ -613,7 +582,7 @@ void _prices_curve::draw(i64 n, _area area)
 	double min, max; // разброс по y
 	for (auto& i : pri) i.clear();
 
-	for (i64 i = index.data[n].ncc.min; i < index.data[n].ncc.max; i++)
+	for (i64 i = index_data[n].ncc.min; i < index_data[n].ncc.max; i++)
 	{
 		if (i < begin_ss)
 		{
@@ -658,8 +627,8 @@ void _prices_curve::draw(i64 n, _area area)
 		if (part_ss[ii].empty()) part_ss[ii] = stock_statistics[i];
 		pri[part_ss[ii].time % 60] = part_ss[ii];
 	}
-	min = index.data[n].minmin - c_unpak;
-	max = index.data[n].maxmax;
+	min = index_data[n].minmin - c_unpak;
+	max = index_data[n].maxmax;
 	_iinterval xx = area.x;
 	xx.min++;
 	i64 dx = xx.size();
@@ -723,7 +692,7 @@ void _prices_curve::draw(i64 n, _area area)
 
 _interval _prices_curve::get_y(i64 n)
 {
-	auto a = &index.data[n];
+	auto a = &index_data[n];
 	return { a->minmin - c_unpak, a->maxmax };
 }
 
@@ -735,7 +704,7 @@ void _prices_curve2::draw(i64 n, _area area)
 	double min, max; // разброс по y
 	for (auto& i : pri) i.clear();
 
-	for (i64 i = index.data[n].ncc.min; i < index.data[n].ncc.max; i++)
+	for (i64 i = index_data[n].ncc.min; i < index_data[n].ncc.max; i++)
 	{
 		if (i < begin_ss)
 		{
@@ -780,8 +749,8 @@ void _prices_curve2::draw(i64 n, _area area)
 		if (part_ss[ii].empty()) part_ss[ii] = stock_statistics[i];
 		pri[part_ss[ii].time % 60] = part_ss[ii];
 	}
-	min = index.data[n].minmin - c_unpak;
-	max = index.data[n].maxmax;
+	min = index_data[n].minmin - c_unpak;
+	max = index_data[n].maxmax;
 	_iinterval xx = area.x;
 	xx.min++;
 	i64 dx = xx.size();
@@ -835,28 +804,8 @@ void _prices_curve2::draw(i64 n, _area area)
 
 _interval _prices_curve2::get_y(i64 n)
 {
-	auto a = &index.data[n];
+	auto a = &index_data[n];
 	return { a->minmin - c_unpak, a->maxmax };
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void _label_statistics::calc()
-{
-	std::deque<std::pair<time_t,i64>> data;
-	label.clear();
-	for (i64 i = prediction_basis - 1; i < (i64)index.data.size(); i++) // i - последняя минута базиса
-	{
-		time_t ti = index.data[i].time;
-		if (ti - index.data[i - (prediction_basis - 1)].time == (prediction_basis - 1) * 60)
-			data.push_back({ ti + prediction_depth * 60,  i - (prediction_basis - 1) });
-		while (!data.empty())
-		{
-			if (data.front().first > ti) break;
-			if (data.front().first == ti) label.push_back({ data.front().second, i });
-			data.pop_front();
-		}
-	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -869,22 +818,22 @@ void calc_all_prediction(std::function<i64(i64)> o, i64& vv, double& k)
 	i64 cena2 = 0;
 	vv = 0;
 	k = 1;
-	for (i64 i = 1; i < (i64)index.data.size(); i++)
+	for (i64 i = 1; i < (i64)index_data.size(); i++)
 	{
 		if (rez == 2)
 		{
-			if (index.data[i].time < t_end) continue; // еще не время
-			if (index.data[i].time > t_end) { rez = 0; continue; }; // что-то не так
-			cena2 = index.data[i].c3_buy;
+			if (index_data[i].time < t_end) continue; // еще не время
+			if (index_data[i].time > t_end) { rez = 0; continue; }; // что-то не так
+			cena2 = index_data[i].c3_buy;
 			rez = 0;
 			vv++;
 			k *= (cena2 * 0.999) / cena;
 		} // после продажи, возможна покупка в ту-же минуту
 		i64 t = o(i - 1);
 		if (t <= 0) continue;
-		t_end = index.data[i].time + t * 60;
+		t_end = index_data[i].time + t * 60;
 		rez = 2;
-		cena = index.data[i].c3_sale;
+		cena = index_data[i].c3_sale;
 	}
 }
 
