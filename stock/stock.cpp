@@ -10,8 +10,6 @@
 
 распределение "вероятностей" вместо одного числа 0..+5 -> 0.2, +5..+10 -> 0.8, ... +50..+inf -> 0.01%
 
-предсказывать на основе базисов разной длины (x), построить график, сравнить со средним графиком
-
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <chrono>
@@ -88,16 +86,6 @@ struct _prices_curve2 : public _basic_curve // посекундный спрос
 	_interval get_y(i64 n) override; // дипазон рисования по y
 };
 
-struct _linear_oracle_curve : public _basic_curve // линейный предсказатель
-{
-	static constexpr i64 prediction_depth = 35; // глубина предсказания 35 минут
-	static constexpr i64 prediction_basis = 65; // база предсказания 60 минут
-
-	_matrix kk; // вектор коэффициентов
-
-	void draw(i64 n, _area area) override; // нарисовать 1 элемент
-};
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _label_statistics
@@ -152,10 +140,6 @@ void start_stock()
 	graph->curve2.push_back(new _candle_curve);
 	graph->curve2.push_back(new _prices_curve2);
 //	graph->curve2.push_back(new _prices_curve);
-//	graph->curve2.push_back(new _nervous_curve);
-//	graph->curve2.push_back(new _compression_curve);
-//	graph->curve2.push_back(new _linear_oracle_curve);
-//	graph->curve2.push_back(new _spectr_curve);
 }
 
 void sable_fun1(_g_terminal* t)
@@ -900,134 +884,6 @@ void _label_statistics::calc()
 		}
 	}
 }
-
-void calc_delta_price(i64 delta_minute, _basic_statistics &bs)
-{
-	bs.clear();
-	for (i64 i = delta_minute; i < (i64)index.data.size(); i++)
-	{
-		if (index.data[i].time - index.data[i - delta_minute].time != delta_minute * 60) continue;
-		double d = (index.data[i].cc - index.data[i - delta_minute].cc) * c_pak;
-		if (d > 0) d += 0.5; else d -= 0.5; // для правильного округления
-		bs.push(d);
-	}
-}
-
-_matrix calc_vector_prediction(i64 prediction_basis, _label_statistics &ls, std::vector<i64>* sm = nullptr)
-{
-	i64 delta_basis = ls.prediction_basis - prediction_basis;
-	if ((delta_basis < 0) || (prediction_basis < 1)) return _matrix();
-	i64 vv = (sm) ? sm->size() + 1 : 1;
-	i64 v = ls.label.size();
-
-	_matrix m(prediction_basis * vv, v);
-	_matrix r(v);
-
-	for (v = 0; v < (i64)ls.label.size(); v++)
-	{
-		i64 i = ls.label[v].n;
-		i64 ii = ls.label[v].start_basis + delta_basis;
-		for (i64 j = 0; j < prediction_basis; j++)
-		{
-			m[j * vv][v] = index.data[ii + j].cc;
-			if (!sm) continue;
-			i64 ad = (i64)&index.data[ii + j];
-			for (i64 jj = 0; jj < (i64)sm->size(); jj++)
-				m[j * vv + jj + 1][v] = *((double*)(ad + (*sm)[jj]));
-		}
-		r.data[v] = index.data[i].cc;
-	}
-
-	return m.this_mul_transpose().pseudoinverse() * m * r;
-}
-
-double prediction(i64 n, _matrix& kk, i64 prediction_depth, std::vector<i64>* sm = nullptr)
-{
-	if ((kk.size.x != 1) && (kk.size.y != 1)) return 0; // должен быть столбец или строка
-	i64 vv = (sm) ? sm->size() + 1 : 1;
-	i64 prediction_basis = kk.size.square() / vv;
-	if (n < prediction_depth) return 0;
-	time_t t = index.data[n].time;
-	time_t lb = t - prediction_depth * 60;
-	for (i64 i = n - prediction_depth; i < n; i++)
-	{
-		if (index.data[i].time != lb) continue;
-		i64 ina = i - prediction_basis + 1;
-		if (ina < 0) return 0;
-		if (lb - index.data[ina].time != (prediction_basis - 1) * 60) return 0;
-		double s = 0;
-		for (i64 j = 0; j < prediction_basis; j++)
-		{
-			s += kk.data[j * vv] * index.data[ina + j].cc;
-			if (!sm) continue;
-			i64 ad = (i64)&index.data[ina + j];
-			for (i64 jj = 0; jj < (i64)sm->size(); jj++)
-				s += kk.data[j * vv + jj + 1] * *((double*)(ad + (*sm)[jj]));
-		}
-		return s;
-	}
-	return 0;
-}
-
-_matrix prediction_multi(i64 n, std::vector<_matrix>& kk, i64 prediction_depth, std::vector<i64>* sm, double& y0)
-{
-	for (auto &i: kk)
-		if ((i.size.x != 1) && (i.size.y != 1)) return _matrix(); // должен быть столбец или строка
-	i64 vv = (sm) ? sm->size() + 1 : 1;
-	i64 prediction_basis = kk[0].size.square() / vv;
-	if (n < prediction_depth) return 0;
-	time_t t = index.data[n].time;
-	time_t lb = t - prediction_depth * 60;
-	_matrix res(kk.size());
-	for (i64 i = n - prediction_depth; i < n; i++)
-	{
-		if (index.data[i].time != lb) continue;
-		i64 ina = i - prediction_basis + 1;
-		if (ina < 0) return 0;
-		if (lb - index.data[ina].time != (prediction_basis - 1) * 60) return 0;
-		y0 = index.data[ina + prediction_basis - 1].cc;
-		for (i64 oo = 0; oo < (i64)kk.size(); oo++)
-		{
-			double s = 0;
-			for (i64 j = 0; j < prediction_basis; j++)
-			{
-				s += kk[oo].data[j * vv] * index.data[ina + j].cc;
-				if (!sm) continue;
-				i64 ad = (i64)&index.data[ina + j];
-				for (i64 jj = 0; jj < (i64)sm->size(); jj++)
-					s += kk[oo].data[j * vv + jj + 1] * *((double*)(ad + (*sm)[jj]));
-			}
-			res.data[oo] = s;
-		}
-		return res;
-	}
-	return _matrix();
-}
-
-void _linear_oracle_curve::draw(i64 n, _area area)
-{
-	if (kk.empty())
-	{
-		_label_statistics ls;
-		ls.prediction_basis = prediction_basis;
-		ls.prediction_depth = prediction_depth;
-		ls.calc();
-		kk = calc_vector_prediction(prediction_basis, ls);
-	}
-	double pr = prediction(n, kk, prediction_depth);
-	if (pr == 0) return;
-	double yy1 = y_graph.max - (pr - y_graph_re.min) * y_graph.length() / (y_graph_re.max - y_graph_re.min);
-	double r = area.x.length();
-	master_bm.fill_ring({ area.x(0.5), yy1 }, r, r * 0.1, 0x80ff0000, 0x80ff0000);
-}
-
-struct _time_zn
-{
-	time_t time; // время
-	double zn; // среднее значение
-
-	bool operator < (time_t a) const noexcept { return (time < a); } // для алгоритма поиска по времени
-};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
