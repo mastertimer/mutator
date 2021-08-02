@@ -6,6 +6,8 @@
 
 struct _stock_statistics
 {
+	i64 info_compressed_size = 0;
+
 	void push_back(const _supply_and_demand& c);
 	const std::vector<_supply_and_demand>& operator*() const { return sad; }
 	const std::vector<_supply_and_demand>* operator->() const { return &sad; }

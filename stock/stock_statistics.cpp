@@ -23,6 +23,7 @@ void _stock_statistics::save_to_file(std::wstring_view fn)
 	for (auto& th : threads) th.join();
 	_stack mem;
 	for (i64 i = 0; i < number_thread; i++)	cs[i].push_to(mem);
+	info_compressed_size = mem.size;
 	mem.save_to_file(fn);
 }
 
@@ -33,6 +34,7 @@ void _stock_statistics::load_from_file(std::wstring_view fn)
 
 	_stack mem;
 	mem.load_from_file(fn);
+	info_compressed_size = mem.size;
 	i64 v = 0;
 	for (i64 i = 0; i < number_thread; i++)
 	{

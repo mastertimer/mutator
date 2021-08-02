@@ -139,8 +139,7 @@ bool update_index_data()
 
 void start_stock()
 {
-	static bool first = true; if (!first) return; first = false;
-
+	if (!stock_statistics->empty()) return;
 	stock_statistics.load_from_file(exe_path + file_stock_statistics);
 
 	if (!graph) return;
@@ -155,57 +154,17 @@ void start_stock()
 	update_index_data();
 	graph->curve2.push_back(new _candle_curve);
 	graph->curve2.push_back(new _prices_curve2);
-//	graph->curve2.push_back(new _prices_curve);
 }
 
 void sable_fun1(_g_terminal* t)
 {
-/*	fun13(nullptr, nullptr, 0);
-	t->add_text(L"количество цен: " + std::to_wstring(sss.size));
-	i64 size_pak = (sss.data.size() + 7) / 8;
-	t->add_text(L"сжатый размер: " + std::to_wstring(size_pak));
-	t->add_text(L"размер   сжатой записи:  " + double_to_wstring(double(size_pak) / sss.size, 1));
-	t->add_text(L"размер несжатой записи: " + std::to_wstring(sizeof(_supply_and_demand)));
-	_prices c;
-	for (i64 i = 0; i < sss.size; i++)
-	{
-		sss.read(i, c);
-		stock_statistics.push_back(c);
-		if (rnd(100) == 13) stock_statistics.push_back(c);
-	}
-	t->start_timer();
-//	_compression_stock_statistics cs(stock_statistics);
-//	cs.save_to_file(exe_path + sss2_file);
-	stock_statistics.save_to_file(exe_path + sss2_file);
-	t->stop_timer(L"время сжатия и сохранения");*/
+	start_stock();
+	t->add_text(L"количество цен: " + std::to_wstring(stock_statistics.size()));
+	t->add_text(L"размер сжатой записи (20.2): " + double_to_wstring(double(stock_statistics.info_compressed_size) / stock_statistics.size(), 1));
 }
 
 void sable_fun2(_g_terminal* t)
 {
-/*	fun13(nullptr, nullptr, 0);
-	t->add_text(L"количество цен: " + std::to_wstring(sss.size));
-	i64 size_pak = (sss.data.size() + 7) / 8;
-	t->add_text(L"сжатый размер: " + std::to_wstring(size_pak));
-	t->add_text(L"размер   сжатой записи:  " + double_to_wstring(double(size_pak) / sss.size, 1));
-	t->start_timer();
-	stock_statistics.load_from_file(exe_path + sss2_file);
-	t->stop_timer(L"время загрузки и распаковки");
-	if (sss.size != (i64)stock_statistics->size())
-	{
-		t->add_text(L"несовпадение количества!! ");
-		return;
-	}
-	_prices c;
-	for (i64 i = 0; i < sss.size; i++)
-	{
-		sss.read(i, c);
-		if (c != stock_statistics[i])
-		{
-			t->add_text(L"не совпало!! ");
-			return;
-		}
-	}
-	t->add_text(L"OK полное совадение! ");*/
 }
 
 i64 can_trade    = -6; // разрешенное количество сделок (купить-продать = 2 сделки), отрицательное - неактивно
