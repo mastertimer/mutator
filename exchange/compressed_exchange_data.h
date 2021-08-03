@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "stock_basic.h"
+#include "exchange_basic.h"
 
 struct _compressed_exchange_data
 {
