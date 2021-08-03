@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 void scan_supply_and_demand();
 void change_can_trade(bool);

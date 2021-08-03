@@ -1,6 +1,7 @@
 ﻿#include <chrono>
 
 #include "compression.h"
+#include "exchange_research.h"
 #include "tetron.h"
 
 __hash_table<_link> glink;
@@ -1463,16 +1464,13 @@ struct _cmd_test : public _g_terminal::_command
 	}
 };
 
-void sable_fun1(_g_terminal* t);
-void sable_fun2(_g_terminal* t);
-
 struct _cmd_load_sable_stat : public _g_terminal::_command
 {
 	std::wstring help() override { return L"конвертация статистики"; }
 
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
-		sable_fun1(t);
+		exchange_fun1(t);
 	}
 };
 
@@ -1482,7 +1480,7 @@ struct _cmd_test_stat : public _g_terminal::_command
 
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
-		sable_fun2(t);
+		exchange_fun2(t);
 	}
 };
 

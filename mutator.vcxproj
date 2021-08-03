@@ -164,6 +164,7 @@
   <ItemGroup>
     <ClCompile Include="exchange\compressed_exchange_data.cpp" />
     <ClCompile Include="exchange\exchange_data.cpp" />
+    <ClCompile Include="exchange\exchange_research.cpp" />
     <ClCompile Include="exchange\exchange_trade.cpp" />
     <ClCompile Include="exchange\g_exchange_graph.cpp" />
     <ClCompile Include="exchange\mediator.cpp" />
@@ -180,6 +181,7 @@
   <ItemGroup>
     <ClInclude Include="exchange\compressed_exchange_data.h" />
     <ClInclude Include="exchange\exchange_data.h" />
+    <ClInclude Include="exchange\exchange_research.h" />
     <ClInclude Include="exchange\exchange_trade.h" />
     <ClInclude Include="exchange\g_exchange_graph.h" />
     <ClInclude Include="exchange\mediator.h" />

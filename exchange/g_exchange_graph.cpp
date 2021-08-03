@@ -71,17 +71,6 @@ void start_stock()
 	graph->curve2.push_back(new _prices_curve2);
 }
 
-void sable_fun1(_g_terminal* t)
-{
-	start_stock();
-	t->add_text(L"количество цен: " + std::to_wstring(exchange_data.size()));
-	t->add_text(L"размер сжатой записи: " + double_to_wstring(double(exchange_data.info_compressed_size) / exchange_data.size(), 1)); // 20.2
-}
-
-void sable_fun2(_g_terminal* t)
-{
-}
-
 void expand_elements_graph()
 {
 	graph->size_el++;

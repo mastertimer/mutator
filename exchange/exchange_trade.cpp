@@ -1,11 +1,10 @@
-#include "g_exchange_graph.h"
-
-#include "exchange_trade.h"
+п»ї#include "g_exchange_graph.h"
 #include "mediator.h"
 #include "t_function.h"
+#include "exchange_trade.h"
 
-i64 can_trade = -6; // разрешенное количество сделок (купить-продать = 2 сделки), отрицательное - неактивно
-int vrema_prodat = 0; // время когда нужно продать
+i64 can_trade = -6; // СЂР°Р·СЂРµС€РµРЅРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃРґРµР»РѕРє (РєСѓРїРёС‚СЊ-РїСЂРѕРґР°С‚СЊ = 2 СЃРґРµР»РєРё), РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕРµ - РЅРµР°РєС‚РёРІРЅРѕ
+int vrema_prodat = 0; // РІСЂРµРјСЏ РєРѕРіРґР° РЅСѓР¶РЅРѕ РїСЂРѕРґР°С‚СЊ
 
 void scan_supply_and_demand()
 {
@@ -31,16 +30,16 @@ void scan_supply_and_demand()
 
 	graph->run(nullptr, graph, flag_run);
 
-	// всякие проверки на начало покупки !!!!
+	// РІСЃСЏРєРёРµ РїСЂРѕРІРµСЂРєРё РЅР° РЅР°С‡Р°Р»Рѕ РїРѕРєСѓРїРєРё !!!!
 	if (can_trade <= 0) return;
 
-	if (can_trade & 1) // была покупка, но небыло продажи
+	if (can_trade & 1) // Р±С‹Р»Р° РїРѕРєСѓРїРєР°, РЅРѕ РЅРµР±С‹Р»Рѕ РїСЂРѕРґР°Р¶Рё
 	{
 		if ((a.time >= vrema_prodat) || ((a.time_hour() == 18) && (a.time_minute() > 30))/* || noracle->get_latest_events(noracle->zn.size() - 1).stop()*/)
 		{
 			/*			int b;
 						recognize.ReadTablicaZayavok(0, b);
-						if (b != gotovo_prodaz)// лажа, не все купилось, прекратить
+						if (b != gotovo_prodaz)// Р»Р°Р¶Р°, РЅРµ РІСЃРµ РєСѓРїРёР»РѕСЃСЊ, РїСЂРµРєСЂР°С‚РёС‚СЊ
 						{
 							gotovo_prodaz = 0;
 							popitok_prodaz = 0;
@@ -54,15 +53,15 @@ void scan_supply_and_demand()
 		return;
 	}
 
-	if (a.time_hour() >= 18) return; // слишком поздно
+	if (a.time_hour() >= 18) return; // СЃР»РёС€РєРѕРј РїРѕР·РґРЅРѕ
 	time_t ti = 0;// super_oracle->prediction();
 
 
 	if (ti == 0) return;
-	// купить акции
+	// РєСѓРїРёС‚СЊ Р°РєС†РёРё
 /*	int b;
 	recognize.ReadTablicaZayavok(0, b);
-	if (b != gotovo_prodaz)// лажа, не все купилось, прекратить
+	if (b != gotovo_prodaz)// Р»Р°Р¶Р°, РЅРµ РІСЃРµ РєСѓРїРёР»РѕСЃСЊ, РїСЂРµРєСЂР°С‚РёС‚СЊ
 	{
 		gotovo_prodaz = 0;
 		popitok_prodaz = 0;
