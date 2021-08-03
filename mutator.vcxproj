@@ -168,7 +168,7 @@
     <ClCompile Include="library\mathematics.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mutator.cpp" />
-    <ClCompile Include="stock\compression_stock_statistics.cpp" />
+    <ClCompile Include="stock\compressed_exchange_data.cpp" />
     <ClCompile Include="stock\mediator.cpp" />
     <ClCompile Include="stock\g_exchange_graph.cpp" />
     <ClCompile Include="stock\stock_basic.cpp" />
@@ -183,7 +183,7 @@
     <ClInclude Include="library\mathematics.h" />
     <ClInclude Include="mutator.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="stock\compression_stock_statistics.h" />
+    <ClInclude Include="stock\compressed_exchange_data.h" />
     <ClInclude Include="stock\mediator.h" />
     <ClInclude Include="stock\g_exchange_graph.h" />
     <ClInclude Include="stock\stock_basic.h" />

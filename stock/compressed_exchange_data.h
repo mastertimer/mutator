@@ -2,7 +2,7 @@
 
 #include "stock_basic.h"
 
-struct _compression_stock_statistics
+struct _compressed_exchange_data
 {
 	i64 size = 0; // количество записей
 	_bit_vector data; // сжатые данные

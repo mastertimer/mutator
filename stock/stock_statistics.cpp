@@ -7,10 +7,10 @@
 
 void _stock_statistics::save_to_file(std::wstring_view fn)
 {
-	_compression_stock_statistics cs[number_thread];
+	_compressed_exchange_data cs[number_thread];
 	std::vector<std::thread> threads;
 
-	auto fun = [](_compression_stock_statistics* co, _supply_and_demand* sad, i64 k)
+	auto fun = [](_compressed_exchange_data* co, _supply_and_demand* sad, i64 k)
 	{
 		for (i64 i = 0; i < k; i++) co->add(sad[i]);
 	};
@@ -29,7 +29,7 @@ void _stock_statistics::save_to_file(std::wstring_view fn)
 
 void _stock_statistics::load_from_file(std::wstring_view fn)
 {
-	_compression_stock_statistics cs[number_thread];
+	_compressed_exchange_data cs[number_thread];
 	std::vector<std::thread> threads;
 
 	_stack mem;
@@ -43,7 +43,7 @@ void _stock_statistics::load_from_file(std::wstring_view fn)
 	}
 	sad.resize(v);
 
-	auto fun = [](_compression_stock_statistics* co, _supply_and_demand* sad)
+	auto fun = [](_compressed_exchange_data* co, _supply_and_demand* sad)
 	{
 		for (i64 i = 0; i < co->size; i++) co->read(sad[i]);
 	};
@@ -67,7 +67,7 @@ void _stock_statistics::push_back(const _supply_and_demand& c)
 	sad.push_back(c);
 }
 
-void _stock_statistics::operator=(_compression_stock_statistics& cs)
+void _stock_statistics::operator=(_compressed_exchange_data& cs)
 {
 	sad.clear();
 	sad.reserve(cs.size);

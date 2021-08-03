@@ -1,4 +1,4 @@
-﻿#include "stock.h"
+﻿#include "g_exchange_graph.h"
 #include "mediator.h"
 #include "t_function.h"
 

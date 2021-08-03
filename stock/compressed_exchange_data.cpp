@@ -3,7 +3,7 @@
 #include <map>
 
 #include "mathematics.h"
-#include "compression_stock_statistics.h"
+#include "compressed_exchange_data.h"
 
 namespace
 {
@@ -567,7 +567,7 @@ void _cdf3::calc(const _statistics& st, i64 min_value, i64 max_value)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-i64  _compression_stock_statistics::decoding_delta_number(i64 a)
+i64  _compressed_exchange_data::decoding_delta_number(i64 a)
 {
 	if (a <= 66) return a + ttrr1.decoding(data); // 25 %
 	if (a <= 200) return a + ttrr2.decoding(data); // 25 %
@@ -575,7 +575,7 @@ i64  _compression_stock_statistics::decoding_delta_number(i64 a)
 	return a + ttrr4.decoding(data); // 25 %
 }
 
-bool _compression_stock_statistics::read0(_supply_and_demand& c)
+bool _compressed_exchange_data::read0(_supply_and_demand& c)
 {
 	c.demand.offer[size_offer - 1].price = data.popn(16);
 	for (i64 i = size_offer - 1; i >= 0; i--)
@@ -599,7 +599,7 @@ bool _compression_stock_statistics::read0(_supply_and_demand& c)
 	return true;
 }
 
-bool _compression_stock_statistics::read1(_supply_and_demand& c)
+bool _compressed_exchange_data::read1(_supply_and_demand& c)
 {
 	if (data.pop1() == 0) return read0(c);
 	if (!read12(c.demand.offer, base_buy)) return false;
@@ -607,7 +607,7 @@ bool _compression_stock_statistics::read1(_supply_and_demand& c)
 	return true;
 }
 
-bool _compression_stock_statistics::read12(_offer* v1, std::vector<_offer>& v0)
+bool _compressed_exchange_data::read12(_offer* v1, std::vector<_offer>& v0)
 {
 	i64 kk = (v0[1].price > v0[0].price) ? -1 : 1;
 	i64 izm = nnds.decoding(data);
@@ -737,7 +737,7 @@ bool _compression_stock_statistics::read12(_offer* v1, std::vector<_offer>& v0)
 	return true;
 }
 
-bool _compression_stock_statistics::read(_supply_and_demand& c)
+bool _compressed_exchange_data::read(_supply_and_demand& c)
 {
 	if (back_time == 0)
 	{
@@ -758,19 +758,19 @@ bool _compression_stock_statistics::read(_supply_and_demand& c)
 	return true;
 }
 
-void _compression_stock_statistics::push_to(_stack& mem)
+void _compressed_exchange_data::push_to(_stack& mem)
 {
 	data.save(mem);
 	mem << size;
 }
 
-void _compression_stock_statistics::pop_from(_stack& mem)
+void _compressed_exchange_data::pop_from(_stack& mem)
 {
 	data.load(mem);
 	mem >> size;
 }
 
-bool _compression_stock_statistics::add0(const _supply_and_demand& c)
+bool _compressed_exchange_data::add0(const _supply_and_demand& c)
 {
 	data.pushn(c.demand.offer[size_offer - 1].price, 16);
 	for (i64 i = size_offer - 1; i >= 0; i--)
@@ -800,7 +800,7 @@ bool _compression_stock_statistics::add0(const _supply_and_demand& c)
 	return true;
 }
 
-bool _compression_stock_statistics::coding_delta_number(i64 a, i64 b)
+bool _compressed_exchange_data::coding_delta_number(i64 a, i64 b)
 {
 	if (a <= 66) return ttrr1.coding(b - a, data); // 25 %
 	if (a <= 200) return ttrr2.coding(b - a, data); // 25 %
@@ -808,7 +808,7 @@ bool _compression_stock_statistics::coding_delta_number(i64 a, i64 b)
 	return ttrr4.coding(b - a, data); // 25 %
 }
 
-bool _compression_stock_statistics::add12(const _offer* v1, std::vector<_offer>& v0, i64 izm)
+bool _compressed_exchange_data::add12(const _offer* v1, std::vector<_offer>& v0, i64 izm)
 {
 	i64 kk = (v1[1].price > v1[0].price) ? -1 : 1;
 	if (!nnds.coding(izm, data)) return false;
@@ -940,7 +940,7 @@ bool _compression_stock_statistics::add12(const _offer* v1, std::vector<_offer>&
 	return true;
 }
 
-bool _compression_stock_statistics::add1(const _supply_and_demand& c)
+bool _compressed_exchange_data::add1(const _supply_and_demand& c)
 {
 	i64 buy_izm = calc_delta_del_add(c.demand.offer, base_buy);
 	i64 sale_izm = calc_delta_del_add(c.supply.offer, base_sale);
@@ -962,7 +962,7 @@ bool _compression_stock_statistics::add1(const _supply_and_demand& c)
 	return true;
 }
 
-bool _compression_stock_statistics::add(const _supply_and_demand& c)
+bool _compressed_exchange_data::add(const _supply_and_demand& c)
 {
 	auto s_data = data.size();
 	if (size == 0)

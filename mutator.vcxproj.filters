@@ -38,7 +38,7 @@
     <ClCompile Include="library\compression.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
-    <ClCompile Include="stock\compression_stock_statistics.cpp">
+    <ClCompile Include="stock\compressed_exchange_data.cpp">
       <Filter>Исходные файлы\exchange</Filter>
     </ClCompile>
     <ClCompile Include="stock\stock_basic.cpp">
@@ -79,7 +79,7 @@
     <ClInclude Include="library\compression.h">
       <Filter>Исходные файлы\library</Filter>
     </ClInclude>
-    <ClInclude Include="stock\compression_stock_statistics.h">
+    <ClInclude Include="stock\compressed_exchange_data.h">
       <Filter>Исходные файлы\exchange</Filter>
     </ClInclude>
     <ClInclude Include="stock\stock_basic.h">
