@@ -44,7 +44,7 @@
     <ClCompile Include="stock\stock_basic.cpp">
       <Filter>Исходные файлы\exchange</Filter>
     </ClCompile>
-    <ClCompile Include="stock\stock_statistics.cpp">
+    <ClCompile Include="stock\exchange_data.cpp">
       <Filter>Исходные файлы\exchange</Filter>
     </ClCompile>
     <ClCompile Include="stock\g_exchange_graph.cpp">
@@ -85,7 +85,7 @@
     <ClInclude Include="stock\stock_basic.h">
       <Filter>Исходные файлы\exchange</Filter>
     </ClInclude>
-    <ClInclude Include="stock\stock_statistics.h">
+    <ClInclude Include="stock\exchange_data.h">
       <Filter>Исходные файлы\exchange</Filter>
     </ClInclude>
     <ClInclude Include="stock\g_exchange_graph.h">

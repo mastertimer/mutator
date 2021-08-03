@@ -77,14 +77,14 @@ bool update_index_data()
 {
 	i64 vcc = 0;
 	if (!index_data.empty()) vcc = index_data.back().ncc.max;
-	if (vcc == (i64)stock_statistics->size()) return false; // ничего не изменилось
-	if (vcc > (i64)stock_statistics->size())
+	if (vcc == (i64)exchange_data->size()) return false; // ничего не изменилось
+	if (vcc > (i64)exchange_data->size())
 	{
 		index_data.clear(); // обработанных данных больше, чем исходных, потому пусть будет полный перерасчет
 		vcc = 0;
 	}
-	if (stock_statistics->size() < 2) return false; // мало данных для обработки
-	i64 back_minute = stock_statistics->back().time_to_minute();
+	if (exchange_data->size() < 2) return false; // мало данных для обработки
+	i64 back_minute = exchange_data->back().time_to_minute();
 	if (!index_data.empty())
 	{
 		if (back_minute == index_data.back().time + 1) return false; // еще рано
@@ -94,12 +94,12 @@ bool update_index_data()
 			vcc = 0;
 		}
 	}
-	if (stock_statistics->size() - vcc < 2) return false; // мало данных для обработки
+	if (exchange_data->size() - vcc < 2) return false; // мало данных для обработки
 	time_t t = 0;
 	_index cp;
-	for (i64 i = vcc; i < (i64)stock_statistics->size(); i++)
+	for (i64 i = vcc; i < (i64)exchange_data->size(); i++)
 	{
-		const _supply_and_demand& cc = stock_statistics[i];
+		const _supply_and_demand& cc = exchange_data[i];
 		time_t t2 = cc.time_to_minute();
 		if (t2 == t)
 		{
@@ -139,8 +139,8 @@ bool update_index_data()
 
 void start_stock()
 {
-	if (!stock_statistics->empty()) return;
-	stock_statistics.load_from_file(exe_path + file_stock_statistics);
+	if (!exchange_data->empty()) return;
+	exchange_data.load_from_file(exe_path + file_stock_statistics);
 
 	if (!graph) return;
 	if (!graph->find1<_g_scrollbar>(flag_part))
@@ -159,8 +159,8 @@ void start_stock()
 void sable_fun1(_g_terminal* t)
 {
 	start_stock();
-	t->add_text(L"количество цен: " + std::to_wstring(stock_statistics.size()));
-	t->add_text(L"размер сжатой записи: " + double_to_wstring(double(stock_statistics.info_compressed_size) / stock_statistics.size(), 1)); // 20.2
+	t->add_text(L"количество цен: " + std::to_wstring(exchange_data.size()));
+	t->add_text(L"размер сжатой записи: " + double_to_wstring(double(exchange_data.info_compressed_size) / exchange_data.size(), 1)); // 20.2
 }
 
 void sable_fun2(_g_terminal* t)
@@ -189,7 +189,7 @@ void scan_supply_and_demand()
 		#endif // DEBUG_MMM*/
 		return;
 	}
-	stock_statistics.push_back(a);
+	exchange_data.push_back(a);
 	update_index_data();
 
 	graph->run(nullptr, graph, flag_run);
@@ -273,7 +273,7 @@ void narrow_graph_elements()
 
 void save_stock_statistics()
 {
-	stock_statistics.save_to_file(exe_path + file_stock_statistics);
+	exchange_data.save_to_file(exe_path + file_stock_statistics);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -485,7 +485,7 @@ void _g_exchange_graph::ris2(_trans tr, bool final)
 		date_to_ansi_string(mintime).data(), 4, cc2 - 0x80000000);
 	// рисование количества элементов
 	master_bm.text16n(std::max(a.x.min, 0.0) + dex + 10, std::max(a.y.min, 0.0) + 60,
-		std::to_string(stock_statistics.size()).data(), 2, 0x60ff0000);
+		std::to_string(exchange_data.size()).data(), 2, 0x60ff0000);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -583,7 +583,7 @@ void _prices_curve::draw(i64 n, _area area)
 				}
 		}
 		i64 ii = i - begin_ss;
-		if (part_ss[ii].empty()) part_ss[ii] = stock_statistics[i];
+		if (part_ss[ii].empty()) part_ss[ii] = exchange_data[i];
 		pri[part_ss[ii].time % 60] = part_ss[ii];
 	}
 	min = index_data[n].minmin - c_unpak;
@@ -705,7 +705,7 @@ void _prices_curve2::draw(i64 n, _area area)
 				}
 		}
 		i64 ii = i - begin_ss;
-		if (part_ss[ii].empty()) part_ss[ii] = stock_statistics[i];
+		if (part_ss[ii].empty()) part_ss[ii] = exchange_data[i];
 		pri[part_ss[ii].time % 60] = part_ss[ii];
 	}
 	min = index_data[n].minmin - c_unpak;

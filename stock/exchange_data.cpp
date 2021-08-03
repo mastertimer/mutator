@@ -1,11 +1,11 @@
 ﻿#include <ctime>
 #include <thread>
 
-#include "stock_statistics.h"
+#include "exchange_data.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _stock_statistics::save_to_file(std::wstring_view fn)
+void _exchange_data::save_to_file(std::wstring_view fn)
 {
 	_compressed_exchange_data cs[number_thread];
 	std::vector<std::thread> threads;
@@ -27,7 +27,7 @@ void _stock_statistics::save_to_file(std::wstring_view fn)
 	mem.save_to_file(fn);
 }
 
-void _stock_statistics::load_from_file(std::wstring_view fn)
+void _exchange_data::load_from_file(std::wstring_view fn)
 {
 	_compressed_exchange_data cs[number_thread];
 	std::vector<std::thread> threads;
@@ -57,7 +57,7 @@ void _stock_statistics::load_from_file(std::wstring_view fn)
 	for (auto& th : threads) th.join();
 }
 
-void _stock_statistics::push_back(const _supply_and_demand& c)
+void _exchange_data::push_back(const _supply_and_demand& c)
 {
 	if (!sad.empty())
 	{
@@ -67,7 +67,7 @@ void _stock_statistics::push_back(const _supply_and_demand& c)
 	sad.push_back(c);
 }
 
-void _stock_statistics::operator=(_compressed_exchange_data& cs)
+void _exchange_data::operator=(_compressed_exchange_data& cs)
 {
 	sad.clear();
 	sad.reserve(cs.size);

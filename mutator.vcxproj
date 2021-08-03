@@ -172,7 +172,7 @@
     <ClCompile Include="stock\mediator.cpp" />
     <ClCompile Include="stock\g_exchange_graph.cpp" />
     <ClCompile Include="stock\stock_basic.cpp" />
-    <ClCompile Include="stock\stock_statistics.cpp" />
+    <ClCompile Include="stock\exchange_data.cpp" />
     <ClCompile Include="tetrons\tetron.cpp" />
     <ClCompile Include="tetrons\t_function.cpp" />
   </ItemGroup>
@@ -187,7 +187,7 @@
     <ClInclude Include="stock\mediator.h" />
     <ClInclude Include="stock\g_exchange_graph.h" />
     <ClInclude Include="stock\stock_basic.h" />
-    <ClInclude Include="stock\stock_statistics.h" />
+    <ClInclude Include="stock\exchange_data.h" />
     <ClInclude Include="tetrons\tetron.h" />
     <ClInclude Include="tetrons\t_function.h" />
   </ItemGroup>
