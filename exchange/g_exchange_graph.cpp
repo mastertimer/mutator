@@ -15,31 +15,10 @@
 #include <chrono>
 #include <deque>
 
-#include "t_function.h"
-#include "mediator.h"
+#include "exchange_data.h"
 #include "g_exchange_graph.h"
 
-constexpr wchar_t file_stock_statistics[] = L"..\\..\\data\\base.c3";
-
-_g_exchange_graph *graph = nullptr; // график
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct _index           // разнообразные минутные коэффициенты
-{
-	_iinterval ncc;     // диапазон цен
-	i64    time    = 0; // время (с обнуленной секундой (time%60 = 0))
-	double min     = 0; // минимальная цена
-	double max     = 0; // макимальная цена
-	double first   = 0; // первая цена
-	double last    = 0; // последняя цена
-	double c3_buy  = 0; // цена покупки на 3-й секунде
-	double c3_sale = 0; // цена продажи на 3-й секунде
-	double minmin  = 0; // минимальная цена минимального спроса ([19])
-	double maxmax  = 0; // максимальная цена максимального предложения ([19])
-};
-
-std::vector<_index> index_data; // поминутный вектор все коэффициенты
 
 //_basic_curve* super_oracle = nullptr; // оракул для предсказания
 
@@ -73,74 +52,10 @@ struct _prices_curve2 : public _basic_curve // посекундный спрос
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool update_index_data()
-{
-	i64 vcc = 0;
-	if (!index_data.empty()) vcc = index_data.back().ncc.max;
-	if (vcc == (i64)exchange_data->size()) return false; // ничего не изменилось
-	if (vcc > (i64)exchange_data->size())
-	{
-		index_data.clear(); // обработанных данных больше, чем исходных, потому пусть будет полный перерасчет
-		vcc = 0;
-	}
-	if (exchange_data->size() < 2) return false; // мало данных для обработки
-	i64 back_minute = exchange_data->back().time_to_minute();
-	if (!index_data.empty())
-	{
-		if (back_minute == index_data.back().time + 1) return false; // еще рано
-		if (back_minute <= index_data.back().time) // так быть не должно, полный перерасчет
-		{
-			index_data.clear();
-			vcc = 0;
-		}
-	}
-	if (exchange_data->size() - vcc < 2) return false; // мало данных для обработки
-	time_t t = 0;
-	_index cp;
-	for (i64 i = vcc; i < (i64)exchange_data->size(); i++)
-	{
-		const _supply_and_demand& cc = exchange_data[i];
-		time_t t2 = cc.time_to_minute();
-		if (t2 == t)
-		{
-			double aa = ((i64)cc.demand.offer[0].price + cc.supply.offer[0].price) * (c_unpak * 0.5);
-			if (aa < cp.min) cp.min = aa;
-			if (aa > cp.max) cp.max = aa;
-			if (cc.demand.offer[size_offer - 1].price * c_unpak < cp.minmin) cp.minmin = cc.demand.offer[size_offer - 1].price * c_unpak;
-			if (cc.supply.offer[size_offer - 1].price * c_unpak > cp.maxmax) cp.maxmax = cc.supply.offer[size_offer - 1].price * c_unpak;
-			cp.ncc.max++;
-			cp.last = aa;
-			if (cc.time % 60 == 3)
-			{
-				cp.c3_buy = cc.demand.offer[0].price * c_unpak;
-				cp.c3_sale = cc.supply.offer[0].price * c_unpak;
-			}
-			continue;
-		}
-		if (t != 0)
-		{
-			index_data.push_back(cp);
-		}
-		if (t2 == back_minute) break; // последнюю минуту пока не трогать
-		t = t2;
-		cp.time = t;
-		cp.ncc.min = i;
-		cp.ncc.max = i + 1;
-		cp.max = cp.min = cp.last = cp.first = ((i64)cc.demand.offer[0].price + cc.supply.offer[0].price) * (c_unpak * 0.5);
-		cp.minmin = cc.demand.offer[size_offer - 1].price * c_unpak;
-		cp.maxmax = cc.supply.offer[size_offer - 1].price * c_unpak;
-		cp.c3_buy = cc.demand.offer[0].price * c_unpak;
-		cp.c3_sale = cc.supply.offer[0].price * c_unpak;
-	}
-	return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 void start_stock()
 {
 	if (!exchange_data->empty()) return;
-	exchange_data.load_from_file(exe_path + file_stock_statistics);
+	exchange_data.load_from_file();
 
 	if (!graph) return;
 	if (!graph->find1<_g_scrollbar>(flag_part))
@@ -167,98 +82,6 @@ void sable_fun2(_g_terminal* t)
 {
 }
 
-i64 can_trade    = -6; // разрешенное количество сделок (купить-продать = 2 сделки), отрицательное - неактивно
-int vrema_prodat =  0; // время когда нужно продать
-
-void scan_supply_and_demand()
-{
-	if (zamok_pokupki) return;
-	_supply_and_demand a;
-	int ok = recognize.read_prices_from_screen(&a);
-	if (ok != 0)
-	{
-		/*#ifdef DEBUG_MMM
-				wstring fn = exe_path + L"errorscr.bmp";
-				if (!FileExists(fn.c_str()))
-				{
-					recognize.image_.SaveToFile(fn.c_str());
-					ofstream file(exe_path + L"errorscr.txt");
-					file << ok;
-					file.close();
-				}
-		#endif // DEBUG_MMM*/
-		return;
-	}
-	exchange_data.push_back(a);
-	update_index_data();
-
-	graph->run(nullptr, graph, flag_run);
-
-	// всякие проверки на начало покупки !!!!
-	if (can_trade <= 0) return;
-
-	if (can_trade & 1) // была покупка, но небыло продажи
-	{
-		if ((a.time >= vrema_prodat) || ((a.time_hour() == 18) && (a.time_minute() > 30))/* || noracle->get_latest_events(noracle->zn.size() - 1).stop()*/)
-		{
-			/*			int b;
-						recognize.ReadTablicaZayavok(0, b);
-						if (b != gotovo_prodaz)// лажа, не все купилось, прекратить
-						{
-							gotovo_prodaz = 0;
-							popitok_prodaz = 0;
-							return;
-						}*/
-			zamok_pokupki = true;
-			can_trade--;
-			_t_function* fu = new _t_function(36);
-			fu->run(0, fu, flag_run);
-		}
-		return;
-	}
-
-	if (a.time_hour() >= 18) return; // слишком поздно
-	time_t ti = 0;// super_oracle->prediction();
-
-
-	if (ti == 0) return;
-	// купить акции
-/*	int b;
-	recognize.ReadTablicaZayavok(0, b);
-	if (b != gotovo_prodaz)// лажа, не все купилось, прекратить
-	{
-		gotovo_prodaz = 0;
-		popitok_prodaz = 0;
-		return;
-	}*/
-	zamok_pokupki = true;
-	vrema_prodat = a.time + ti * 60;
-	can_trade--;
-	_t_function* fu = new _t_function(35);
-	fu->run(0, fu, flag_run);
-}
-
-void change_can_trade(bool can)
-{
-	can_trade = (can) ? abs(can_trade) : -abs(can_trade);
-}
-
-void buy_shares()
-{
-	if (zamok_pokupki) return;
-	zamok_pokupki = true;
-	_t_function* fu = new _t_function(35);
-	fu->run(0, fu, flag_run);
-}
-
-void sell_shares()
-{
-	if (zamok_pokupki) return;
-	zamok_pokupki = true;
-	_t_function* fu = new _t_function(36);
-	fu->run(0, fu, flag_run);
-}
-
 void expand_elements_graph()
 {
 	graph->size_el++;
@@ -269,11 +92,6 @@ void narrow_graph_elements()
 {
 	if (graph->size_el > 1) graph->size_el--;
 	graph->cha_area();
-}
-
-void save_stock_statistics()
-{
-	exchange_data.save_to_file(exe_path + file_stock_statistics);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

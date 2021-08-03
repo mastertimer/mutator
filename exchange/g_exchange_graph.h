@@ -36,6 +36,8 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+inline _g_exchange_graph* graph = nullptr; // график
+
 inline _basic_statistics research1; // для исследования статистики
 inline _basic_statistics research2; // для исследования статистики
 inline _basic_statistics research3; // для исследования статистики
@@ -43,11 +45,6 @@ inline _basic_statistics research3; // для исследования стат�
 void calc_all_prediction(std::function<i64(i64)> o, i64& vv, double& k);
 
 void start_stock();
-void scan_supply_and_demand();
-void save_stock_statistics();
-void change_can_trade(bool);
-void buy_shares();
-void sell_shares();
 void expand_elements_graph();
 void narrow_graph_elements();
 
