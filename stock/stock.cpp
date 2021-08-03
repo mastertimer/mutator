@@ -21,7 +21,7 @@
 
 constexpr wchar_t file_stock_statistics[] = L"..\\..\\data\\base.c3";
 
-_sable_graph *graph = nullptr; // график
+_g_bourse_graph *graph = nullptr; // график
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -160,7 +160,7 @@ void sable_fun1(_g_terminal* t)
 {
 	start_stock();
 	t->add_text(L"количество цен: " + std::to_wstring(stock_statistics.size()));
-	t->add_text(L"размер сжатой записи (20.2): " + double_to_wstring(double(stock_statistics.info_compressed_size) / stock_statistics.size(), 1));
+	t->add_text(L"размер сжатой записи: " + double_to_wstring(double(stock_statistics.info_compressed_size) / stock_statistics.size(), 1)); // 20.2
 }
 
 void sable_fun2(_g_terminal* t)
@@ -278,18 +278,18 @@ void save_stock_statistics()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_sable_graph::~_sable_graph()
+_g_bourse_graph::~_g_bourse_graph()
 {
 	for (auto i : curve2) delete i;
 }
 
-bool _sable_graph::mouse_down_left2(_xy r)
+bool _g_bourse_graph::mouse_down_left2(_xy r)
 {
 	x_tani = (i64)r.x;
 	return true;
 }
 
-void _sable_graph::mouse_move_left2(_xy r)
+void _g_bourse_graph::mouse_move_left2(_xy r)
 {
 	i64 dx = ((i64)r.x - x_tani) / size_el;
 	if (dx == 0) return;
@@ -306,12 +306,12 @@ void _sable_graph::mouse_move_left2(_xy r)
 	polz->run(0, polz, flag_run);
 }
 
-void _sable_graph::run(_tetron* tt0, _tetron* tt, u64 flags)
+void _g_bourse_graph::run(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	cha_area();
 }
 
-_sable_graph::_sable_graph()
+_g_bourse_graph::_g_bourse_graph()
 {
 	graph = this;
 	local_area = { {0, 200}, {0, 100} };
@@ -333,7 +333,7 @@ std::string date_to_ansi_string(time_t time)
 	return res;
 }
 
-void _sable_graph::ris2(_trans tr, bool final)
+void _g_bourse_graph::ris2(_trans tr, bool final)
 {
 	_area a = tr(local_area);
 	_interval y_; // диапазон у (grid)

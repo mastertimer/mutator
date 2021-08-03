@@ -13,13 +13,13 @@ struct _basic_curve // база для кривых
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _sable_graph : public _t_go
+struct _g_bourse_graph : public _t_go
 {
 	std::vector<_basic_curve*> curve2; // кривая, 2я версия
 	i64 size_el = 6; // размер элемента
 
-	_sable_graph();
-	~_sable_graph();
+	_g_bourse_graph();
+	~_g_bourse_graph();
 
 	uchar type()      override { return 9; }
 	int get_froglif() override { return 0x71; }
@@ -41,7 +41,6 @@ inline _basic_statistics research2; // для исследования стат�
 inline _basic_statistics research3; // для исследования статистики
 
 void calc_all_prediction(std::function<i64(i64)> o, i64& vv, double& k);
-void calc_delta_price(i64 delta_minute, _basic_statistics& bs);
 
 void start_stock();
 void scan_supply_and_demand();
