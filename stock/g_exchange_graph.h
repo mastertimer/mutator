@@ -13,13 +13,13 @@ struct _basic_curve // база для кривых
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _g_bourse_graph : public _t_go
+struct _g_exchange_graph : public _t_go
 {
 	std::vector<_basic_curve*> curve2; // кривая, 2я версия
 	i64 size_el = 6; // размер элемента
 
-	_g_bourse_graph();
-	~_g_bourse_graph();
+	_g_exchange_graph();
+	~_g_exchange_graph();
 
 	uchar type()      override { return 9; }
 	int get_froglif() override { return 0x71; }

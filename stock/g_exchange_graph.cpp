@@ -17,11 +17,11 @@
 
 #include "t_function.h"
 #include "mediator.h"
-#include "stock.h"
+#include "g_exchange_graph.h"
 
 constexpr wchar_t file_stock_statistics[] = L"..\\..\\data\\base.c3";
 
-_g_bourse_graph *graph = nullptr; // график
+_g_exchange_graph *graph = nullptr; // график
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -278,18 +278,18 @@ void save_stock_statistics()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_g_bourse_graph::~_g_bourse_graph()
+_g_exchange_graph::~_g_exchange_graph()
 {
 	for (auto i : curve2) delete i;
 }
 
-bool _g_bourse_graph::mouse_down_left2(_xy r)
+bool _g_exchange_graph::mouse_down_left2(_xy r)
 {
 	x_tani = (i64)r.x;
 	return true;
 }
 
-void _g_bourse_graph::mouse_move_left2(_xy r)
+void _g_exchange_graph::mouse_move_left2(_xy r)
 {
 	i64 dx = ((i64)r.x - x_tani) / size_el;
 	if (dx == 0) return;
@@ -306,12 +306,12 @@ void _g_bourse_graph::mouse_move_left2(_xy r)
 	polz->run(0, polz, flag_run);
 }
 
-void _g_bourse_graph::run(_tetron* tt0, _tetron* tt, u64 flags)
+void _g_exchange_graph::run(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	cha_area();
 }
 
-_g_bourse_graph::_g_bourse_graph()
+_g_exchange_graph::_g_exchange_graph()
 {
 	graph = this;
 	local_area = { {0, 200}, {0, 100} };
@@ -333,7 +333,7 @@ std::string date_to_ansi_string(time_t time)
 	return res;
 }
 
-void _g_bourse_graph::ris2(_trans tr, bool final)
+void _g_exchange_graph::ris2(_trans tr, bool final)
 {
 	_area a = tr(local_area);
 	_interval y_; // диапазон у (grid)

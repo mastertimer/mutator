@@ -6688,7 +6688,7 @@
 			]
 		},
 		{
-			"name": "_g_bourse_graph",
+			"name": "_g_exchange_graph",
 			"id": 671,
 			"local_area": { "x": { "min": 0, "max": 949 }, "y": { "min": 0, "max": 451 } },
 			"links": [

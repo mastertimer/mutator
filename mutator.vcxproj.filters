@@ -15,11 +15,11 @@
       <Extensions>
       </Extensions>
     </Filter>
-    <Filter Include="Исходные файлы\stock">
-      <UniqueIdentifier>{5d5e97c9-7d36-430b-9833-5e718f4e4c94}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Исходные файлы\tetrons">
       <UniqueIdentifier>{5094bb71-0e68-406b-8a8c-30558c4e4b1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\exchange">
+      <UniqueIdentifier>{5d5e97c9-7d36-430b-9833-5e718f4e4c94}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -39,19 +39,19 @@
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
     <ClCompile Include="stock\compression_stock_statistics.cpp">
-      <Filter>Исходные файлы\stock</Filter>
+      <Filter>Исходные файлы\exchange</Filter>
     </ClCompile>
     <ClCompile Include="stock\stock_basic.cpp">
-      <Filter>Исходные файлы\stock</Filter>
+      <Filter>Исходные файлы\exchange</Filter>
     </ClCompile>
     <ClCompile Include="stock\stock_statistics.cpp">
-      <Filter>Исходные файлы\stock</Filter>
+      <Filter>Исходные файлы\exchange</Filter>
     </ClCompile>
-    <ClCompile Include="stock\stock.cpp">
-      <Filter>Исходные файлы\stock</Filter>
+    <ClCompile Include="stock\g_exchange_graph.cpp">
+      <Filter>Исходные файлы\exchange</Filter>
     </ClCompile>
     <ClCompile Include="stock\mediator.cpp">
-      <Filter>Исходные файлы\stock</Filter>
+      <Filter>Исходные файлы\exchange</Filter>
     </ClCompile>
     <ClCompile Include="tetrons\tetron.cpp">
       <Filter>Исходные файлы\tetrons</Filter>
@@ -80,19 +80,19 @@
       <Filter>Исходные файлы\library</Filter>
     </ClInclude>
     <ClInclude Include="stock\compression_stock_statistics.h">
-      <Filter>Исходные файлы\stock</Filter>
+      <Filter>Исходные файлы\exchange</Filter>
     </ClInclude>
     <ClInclude Include="stock\stock_basic.h">
-      <Filter>Исходные файлы\stock</Filter>
+      <Filter>Исходные файлы\exchange</Filter>
     </ClInclude>
     <ClInclude Include="stock\stock_statistics.h">
-      <Filter>Исходные файлы\stock</Filter>
+      <Filter>Исходные файлы\exchange</Filter>
     </ClInclude>
-    <ClInclude Include="stock\stock.h">
-      <Filter>Исходные файлы\stock</Filter>
+    <ClInclude Include="stock\g_exchange_graph.h">
+      <Filter>Исходные файлы\exchange</Filter>
     </ClInclude>
     <ClInclude Include="stock\mediator.h">
-      <Filter>Исходные файлы\stock</Filter>
+      <Filter>Исходные файлы\exchange</Filter>
     </ClInclude>
     <ClInclude Include="tetrons\tetron.h">
       <Filter>Исходные файлы\tetrons</Filter>

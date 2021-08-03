@@ -28,7 +28,7 @@
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "t_function.h"
-#include "stock.h"
+#include "g_exchange_graph.h"
 #include "mutator.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,7 +65,7 @@ _tetron* create_tetron(const std::string& name)
 		make(_g_edit_double),
 		make(_g_button),
 		make(_g_tetron),
-		make(_g_bourse_graph),
+		make(_g_exchange_graph),
 		make(_g_graph),
 		make(_g_terminal)
 	};
@@ -88,7 +88,7 @@ _tetron* create_tetron(uchar type)
 	case  6: return new _g_test_graph;        // 0xF2
 	case  7: return new _t_double;            // 0x50
 	case  8: return new _g_link;              // 0x7A
-	case  9: return new _g_bourse_graph;         // 0x71
+	case  9: return new _g_exchange_graph;    // 0x71
 	case 10: return new _g_circle;            // 0x74
 	case 11: return new _g_line;              // 0x70
 	case 12: return new _g_rect;              // 0xF4
