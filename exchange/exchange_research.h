@@ -17,6 +17,8 @@ struct _delta_offers
 {
 	_delta_offer delta_offer[size_offer];
 	i64 size;
+
+	_delta_offers(const _offers &a, const _offers& b); // =a-b
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -25,6 +27,8 @@ struct _delta_supply_and_demand // предложение и спрос
 {
 	_delta_offers delta_demand; // желающие купить
 	_delta_offers delta_supply; // желающие продать
+
+	_delta_supply_and_demand(const _supply_and_demand& a, const _supply_and_demand& b); // =a-b
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -66,7 +66,7 @@ void _exchange_data::push_back(const _supply_and_demand& c)
 	if (!sad.empty())
 	{
 		if (c == sad.back()) return;
-		//		if (c.time <= sad.back().time) return;
+		if (c.time <= sad.back().time) return;
 	}
 	sad.push_back(c);
 }
