@@ -11,9 +11,10 @@ _delta_offer operator-(_offer a, _offer b) // =a-b
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_delta_offers::_delta_offers(const _offers& a, const _offers& b)
+_delta_offers operator-(const _offers& a, const _offers& b)
 {
-	size = 0;
+	_delta_offers res;
+	res.size = 0;
 	bool increase = a.offer[1].price > a.offer[0].price;
 	for (i64 ia = 0, ib = 0; ia < size_offer && ib < size_offer;)
 	{
@@ -22,14 +23,15 @@ _delta_offers::_delta_offers(const _offers& a, const _offers& b)
 			if (increase ^ (a.offer[ia].price < b.offer[ib].price)) ib++; else ia++;
 			continue;
 		}
-		delta_offer[size++] = a.offer[ia++] - b.offer[ib++];
+		res.delta_offer[res.size++] = a.offer[ia++] - b.offer[ib++];
 	}
+	return res;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 _delta_supply_and_demand::_delta_supply_and_demand(const _supply_and_demand& a, const _supply_and_demand& b):
-	delta_demand(a.demand, b.demand), delta_supply(a.supply, b.supply)
+	delta_demand{ a.demand - b.demand }, delta_supply{ a.supply - b.supply }
 {
 }
 
