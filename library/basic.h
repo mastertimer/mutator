@@ -827,24 +827,6 @@ struct _bitmap : public _picture
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _hsva // цвет в формате hsv
-{
-	double h; // цветовой тон
-	double s; // насыщенность
-	double v; // яркость
-	double a; // прозрачность
-
-	_hsva() = default;
-	_hsva(uint c) { *this = c; }
-	_hsva(const _hsva& c) = default;
-
-	void operator = (uint c);
-	_hsva& operator = (const _hsva& c) = default;
-	operator uint();
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 inline _bitmap master_bm; // кусочный рисунок
 
 _stack& operator<<(_stack& o, _picture const& p);

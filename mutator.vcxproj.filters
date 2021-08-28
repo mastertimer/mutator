@@ -68,6 +68,9 @@
     <ClCompile Include="exchange\exchange_research.cpp">
       <Filter>Исходные файлы\exchange</Filter>
     </ClCompile>
+    <ClCompile Include="library\graphics.cpp">
+      <Filter>Исходные файлы\library</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\basic.h">
@@ -114,6 +117,9 @@
     </ClInclude>
     <ClInclude Include="exchange\exchange_research.h">
       <Filter>Исходные файлы\exchange</Filter>
+    </ClInclude>
+    <ClInclude Include="library\graphics.h">
+      <Filter>Исходные файлы\library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

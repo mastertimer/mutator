@@ -53,7 +53,6 @@ _tetron* create_tetron(const std::string& name)
 		make(_g_rect),
 		make(_g_froglif),
 		make(_g_scrollbar),
-		make(_g_color_ring),
 		make(_t_string),
 		make(_g_edit_string),
 		make(_t_int),
@@ -96,7 +95,7 @@ _tetron* create_tetron(uchar type)
 	case 14: return new _g_froglif;           // 0x7F
 	case 15: return new _t_xy;                // 0x30
 	case 16: return new _g_scrollbar;         // 0xF8
-	case 17: return new _g_color_ring;        // 0x72
+
 	case 18: return new _g_terminal;          // 0x73
 
 	case 24: return new _t_string;            // 0x10

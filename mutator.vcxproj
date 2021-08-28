@@ -171,6 +171,7 @@
     <ClCompile Include="exchange\exchange_basic.cpp" />
     <ClCompile Include="library\basic.cpp" />
     <ClCompile Include="library\compression.cpp" />
+    <ClCompile Include="library\graphics.cpp" />
     <ClCompile Include="library\json.cpp" />
     <ClCompile Include="library\mathematics.cpp" />
     <ClCompile Include="main.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="exchange\exchange_basic.h" />
     <ClInclude Include="library\basic.h" />
     <ClInclude Include="library\compression.h" />
+    <ClInclude Include="library\graphics.h" />
     <ClInclude Include="library\json.h" />
     <ClInclude Include="library\mathematics.h" />
     <ClInclude Include="mutator.h" />
