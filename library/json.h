@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "basic.h"
+#include "graphics.h"
 
 struct _wjson
 {
