@@ -3,7 +3,7 @@
 #include <map>
 #include <chrono>
 
-#include "basic.h" 
+#include "graphics.h" 
 #include "json.h" 
 #include "mathematics.h"
 
@@ -25,6 +25,8 @@ inline _xy mouse_xy; // координаты мышки
 inline _xy mouse_xy_pr; // предыдущие координаты мышки
 
 inline u64 inverted_flags(u64 a) { return (a << 32) | (a >> 32); }
+
+inline _bitmap master_bm; // кусочный рисунок
 
 constexpr u64 flag_parent       = 0x001;
 constexpr u64 flag_part         = 0x002;
