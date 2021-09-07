@@ -8,15 +8,15 @@
 
 _picture::_picture(_isize r) noexcept
 {
-	area = size = r.correct();
+	drawing_area = size = r.correct();
 	if (!size.empty()) data = new uint[size.square()];
 }
 
 _picture::_picture(_picture&& move) noexcept : data(move.data), size(move.size), transparent(move.transparent),
-area(move.area)
+drawing_area(move.drawing_area)
 {
 	move.data = nullptr;
-	move.area = move.size = { 0,0 };
+	move.drawing_area = move.size = { 0,0 };
 }
 
 void _picture::operator=(const _picture& move) noexcept
@@ -24,7 +24,7 @@ void _picture::operator=(const _picture& move) noexcept
 	resize(move.size);
 	transparent = move.transparent;
 	memcpy(data, move.data, size.square() * 4);
-	area = size;
+	drawing_area = size;
 }
 
 _picture& _picture::operator=(_picture&& move) noexcept
@@ -33,10 +33,10 @@ _picture& _picture::operator=(_picture&& move) noexcept
 	delete[] data;
 	data = move.data;
 	size = move.size;
-	area = move.area;
+	drawing_area = move.drawing_area;
 	transparent = move.transparent;
 	move.data = nullptr;
-	move.area = move.size = { 0,0 };
+	move.drawing_area = move.size = { 0,0 };
 	return *this;
 }
 
@@ -54,7 +54,7 @@ void _picture::set_transparent() noexcept
 
 void _picture::draw(_ixy r, _picture& bm)
 {
-	_iarea b = bm.size.move(r) & area;
+	_iarea b = bm.size.move(r) & drawing_area;
 	if (b.empty()) return;
 	if (!bm.transparent)
 	{
@@ -86,14 +86,14 @@ bool _picture::resize(_isize wh) noexcept
 	size = wh;
 	delete[] data;
 	data = (size.empty()) ? nullptr : (new uint[size.square()]);
-	area = size;
+	drawing_area = size;
 	transparent = false;
 	return true;
 }
 
 void _picture::clear(uint c) noexcept
 {
-	if (area != size) { fill_rectangle(size, c, true); return; }
+	if (drawing_area != size) { fill_rectangle(size, c, true); return; }
 	transparent = ((c >> 24) != 0xff);
 	u64 cc = (((u64)c) << 32) + c;
 	u64* ee = (u64*)data;
@@ -110,9 +110,9 @@ void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
 	if (p1.y == p2.y) // горизонтальная линия
 	{
 		if (p1.x > p2.x) std::swap(p1.x, p2.x);
-		if (p1.x < area.x.min) p1.x = area.x.min;
-		if (p2.x >= area.x.max) p2.x = area.x.max - 1;
-		if ((p1.x > p2.x) || (p1.y < area.y.min) || (p1.y >= area.y.max)) return; // за пределы
+		if (p1.x < drawing_area.x.min) p1.x = drawing_area.x.min;
+		if (p2.x >= drawing_area.x.max) p2.x = drawing_area.x.max - 1;
+		if ((p1.x > p2.x) || (p1.y < drawing_area.y.min) || (p1.y >= drawing_area.y.max)) return; // за пределы
 		if (rep)
 		{
 			u64  cc = (((u64)c) << 32) + c;
@@ -139,9 +139,9 @@ void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
 	if (p1.x == p2.x) // вертикальная линия
 	{
 		if (p1.y > p2.y) std::swap(p1.y, p2.y);
-		if (p1.y < area.y.min) p1.y = area.y.min;
-		if (p2.y >= area.y.max) p2.y = area.y.max - 1;
-		if ((p1.y > p2.y) || (p1.x < area.x.min) || (p1.x >= area.x.max)) return; // за пределы
+		if (p1.y < drawing_area.y.min) p1.y = drawing_area.y.min;
+		if (p2.y >= drawing_area.y.max) p2.y = drawing_area.y.max - 1;
+		if ((p1.y > p2.y) || (p1.x < drawing_area.x.min) || (p1.x >= drawing_area.x.max)) return; // за пределы
 		if (rep)
 		{
 			uint* c2 = &data[p1.y * size.x + p1.x];
@@ -174,48 +174,48 @@ void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
 	i64 y = ((p1.y * 2 + 1) << 31) - dy;
 	i64 n = 0;
 	i64 k = d;
-	if (p1.x < area.x.min)
+	if (p1.x < drawing_area.x.min)
 	{
 		if (dx <= 0) return;
-		n = (i64)((((area.x.min - 0) << 32) - x) / dx);
+		n = (i64)((((drawing_area.x.min - 0) << 32) - x) / dx);
 	}
-	else if (p1.x >= area.x.max)
+	else if (p1.x >= drawing_area.x.max)
 	{
 		if (dx >= 0) return;
-		n = (int)((((area.x.max - 0) << 32) - x) / dx);
+		n = (int)((((drawing_area.x.max - 0) << 32) - x) / dx);
 	}
-	if (p2.x < area.x.min)
+	if (p2.x < drawing_area.x.min)
 	{
 		if (dx >= 0) return;
-		k = (int)((((area.x.min - 0) << 32) - x) / dx - 1);
+		k = (int)((((drawing_area.x.min - 0) << 32) - x) / dx - 1);
 	}
-	else if (p2.x >= area.x.max)
+	else if (p2.x >= drawing_area.x.max)
 	{
 		if (dx <= 0) return;
-		k = (int)((((area.x.max - 1) << 32) - x) / dx);
+		k = (int)((((drawing_area.x.max - 1) << 32) - x) / dx);
 	}
-	if (p1.y < area.y.min)
+	if (p1.y < drawing_area.y.min)
 	{
 		if (dy <= 0) return;
-		int n2 = (int)((((area.y.min - 0) << 32) - y) / dy);
+		int n2 = (int)((((drawing_area.y.min - 0) << 32) - y) / dy);
 		if (n2 > n) n = n2;
 	}
-	else if (p1.y >= area.y.max)
+	else if (p1.y >= drawing_area.y.max)
 	{
 		if (dy >= 0) return;
-		int n2 = (int)((((area.y.max - 0) << 32) - y) / dy);
+		int n2 = (int)((((drawing_area.y.max - 0) << 32) - y) / dy);
 		if (n2 > n) n = n2;
 	}
-	if (p2.y < area.y.min)
+	if (p2.y < drawing_area.y.min)
 	{
 		if (dy >= 0) return;
-		int k2 = (int)((((area.y.min - 0) << 32) - y) / dy - 1);
+		int k2 = (int)((((drawing_area.y.min - 0) << 32) - y) / dy - 1);
 		if (k2 < k) k = k2;
 	}
-	else if (p2.y >= area.y.max)
+	else if (p2.y >= drawing_area.y.max)
 	{
 		if (dy <= 0) return;
-		int k2 = (int)((((area.y.max - 1) << 32) - y) / dy);
+		int k2 = (int)((((drawing_area.y.max - 1) << 32) - y) / dy);
 		if (k2 < k) k = k2;
 	}
 	x += dx * n;
@@ -248,10 +248,10 @@ void _picture::lines(_xy p1, _xy p2, double l, uint c)
 	i64 xmax = int(std::max(p1.x, p2.x) + l);
 	i64 ymin = int(p1.y - l);
 	i64 ymax = int(p2.y + l);
-	if (xmin < area.x.min) xmin = area.x.min;
-	if (ymin < area.y.min) ymin = area.y.min;
-	if (xmax >= area.x.max) xmax = area.x.max - 1;
-	if (ymax >= area.y.max) ymax = area.y.max - 1;
+	if (xmin < drawing_area.x.min) xmin = drawing_area.x.min;
+	if (ymin < drawing_area.y.min) ymin = drawing_area.y.min;
+	if (xmax >= drawing_area.x.max) xmax = drawing_area.x.max - 1;
+	if (ymax >= drawing_area.y.max) ymax = drawing_area.y.max - 1;
 	if ((xmax < xmin) || (ymax < ymin)) return; // активная область за экраном
 	double dx = p2.x - p1.x;
 	double dy = p2.y - p1.y;
@@ -321,17 +321,17 @@ void _picture::stretch_draw_speed(_picture* bm, i64 nXDest, i64 nYDest, double m
 	i64 nYSrc = 0;
 	i64 bmrx = nWidth;
 	i64 bmry = nHeight;
-	if (nXDest < area.x.min)
+	if (nXDest < drawing_area.x.min)
 	{
-		nWidth += nXDest - area.x.min;
-		nXSrc -= nXDest - area.x.min;
-		nXDest = area.x.min;
+		nWidth += nXDest - drawing_area.x.min;
+		nXSrc -= nXDest - drawing_area.x.min;
+		nXDest = drawing_area.x.min;
 	}
-	if (nYDest < area.y.min)
+	if (nYDest < drawing_area.y.min)
 	{
-		nHeight += nYDest - area.y.min;
-		nYSrc -= nYDest - area.y.min;
-		nYDest = area.y.min;
+		nHeight += nYDest - drawing_area.y.min;
+		nYSrc -= nYDest - drawing_area.y.min;
+		nYDest = drawing_area.y.min;
 	}
 	if (nXSrc < 0)
 	{
@@ -345,10 +345,10 @@ void _picture::stretch_draw_speed(_picture* bm, i64 nXDest, i64 nYDest, double m
 		nYDest -= nYSrc;
 		nYSrc = 0;
 	}
-	if ((nXDest >= area.x.max) || (nYDest >= area.y.max)) return;
+	if ((nXDest >= drawing_area.x.max) || (nYDest >= drawing_area.y.max)) return;
 	if ((nXSrc >= bmrx) || (nYSrc >= bmry)) return;
-	if (nXDest + nWidth > area.x.max) nWidth = area.x.max - nXDest;
-	if (nYDest + nHeight > area.y.max) nHeight = area.y.max - nYDest;
+	if (nXDest + nWidth > drawing_area.x.max) nWidth = drawing_area.x.max - nXDest;
+	if (nYDest + nHeight > drawing_area.y.max) nHeight = drawing_area.y.max - nYDest;
 	if (nXSrc + nWidth > bmrx) nWidth = bmrx - nXSrc;
 	if (nYSrc + nHeight > bmry) nHeight = bmry - nYSrc;
 	if ((nWidth <= 0) || (nHeight <= 0)) return;
@@ -380,12 +380,12 @@ void _picture::stretch_draw(_picture* bm, i64 x, i64 y, double m)
 		draw({ x, y }, *bm);
 		return;
 	}
-	i64 x1 = (x >= area.x.min) ? x : area.x.min;
-	i64 y1 = (y >= area.y.min) ? y : area.y.min;
+	i64 x1 = (x >= drawing_area.x.min) ? x : drawing_area.x.min;
+	i64 y1 = (y >= drawing_area.y.min) ? y : drawing_area.y.min;
 	i64 x2 = x + rx2 - 1;
 	i64 y2 = y + ry2 - 1;
-	if (x2 >= area.x.max) x2 = area.x.max - 1;
-	if (y2 >= area.y.max) y2 = area.y.max - 1;
+	if (x2 >= drawing_area.x.max) x2 = drawing_area.x.max - 1;
+	if (y2 >= drawing_area.y.max) y2 = drawing_area.y.max - 1;
 	if ((x2 < x1) || (y2 < y1)) return;
 	i64 nox1 = (i64)x1 - x;
 	i64 noy1 = (i64)y1 - y;
@@ -593,7 +593,7 @@ void _picture::fill_rect_rep_speed(_iarea r, uint c)
 
 void _picture::fill_rectangle(_iarea r, uint c, bool rep)
 {
-	r &= area;
+	r &= drawing_area;
 	if (r.empty()) return;
 	uint kk = (c >> 24);
 	if (rep || (kk == 0xFF)) { fill_rect_rep_speed(r, c); return; }
@@ -757,7 +757,7 @@ void _picture::text16n(i64 x, i64 y, astr s, i64 n, uint c)
 	if (n < 1) return;
 	if (n == 1) return text16({ x, y }, s, c);
 	constexpr int ly = 13;
-	if ((y >= area.y.max) || (y + ly * n <= area.y.min)) return;
+	if ((y >= drawing_area.y.max) || (y + ly * n <= drawing_area.y.min)) return;
 	uint kk = 255 - (c >> 24);
 	if (kk == 0xFF) return; // полностью прозрачная
 	uint k2 = 256 - kk;
@@ -770,9 +770,9 @@ void _picture::text16n(i64 x, i64 y, astr s, i64 n, uint c)
 
 	i64 j0 = 0;
 	i64 j1 = ly;
-	if (y < area.y.min) j0 = (area.y.min + n - 1 - y) / n;
-	if (y + ly * n > area.y.max) j1 = (area.y.max - y) / n;
-	while ((*s) && (*s != '\n') && (x < area.x.max))
+	if (y < drawing_area.y.min) j0 = (drawing_area.y.min + n - 1 - y) / n;
+	if (y + ly * n > drawing_area.y.max) j1 = (drawing_area.y.max - y) / n;
+	while ((*s) && (*s != '\n') && (x < drawing_area.x.max))
 	{
 		i64 probel = (*s == 32) ? 4 : 1;
 		const ushort* ss = font16[(uchar)(*s++)];
@@ -789,8 +789,8 @@ void _picture::text16n(i64 x, i64 y, astr s, i64 n, uint c)
 		}
 		i64 i0 = 0;
 		i64 i1_ = lx;
-		if (x < area.x.min) i0 = (area.x.min + n - 1 - x) / n;
-		if (x + lx * n > area.x.max) i1_ = (area.x.max - x) / n;
+		if (x < drawing_area.x.min) i0 = (drawing_area.x.min + n - 1 - x) / n;
+		if (x + lx * n > drawing_area.x.max) i1_ = (drawing_area.x.max - x) / n;
 		for (i64 j = j0; j < j1; j++)
 		{
 			ushort mask = (ushort(1) << j);
@@ -869,7 +869,7 @@ void _picture::text16n(i64 x, i64 y, astr s, i64 n, uint c)
 
 void _picture::text16(_ixy p, std::string_view st, uint c)
 {
-	auto text_area = size_text16(st).move(p) & area;
+	auto text_area = size_text16(st).move(p) & drawing_area;
 	if (text_area.empty()) return;
 	constexpr int ly = 13;
 	uint kk = 255 - (c >> 24);
@@ -884,11 +884,11 @@ void _picture::text16(_ixy p, std::string_view st, uint c)
 
 	i64 j0 = 0;
 	i64 j1 = ly;
-	if (p.y < area.y.min) j0 = area.y.min - p.y;
-	if (p.y + ly > area.y.max) j1 = area.y.max - p.y;
+	if (p.y < drawing_area.y.min) j0 = drawing_area.y.min - p.y;
+	if (p.y + ly > drawing_area.y.max) j1 = drawing_area.y.max - p.y;
 	for (auto s : st)
 	{
-		if (p.x >= area.x.max) break;
+		if (p.x >= drawing_area.x.max) break;
 		i64 probel = (s == 32) ? 4 : 1;
 		const ushort* ss = font16[(uchar)s];
 		i64 lx = lx2;
@@ -904,8 +904,8 @@ void _picture::text16(_ixy p, std::string_view st, uint c)
 		}
 		i64 i0 = 0;
 		i64 i1_ = lx;
-		if (p.x < area.x.min) i0 = area.x.min - p.x;
-		if (p.x + lx > area.x.max) i1_ = area.x.max - p.x;
+		if (p.x < drawing_area.x.min) i0 = drawing_area.x.min - p.x;
+		if (p.x + lx > drawing_area.x.max) i1_ = drawing_area.x.max - p.x;
 		for (i64 j = j0; j < j1; j++)
 		{
 			ushort        mask = (ushort(1) << j);
@@ -989,10 +989,10 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 	i64 y1 = (i64)p.y;
 	i64 y2 = (i64)(p.y + r);
 
-	if (x1 < area.x.min) x1 = area.x.min;
-	if (y1 < area.y.min) y1 = area.y.min;
-	if (x2 >= area.x.max) x2 = area.x.max - 1;
-	if (y2 >= area.y.max) y2 = area.y.max - 1;
+	if (x1 < drawing_area.x.min) x1 = drawing_area.x.min;
+	if (y1 < drawing_area.y.min) y1 = drawing_area.y.min;
+	if (x2 >= drawing_area.x.max) x2 = drawing_area.x.max - 1;
+	if (y2 >= drawing_area.y.max) y2 = drawing_area.y.max - 1;
 	if ((x2 < x1) || (y2 < y1)) return;
 	fill_rectangle({ {x1 - 1, x2 + 2}, {y1 - 1, y2 + 2} }, c2);
 
@@ -2017,10 +2017,10 @@ void _picture::fill_rect_d(double x1, double y1, double x2, double y2, uint c)
 	if (kk == 0xFF) return; // полностью прозрачная
 	if (x1 > x2) std::swap(x1, x2);
 	if (y1 > y2) std::swap(y1, y2);
-	if (x1 < area.x.min) x1 = (double)area.x.min;
-	if (y1 < area.y.min) y1 = (double)area.y.min;
-	if (x2 >= area.x.max) x2 = area.x.max - 0.0001;
-	if (y2 >= area.y.max) y2 = area.y.max - 0.0001;
+	if (x1 < drawing_area.x.min) x1 = (double)drawing_area.x.min;
+	if (y1 < drawing_area.y.min) y1 = (double)drawing_area.y.min;
+	if (x2 >= drawing_area.x.max) x2 = drawing_area.x.max - 0.0001;
+	if (y2 >= drawing_area.y.max) y2 = drawing_area.y.max - 0.0001;
 	if ((x2 - x1 < 0.004) || (y2 - y1 < 0.004)) return; // слишком тонкий или за пределами
 
 	i64 xx1 = (i64)x1;
@@ -2172,13 +2172,13 @@ void _picture::fill_ring(_xy p, double r, double d, uint c, uint c2)
 	double r2 = r - d;
 	if (r2 < 0) r2 = 0;
 	i64 y1 = (i64)(p.y - r);
-	y1 = std::max(area.y.min, y1);
+	y1 = std::max(drawing_area.y.min, y1);
 	i64 y2 = (i64)(p.y + r);
-	y2 = std::min(area.y.max - 1, y2);
+	y2 = std::min(drawing_area.y.max - 1, y2);
 	i64 x1 = (i64)(p.x - r);
-	x1 = std::max(area.x.min, x1);
+	x1 = std::max(drawing_area.x.min, x1);
 	i64 x2 = (i64)(p.x + r);
-	x2 = std::min(area.x.max - 1, x2);
+	x2 = std::min(drawing_area.x.max - 1, x2);
 	if ((x2 < x1) || (y2 < y1)) return;
 	double rrmin = (r - 0.5) * (r - 0.5);
 	double rrmax = (r + 0.5) * (r + 0.5);
@@ -2328,13 +2328,13 @@ void _picture::ring(_xy p, double r, double d, uint c)
 	double r2 = r - d;
 	if (r2 < 0) r2 = 0;
 	i64 y1 = (int)(p.y - r);
-	y1 = std::max(area.y.min, y1);
+	y1 = std::max(drawing_area.y.min, y1);
 	i64 y2 = (int)(p.y + r);
-	y2 = std::min(area.y.max - 1, y2);
+	y2 = std::min(drawing_area.y.max - 1, y2);
 	i64 x1 = (int)(p.x - r);
-	x1 = std::max(area.x.min, x1);
+	x1 = std::max(drawing_area.x.min, x1);
 	i64 x2 = (int)(p.x + r);
-	x2 = std::min(area.x.max - 1, x2);
+	x2 = std::min(drawing_area.x.max - 1, x2);
 	if ((x2 < x1) || (y2 < y1)) return;
 
 	double rrmin = (r - 0.5) * (r - 0.5);
@@ -2466,13 +2466,13 @@ void _picture::fill_circle(_xy p, double r, uint c)
 {
 	if (r < 0.5) return; // слишком маленький
 	i64 y1 = (i64)(p.y - r);
-	y1 = std::max(area.y.min, y1);
+	y1 = std::max(drawing_area.y.min, y1);
 	i64 y2 = (i64)(p.y + r);
-	y2 = std::min(area.y.max - 1, y2);
+	y2 = std::min(drawing_area.y.max - 1, y2);
 	i64 x1 = (i64)(p.x - r);
-	x1 = std::max(area.x.min, x1);
+	x1 = std::max(drawing_area.x.min, x1);
 	i64 x2 = (i64)(p.x + r);
-	x2 = std::min(area.x.max - 1, x2);
+	x2 = std::min(drawing_area.x.max - 1, x2);
 	if ((x2 < x1) || (y2 < y1)) return;
 
 	double rrmin = (r - 0.5) * (r - 0.5);
@@ -2568,7 +2568,7 @@ bool _bitmap::resize(_isize wh)
 	wh = wh.correct();
 	if (size == wh) return false;
 	size = wh;
-	area = size;
+	drawing_area = size;
 	BITMAPINFO bmi = { sizeof(BITMAPINFOHEADER), (long)size.x, (long)-size.y, 1, 32, BI_RGB, 0, 0, 0, 0, 0 };
 	bitmap2 = CreateDIBSection(0, &bmi, DIB_RGB_COLORS, (void**)(&data), 0, 0);
 	HGDIOBJ old = (bitmap2 != 0) ? SelectObject(hdc, bitmap2) : 0;
@@ -2612,7 +2612,7 @@ _bitmap::~_bitmap()
 
 void _bitmap::text(_ixy p, std::wstring_view s, int h, uint c, uint bg)
 {
-	auto text_area = size_text(s, h).move(p) & area;
+	auto text_area = size_text(s, h).move(p) & drawing_area;
 	if (text_area.empty()) return;
 	podg_font(h);
 	podg_cc(c, bg);
@@ -2621,7 +2621,7 @@ void _bitmap::text(_ixy p, std::wstring_view s, int h, uint c, uint bg)
 
 void _bitmap::text(_ixy p, std::string_view s, int h, uint c, uint bg)
 {
-	auto text_area = size_text(s, h).move(p) & area;
+	auto text_area = size_text(s, h).move(p) & drawing_area;
 	if (text_area.empty()) return;
 	podg_font(h);
 	podg_cc(c, bg);

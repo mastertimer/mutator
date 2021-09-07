@@ -20,7 +20,7 @@ struct _picture
 	void operator=(const _picture& move) noexcept;
 
 	uint* sl(i64 y) const noexcept { return &data[y * size.x]; }
-	void set_area(const _iarea& q) noexcept { area = q & size; }
+	void set_area(const _iarea& q) noexcept { drawing_area = q & size; }
 	bool resize(_isize wh) noexcept;
 	void set_transparent() noexcept; // узнать, есть ли прозрачные пиксели
 	void clear(uint c = 0xFF000000) noexcept;
@@ -50,7 +50,7 @@ struct _picture
 	//	void text0(int x, int y, std::string_view s, int h, uint c, uint bg);
 
 protected:
-	_iarea area; // разрешенная область для рисования
+	_iarea drawing_area; // разрешенная область для рисования
 
 	void line_vert_rep_speed(_ixy p, i64 y2, uint c); // вертикальная линия замещения без проверок диапазона
 
