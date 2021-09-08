@@ -109,13 +109,13 @@ bool _picture::resize(_isize wh) noexcept
 
 void _picture::clear(uint c) noexcept
 {
-	if (drawing_area != size_) { fill_rectangle(size_, c, true); return; }
+	if (drawing_area != size_)
+	{
+		fill_rectangle(size_, c, true);
+		return;
+	}
 	transparent = ((c >> 24) != 0xff);
-	u64 cc = (((u64)c) << 32) + c;
-	u64* ee = (u64*)data;
-	u64* eemax = (u64*)(&(data[size_.y * size_.x - 1]));
-	while (ee < eemax) *ee++ = cc;
-	if (ee == eemax) *((uint*)ee) = c;
+	memset32(data, c, size_.square());
 }
 
 void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
