@@ -25,7 +25,7 @@ _picture::_picture(const _picture& copy) : size_(copy.size_), transparent(copy.t
 
 _picture::_picture(_isize r) noexcept
 {
-	drawing_area = size_ = r.correct();
+	drawing_area = size_ = r;
 }
 
 _picture::_picture(_picture&& move) noexcept : data(move.data), size_(move.size_), transparent(move.transparent),
@@ -98,7 +98,6 @@ void _picture::draw(_ixy r, _picture& bm)
 
 bool _picture::resize(_isize wh) noexcept
 {
-	wh = wh.correct();
 	if (size_ == wh) return false;
 	size_ = wh;
 	delete[] data;
@@ -2582,7 +2581,6 @@ uint brighten(uint c)
 
 bool _bitmap::resize(_isize wh)
 {
-	wh = wh.correct();
 	if (size_ == wh) return false;
 	size_ = wh;
 	drawing_area = size_;

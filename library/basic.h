@@ -557,14 +557,13 @@ struct _isize // [0...x), [0...y)
 {
 	i64 x = 0, y = 0;
 
-	bool   empty()   const noexcept { return ((x <= 0) || (y <= 0)); }
-	i64    square()  const noexcept { return ((x <= 0) || (y <= 0)) ? 0 : (x * y); }
-	_xy    center()  const noexcept { return { x * 0.5, y * 0.5 }; }
-	_isize correct() const noexcept { if ((x <= 0) || (y <= 0)) return { 0, 0 }; return { x, y }; }
+	bool empty()  const noexcept { return ((x <= 0) || (y <= 0)); }
+	i64  square() const noexcept { return (empty()) ? 0 : (x * y); }
+	_xy  center() const noexcept { return { x * 0.5, y * 0.5 }; }
 	inline _iarea move(_ixy d) const noexcept;
 
-	bool operator==(_isize s) const noexcept { return (x == s.x) && (y == s.y); }
-	bool operator!=(_isize s) const noexcept { return (x != s.x) || (y != s.y); }
+	bool operator==(const _isize s) const noexcept { return ((x == s.x) && (y == s.y)) || (empty() && s.empty()); }
+	bool operator!=(const _isize s) const noexcept { return !(*this == s); }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
