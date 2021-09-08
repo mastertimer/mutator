@@ -6,10 +6,26 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void _picture::set_drawing_area(const _iarea& q) noexcept
+{ 
+	drawing_area = q & size_;
+}
+
+_picture::~_picture() noexcept
+{
+	delete[] data;
+}
+
+_picture::_picture(const _picture& copy) : size_(copy.size_), transparent(copy.transparent), drawing_area(copy.size_)
+{
+	if (size_.empty()) return;
+	data = new uint[size_.square()];
+	memcpy(data, copy.data, size_.square() * sizeof(data[0]));
+}
+
 _picture::_picture(_isize r) noexcept
 {
 	drawing_area = size_ = r.correct();
-	if (!size_.empty()) data = new uint[size_.square()];
 }
 
 _picture::_picture(_picture&& move) noexcept : data(move.data), size_(move.size_), transparent(move.transparent),
@@ -19,12 +35,13 @@ drawing_area(move.drawing_area)
 	move.drawing_area = move.size_ = { 0,0 };
 }
 
-void _picture::operator=(const _picture& move) noexcept
+_picture& _picture::operator=(const _picture& copy) noexcept
 {
-	resize(move.size_);
-	transparent = move.transparent;
-	memcpy(data, move.data, size_.square() * 4);
-	drawing_area = size_;
+	if (&copy == this) return *this;
+	resize(copy.size_);
+	transparent = copy.transparent;
+	memcpy(data, copy.data, size_.square() * sizeof(data[0]));
+	return *this;
 }
 
 _picture& _picture::operator=(_picture&& move) noexcept
@@ -33,8 +50,8 @@ _picture& _picture::operator=(_picture&& move) noexcept
 	delete[] data;
 	data = move.data;
 	size_ = move.size_;
-	drawing_area = move.drawing_area;
 	transparent = move.transparent;
+	drawing_area = move.drawing_area;
 	move.data = nullptr;
 	move.drawing_area = move.size_ = { 0,0 };
 	return *this;

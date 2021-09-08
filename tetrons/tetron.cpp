@@ -873,7 +873,7 @@ void _t_go::ris(_trans tr, bool final)
 				bb->ris(tr / bb->trans, final);
 	}
 	auto ris_all = [&]() {
-		master_bm.set_area(tr(local_area) & master_obl_izm);
+		master_bm.set_drawing_area(tr(local_area) & master_obl_izm);
 		ris2(tr, final);
 		if (!final)
 			for (_layers_go a(this); a; a++) a->ris(tr, final);
@@ -2046,7 +2046,7 @@ void _g_test_graph::ris2(_trans tr, bool final)
 		first = false;
 		a.clear(0xFF0000FF);
 		_iarea ogr({ 30LL, 225LL }, { 25LL, 125LL });
-		a.set_area(ogr);
+		a.set_drawing_area(ogr);
 		a.stretch_draw(&te, 0, 0, 3.3);
 		a.rectangle(ogr, 0x80FF0000);
 	}

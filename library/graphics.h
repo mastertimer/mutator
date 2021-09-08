@@ -6,21 +6,21 @@
 
 struct _picture
 {
-	uint* data = nullptr;
-
 	_picture() = default;
 	explicit _picture(_isize r) noexcept;
-	_picture(const _picture&) = delete;
+	_picture(const _picture& copy);
 	_picture(_picture&& move) noexcept;
-	~_picture() noexcept { delete[] data; }
+	~_picture() noexcept;
 
 	_picture& operator=(_picture&& move) noexcept;
-	void operator=(const _picture& move) noexcept;
+	_picture& operator=(const _picture& copy) noexcept;
 
-	uint* sl(i64 y) const noexcept { return &data[y * size_.x]; }
-	void set_area(const _iarea& q) noexcept { drawing_area = q & size_; }
-	_isize size() const { return size_; }
+	uint* scan_line(i64 y) const noexcept { return &data[y * size_.x]; }
+
+	_isize size() const noexcept { return size_; }
 	bool resize(_isize wh) noexcept;
+	void set_drawing_area(const _iarea& q) noexcept;
+
 	void set_transparent() noexcept; // узнать, есть ли прозрачные пиксели
 	void clear(uint c = 0xFF000000) noexcept;
 
@@ -54,6 +54,7 @@ protected:
 	friend struct _wjson;
 	friend struct _rjson;
 
+	uint* data = nullptr;
 	_isize size_;
 	bool transparent = false;
 	_iarea drawing_area; // разрешенная область для рисования

@@ -94,7 +94,7 @@ _recognize::_recognize()
 			ZeroMemory(aa, sizeof(ushort) * size.x);
 			for (i64 j = size.y - 1; j >= 0; j--)
 			{
-				uint* sl = bm_[nf].sl(j);
+				uint* sl = bm_[nf].scan_line(j);
 				for (int i_ = 0; i_ < size.x; i_++) aa[i_] = (aa[i_] << 1) + (sl[i_] > 0);
 			}
 			int na = 0;
@@ -340,7 +340,7 @@ void _recognize::find_red_text13(uint err)
 	ZeroMemory(lin, sizeof(ushort) * rx);
 	for (i64 j = image.size().y - 1; j >= 0; j--)
 	{
-		uint* sl = image.sl(j);
+		uint* sl = image.scan_line(j);
 		i64 first = -1;
 		i64 last = -100;
 		bool norm = true;
@@ -390,7 +390,7 @@ void _recognize::find_text13(uint c, int err)
 	ZeroMemory(lin, sizeof(ushort) * rx);
 	for (i64 j = image.size().y - 1; j >= 0; j--)
 	{
-		uint* sl = image.sl(j);
+		uint* sl = image.scan_line(j);
 		i64 first = -1;
 		i64 last = -100;
 		bool norm = true;
@@ -442,7 +442,7 @@ void _recognize::find_text13(uint c)
 	ZeroMemory(lin, sizeof(ushort) * rx);
 	for (i64 j = image.size().y - 1; j >= 0; j--)
 	{
-		uint* sl = image.sl(j);
+		uint* sl = image.scan_line(j);
 		i64 first = -1;
 		i64 last = -100;
 		bool norm = true;
@@ -654,14 +654,14 @@ void buy_stock(_tetron* tt, bool buy)
 			//			MessageBox(0, L"не найдена покупка/продажа", L"упс..", MB_OK | MB_TASKMODAL);
 			return;
 		}
-		uint c = recognize.image.sl(recognize.elem[n_pok].area.y.min)[recognize.elem[n_pok].area.x.min - 1];
+		uint c = recognize.image.scan_line(recognize.elem[n_pok].area.y.min)[recognize.elem[n_pok].area.x.min - 1];
 		uchar* cc = (uchar*)&c;
 		bool cfpok = (cc[0] != cc[1]) || (cc[0] != cc[2]); // не серый цвет
-		c = recognize.image.sl(recognize.elem[n_pro].area.y.min)[recognize.elem[n_pro].area.x.min - 1];
+		c = recognize.image.scan_line(recognize.elem[n_pro].area.y.min)[recognize.elem[n_pro].area.x.min - 1];
 		cc = (uchar*)&c;
 		bool cfpro = (cc[0] != cc[1]) || (cc[0] != cc[2]); // не серый цвет
-//		bool cfpok = (recognize.image.sl(recognize.elem[n_pok].area.y.min)[recognize.elem[n_pok].area.x.min - 1] != recognize.image.data[0]);
-//		bool cfpro = (recognize.image.sl(recognize.elem[n_pro].area.y.min)[recognize.elem[n_pro].area.x.min - 1] != recognize.image.data[0]);
+//		bool cfpok = (recognize.image.scan_line(recognize.elem[n_pok].area.y.min)[recognize.elem[n_pok].area.x.min - 1] != recognize.image.data[0]);
+//		bool cfpro = (recognize.image.scan_line(recognize.elem[n_pro].area.y.min)[recognize.elem[n_pro].area.x.min - 1] != recognize.image.data[0]);
 		if (cfpok == cfpro)
 		{
 			//			MessageBox(0, L"одинаковые цвета покупка/продажа", L"упс..", MB_OK | MB_TASKMODAL);
