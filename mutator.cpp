@@ -1,5 +1,7 @@
 ﻿/*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+проверить скорость noexcept
+
 памятка на будущее:
 
 ключевые задачи для дальнейшего развития:
@@ -212,7 +214,7 @@ namespace mutator
 		if (master_bm.resize(r)) master_obl_izm = r;
 		if (master_obl_izm.empty()) return;
 		master_bm.set_area(master_obl_izm);
-		master_obl_izm &= master_bm.size;
+		master_obl_izm &= master_bm.size();
 		master_bm.clear(cc0);
 		master_chain_go.clear();
 		n_ko->operator _t_trans* ()->ris(_trans(), false);

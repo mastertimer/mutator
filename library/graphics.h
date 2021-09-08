@@ -7,8 +7,6 @@
 struct _picture
 {
 	uint* data = nullptr;
-	_isize size;
-	bool transparent = false;
 
 	_picture() = default;
 	explicit _picture(_isize r) noexcept;
@@ -19,8 +17,9 @@ struct _picture
 	_picture& operator=(_picture&& move) noexcept;
 	void operator=(const _picture& move) noexcept;
 
-	uint* sl(i64 y) const noexcept { return &data[y * size.x]; }
-	void set_area(const _iarea& q) noexcept { drawing_area = q & size; }
+	uint* sl(i64 y) const noexcept { return &data[y * size_.x]; }
+	void set_area(const _iarea& q) noexcept { drawing_area = q & size_; }
+	_isize size() const { return size_; }
 	bool resize(_isize wh) noexcept;
 	void set_transparent() noexcept; // узнать, есть ли прозрачные пиксели
 	void clear(uint c = 0xFF000000) noexcept;
@@ -50,6 +49,13 @@ struct _picture
 	//	void text0(int x, int y, std::string_view s, int h, uint c, uint bg);
 
 protected:
+	friend _stack& operator>>(_stack& o, _picture& p);
+	friend _stack& operator<<(_stack& o, _picture const& p);
+	friend struct _wjson;
+	friend struct _rjson;
+
+	_isize size_;
+	bool transparent = false;
 	_iarea drawing_area; // разрешенная область для рисования
 
 	void line_vert_rep_speed(_ixy p, i64 y2, uint c); // вертикальная линия замещения без проверок диапазона

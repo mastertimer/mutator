@@ -2,29 +2,29 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#define px(xx,yy) ((uchar*)&data[(yy) * size.x + (xx)])
+#define px(xx,yy) ((uchar*)&data[(yy) * size_.x + (xx)])
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 _picture::_picture(_isize r) noexcept
 {
-	drawing_area = size = r.correct();
-	if (!size.empty()) data = new uint[size.square()];
+	drawing_area = size_ = r.correct();
+	if (!size_.empty()) data = new uint[size_.square()];
 }
 
-_picture::_picture(_picture&& move) noexcept : data(move.data), size(move.size), transparent(move.transparent),
+_picture::_picture(_picture&& move) noexcept : data(move.data), size_(move.size_), transparent(move.transparent),
 drawing_area(move.drawing_area)
 {
 	move.data = nullptr;
-	move.drawing_area = move.size = { 0,0 };
+	move.drawing_area = move.size_ = { 0,0 };
 }
 
 void _picture::operator=(const _picture& move) noexcept
 {
-	resize(move.size);
+	resize(move.size_);
 	transparent = move.transparent;
-	memcpy(data, move.data, size.square() * 4);
-	drawing_area = size;
+	memcpy(data, move.data, size_.square() * 4);
+	drawing_area = size_;
 }
 
 _picture& _picture::operator=(_picture&& move) noexcept
@@ -32,17 +32,17 @@ _picture& _picture::operator=(_picture&& move) noexcept
 	if (&move == this) return *this;
 	delete[] data;
 	data = move.data;
-	size = move.size;
+	size_ = move.size_;
 	drawing_area = move.drawing_area;
 	transparent = move.transparent;
 	move.data = nullptr;
-	move.drawing_area = move.size = { 0,0 };
+	move.drawing_area = move.size_ = { 0,0 };
 	return *this;
 }
 
 void _picture::set_transparent() noexcept
 {
-	i64 r = size.square();
+	i64 r = size_.square();
 	for (i64 i = 0; i < r; i++)
 		if ((data[i] & 0xff000000) != 0xff000000)
 		{
@@ -54,18 +54,18 @@ void _picture::set_transparent() noexcept
 
 void _picture::draw(_ixy r, _picture& bm)
 {
-	_iarea b = bm.size.move(r) & drawing_area;
+	_iarea b = bm.size_.move(r) & drawing_area;
 	if (b.empty()) return;
 	if (!bm.transparent)
 	{
 		for (i64 j = b.y.min; j < b.y.max; j++)
-			memcpy(px(b.x.min, j), (bm.data + ((j - r.y) * bm.size.x + (b.x.min - r.x))), (b.x.max - b.x.min) * 4);
+			memcpy(px(b.x.min, j), (bm.data + ((j - r.y) * bm.size_.x + (b.x.min - r.x))), (b.x.max - b.x.min) * 4);
 		return;
 	}
 	for (i64 j = b.y.min; j < b.y.max; j++)
 	{
 		uchar* s1_ = px(b.x.min, j);
-		uchar* s2_ = (uchar*)(bm.data + ((j - r.y) * bm.size.x + (b.x.min - r.x)));
+		uchar* s2_ = (uchar*)(bm.data + ((j - r.y) * bm.size_.x + (b.x.min - r.x)));
 		for (i64 i = b.x.min; i < b.x.max; i++)
 		{
 			uint pp2 = s2_[3];
@@ -82,22 +82,22 @@ void _picture::draw(_ixy r, _picture& bm)
 bool _picture::resize(_isize wh) noexcept
 {
 	wh = wh.correct();
-	if (size == wh) return false;
-	size = wh;
+	if (size_ == wh) return false;
+	size_ = wh;
 	delete[] data;
-	data = (size.empty()) ? nullptr : (new uint[size.square()]);
-	drawing_area = size;
+	data = (size_.empty()) ? nullptr : (new uint[size_.square()]);
+	drawing_area = size_;
 	transparent = false;
 	return true;
 }
 
 void _picture::clear(uint c) noexcept
 {
-	if (drawing_area != size) { fill_rectangle(size, c, true); return; }
+	if (drawing_area != size_) { fill_rectangle(size_, c, true); return; }
 	transparent = ((c >> 24) != 0xff);
 	u64 cc = (((u64)c) << 32) + c;
 	u64* ee = (u64*)data;
-	u64* eemax = (u64*)(&(data[size.y * size.x - 1]));
+	u64* eemax = (u64*)(&(data[size_.y * size_.x - 1]));
 	while (ee < eemax) *ee++ = cc;
 	if (ee == eemax) *((uint*)ee) = c;
 }
@@ -116,8 +116,8 @@ void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
 		if (rep)
 		{
 			u64  cc = (((u64)c) << 32) + c;
-			u64* ee = (u64*)&(data[p1.y * size.x + p1.x]);
-			u64* eemax = (u64*)&(data[p1.y * size.x + p2.x]);
+			u64* ee = (u64*)&(data[p1.y * size_.x + p1.x]);
+			u64* eemax = (u64*)&(data[p1.y * size_.x + p2.x]);
 			while (ee < eemax) *ee++ = cc;
 			if (ee == eemax) *((uint*)ee) = c;
 			return;
@@ -126,7 +126,7 @@ void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
 		uint   d1 = (c & 255) * k2;
 		uint   d2 = ((c >> 8) & 255) * k2;
 		uint   d3 = ((c >> 16) & 255) * k2;
-		uchar* c2 = (uchar*)&(data[p1.y * size.x + p1.x]);
+		uchar* c2 = (uchar*)&(data[p1.y * size_.x + p1.x]);
 		for (i64 d = p1.x - p2.x; d <= 0; d++)
 		{
 			c2[0] = (c2[0] * kk + d1) >> 8;
@@ -144,11 +144,11 @@ void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
 		if ((p1.y > p2.y) || (p1.x < drawing_area.x.min) || (p1.x >= drawing_area.x.max)) return; // за пределы
 		if (rep)
 		{
-			uint* c2 = &data[p1.y * size.x + p1.x];
+			uint* c2 = &data[p1.y * size_.x + p1.x];
 			for (i64 y = p1.y - p2.y; y <= 0; y++)
 			{
 				*c2 = c;
-				c2 += size.x;
+				c2 += size_.x;
 			}
 			return;
 		}
@@ -156,8 +156,8 @@ void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
 		uint   d1 = (c & 255) * k2;
 		uint   d2 = ((c >> 8) & 255) * k2;
 		uint   d3 = ((c >> 16) & 255) * k2;
-		i64    dc2 = size.x * 4;
-		uchar* c2 = (uchar*)&(data[p1.y * size.x + p1.x]);
+		i64    dc2 = size_.x * 4;
+		uchar* c2 = (uchar*)&(data[p1.y * size_.x + p1.x]);
 		for (i64 y = p1.y - p2.y; y <= 0; y++)
 		{
 			c2[0] = (c2[0] * kk + d1) >> 8;
@@ -222,7 +222,7 @@ void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
 	y += dy * n;
 	if (rep)
 	{
-		for (i64 i = k - n; i >= 0; i--) data[((y += dy) >> 32) * size.x + ((x += dx) >> 32)] = c;
+		for (i64 i = k - n; i >= 0; i--) data[((y += dy) >> 32) * size_.x + ((x += dx) >> 32)] = c;
 		return;
 	}
 	uint k2 = 256 - kk;
@@ -231,7 +231,7 @@ void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
 	uint d3 = ((c >> 16) & 255) * k2;
 	for (i64 i = k - n; i >= 0; i--)
 	{
-		uchar* c2 = (uchar*)&data[((y += dy) >> 32) * size.x + ((x += dx) >> 32)];
+		uchar* c2 = (uchar*)&data[((y += dy) >> 32) * size_.x + ((x += dx) >> 32)];
 		c2[0] = (c2[0] * kk + d1) >> 8;
 		c2[1] = (c2[1] * kk + d2) >> 8;
 		c2[2] = (c2[2] * kk + d3) >> 8;
@@ -259,9 +259,9 @@ void _picture::lines(_xy p1, _xy p2, double l, uint c)
 	double ll_1 = 1.0 / sqrt(dx * dx + dy * dy);
 	if (ll_1 > 2) return; // слишком короткая линия
 	double x2y1_y2x1 = p2.x * p1.y - p2.y * p1.x;
-	double rcentrscreen = (dy * size.x * 0.5 - dx * size.y * 0.5 + x2y1_y2x1) * ll_1; // расстояние от линии до центра эрана
+	double rcentrscreen = (dy * size_.x * 0.5 - dx * size_.y * 0.5 + x2y1_y2x1) * ll_1; // расстояние от линии до центра эрана
 	if (rcentrscreen < 0) rcentrscreen = -rcentrscreen;
-	if (rcentrscreen - l > ((double)size.x + size.y) * 0.5) return; // линия не задевает экран
+	if (rcentrscreen - l > ((double)size_.x + size_.y) * 0.5) return; // линия не задевает экран
 	double dxdy = dx / dy;
 	double db = l * sqrt(dxdy * dxdy + 1.0);
 	double xx1 = p1.x + (ymin - p1.y) * dxdy; // х верхней точки пересечения
@@ -286,7 +286,7 @@ void _picture::lines(_xy p1, _xy p2, double l, uint c)
 		if (xx2i > xmax) xx2i = xmax;
 		if (xx2i < xx1i) continue;
 		double rr = (dy * xx1i - dx * j + temp1) * ll_1;
-		uchar* c2 = (uchar*)&(data[j * size.x + xx1i]);
+		uchar* c2 = (uchar*)&(data[j * size_.x + xx1i]);
 		for (i64 i = xx1i; i <= xx2i; i++, rr += drr, c2 += 4)
 		{
 			double rra = ((rr < 0) ? -rr : rr) - 0.5;
@@ -309,10 +309,10 @@ void _picture::lines(_xy p1, _xy p2, double l, uint c)
 
 void _picture::stretch_draw_speed(_picture* bm, i64 nXDest, i64 nYDest, double m)
 {
-	if (bm->size.x * bm->size.y == 0) return;
-	i64 nWidth = (int)(bm->size.x * m + 0.5);
-	i64 nHeight = (int)(bm->size.y * m + 0.5);
-	if ((nWidth == bm->size.x) && (nHeight == bm->size.y))
+	if (bm->size_.x * bm->size_.y == 0) return;
+	i64 nWidth = (int)(bm->size_.x * m + 0.5);
+	i64 nHeight = (int)(bm->size_.y * m + 0.5);
+	if ((nWidth == bm->size_.x) && (nHeight == bm->size_.y))
 	{
 		draw({ nXDest, nYDest }, *bm);
 		return;
@@ -355,8 +355,8 @@ void _picture::stretch_draw_speed(_picture* bm, i64 nXDest, i64 nYDest, double m
 	double mm = 1.0 / m;
 	for (i64 j = 0; j < nHeight; j++)
 	{
-		uchar* s1 = (uchar*)(data + ((nYDest + j) * size.x + nXDest));
-		uint* ss2 = (bm->data + (i64)(((nYSrc + j) * mm)) * bm->size.x);
+		uchar* s1 = (uchar*)(data + ((nYDest + j) * size_.x + nXDest));
+		uint* ss2 = (bm->data + (i64)(((nYSrc + j) * mm)) * bm->size_.x);
 		for (i64 i = 0; i < nWidth; i++)
 		{
 			uchar* s2_ = (uchar*)(ss2 + (i64)((nXSrc + i) * mm));
@@ -372,10 +372,10 @@ void _picture::stretch_draw_speed(_picture* bm, i64 nXDest, i64 nYDest, double m
 
 void _picture::stretch_draw(_picture* bm, i64 x, i64 y, double m)
 {
-	if (bm->size.x * bm->size.y == 0) return;
-	int rx2 = (int)(bm->size.x * m + 0.5);
-	int ry2 = (int)(bm->size.y * m + 0.5);
-	if ((rx2 == bm->size.x) && (ry2 == bm->size.y))
+	if (bm->size_.x * bm->size_.y == 0) return;
+	int rx2 = (int)(bm->size_.x * m + 0.5);
+	int ry2 = (int)(bm->size_.y * m + 0.5);
+	if ((rx2 == bm->size_.x) && (ry2 == bm->size_.y))
 	{
 		draw({ x, y }, *bm);
 		return;
@@ -391,8 +391,8 @@ void _picture::stretch_draw(_picture* bm, i64 x, i64 y, double m)
 	i64 noy1 = (i64)y1 - y;
 	i64 nox2 = (i64)x2 - x;
 	i64 noy2 = (i64)y2 - y;
-	i64 f1x = bm->size.x;
-	i64 f1y = bm->size.y;
+	i64 f1x = bm->size_.x;
+	i64 f1y = bm->size_.y;
 	i64 f1xx = rx2;
 	i64 f1yy = ry2;
 	for (i64 j = noy1; j <= noy2; j++)
@@ -401,7 +401,7 @@ void _picture::stretch_draw(_picture* bm, i64 x, i64 y, double m)
 		i64  pyk = (j + 1) * f1y - 1;
 		i64  pyn2 = pyn / f1yy;
 		i64  pyk2 = pyk / f1yy;
-		uchar* p1 = (uchar*)&data[(j + y) * size.x + x1 - 1];
+		uchar* p1 = (uchar*)&data[(j + y) * size_.x + x1 - 1];
 		for (i64 i = nox1; i <= nox2; i++)
 		{
 			p1 += 4;
@@ -570,8 +570,8 @@ void _picture::stretch_draw(_picture* bm, i64 x, i64 y, double m)
 
 void _picture::line_vert_rep_speed(_ixy p, i64 y2, uint c)
 {
-	uint* c2 = &data[p.y * size.x + p.x];
-	for (i64 y = p.y - y2; y <= 0; y++) { *c2 = c; c2 += size.x; }
+	uint* c2 = &data[p.y * size_.x + p.x];
+	for (i64 y = p.y - y2; y <= 0; y++) { *c2 = c; c2 += size_.x; }
 }
 
 void _picture::fill_rect_rep_speed(_iarea r, uint c)
@@ -584,8 +584,8 @@ void _picture::fill_rect_rep_speed(_iarea r, uint c)
 	u64 cc = (((u64)c) << 32) + c;
 	for (i64 i = r.y.min; i < r.y.max; i++)
 	{
-		u64* ee = (u64*)(&(data[i * size.x + r.x.min]));
-		u64* eemax = (u64*)(&(data[i * size.x + r.x.max - 1]));
+		u64* ee = (u64*)(&(data[i * size_.x + r.x.min]));
+		u64* eemax = (u64*)(&(data[i * size_.x + r.x.max - 1]));
 		while (ee < eemax) *ee++ = cc;
 		if (ee == eemax) *((uint*)ee) = c;
 	}
@@ -622,7 +622,7 @@ void _picture::fill_rect_transparent_speed(_iarea r, uint c)
 	uint d33 = d3 * 255;
 	for (i64 i = r.y.min; i < r.y.max; i++)
 	{
-		uchar* c2 = (uchar*)&(data[i * size.x + r.x.min]);
+		uchar* c2 = (uchar*)&(data[i * size_.x + r.x.min]);
 		for (i64 d = -dx; d < 0; d++)
 		{
 			uint kk_ = 255 - c2[3];
@@ -652,7 +652,7 @@ void _picture::fill_rect_speed(_iarea r, uint c)
 	uint d3 = ((c >> 16) & 255) * k2;
 	for (i64 i = r.y.min; i < r.y.max; i++)
 	{
-		uchar* c2 = (uchar*)&(data[i * size.x + r.x.min]);
+		uchar* c2 = (uchar*)&(data[i * size_.x + r.x.min]);
 		for (i64 d = -dx; d < 0; d++)
 		{
 			c2[0] = (c2[0] * kk + d1) >> 8;
@@ -799,7 +799,7 @@ void _picture::text16n(i64 x, i64 y, astr s, i64 n, uint c)
 				const ushort* ss2 = ss;
 				if (kk == 0)
 				{
-					uint* c2 = &data[(y + j * n + jj) * size.x + x + i0 * n];
+					uint* c2 = &data[(y + j * n + jj) * size_.x + x + i0 * n];
 					for (i64 i = i0; i < i1_; i++)
 					{
 						if (*ss2 & mask)
@@ -817,7 +817,7 @@ void _picture::text16n(i64 x, i64 y, astr s, i64 n, uint c)
 				}
 				else
 				{
-					uchar* c2 = (uchar*)&data[(y + j * n + jj) * size.x + x + i0 * n];
+					uchar* c2 = (uchar*)&data[(y + j * n + jj) * size_.x + x + i0 * n];
 					if (!transparent)
 					{
 						for (i64 i = i0; i < i1_; i++)
@@ -912,7 +912,7 @@ void _picture::text16(_ixy p, std::string_view st, uint c)
 			const ushort* ss2 = ss;
 			if (kk == 0)
 			{
-				uint* c2 = &data[(p.y + j) * size.x + p.x + i0];
+				uint* c2 = &data[(p.y + j) * size_.x + p.x + i0];
 				for (i64 i = i0; i < i1_; i++)
 				{
 					if (*ss2++ & mask) *c2 = c;
@@ -921,7 +921,7 @@ void _picture::text16(_ixy p, std::string_view st, uint c)
 			}
 			else
 			{
-				uchar* c2 = (uchar*)&data[(p.y + j) * size.x + p.x + i0];
+				uchar* c2 = (uchar*)&data[(p.y + j) * size_.x + p.x + i0];
 				if (!transparent)
 				{
 					for (i64 i = i0; i < i1_; i++)
@@ -1245,7 +1245,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 				i64 x11 = xxax->x1;
 				if (x11 > x2) break;
 				i64 x22 = xxax->x2;
-				uchar* cc = (uchar*)&(data[y * size.x + x11]);
+				uchar* cc = (uchar*)&(data[y * size_.x + x11]);
 				cc[0] = (cc[0] * xxax->kk_1 + xxax->d1_1) >> 8;
 				cc[1] = (cc[1] * xxax->kk_1 + xxax->d2_1) >> 8;
 				cc[2] = (cc[2] * xxax->kk_1 + xxax->d3_1) >> 8;
@@ -1370,7 +1370,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 						i64 xx11 = xxax->x1;
 						if ((xx11 >= x11) || (xx11 > x2)) break;
 						i64 xx22 = xxax->x2;
-						uchar* cc = (uchar*)&(data[y * size.x + xx11]);
+						uchar* cc = (uchar*)&(data[y * size_.x + xx11]);
 						if (vepa)
 						{
 							cc[0] = (cc[0] * xxax->kk_1 + xxax->d1_1) >> 8;
@@ -1421,7 +1421,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 					}
 				}
 				if (x11 > x2) break;
-				uchar* cc = (uchar*)&(data[y * size.x + x11]);
+				uchar* cc = (uchar*)&(data[y * size_.x + x11]);
 				while (x11 <= x22)
 				{
 					// поиск рисуемой палочки
@@ -1652,7 +1652,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 						i64 xx11 = xxax->x1;
 						if ((xx11 >= x11) || (xx11 > x2)) break;
 						i64 xx22 = xxax->x2;
-						uchar* cc = (uchar*)&(data[y * size.x + xx11]);
+						uchar* cc = (uchar*)&(data[y * size_.x + xx11]);
 						if (nipa)
 						{
 							cc[0] = (cc[0] * xxax->kk_1 + xxax->d1_1) >> 8;
@@ -1703,7 +1703,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 					}
 				}
 				if (x11 > x2) break;
-				uchar* cc = (uchar*)&(data[y * size.x + x11]);
+				uchar* cc = (uchar*)&(data[y * size_.x + x11]);
 				while (x11 <= x22)
 				{
 					// поиск рисуемой палочки
@@ -1923,7 +1923,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 					i64 xx11 = xxax->x1;
 					if ((xx11 >= x11) || (xx11 > x2)) break;
 					i64 xx22 = xxax->x2;
-					uchar* cc = (uchar*)&(data[y * size.x + xx11]);
+					uchar* cc = (uchar*)&(data[y * size_.x + xx11]);
 					cc[0] = (cc[0] * xxax->kk_1 + xxax->d1_1) >> 8;
 					cc[1] = (cc[1] * xxax->kk_1 + xxax->d2_1) >> 8;
 					cc[2] = (cc[2] * xxax->kk_1 + xxax->d3_1) >> 8;
@@ -1946,7 +1946,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 				}
 			}
 			if (x11 > x2) break;
-			uchar* cc = (uchar*)&(data[y * size.x + x11]);
+			uchar* cc = (uchar*)&(data[y * size_.x + x11]);
 			i64 d = x11 - x22 + 1;
 			xxxyyy* xxax = &(xx[ayx]);
 			if (nac)
@@ -1997,8 +1997,8 @@ void _picture::rectangle(_iarea oo, uint c)
 
 _stack& operator<<(_stack& o, _picture const& p)
 {
-	o << p.size << p.transparent;
-	o.push_data(p.data, 4 * p.size.square());
+	o << p.size_ << p.transparent;
+	o.push_data(p.data, 4 * p.size_.square());
 	return o;
 }
 
@@ -2007,7 +2007,7 @@ _stack& operator>>(_stack& o, _picture& p)
 	_isize r;
 	o >> r >> p.transparent;
 	p.resize(r);
-	o.pop_data(p.data, 4 * p.size.square());
+	o.pop_data(p.data, 4 * p.size_.square());
 	return o;
 }
 
@@ -2344,8 +2344,8 @@ void _picture::ring(_xy p, double r, double d, uint c)
 	double ddmax = (r2 + 0.5) * (r2 + 0.5);
 	double ddd = ddmax - ddmin;
 
-	double xxx2 = (size.x / 2 - p.x) * (size.x / 2 - p.x) + (size.y / 2 - p.y) * (size.y / 2 - p.y);
-	double yyy2 = 0.25 * size.x * size.x + 0.25 * size.y * size.y;
+	double xxx2 = (size_.x / 2 - p.x) * (size_.x / 2 - p.x) + (size_.y / 2 - p.y) * (size_.y / 2 - p.y);
+	double yyy2 = 0.25 * size_.x * size_.x + 0.25 * size_.y * size_.y;
 	if (xxx2 + yyy2 + 2 * sqrt(xxx2 * yyy2) < ddmin) return; // экран внутри кольца
 
 	p.x -= 0.5;
@@ -2566,10 +2566,10 @@ uint brighten(uint c)
 bool _bitmap::resize(_isize wh)
 {
 	wh = wh.correct();
-	if (size == wh) return false;
-	size = wh;
-	drawing_area = size;
-	BITMAPINFO bmi = { sizeof(BITMAPINFOHEADER), (long)size.x, (long)-size.y, 1, 32, BI_RGB, 0, 0, 0, 0, 0 };
+	if (size_ == wh) return false;
+	size_ = wh;
+	drawing_area = size_;
+	BITMAPINFO bmi = { sizeof(BITMAPINFOHEADER), (long)size_.x, (long)-size_.y, 1, 32, BI_RGB, 0, 0, 0, 0, 0 };
 	bitmap2 = CreateDIBSection(0, &bmi, DIB_RGB_COLORS, (void**)(&data), 0, 0);
 	HGDIOBJ old = (bitmap2 != 0) ? SelectObject(hdc, bitmap2) : 0;
 	if (old != 0) DeleteObject(old);
@@ -2698,7 +2698,7 @@ void _bitmap::grab_ecran_oo2(HWND hwnd)
 	ReleaseDC(hwnd, X);
 	// исправление альфа канала
 	unsigned long long* ee = (unsigned long long*)data;
-	unsigned long long* eemax = (unsigned long long*) & (data[size.x * size.y - 1]);
+	unsigned long long* eemax = (unsigned long long*) & (data[size_.x * size_.y - 1]);
 	while (ee < eemax)*ee++ |= 0xff000000ff000000;
 	if (ee == eemax)*((unsigned int*)ee) |= 0xff000000;
 }

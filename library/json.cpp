@@ -225,7 +225,7 @@ _wjson& _wjson::add(std::string_view name, const _picture& b)
 {
 	arr(name);
 	bool pak = false;
-	if (b.size == _isize{ 24, 24 })
+	if (b.size_ == _isize{ 24, 24 })
 	{
 		pak = true;
 		for (i64 i = 0; i < 576; i++)
@@ -237,7 +237,7 @@ _wjson& _wjson::add(std::string_view name, const _picture& b)
 	}
 	if (!pak)
 	{
-		for (int j = 0; j < b.size.y; j++) add_mem(&b.data[j * b.size.x], b.size.x * 4ULL);
+		for (int j = 0; j < b.size_.y; j++) add_mem(&b.data[j * b.size_.x], b.size_.x * 4ULL);
 	}
 	else
 	{
@@ -514,7 +514,7 @@ void _rjson::read(std::string_view name, _picture& b)
 	int rx = (int)(temp[0].size() / 8);
 	b.resize({ rx, (i64)temp.size() });
 	for (int j = 0; j < temp.size(); j++)
-		if (!string_to_mem(temp[j], &b.data[j * b.size.x], b.size.x * 4))
+		if (!string_to_mem(temp[j], &b.data[j * b.size_.x], b.size_.x * 4))
 		{
 			error = 12;
 			return;
