@@ -811,6 +811,43 @@ _area _trans::operator()(const _area& b) const noexcept
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+i64 _iinterval::length() const
+{
+	i64 r = max - min;
+	return (r < 0) ? 0 : r;
+}
+
+bool _iinterval::contains(i64 x)
+{
+	return (x >= min) && (x < max);
+}
+
+_iinterval _iinterval::operator&(const _iinterval& b) noexcept
+{
+	return { std::max(min, b.min), std::min(max, b.max) };
+}
+
+void _iinterval::operator&=(const _iinterval& b) noexcept
+{
+	if (b.min > min) min = b.min; 
+	if (b.max < max) max = b.max;
+}
+
+_iinterval& _iinterval::operator << (i64 x)
+{
+	if (empty())
+	{
+		min = x;
+		max = x + 1;
+		return *this;
+	}
+	if (x < min) min = x;
+	if (x + 1 > max) max = x + 1;
+	return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool _iarea::operator!=(_isize b) const noexcept
 {
 	if (b.empty() && empty()) return false;

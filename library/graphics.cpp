@@ -1,8 +1,26 @@
-﻿#include "graphics.h"
+﻿#include "graphics.h" // 2732
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #define px(xx,yy) ((uchar*)&data[(yy) * size_.x + (xx)])
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+_color_mixing::_color_mixing(_color c)
+{
+	kk = 255 - c.a;
+	uint k2 = c.a + 1;
+	d1 = (c & 255) * k2;
+	d2 = ((c >> 8) & 255) * k2;
+	d3 = ((c >> 16) & 255) * k2;
+}
+
+void _color_mixing::mix(_color& c)
+{
+	c.r = (c.r * kk + d1) >> 8;
+	c.g = (c.g * kk + d2) >> 8;
+	c.b = (c.b * kk + d3) >> 8;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -107,6 +125,11 @@ bool _picture::resize(_isize wh) noexcept
 	return true;
 }
 
+void _picture::set_transparent(_color c)
+{
+	if (c.a != 0xff) transparent = true;
+}
+
 void _picture::clear(uint c) noexcept
 {
 	if (drawing_area != size_)
@@ -116,6 +139,41 @@ void _picture::clear(uint c) noexcept
 	}
 	transparent = ((c >> 24) != 0xff);
 	memset32(data, c, size_.square());
+}
+
+void _picture::horizontal_line(_ixy p1, _ixy p2, _color c, bool rep)
+{
+	if (c.a == 0) return; // полностью прозрачная
+	if (!drawing_area.y.contains(p1.y)) return;
+	auto interval = (_iinterval(p1.x) << p2.x) & drawing_area.x;
+	if (interval.empty()) return;
+	if (rep || c.a == 0xff)
+	{
+		set_transparent(c);
+		memset32((uint*)&pixel(interval.min, p1.y), c, interval.length());
+		return;
+	}
+	if (!transparent)
+	{
+		_color_mixing cc(c);
+		_color* c2 = &pixel(interval.min, p1.y);
+		for (i64 d = 1 - interval.length(); d <= 0; d++) cc.mix(*c2++);
+//		for (i64 i = interval.min; i < interval.max; i++) cc.mix(*c2++);
+		return;
+	}
+}
+
+void _picture::line2(_ixy p1, _ixy p2, _color c, bool rep)
+{
+	if (p1.y == p2.y)
+	{
+		horizontal_line(p1, p2, c, rep);
+		return;
+	}
+	if (p1.x == p2.x)
+	{
+		return;
+	}
 }
 
 void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
@@ -2719,4 +2777,3 @@ void _bitmap::grab_ecran_oo2(HWND hwnd)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-

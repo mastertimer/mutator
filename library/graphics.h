@@ -4,6 +4,31 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+struct _color
+{
+	union
+	{
+		uint c;
+		uchar a, r, g, b;
+	};
+	operator uint() { return c; }
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct _color_mixing
+{
+	uint kk;
+	uint d1;
+	uint d2;
+	uint d3;
+
+	_color_mixing(_color c);
+	void mix(_color& c);
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct _picture
 {
 	_picture() = default;
@@ -21,11 +46,11 @@ struct _picture
 	bool resize(_isize wh) noexcept;
 	void set_drawing_area(const _iarea& q) noexcept;
 
-	void set_transparent() noexcept; // узнать, есть ли прозрачные пиксели
 	void clear(uint c = 0xFF000000) noexcept;
 
 	// ниже не проверенные, или не универсальные функции
 
+	void line2(_ixy p1, _ixy p2, _color c, bool rep = false); // линия rep - полное замещение цвета
 	void line(_ixy p1, _ixy p2, uint c, bool rep = false); // линия rep - полное замещение цвета
 	void lines(_xy p1, _xy p2, double l, uint c); // точная линия заданной толщины
 	void text16(_ixy p, std::string_view st, uint c); // простой текст высотой 16
@@ -54,7 +79,11 @@ protected:
 	friend struct _wjson;
 	friend struct _rjson;
 
-	uint* data = nullptr;
+	union
+	{
+		uint* data = nullptr;
+		_color* data2;
+	};
 	_isize size_;
 	bool transparent = false;
 	_iarea drawing_area; // разрешенная область для рисования
@@ -64,6 +93,14 @@ protected:
 	void fill_rect_rep_speed(_iarea r, uint c); // прямоугольник - просто замена цвета без проверок диапазона
 	void fill_rect_transparent_speed(_iarea r, uint c);
 	void fill_rect_speed(_iarea r, uint c);
+
+	void horizontal_line(_ixy p1, _ixy p2, _color c, bool rep);
+
+	// ниже проверенные функции
+
+	void set_transparent() noexcept; // узнать, есть ли прозрачные пиксели
+	void set_transparent(_color c); // изменить transparent
+	_color& pixel(i64 x, i64 y) { return data2[y * size_.x + x]; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
