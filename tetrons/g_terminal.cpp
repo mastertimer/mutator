@@ -1,4 +1,4 @@
-#include "g_terminal.h"
+п»ї#include "g_terminal.h"
 
 #include "exchange_research.h"
 #include "compression.h"
@@ -7,7 +7,7 @@
 
 struct _cmd_load_sable_stat : public _g_terminal::_command
 {
-	std::wstring help() override { return L"конвертация статистики"; }
+	std::wstring help() override { return L"РєРѕРЅРІРµСЂС‚Р°С†РёСЏ СЃС‚Р°С‚РёСЃС‚РёРєРё"; }
 
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
@@ -19,7 +19,7 @@ struct _cmd_load_sable_stat : public _g_terminal::_command
 
 struct _cmd_test_stat : public _g_terminal::_command
 {
-	std::wstring help() override { return L"сравнение статистик"; }
+	std::wstring help() override { return L"СЃСЂР°РІРЅРµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРє"; }
 
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
@@ -33,28 +33,28 @@ std::wstring test_file = L"e:\\mutator\\data\\t110521.txt";
 
 struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 {
-	std::wstring help() override { return L"тестирование арифметического кодирования"; }
+	std::wstring help() override { return L"С‚РµСЃС‚РёСЂРѕРІР°РЅРёРµ Р°СЂРёС„РјРµС‚РёС‡РµСЃРєРѕРіРѕ РєРѕРґРёСЂРѕРІР°РЅРёСЏ"; }
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
-		t->add_text(L"файл: " + test_file);
+		t->add_text(L"С„Р°Р№Р»: " + test_file);
 		std::vector<uchar> data, data2;
 		_bit_vector res;
 		if (!load_file(test_file, data))
 		{
-			t->add_text(L"ошибка загрузки!");
+			t->add_text(L"РѕС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё!");
 			return;
 		}
-		t->add_text(L"размер:            " + std::to_wstring(data.size()));
+		t->add_text(L"СЂР°Р·РјРµСЂ:            " + std::to_wstring(data.size()));
 		double com1 = 0.0, com2 = 0.0;
 		double com = information(data, &com1, &com2);
-		t->add_text(L"информация:        " + double_to_wstring(com, 1) + L" (" + double_to_wstring(com1, 1) + L" + " +
+		t->add_text(L"РёРЅС„РѕСЂРјР°С†РёСЏ:        " + double_to_wstring(com, 1) + L" (" + double_to_wstring(com1, 1) + L" + " +
 			double_to_wstring(com2, 1) + L")");
-		t->add_text(L"идеал:             " + double_to_wstring(size_arithmetic_coding(data), 1));
+		t->add_text(L"РёРґРµР°Р»:             " + double_to_wstring(size_arithmetic_coding(data), 1));
 
 		i64 n = 1;
 		if (!parameters.empty()) n = std::stoi(parameters[0]);
 		if (n < 1) n = 1;
-		if (n > 1) t->add_text(std::to_wstring(n) + L" испытаний");
+		if (n > 1) t->add_text(std::to_wstring(n) + L" РёСЃРїС‹С‚Р°РЅРёР№");
 
 		i64 mindt = 1000000000;
 		i64 maxdt = 0;
@@ -74,10 +74,10 @@ struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 
 		double v = res.size() / 8.0;
 		t->add_text(L"arithmetic_coding: " + double_to_wstring(v, 1));
-		t->add_text(L"разница:           " + double_to_wstring(v - com, 1));
-		t->add_text(L"среднее время, мксек:      " + std::to_wstring(summdt / n));
-		t->add_text(L"минимальное время, мксек:  " + std::to_wstring(mindt));
-		t->add_text(L"максимальное время, мксек: " + std::to_wstring(maxdt));
+		t->add_text(L"СЂР°Р·РЅРёС†Р°:           " + double_to_wstring(v - com, 1));
+		t->add_text(L"СЃСЂРµРґРЅРµРµ РІСЂРµРјСЏ, РјРєСЃРµРє:      " + std::to_wstring(summdt / n));
+		t->add_text(L"РјРёРЅРёРјР°Р»СЊРЅРѕРµ РІСЂРµРјСЏ, РјРєСЃРµРє:  " + std::to_wstring(mindt));
+		t->add_text(L"РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РІСЂРµРјСЏ, РјРєСЃРµРє: " + std::to_wstring(maxdt));
 
 		mindt = 1000000000;
 		maxdt = 0;
@@ -94,12 +94,12 @@ struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 			summdt += dtt;
 		}
 		if (data == data2)
-			t->add_text(L"расжатие норма");
+			t->add_text(L"СЂР°СЃР¶Р°С‚РёРµ РЅРѕСЂРјР°");
 		else
-			t->add_text(L"!!ошибка!! расжатый файл не равен исходному!");
-		t->add_text(L"среднее время, мксек:      " + std::to_wstring(summdt / n));
-		t->add_text(L"минимальное время, мксек:  " + std::to_wstring(mindt));
-		t->add_text(L"максимальное время, мксек: " + std::to_wstring(maxdt));
+			t->add_text(L"!!РѕС€РёР±РєР°!! СЂР°СЃР¶Р°С‚С‹Р№ С„Р°Р№Р» РЅРµ СЂР°РІРµРЅ РёСЃС…РѕРґРЅРѕРјСѓ!");
+		t->add_text(L"СЃСЂРµРґРЅРµРµ РІСЂРµРјСЏ, РјРєСЃРµРє:      " + std::to_wstring(summdt / n));
+		t->add_text(L"РјРёРЅРёРјР°Р»СЊРЅРѕРµ РІСЂРµРјСЏ, РјРєСЃРµРє:  " + std::to_wstring(mindt));
+		t->add_text(L"РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РІСЂРµРјСЏ, РјРєСЃРµРє: " + std::to_wstring(maxdt));
 	}
 };
 
@@ -107,21 +107,21 @@ struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 
 struct _cmd_test_arithmetic_coding2 : public _g_terminal::_command
 {
-	std::wstring help() override { return L"тестирование арифметического кодирования"; }
+	std::wstring help() override { return L"С‚РµСЃС‚РёСЂРѕРІР°РЅРёРµ Р°СЂРёС„РјРµС‚РёС‡РµСЃРєРѕРіРѕ РєРѕРґРёСЂРѕРІР°РЅРёСЏ"; }
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
-		t->add_text(L"файл: " + test_file);
+		t->add_text(L"С„Р°Р№Р»: " + test_file);
 		std::vector<uchar> data, data2;
 		_bit_vector res;
 		if (!load_file(test_file, data))
 		{
-			t->add_text(L"ошибка загрузки!");
+			t->add_text(L"РѕС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё!");
 			return;
 		}
 		double f0 = 0.01;
-		t->add_text(L"размер: " + std::to_wstring(data.size()));
-		t->add_text(L"идеал1: " + double_to_wstring(size_arithmetic_coding(data), 1));
-		t->add_text(L"идеал0: " + double_to_wstring(size_arithmetic_coding(data, f0), 1));
+		t->add_text(L"СЂР°Р·РјРµСЂ: " + std::to_wstring(data.size()));
+		t->add_text(L"РёРґРµР°Р»1: " + double_to_wstring(size_arithmetic_coding(data), 1));
+		t->add_text(L"РёРґРµР°Р»0: " + double_to_wstring(size_arithmetic_coding(data, f0), 1));
 
 		i64 n = 1;
 		if (!parameters.empty()) n = std::stoi(parameters[0]);
@@ -129,7 +129,7 @@ struct _cmd_test_arithmetic_coding2 : public _g_terminal::_command
 		for (i64 i = 0; i < n; i++)
 		{
 			stir_vector(data);
-			t->add_text(L"идеал:  " + double_to_wstring(size_arithmetic_coding(data, f0), 1));
+			t->add_text(L"РёРґРµР°Р»:  " + double_to_wstring(size_arithmetic_coding(data, f0), 1));
 		}
 	}
 };
@@ -138,22 +138,22 @@ struct _cmd_test_arithmetic_coding2 : public _g_terminal::_command
 
 struct _cmd_test_ppm : public _g_terminal::_command
 {
-	std::wstring help() override { return L"тестирование ppm сжатия"; }
+	std::wstring help() override { return L"С‚РµСЃС‚РёСЂРѕРІР°РЅРёРµ ppm СЃР¶Р°С‚РёСЏ"; }
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
-		t->add_text(L"файл: " + test_file);
+		t->add_text(L"С„Р°Р№Р»: " + test_file);
 		std::vector<uchar> data, data2, res;
 		if (!load_file(test_file, data))
 		{
-			t->add_text(L"ошибка загрузки!");
+			t->add_text(L"РѕС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё!");
 			return;
 		}
-		t->add_text(L"размер: " + std::to_wstring(data.size()));
+		t->add_text(L"СЂР°Р·РјРµСЂ: " + std::to_wstring(data.size()));
 
 		i64 n = 0;
 		if (!parameters.empty()) n = std::stoi(parameters[0]);
 		if (n < 0) n = 0;
-		t->add_text(L"порядок = " + std::to_wstring(n));
+		t->add_text(L"РїРѕСЂСЏРґРѕРє = " + std::to_wstring(n));
 
 		i64 mindt = 1000000000;
 		i64 maxdt = 0;
@@ -171,7 +171,7 @@ struct _cmd_test_ppm : public _g_terminal::_command
 
 		double v = res.size();
 		t->add_text(L"ppm:    " + double_to_wstring(v, 0));
-		t->add_text(L"время, мксек:  " + std::to_wstring(mindt));
+		t->add_text(L"РІСЂРµРјСЏ, РјРєСЃРµРє:  " + std::to_wstring(mindt));
 
 	}
 };
@@ -180,20 +180,20 @@ struct _cmd_test_ppm : public _g_terminal::_command
 
 const double kln2 = -1.0 / log(2.0);
 
-// p - реальная вероятность
-// k - оценочная вероятность
+// p - СЂРµР°Р»СЊРЅР°СЏ РІРµСЂРѕСЏС‚РЅРѕСЃС‚СЊ
+// k - РѕС†РµРЅРѕС‡РЅР°СЏ РІРµСЂРѕСЏС‚РЅРѕСЃС‚СЊ
 
-double entropy01(double p) // энтропия 01: p(1) = p, p(0) = 1-p
+double entropy01(double p) // СЌРЅС‚СЂРѕРїРёСЏ 01: p(1) = p, p(0) = 1-p
 {
 	return kln2 * (p * log(p) + (1.0 - p) * log(1.0 - p));
 }
 
-double entropy2(double p, double k) // энтропия второго символа по предсказанию
+double entropy2(double p, double k) // СЌРЅС‚СЂРѕРїРёСЏ РІС‚РѕСЂРѕРіРѕ СЃРёРјРІРѕР»Р° РїРѕ РїСЂРµРґСЃРєР°Р·Р°РЅРёСЋ
 {
 	return kln2 * (p * (p * log(k) + (1.0 - p) * log(1.0 - k)) + (1.0 - p) * (p * log(1.0 - k) + (1.0 - p) * log(k)));
 }
 
-double ratio_entropy2(double p, double k) // во сколько раз энтропия хуже идеальной
+double ratio_entropy2(double p, double k) // РІРѕ СЃРєРѕР»СЊРєРѕ СЂР°Р· СЌРЅС‚СЂРѕРїРёСЏ С…СѓР¶Рµ РёРґРµР°Р»СЊРЅРѕР№
 {
 	return entropy2(p, k) / entropy01(p);
 }
@@ -205,7 +205,7 @@ double f1(double p)
 
 struct _cmd_test : public _g_terminal::_command
 {
-	std::wstring help() override { return L"тестирование перемешивания"; }
+	std::wstring help() override { return L"С‚РµСЃС‚РёСЂРѕРІР°РЅРёРµ РїРµСЂРµРјРµС€РёРІР°РЅРёСЏ"; }
 
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
@@ -222,7 +222,7 @@ struct _cmd_test : public _g_terminal::_command
 
 struct _cmd_clear : public _g_terminal::_command
 {
-	std::wstring help() override { return L"очищение экрана"; }
+	std::wstring help() override { return L"РѕС‡РёС‰РµРЅРёРµ СЌРєСЂР°РЅР°"; }
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
 		t->text_clear();
@@ -233,7 +233,7 @@ struct _cmd_clear : public _g_terminal::_command
 
 struct _cmd_help : public _g_terminal::_command
 {
-	std::wstring help() override { return L"вывод справки"; }
+	std::wstring help() override { return L"РІС‹РІРѕРґ СЃРїСЂР°РІРєРё"; }
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
 		for (auto& i : t->command) t->add_text(i.first + L" - " + i.second->help());
@@ -244,10 +244,38 @@ struct _cmd_help : public _g_terminal::_command
 
 struct _cmd_line : public _g_terminal::_command
 {
-	std::wstring help() override { return L"тест скорости рисования линий"; }
+	std::wstring help() override { return L"С‚РµСЃС‚ СЃРєРѕСЂРѕСЃС‚Рё СЂРёСЃРѕРІР°РЅРёСЏ Р»РёРЅРёР№"; }
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
-		_picture k({ 3000, 3000 });
+		int iter = 1000000;
+		_picture k1({ 3000, 3000 }, 0xFF000000);
+		_picture k2({ 3000, 3000 }, 0xFF000000);
+		rnd.init(0);
+		t->start_timer();
+		for (auto i = 0; i < iter; i++)
+		{
+			auto y = rnd(3000);
+			auto x1 = rnd(3000);
+			auto x2 = rnd(3000);
+			uint c = rnd(0xFFFFFFFF);
+			k1.line({ x1, y }, { x2, y }, c);
+		}
+		t->stop_timer(L"line");
+		rnd.init(0);
+		t->start_timer();
+		for (auto i = 0; i < iter; i++)
+		{
+			auto y = rnd(3000);
+			auto x1 = rnd(3000);
+			auto x2 = rnd(3000);
+			uint c = rnd(0xFFFFFFFF);
+			k2.line2({ x1, y }, { x2, y }, c);
+		}
+		t->stop_timer(L"line2");
+		if (k1 == k2)
+			t->add_text(L"РєР°СЂС‚РёРЅРєРё СЂР°РІРЅС‹");
+		else
+			t->add_text(L"!!РќР•РЎРћР’РџРђР”Р•РќРР•");
 	}
 };
 
@@ -280,7 +308,7 @@ void _g_terminal::stop_timer(std::wstring_view s)
 	std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - timer.back();
 	timer.pop_back();
 	double dtt = dt.count() / 1.0e9;
-	text.push_back(std::wstring(s) + L": " + double_to_wstring(dtt, 6) + L" сек");
+	text.push_back(std::wstring(s) + L": " + double_to_wstring(dtt, 6) + L" СЃРµРє");
 }
 
 bool _g_terminal::mouse_down_left2(_xy r)
@@ -289,7 +317,7 @@ bool _g_terminal::mouse_down_left2(_xy r)
 	r = master_trans_go(r);
 	_iarea oo = master_trans_go(local_area);
 	if (r.x > oo.x.max - width_scrollbar)
-	{ // на полосе прокрутки
+	{ // РЅР° РїРѕР»РѕСЃРµ РїСЂРѕРєСЂСѓС‚РєРё
 		if (r.y < y_slider.min)
 			scrollbar += max_lines - 1;
 		else
@@ -302,7 +330,7 @@ bool _g_terminal::mouse_down_left2(_xy r)
 			}
 	}
 	else
-	{ // на тексте
+	{ // РЅР° С‚РµРєСЃС‚Рµ
 		i64 x_text = oo.x.min + otst_x;
 		i64 y_cmd = oo.y.max - otst_y;
 
@@ -328,7 +356,7 @@ void _g_terminal::mouse_move_left2(_xy r)
 		cha_area();
 		return;
 	}
-	// выделение текста
+	// РІС‹РґРµР»РµРЅРёРµ С‚РµРєСЃС‚Р°
 	i64 x_text = oo.x.min + otst_x;
 	i64 y_cmd = oo.y.max - otst_y;
 
@@ -356,14 +384,14 @@ void _g_terminal::run_cmd()
 	std::vector<std::wstring> parameters;
 
 	i64 i0 = cmd.size();
-	// пропуск первых пробелов
+	// РїСЂРѕРїСѓСЃРє РїРµСЂРІС‹С… РїСЂРѕР±РµР»РѕРІ
 	for (i64 i = 0; i < (i64)cmd.size(); i++)
 		if ((cmd[i] != L' ') && (cmd[i] != L'\t'))
 		{
 			i0 = i;
 			break;
 		}
-	// вычленение command_name
+	// РІС‹С‡Р»РµРЅРµРЅРёРµ command_name
 	for (i64 i = i0; i < (i64)cmd.size(); i++)
 		if ((cmd[i] == L' ') || (cmd[i] == L'\t'))
 		{
@@ -371,8 +399,8 @@ void _g_terminal::run_cmd()
 			break;
 		}
 	if (command_name.empty()) command_name = cmd.substr(i0, cmd.size() - i0);
-	// вычленение параметров
-	int rez = 0; // 0 - пробелы 1 - набор символов 2 - строка "safasf asf"
+	// РІС‹С‡Р»РµРЅРµРЅРёРµ РїР°СЂР°РјРµС‚СЂРѕРІ
+	int rez = 0; // 0 - РїСЂРѕР±РµР»С‹ 1 - РЅР°Р±РѕСЂ СЃРёРјРІРѕР»РѕРІ 2 - СЃС‚СЂРѕРєР° "safasf asf"
 	int start_p = 0;
 	for (i64 i = i0 + command_name.size(); i < (i64)cmd.size(); i++)
 	{
@@ -399,10 +427,10 @@ void _g_terminal::run_cmd()
 		{
 			start_timer();
 			cc->second->run(this, parameters);
-			stop_timer(L"время выполнения");
+			stop_timer(L"РІСЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ");
 		}
 		else
-			text.push_back(L"команда не найдена");
+			text.push_back(L"РєРѕРјР°РЅРґР° РЅРµ РЅР°Р№РґРµРЅР°");
 	}
 	text.push_back(L"");
 	old_cmd_vis_len = -1;
@@ -510,7 +538,7 @@ void _g_terminal::key_down(ushort key)
 		if (cursor > 0)	cursor--;
 		vis_cur = true;
 		break;
-	case 38: // стрелка вверх
+	case 38: // СЃС‚СЂРµР»РєР° РІРІРµСЂС…
 		if (act_previous_cmd > 0) act_previous_cmd--;
 		if (act_previous_cmd < (i64)previous_cmd.size()) cmd = previous_cmd[act_previous_cmd];
 		cursor = 0;
@@ -522,7 +550,7 @@ void _g_terminal::key_down(ushort key)
 		if (cursor < (i64)cmd.size()) cursor++;
 		vis_cur = true;
 		break;
-	case 40: // стрелка вниз
+	case 40: // СЃС‚СЂРµР»РєР° РІРЅРёР·
 		if (act_previous_cmd < (i64)previous_cmd.size() - 1) act_previous_cmd++;
 		if (act_previous_cmd < (i64)previous_cmd.size()) cmd = previous_cmd[act_previous_cmd];
 		cursor = 0;
@@ -587,9 +615,9 @@ void _g_terminal::ris2(_trans tr, bool final)
 	if (cmd_vis_len <= 0) cmd_vis_len = 1;
 	i64 ks = (full_cmd.size() + cmd_vis_len) / cmd_vis_len;
 
-	max_lines = (oo.y.size() - otst_y * 2) / font_size; // строк в окне
+	max_lines = (oo.y.size() - otst_y * 2) / font_size; // СЃС‚СЂРѕРє РІ РѕРєРЅРµ
 
-	full_lines = 0; // общее количество строк
+	full_lines = 0; // РѕР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє
 	if (old_cmd_vis_len == cmd_vis_len)
 		full_lines = old_full_lines;
 	else
@@ -634,9 +662,9 @@ void _g_terminal::ris2(_trans tr, bool final)
 		}
 	}
 	vis_cur = false;
-	if (_area(area_cursor) == master_obl_izm) // перерисовать только курсор
+	if (_area(area_cursor) == master_obl_izm) // РїРµСЂРµСЂРёСЃРѕРІР°С‚СЊ С‚РѕР»СЊРєРѕ РєСѓСЂСЃРѕСЂ
 	{
-		if (area_cursor.empty()) goto finish; // перестраховка
+		if (area_cursor.empty()) goto finish; // РїРµСЂРµСЃС‚СЂР°С…РѕРІРєР°
 		master_bm.text({ area_cursor.x.min, area_cursor.y.min }, cmd.substr(cursor, 1), font_size, cc2, cc0);
 		if (visible_cursor) master_bm.fill_rectangle(area_cursor, cc3 - 0xC0000000);
 		goto finish;
@@ -647,7 +675,7 @@ void _g_terminal::ris2(_trans tr, bool final)
 	if ((oo2.y.size() < 30) || (oo2.x.size() < 30)) goto finish;
 
 	if (full_lines > max_lines)
-	{ // ползунок
+	{ // РїРѕР»Р·СѓРЅРѕРє
 		master_bm.line({ oo.x.max - 1, oo.y.min }, { oo.x.max - 1, oo.y.max }, c0);
 		master_bm.line({ oo2.x.max, oo.y.min }, { oo.x.max - 2, oo.y.min }, c0);
 		master_bm.line({ oo2.x.max, oo.y.max - 1 }, { oo.x.max - 2, oo.y.max - 1 }, c0);

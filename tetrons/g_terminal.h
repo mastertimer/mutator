@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 
 #include "tetron.h"
 
@@ -14,23 +14,23 @@ struct _g_terminal : public _t_go
 	};
 
 	std::map<std::wstring, std::unique_ptr<_command>> command;
-	std::wstring cmd; // командная строка
-	std::vector<std::wstring> previous_cmd; // база всех вызываемых команд
+	std::wstring cmd; // РєРѕРјР°РЅРґРЅР°СЏ СЃС‚СЂРѕРєР°
+	std::vector<std::wstring> previous_cmd; // Р±Р°Р·Р° РІСЃРµС… РІС‹Р·С‹РІР°РµРјС‹С… РєРѕРјР°РЅРґ
 
-	i64 act_previous_cmd = 0; // активная предыдущая команда
-	i64 cursor = 0; // позиция курсора в командной строке
+	i64 act_previous_cmd = 0; // Р°РєС‚РёРІРЅР°СЏ РїСЂРµРґС‹РґСѓС‰Р°СЏ РєРѕРјР°РЅРґР°
+	i64 cursor = 0; // РїРѕР·РёС†РёСЏ РєСѓСЂСЃРѕСЂР° РІ РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРµ
 	bool visible_cursor = true;
 	bool insert_mode = true;
 	_iarea area_cursor;
-	i64 scrollbar = 0; // отступ ползунка снизу
-	inline static int font_size = 16; // минимум 12 для читабельности
-	int font_width = 0; // ширина символов
+	i64 scrollbar = 0; // РѕС‚СЃС‚СѓРї РїРѕР»Р·СѓРЅРєР° СЃРЅРёР·Сѓ
+	inline static int font_size = 16; // РјРёРЅРёРјСѓРј 12 РґР»СЏ С‡РёС‚Р°Р±РµР»СЊРЅРѕСЃС‚Рё
+	int font_width = 0; // С€РёСЂРёРЅР° СЃРёРјРІРѕР»РѕРІ
 	inline static std::wstring prefix = L"> ";
-	inline static i64 width_scrollbar = 15; // ширина полосы прокрутки
-	inline static i64 otst_x = 3; // отступ при рисовании
-	inline static i64 otst_y = 2; // отступ при рисовании
-	_ixy selection_begin = { -1LL,0LL }; // номер отображаемой строки и номер символа
-	_ixy selection_end = { 0LL,0LL }; // номер отображаемой строки и номер символа
+	inline static i64 width_scrollbar = 15; // С€РёСЂРёРЅР° РїРѕР»РѕСЃС‹ РїСЂРѕРєСЂСѓС‚РєРё
+	inline static i64 otst_x = 3; // РѕС‚СЃС‚СѓРї РїСЂРё СЂРёСЃРѕРІР°РЅРёРё
+	inline static i64 otst_y = 2; // РѕС‚СЃС‚СѓРї РїСЂРё СЂРёСЃРѕРІР°РЅРёРё
+	_ixy selection_begin = { -1LL,0LL }; // РЅРѕРјРµСЂ РѕС‚РѕР±СЂР°Р¶Р°РµРјРѕР№ СЃС‚СЂРѕРєРё Рё РЅРѕРјРµСЂ СЃРёРјРІРѕР»Р°
+	_ixy selection_end = { 0LL,0LL }; // РЅРѕРјРµСЂ РѕС‚РѕР±СЂР°Р¶Р°РµРјРѕР№ СЃС‚СЂРѕРєРё Рё РЅРѕРјРµСЂ СЃРёРјРІРѕР»Р°
 
 	_g_terminal();
 	uchar type() override { return 18; }
@@ -42,8 +42,8 @@ struct _g_terminal : public _t_go
 	bool mouse_wheel2(_xy r) override;
 	bool mouse_down_left2(_xy r) override;
 	void mouse_move_left2(_xy r) override;
-	void run_cmd(); // выволнить введенную команду
-	void add_text(std::wstring_view s); // добавить текст
+	void run_cmd(); // РІС‹РІРѕР»РЅРёС‚СЊ РІРІРµРґРµРЅРЅСѓСЋ РєРѕРјР°РЅРґСѓ
+	void add_text(std::wstring_view s); // РґРѕР±Р°РІРёС‚СЊ С‚РµРєСЃС‚
 	void text_clear() { text.clear(); }
 	void start_timer();
 	void stop_timer(std::wstring_view s);
@@ -51,17 +51,17 @@ struct _g_terminal : public _t_go
 private:
 	std::vector<std::wstring> text;
 	std::vector<decltype(std::chrono::high_resolution_clock::now())> timer;
-	i64 old_cmd_vis_len = -1; // количество символов в строке
-	i64 old_full_lines = 0; // полное количество строк
-	i64 vis_cur = false; // сделать курсор видимым
-	_iinterval y_slider; // пиксельные координаты y ползунка
-	i64 max_lines = 0; // сколько строк помещается на экране
-	double y0_move_slider = -1; // начальный y - перемещения ползунка
-	i64 scrollbar0_move_slider = 0; // начальное положение scrollbar
-	i64 full_lines = 0; // полное количество строк
-	i64 cmd_vis_len = 0; // количество символов по x
+	i64 old_cmd_vis_len = -1; // РєРѕР»РёС‡РµСЃС‚РІРѕ СЃРёРјРІРѕР»РѕРІ РІ СЃС‚СЂРѕРєРµ
+	i64 old_full_lines = 0; // РїРѕР»РЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє
+	i64 vis_cur = false; // СЃРґРµР»Р°С‚СЊ РєСѓСЂСЃРѕСЂ РІРёРґРёРјС‹Рј
+	_iinterval y_slider; // РїРёРєСЃРµР»СЊРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ y РїРѕР»Р·СѓРЅРєР°
+	i64 max_lines = 0; // СЃРєРѕР»СЊРєРѕ СЃС‚СЂРѕРє РїРѕРјРµС‰Р°РµС‚СЃСЏ РЅР° СЌРєСЂР°РЅРµ
+	double y0_move_slider = -1; // РЅР°С‡Р°Р»СЊРЅС‹Р№ y - РїРµСЂРµРјРµС‰РµРЅРёСЏ РїРѕР»Р·СѓРЅРєР°
+	i64 scrollbar0_move_slider = 0; // РЅР°С‡Р°Р»СЊРЅРѕРµ РїРѕР»РѕР¶РµРЅРёРµ scrollbar
+	i64 full_lines = 0; // РїРѕР»РЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє
+	i64 cmd_vis_len = 0; // РєРѕР»РёС‡РµСЃС‚РІРѕ СЃРёРјРІРѕР»РѕРІ РїРѕ x
 
-	void set_clipboard(); // скопировать выделенный текст в буффер обмена
+	void set_clipboard(); // СЃРєРѕРїРёСЂРѕРІР°С‚СЊ РІС‹РґРµР»РµРЅРЅС‹Р№ С‚РµРєСЃС‚ РІ Р±СѓС„С„РµСЂ РѕР±РјРµРЅР°
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -9,24 +9,24 @@
 struct _color_mixing
 {
 	uint kk;
-	uint d1;
-	uint d2;
-	uint d3;
+	uint d_b;
+	uint d_g;
+	uint d_r;
 
 	_color_mixing(_color c)
 	{
 		kk = 255 - c.a;
 		uint k2 = c.a + 1;
-		d1 = (c & 255) * k2;
-		d2 = ((c >> 8) & 255) * k2;
-		d3 = ((c >> 16) & 255) * k2;
+		d_b = c.b * k2;
+		d_g = c.g * k2;
+		d_r = c.r * k2;
 	}
 
-	void mix(_color& c)
+	void mix(_color& c) const
 	{
-		c.r = (c.r * kk + d1) >> 8;
-		c.g = (c.g * kk + d2) >> 8;
-		c.b = (c.b * kk + d3) >> 8;
+		c.b = (c.b * kk + d_b) >> 8;
+		c.g = (c.g * kk + d_g) >> 8;
+		c.r = (c.r * kk + d_r) >> 8;
 	}
 
 };
@@ -53,6 +53,14 @@ _picture::_picture(const _picture& copy) : size_(copy.size_), transparent(copy.t
 _picture::_picture(_isize r) noexcept
 {
 	drawing_area = size_ = r;
+	if (!size_.empty())	data = new uint[size_.square()];
+}
+
+_picture::_picture(_isize r, uint c) noexcept
+{
+	drawing_area = size_ = r;
+	if (!size_.empty())	data = new uint[size_.square()];
+	clear(c);
 }
 
 _picture::_picture(_picture&& move) noexcept : data(move.data), size_(move.size_), transparent(move.transparent),
@@ -60,6 +68,15 @@ drawing_area(move.drawing_area)
 {
 	move.data = nullptr;
 	move.drawing_area = move.size_ = { 0,0 };
+}
+
+bool _picture::operator==(const _picture& pic)
+{
+	if (size_ != pic.size_) return false;
+	auto r = size_.square();
+	for (auto i = 0; i < r; i++)
+		if (data[i] != pic.data[i]) return false;
+	return true;
 }
 
 _picture& _picture::operator=(const _picture& copy) noexcept
@@ -166,8 +183,7 @@ void _picture::horizontal_line(_ixy p1, _ixy p2, _color c, bool rep)
 	{
 		_color_mixing cc(c);
 		_color* c2 = &pixel(interval.min, p1.y);
-		for (i64 d = 1 - interval.length(); d <= 0; d++) cc.mix(*c2++);
-//		for (i64 i = interval.min; i < interval.max; i++) cc.mix(*c2++);
+		for (i64 i = interval.min; i < interval.max; i++) cc.mix(*c2++);
 		return;
 	}
 }

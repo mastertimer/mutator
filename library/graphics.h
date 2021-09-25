@@ -6,12 +6,10 @@
 
 struct _color
 {
-	union
-	{
-		uint c;
-		uchar a, r, g, b;
-	};
-	operator uint() { return c; }
+	uchar b, g, r, a;
+
+	_color(uint c) { *((uint*)this) = c; }
+	operator uint() { return *((uint*)this); }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,12 +18,14 @@ struct _picture
 {
 	_picture() = default;
 	explicit _picture(_isize r) noexcept;
+	explicit _picture(_isize r, uint c) noexcept;
 	_picture(const _picture& copy);
 	_picture(_picture&& move) noexcept;
 	~_picture() noexcept;
 
 	_picture& operator=(_picture&& move) noexcept;
 	_picture& operator=(const _picture& copy) noexcept;
+	bool operator==(const _picture& pic);
 
 	uint* scan_line(i64 y) const noexcept { return &data[y * size_.x]; }
 
