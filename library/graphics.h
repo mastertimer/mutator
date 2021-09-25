@@ -82,6 +82,7 @@ protected:
 	void fill_rect_speed(_iarea r, uint c);
 
 	void horizontal_line(_ixy p1, _ixy p2, _color c, bool rep);
+	void vertical_line(_ixy p1, _ixy p2, _color c, bool rep);
 
 	// ниже проверенные функции
 

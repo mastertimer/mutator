@@ -200,6 +200,30 @@ void _picture::horizontal_line(_ixy p1, _ixy p2, _color c, bool rep)
 	for (i64 i = interval.min; i < interval.max; i++) cc.mix(*c2++);
 }
 
+void _picture::vertical_line(_ixy p1, _ixy p2, _color c, bool rep)
+{
+	if (!drawing_area.x.contains(p1.x)) return;
+	auto interval = (_iinterval(p1.y) << p2.y) & drawing_area.y;
+	if (interval.empty()) return;
+	_color* c2 = &pixel(p1.x, interval.min);
+	if (rep || c.a == 0xff)
+	{
+		set_transparent(c);
+		for (i64 i = interval.min; i < interval.max; i++)
+		{
+			*c2 = c;
+			c2 += size_.x;
+		}
+		return;
+	}
+	_color_mixing cc(c, transparent);
+	for (i64 i = interval.min; i < interval.max; i++)
+	{
+		cc.mix(*c2);
+		c2 += size_.x;
+	}
+}
+
 void _picture::line2(_ixy p1, _ixy p2, _color c, bool rep)
 {
 	if (c.a == 0 && !rep) return; // полностью прозрачная
@@ -210,6 +234,7 @@ void _picture::line2(_ixy p1, _ixy p2, _color c, bool rep)
 	}
 	if (p1.x == p2.x)
 	{
+		vertical_line(p1, p2, c, rep);
 		return;
 	}
 }

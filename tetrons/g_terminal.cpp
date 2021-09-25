@@ -254,22 +254,22 @@ struct _cmd_line : public _g_terminal::_command
 		t->start_timer();
 		for (auto i = 0; i < iter; i++)
 		{
-			auto y = rnd(3000);
-			auto x1 = rnd(3000);
-			auto x2 = rnd(3000);
+			auto x = rnd(3000);
+			auto y1 = rnd(3000);
+			auto y2 = rnd(3000);
 			uint c = rnd(0xFFFFFFFF);
-			k1.line({ x1, y }, { x2, y }, c);
+			k1.line({ x, y1 }, { x, y2 }, c);
 		}
 		t->stop_timer(L"line");
 		rnd.init(0);
 		t->start_timer();
 		for (auto i = 0; i < iter; i++)
 		{
-			auto y = rnd(3000);
-			auto x1 = rnd(3000);
-			auto x2 = rnd(3000);
+			auto x = rnd(3000);
+			auto y1 = rnd(3000);
+			auto y2 = rnd(3000);
 			uint c = rnd(0xFFFFFFFF);
-			k2.line2({ x1, y }, { x2, y }, c);
+			k2.line2({ x, y1 }, { x, y2 }, c);
 		}
 		t->stop_timer(L"line2");
 		if (k1 == k2)
