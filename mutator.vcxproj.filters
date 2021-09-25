@@ -71,6 +71,9 @@
     <ClCompile Include="library\graphics.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
+    <ClCompile Include="tetrons\g_terminal.cpp">
+      <Filter>Исходные файлы\tetrons</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\basic.h">
@@ -120,6 +123,9 @@
     </ClInclude>
     <ClInclude Include="library\graphics.h">
       <Filter>Исходные файлы\library</Filter>
+    </ClInclude>
+    <ClInclude Include="tetrons\g_terminal.h">
+      <Filter>Исходные файлы\tetrons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
