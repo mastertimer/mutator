@@ -17,23 +17,23 @@ struct _color
 struct _picture
 {
 	_picture() = default;
-	explicit _picture(_isize r) noexcept;
-	explicit _picture(_isize r, uint c) noexcept;
+	explicit _picture(_isize r);
+	explicit _picture(_isize r, _color c);
 	_picture(const _picture& copy);
-	_picture(_picture&& move) noexcept;
+	_picture(_picture&& move);
 	~_picture();
 
-	_picture& operator=(_picture&& move) noexcept;
-	_picture& operator=(const _picture& copy) noexcept;
-	bool operator==(const _picture& pic);
+	_picture& operator=(_picture&& move);
+	_picture& operator=(const _picture& copy);
+	bool operator==(const _picture& pic) const;
 
-	uint* scan_line(i64 y) const noexcept { return &data[y * size_.x]; }
+	uint* scan_line(i64 y) const { return &data[y * size_.x]; }
 
-	_isize size() const noexcept { return size_; }
-	bool resize(_isize wh) noexcept;
+	_isize size() const { return size_; }
+	bool resize(_isize wh);
 	void set_drawing_area(const _iarea& q);
 
-	void clear(uint c = 0xFF000000) noexcept;
+	void clear(_color c = 0xFF000000);
 
 	// ниже не проверенные, или не универсальные функции
 
@@ -81,13 +81,14 @@ protected:
 	void fill_rect_transparent_speed(_iarea r, uint c);
 	void fill_rect_speed(_iarea r, uint c);
 
+	// ниже проверенные функции
+
 	void horizontal_line(_ixy p1, _ixy p2, _color c, bool rep);
 	void vertical_line(_ixy p1, _ixy p2, _color c, bool rep);
 
-	// ниже проверенные функции
-
-	void set_transparent() noexcept; // узнать, есть ли прозрачные пиксели
+	void set_transparent(); // узнать, есть ли прозрачные пиксели
 	void set_transparent(_color c); // изменить transparent
+
 	_color& pixel(i64 x, i64 y) { return data2[y * size_.x + x]; }
 };
 

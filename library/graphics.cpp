@@ -67,27 +67,27 @@ _picture::_picture(const _picture& copy) : size_(copy.size_), transparent(copy.t
 	memcpy(data, copy.data, size_.square() * sizeof(data[0]));
 }
 
-_picture::_picture(_isize r) noexcept
+_picture::_picture(_isize r)
 {
 	drawing_area = size_ = r;
 	if (!size_.empty())	data = new uint[size_.square()];
 }
 
-_picture::_picture(_isize r, uint c) noexcept
+_picture::_picture(_isize r, _color c)
 {
 	drawing_area = size_ = r;
 	if (!size_.empty())	data = new uint[size_.square()];
 	clear(c);
 }
 
-_picture::_picture(_picture&& move) noexcept : data(move.data), size_(move.size_), transparent(move.transparent),
+_picture::_picture(_picture&& move) : data(move.data), size_(move.size_), transparent(move.transparent),
 drawing_area(move.drawing_area)
 {
 	move.data = nullptr;
 	move.drawing_area = move.size_ = { 0,0 };
 }
 
-bool _picture::operator==(const _picture& pic)
+bool _picture::operator==(const _picture& pic) const
 {
 	if (size_ != pic.size_) return false;
 	auto r = size_.square();
@@ -96,7 +96,7 @@ bool _picture::operator==(const _picture& pic)
 	return true;
 }
 
-_picture& _picture::operator=(const _picture& copy) noexcept
+_picture& _picture::operator=(const _picture& copy)
 {
 	if (&copy == this) return *this;
 	resize(copy.size_);
@@ -105,7 +105,7 @@ _picture& _picture::operator=(const _picture& copy) noexcept
 	return *this;
 }
 
-_picture& _picture::operator=(_picture&& move) noexcept
+_picture& _picture::operator=(_picture&& move)
 {
 	if (&move == this) return *this;
 	delete[] data;
@@ -118,7 +118,7 @@ _picture& _picture::operator=(_picture&& move) noexcept
 	return *this;
 }
 
-void _picture::set_transparent() noexcept
+void _picture::set_transparent()
 {
 	i64 r = size_.square();
 	for (i64 i = 0; i < r; i++)
@@ -157,7 +157,7 @@ void _picture::draw(_ixy r, _picture& bm)
 	}
 }
 
-bool _picture::resize(_isize wh) noexcept
+bool _picture::resize(_isize wh)
 {
 	if (size_ == wh) return false;
 	size_ = wh;
@@ -173,7 +173,7 @@ void _picture::set_transparent(_color c)
 	if (c.a != 0xff) transparent = true;
 }
 
-void _picture::clear(uint c) noexcept
+void _picture::clear(_color c)
 {
 	if (drawing_area != size_)
 	{
