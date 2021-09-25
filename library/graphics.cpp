@@ -12,33 +12,50 @@ struct _color_mixing
 	uint d_b;
 	uint d_g;
 	uint d_r;
+	bool transp;
 
-	_color_mixing(_color c)
+	_color_mixing(_color c, bool transparent)
 	{
 		kk = 255 - c.a;
 		uint k2 = c.a + 1;
 		d_b = c.b * k2;
 		d_g = c.g * k2;
 		d_r = c.r * k2;
+		if (transp = transparent)
+		{
+			d_b *= 255;
+			d_g *= 255;
+			d_r *= 255;
+		}
 	}
 
 	void mix(_color& c) const
 	{
-		c.b = (c.b * kk + d_b) >> 8;
-		c.g = (c.g * kk + d_g) >> 8;
-		c.r = (c.r * kk + d_r) >> 8;
+		if (!transp)
+		{
+			c.b = (c.b * kk + d_b) >> 8;
+			c.g = (c.g * kk + d_g) >> 8;
+			c.r = (c.r * kk + d_r) >> 8;
+			return;
+		}
+		uint kk_ = 255 - c.a;
+		uint k2_ = (256 - kk_) * kk;
+		uint znam = 65536 - kk * kk_;
+		c.b = (c.b * k2_ + d_b) / znam;
+		c.g = (c.g * k2_ + d_g) / znam;
+		c.r = (c.r * k2_ + d_r) / znam;
+		c.a = 255 - ((kk_ * kk) >> 8);
 	}
-
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _picture::set_drawing_area(const _iarea& q) noexcept
+void _picture::set_drawing_area(const _iarea& q)
 { 
 	drawing_area = q & size_;
 }
 
-_picture::~_picture() noexcept
+_picture::~_picture()
 {
 	delete[] data;
 }
@@ -169,7 +186,6 @@ void _picture::clear(uint c) noexcept
 
 void _picture::horizontal_line(_ixy p1, _ixy p2, _color c, bool rep)
 {
-	if (c.a == 0) return; // полностью прозрачная
 	if (!drawing_area.y.contains(p1.y)) return;
 	auto interval = (_iinterval(p1.x) << p2.x) & drawing_area.x;
 	if (interval.empty()) return;
@@ -179,17 +195,14 @@ void _picture::horizontal_line(_ixy p1, _ixy p2, _color c, bool rep)
 		memset32((uint*)&pixel(interval.min, p1.y), c, interval.length());
 		return;
 	}
-	if (!transparent)
-	{
-		_color_mixing cc(c);
-		_color* c2 = &pixel(interval.min, p1.y);
-		for (i64 i = interval.min; i < interval.max; i++) cc.mix(*c2++);
-		return;
-	}
+	_color_mixing cc(c, transparent);
+	_color* c2 = &pixel(interval.min, p1.y);
+	for (i64 i = interval.min; i < interval.max; i++) cc.mix(*c2++);
 }
 
 void _picture::line2(_ixy p1, _ixy p2, _color c, bool rep)
 {
+	if (c.a == 0 && !rep) return; // полностью прозрачная
 	if (p1.y == p2.y)
 	{
 		horizontal_line(p1, p2, c, rep);

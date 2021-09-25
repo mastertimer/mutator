@@ -21,7 +21,7 @@ struct _picture
 	explicit _picture(_isize r, uint c) noexcept;
 	_picture(const _picture& copy);
 	_picture(_picture&& move) noexcept;
-	~_picture() noexcept;
+	~_picture();
 
 	_picture& operator=(_picture&& move) noexcept;
 	_picture& operator=(const _picture& copy) noexcept;
@@ -31,7 +31,7 @@ struct _picture
 
 	_isize size() const noexcept { return size_; }
 	bool resize(_isize wh) noexcept;
-	void set_drawing_area(const _iarea& q) noexcept;
+	void set_drawing_area(const _iarea& q);
 
 	void clear(uint c = 0xFF000000) noexcept;
 
