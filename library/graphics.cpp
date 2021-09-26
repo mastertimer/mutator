@@ -21,7 +21,8 @@ struct _color_mixing
 		d_b = c.b * k2;
 		d_g = c.g * k2;
 		d_r = c.r * k2;
-		if (transp = transparent)
+		transp = transparent;
+		if (transp)
 		{
 			d_b *= 255;
 			d_g *= 255;
@@ -80,7 +81,7 @@ _picture::_picture(_isize r, _color c)
 	clear(c);
 }
 
-_picture::_picture(_picture&& move) : data(move.data), size_(move.size_), transparent(move.transparent),
+_picture::_picture(_picture&& move) noexcept : data(move.data), size_(move.size_), transparent(move.transparent),
 drawing_area(move.drawing_area)
 {
 	move.data = nullptr;
@@ -105,7 +106,7 @@ _picture& _picture::operator=(const _picture& copy)
 	return *this;
 }
 
-_picture& _picture::operator=(_picture&& move)
+_picture& _picture::operator=(_picture&& move) noexcept
 {
 	if (&move == this) return *this;
 	delete[] data;

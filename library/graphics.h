@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "basic.h"
+#include "geometry.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -20,10 +20,10 @@ struct _picture
 	explicit _picture(_isize r);
 	explicit _picture(_isize r, _color c);
 	_picture(const _picture& copy);
-	_picture(_picture&& move);
+	_picture(_picture&& move) noexcept;
 	~_picture();
 
-	_picture& operator=(_picture&& move);
+	_picture& operator=(_picture&& move) noexcept;
 	_picture& operator=(const _picture& copy);
 	bool operator==(const _picture& pic) const;
 
