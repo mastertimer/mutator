@@ -113,7 +113,10 @@ struct _iinterval // [...)
 	i64 length()  const;
 	_iinterval& operator << (i64 x);
 	bool contains(i64 x);
+	void clear() { min = max = 0; }
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _iarea
 {
@@ -123,14 +126,14 @@ struct _iarea
 	_iarea(_isize b) : x{ 0LL, b.x }, y{ 0LL, b.y } {}
 	_iarea(_iinterval x_, _iinterval y_) : x(x_), y(y_) {}
 
-	bool operator!=(_isize b) const noexcept;
+	bool operator!=(_isize b) const;
 
 	void operator&=(const _iarea& b) { x &= b.x; y &= b.y; }
 
 	_iarea operator&(const _iarea& b) const { _iarea c(*this); c &= b; return c; }
 
-	bool empty() const { return (x.min >= x.max) || (y.min >= y.max); }
-	void clear() { x = { 0LL, 0LL }; }
+	bool empty() const { return x.empty() || y.empty(); }
+	void clear() { x.clear(); }
 	_isize size() const { if (empty()) return { 0,0 }; return { x.max - x.min, y.max - y.min }; }
 
 	_iarea move(_ixy d) const { return { {x.min + d.x, x.max + d.x}, {y.min + d.y, y.max + d.y} }; }
@@ -143,13 +146,11 @@ struct _interval // [...]
 	double min = 1;
 	double max = 0;
 
-	operator _iinterval() const
-	{
-		_iinterval res{ (i64)min, (i64)max };
-		if (min < 0.0) if (min != res.min) res.min--;
-		if ((max >= 0.0) || (max == res.max)) res.max++;
-		return res;
-	}
+	_interval() = default;
+	_interval(double x) : min(x), max(x) {}
+	_interval(double min_, double max_) : min(min_), max(max_) {}
+
+	operator _iinterval() const { return _iinterval(min, max); }
 
 	double operator()(double k) const { return min + (max - min) * k; }; // [0..1 -> min..max]
 	double get_k(double a) const { return (a - min) / (max - min); } // [min..max -> 0..1]
@@ -157,7 +158,11 @@ struct _interval // [...]
 	void operator&=(const _interval& b) { if (b.min > min) min = b.min; if (b.max < max) max = b.max; }
 
 	double length() const { return (max > min) ? (max - min) : 0; }
+	_interval& operator << (double x);
+	bool empty() const { return (max < min); }
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _area
 {

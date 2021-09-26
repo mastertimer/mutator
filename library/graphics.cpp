@@ -238,6 +238,43 @@ void _picture::line2(_ixy p1, _ixy p2, _color c, bool rep)
 		vertical_line(p1, p2, c, rep);
 		return;
 	}
+	double k = (double(p2.y - p1.y)) / (p2.x - p1.x);
+	_xy t1 = p1;
+	_xy t2 = p2;
+//	_interval xinterval = (_interval(t1.x) << t2.x) & drawing_area.x;
+	if (drawing_area.empty()) return;
+	if (t1.x > t2.x) std::swap(t1, t2);
+	double xmin = drawing_area.x.min + 0.5;
+	double xmax = drawing_area.x.max - 0.5;
+	if (t1.x < xmin)
+	{
+		t1.y += (xmin - t1.x) * k;
+		t1.x = xmin;
+	}
+	if (t2.x > xmax)
+	{
+		t2.y -= (t2.x - xmax) * k;
+		t2.x = xmax;
+	}
+	if (t1.x > t2.x) return;
+	if (t1.y > t2.y) std::swap(t1, t2);
+	double ymin = drawing_area.y.min + 0.5;
+	double ymax = drawing_area.y.max - 0.5;
+	if (t1.y < ymin)
+	{
+		t1.x += (ymin - t1.y) / k;
+		t1.y = ymin;
+	}
+	if (t2.y > ymax)
+	{
+		t2.x -= (t2.y - ymax) / k;
+		t2.y = ymax;
+	}
+	if (t1.y > t2.y) return;
+	if (abs(k) >= 1)
+	{ // цикл по y
+
+	}
 }
 
 void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)

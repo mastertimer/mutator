@@ -188,7 +188,21 @@ _iinterval& _iinterval::operator << (i64 x)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool _iarea::operator!=(_isize b) const noexcept
+_interval& _interval::operator << (double x)
+{
+	if (empty())
+	{
+		min = max = x;
+		return *this;
+	}
+	if (x < min) min = x;
+	if (x > max) max = x;
+	return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool _iarea::operator!=(_isize b) const
 {
 	if (b.empty() && empty()) return false;
 	return (x.min != 0) || (y.min != 0) || (x.max != b.x) || (y.max != b.y);
