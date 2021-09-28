@@ -104,8 +104,8 @@ struct _iinterval // [...)
 
 	void operator=(i64 b) noexcept { min = b; max = b + 1; }
 
-	void operator&=(const _iinterval& b) noexcept;
-	_iinterval operator&(const _iinterval& b) noexcept;
+	void operator&=(const _iinterval& b) { if (b.min > min) min = b.min; if (b.max < max) max = b.max; }
+	_iinterval operator&(const _iinterval& b) const { return { std::max(min, b.min), std::min(max, b.max) }; }
 
 	i64  size()   const { return (min < max) ? (max - min) : 0; }
 	bool empty()  const { return (max <= min); }
@@ -152,15 +152,23 @@ struct _interval // [...]
 
 	operator _iinterval() const { return _iinterval(min, max); }
 
-	double operator()(double k) const { return min + (max - min) * k; }; // [0..1 -> min..max]
-	double get_k(double a) const { return (a - min) / (max - min); } // [min..max -> 0..1]
-
 	void operator&=(const _interval& b) { if (b.min > min) min = b.min; if (b.max < max) max = b.max; }
+	_interval operator&(const _interval& b) const { return { std::max(min, b.min), std::min(max, b.max) }; }
 
 	double length() const { return (max > min) ? (max - min) : 0; }
 	_interval& operator << (double x);
 	bool empty() const { return (max < min); }
 };
+
+inline double operator*(const double a, const _interval interv)
+{
+	return interv.min + (interv.max - interv.min) * a;
+}
+
+inline double operator/(const double a, const _interval interv)
+{
+	return (a - interv.min) / (interv.max - interv.min);
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -162,17 +162,6 @@ bool _iinterval::contains(i64 x)
 	return (x >= min) && (x < max);
 }
 
-_iinterval _iinterval::operator&(const _iinterval& b) noexcept
-{
-	return { std::max(min, b.min), std::min(max, b.max) };
-}
-
-void _iinterval::operator&=(const _iinterval& b) noexcept
-{
-	if (b.min > min) min = b.min;
-	if (b.max < max) max = b.max;
-}
-
 _iinterval& _iinterval::operator << (i64 x)
 {
 	if (empty())

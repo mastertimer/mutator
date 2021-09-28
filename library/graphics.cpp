@@ -239,9 +239,16 @@ void _picture::line2(_ixy p1, _ixy p2, _color c, bool rep)
 		return;
 	}
 	double k = (double(p2.y - p1.y)) / (p2.x - p1.x);
+	_iinterval x_interval = _iinterval(p1.x) << p2.x;
+	_iinterval x_area_interval = x_interval & drawing_area.x;
+	if (x_area_interval.empty()) return;
+	_iinterval y_interval = _iinterval(p1.y) << p2.y;
+	_iinterval y_area_interval = y_interval & drawing_area.y;
+	if (y_area_interval.empty()) return;
+//	_interval dx = x_area_interval / x_interval;
+
 	_xy t1 = p1;
 	_xy t2 = p2;
-//	_interval xinterval = (_interval(t1.x) << t2.x) & drawing_area.x;
 	if (drawing_area.empty()) return;
 	if (t1.x > t2.x) std::swap(t1, t2);
 	double xmin = drawing_area.x.min + 0.5;

@@ -327,8 +327,8 @@ void fun03(_tetron* tt0, _tetron* tt, u64 flags)
 		}
 		_t_go* r2 = *n_ramk2;
 		_area a = r2->oko_trans()(r2->local_area);
-		_area pr = { {a.x.max - 5, a.x.max}, {a.y(0.1), a.y(0.9)} };
-		_area ni = { {a.x(0.1), a.x(0.9)}, {a.y.max - 5, a.y.max} };
+		_area pr = { {a.x.max - 5, a.x.max}, {0.1 * a.y, 0.9 * a.y} };
+		_area ni = { {0.1 * a.x, 0.9 * a.x}, {a.y.max - 5, a.y.max} };
 		if (pr.test(to))
 			set_cursor(_cursor::size_we);
 		else

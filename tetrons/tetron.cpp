@@ -1290,7 +1290,7 @@ void add_hint(std::wstring_view hint, _t_go* g)
 	_t_trans* ko = *n_ko;
 	_trans tr = master_trans_go;
 	_isize siz = master_bm.size_text(hint, 13);
-	tr.offset += _xy{ -siz.x * 0.5, -15.0 } + _xy{ g->local_area.x(0.5), g->local_area.y.min } *tr.scale;
+	tr.offset += _xy{ -siz.x * 0.5, -15.0 } + _xy{ 0.5 * g->local_area.x, g->local_area.y.min } *tr.scale;
 	tr.scale = 1;
 	_g_text* go = new _g_text;
 	go->set_c(cc3);
@@ -1387,13 +1387,13 @@ void _g_scrollbar::ris2(_trans tr, bool final)
 	uint c = cc1;
 	if ((vid & 1) == 0)
 	{
-		master_bm.line({ a.x.min, a.y(0.5) }, { a.x.max, a.y(0.5) }, c);
-		master_bm.line({ a.x(position), a.y.min }, { a.x(position), a.y.max }, c);
+		master_bm.line({ a.x.min, 0.5 * a.y }, { a.x.max, 0.5 * a.y }, c);
+		master_bm.line({ position * a.x, a.y.min }, { position * a.x, a.y.max }, c);
 	}
 	else
 	{
-		master_bm.line({ a.x(0.5), a.y.min }, { a.x(0.5), a.y.max }, c);
-		master_bm.line({ a.x.min, a.y(position) }, { a.x.max, a.y(position) }, c);
+		master_bm.line({ 0.5 * a.x, a.y.min }, { 0.5 * a.x, a.y.max }, c);
+		master_bm.line({ a.x.min, position * a.y }, { a.x.max, position * a.y }, c);
 	}
 }
 
@@ -2554,7 +2554,7 @@ void _g_tetron::ris2(_trans tr, bool final)
 				_t_trans* ttr3 = new _t_trans;
 				ttr3->add_flags(n_temp_go, flag_parent);
 				ttr3->trans.scale = std::min(local_area.x.length(), local_area.y.length()) * 0.5;
-				ttr3->trans.offset = { local_area.x(0.5), local_area.y(0.5) };
+				ttr3->trans.offset = { 0.5 * local_area.x, 0.5 * local_area.y };
 				star = ttr3;
 				ttr3->add_flags(ttr, flag_part + flag_sub_go, false);
 				add_flags(ttr3, flag_part + flag_sub_go, false);
@@ -2589,7 +2589,7 @@ void _g_tetron::ris2(_trans tr, bool final)
 		_t_trans* ttr3 = new _t_trans;
 		ttr3->add_flags(n_temp_go, flag_parent);
 		ttr3->trans.scale = std::min(local_area.x.length(), local_area.y.length()) * 0.5;
-		ttr3->trans.offset = { local_area.x(0.5), local_area.y(0.5) };
+		ttr3->trans.offset = { 0.5 * local_area.x, 0.5 * local_area.y };
 		star = ttr3;
 		ttr3->add_flags(ttr, flag_part + flag_sub_go, false);
 	}
