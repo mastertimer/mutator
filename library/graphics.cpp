@@ -245,7 +245,14 @@ void _picture::line2(_ixy p1, _ixy p2, _color c, bool rep)
 	_iinterval y_interval = _iinterval(p1.y) << p2.y;
 	_iinterval y_area_interval = y_interval & drawing_area.y;
 	if (y_area_interval.empty()) return;
-//	_interval dx = x_area_interval / x_interval;
+	_interval dx = x_area_interval / x_interval;
+	_interval dy;
+	if (k > 0)
+		 dy = y_area_interval / y_interval;
+	else
+	{
+
+	}
 
 	_xy t1 = p1;
 	_xy t2 = p2;

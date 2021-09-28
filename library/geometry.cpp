@@ -151,15 +151,16 @@ _area _trans::operator()(const _area& b) const noexcept
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-i64 _iinterval::length() const
+_iinterval::_iinterval(double min_, double max_) : min(min_), max(max_)
 {
-	i64 r = max - min;
-	return (r < 0) ? 0 : r;
+	if ((min_ < 0) && (min != min_)) min--;
+	if ((max_ > 0) || (max == max_)) max++;
 }
 
-bool _iinterval::contains(i64 x)
+bool _iinterval::operator==(_iinterval b) const
 {
-	return (x >= min) && (x < max);
+	if (empty() && b.empty()) return true;
+	return ((min == b.min) && (max == b.max));
 }
 
 _iinterval& _iinterval::operator << (i64 x)
@@ -173,6 +174,17 @@ _iinterval& _iinterval::operator << (i64 x)
 	if (x < min) min = x;
 	if (x + 1 > max) max = x + 1;
 	return *this;
+}
+
+_interval _iinterval::operator/(const _iinterval b)
+{
+	auto len = b.length();
+	if (len == 0)
+	{
+		if (empty()) return { 0, 1.0 };
+		return { -1e300, 1e300 };
+	}
+	return { (double(min - b.min)) / len, (double(max - b.min)) / len };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

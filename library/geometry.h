@@ -73,6 +73,8 @@ struct _isize // [0...x), [0...y)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+struct _interval;
+
 struct _iinterval // [...)
 {
 	i64 min = 0;
@@ -83,36 +85,25 @@ struct _iinterval // [...)
 	_iinterval(i64 min_, i64 max_) : min(min_), max(max_) {}
 	_iinterval(i64 min_, double max_) : min(min_), max(max_) { if ((max_ > 0) || (max == max_)) max++; }
 	_iinterval(double min_, i64 max_) : min(min_), max(max_) { if ((min_ < 0) && (min != min_)) min--; }
+	_iinterval(double min_, double max_);
 
-	_iinterval(double min_, double max_) : min(min_), max(max_)
-	{
-		if ((min_ < 0) && (min != min_)) min--;
-		if ((max_ > 0) || (max == max_)) max++;
-	}
+	void operator=(i64 b) { min = b; max = b + 1; }
 
-	bool operator==(_iinterval b) const
-	{
-		if ((max <= min) && (b.max <= b.min)) return true;
-		return ((min == b.min) && (max == b.max));
-	}
+	bool operator==(_iinterval b) const;
+	bool operator!=(_iinterval b) const { return !(*this == b); }
 
-	bool operator!=(_iinterval b) const
-	{
-		if ((max <= min) && (b.max <= b.min)) return false;
-		return ((min != b.min) || (max != b.max));
-	}
+	void operator&=(const _iinterval b) { if (b.min > min) min = b.min; if (b.max < max) max = b.max; }
+	_iinterval operator&(const _iinterval b) const { return { std::max(min, b.min), std::min(max, b.max) }; }
 
-	void operator=(i64 b) noexcept { min = b; max = b + 1; }
-
-	void operator&=(const _iinterval& b) { if (b.min > min) min = b.min; if (b.max < max) max = b.max; }
-	_iinterval operator&(const _iinterval& b) const { return { std::max(min, b.min), std::min(max, b.max) }; }
+	_interval operator/(const _iinterval b);
 
 	i64  size()   const { return (min < max) ? (max - min) : 0; }
 	bool empty()  const { return (max <= min); }
 	i64  center() const { i64 s = min + max; if (s < 0) s--; return s >> 1; }
-	i64 length()  const;
+	i64  length() const { i64 r = max - min; return (r < 0) ? 0 : r; }
 	_iinterval& operator << (i64 x);
-	bool contains(i64 x);
+	bool contains(i64 x) const { return (x >= min) && (x < max); }
+
 	void clear() { min = max = 0; }
 };
 
