@@ -1,16 +1,16 @@
-#pragma once
+п»ї#pragma once
 
 #include "basic.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-constexpr double de_i = 0.0001; // для больших чисел - не правильно!
+constexpr double de_i = 0.001; // РґР»СЏ Р±РѕР»СЊС€РёС… С‡РёСЃРµР» - РЅРµ РїСЂР°РІРёР»СЊРЅРѕ!
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _xy;
 
-struct _ixy // индекс, номер
+struct _ixy // РёРЅРґРµРєСЃ, РЅРѕРјРµСЂ
 {
 	i64 x;
 	i64 y;
@@ -140,6 +140,7 @@ struct _interval // [...]
 	_interval() = default;
 	_interval(double x) : min(x), max(x) {}
 	_interval(double min_, double max_) : min(min_), max(max_) {}
+	_interval(_iinterval b) : min(b.min), max(b.max - de_i) {}
 
 	operator _iinterval() const { return _iinterval(min, max); }
 
@@ -171,7 +172,7 @@ struct _area
 	_area(const _area&) = default;
 	_area(_interval x_, _interval y_) : x(x_), y(y_) {}
 	_area(_isize b) : x{ 0.0, b.x - de_i }, y{ 0.0, b.y - de_i } {}
-	_area(_iarea b) : x{ (double)b.x.min, (double)b.x.max }, y{ (double)b.y.min, (double)b.y.max } {} // !!! проверить и исправить !!!
+	_area(_iarea b) : x(b.x), y(b.y) {}
 	_area(_xy b) : x{ b.x, b.x }, y{ b.y, b.y } {}
 
 	void operator=(const _isize b) { x = { 0, b.x - de_i }; y = { 0, b.y - de_i }; }
@@ -180,8 +181,8 @@ struct _area
 
 	bool operator==(const _area& b) const noexcept;
 	bool operator<=(const _area& b) const noexcept;
-	bool operator<(const _area& b)  const noexcept; // внутри, грани могут касаться, но не равно
-	bool inside(const _area& b)     const noexcept; // внутри, грани не касаются!
+	bool operator<(const _area& b)  const noexcept; // РІРЅСѓС‚СЂРё, РіСЂР°РЅРё РјРѕРіСѓС‚ РєР°СЃР°С‚СЊСЃСЏ, РЅРѕ РЅРµ СЂР°РІРЅРѕ
+	bool inside(const _area& b)     const noexcept; // РІРЅСѓС‚СЂРё, РіСЂР°РЅРё РЅРµ РєР°СЃР°СЋС‚СЃСЏ!
 
 	void operator&=(const _area& b) { x &= b.x; y &= b.y; }
 	void operator+=(const _area& b) noexcept;
@@ -192,21 +193,21 @@ struct _area
 	bool empty() const { return (x.min > x.max) || (y.min > y.max); }
 	void clear() { x = { 1.0, 0.0 }; }
 
-	_area expansion(double b) const noexcept; // расширенная область во все стороны на b
-	_area scaling(double b) const noexcept; // промасштабированная область во все стороны в b
+	_area expansion(double b) const noexcept; // СЂР°СЃС€РёСЂРµРЅРЅР°СЏ РѕР±Р»Р°СЃС‚СЊ РІРѕ РІСЃРµ СЃС‚РѕСЂРѕРЅС‹ РЅР° b
+	_area scaling(double b) const noexcept; // РїСЂРѕРјР°СЃС€С‚Р°Р±РёСЂРѕРІР°РЅРЅР°СЏ РѕР±Р»Р°СЃС‚СЊ РІРѕ РІСЃРµ СЃС‚РѕСЂРѕРЅС‹ РІ b
 
 	_xy center()       const { return { (x.max + x.min) * 0.5, (y.max + y.min) * 0.5 }; }
-	_xy top_left()     const { return { x.min, y.min }; } // верхний левый угол
-	_xy top_right()    const { return { x.max, y.min }; } // верхний правый угол
-	_xy bottom_left()  const { return { x.min, y.max }; } // нижний левый угол
-	_xy bottom_right() const { return { x.max, y.max }; } // нижний правый угол
+	_xy top_left()     const { return { x.min, y.min }; } // РІРµСЂС…РЅРёР№ Р»РµРІС‹Р№ СѓРіРѕР»
+	_xy top_right()    const { return { x.max, y.min }; } // РІРµСЂС…РЅРёР№ РїСЂР°РІС‹Р№ СѓРіРѕР»
+	_xy bottom_left()  const { return { x.min, y.max }; } // РЅРёР¶РЅРёР№ Р»РµРІС‹Р№ СѓРіРѕР»
+	_xy bottom_right() const { return { x.max, y.max }; } // РЅРёР¶РЅРёР№ РїСЂР°РІС‹Р№ СѓРіРѕР»
 
-	double radius(); // радиус вписанной окружности
-	double min_length() { if (empty()) return 0.0; return std::min(x.max - x.min, y.max - y.min); } // минимальный размер
+	double radius(); // СЂР°РґРёСѓСЃ РІРїРёСЃР°РЅРЅРѕР№ РѕРєСЂСѓР¶РЅРѕСЃС‚Рё
+	double min_length() { if (empty()) return 0.0; return std::min(x.max - x.min, y.max - y.min); } // РјРёРЅРёРјР°Р»СЊРЅС‹Р№ СЂР°Р·РјРµСЂ
 
 	_area move(_xy d) const { return { {x.min + d.x, x.max + d.x}, {y.min + d.y, y.max + d.y} }; }
 
-	bool test(_xy b); // принадлежит ли точка области
+	bool test(_xy b); // РїСЂРёРЅР°РґР»РµР¶РёС‚ Р»Рё С‚РѕС‡РєР° РѕР±Р»Р°СЃС‚Рё
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -216,29 +217,30 @@ struct _trans
 	double scale = 1.0;
 	_xy offset = { 0.0, 0.0 };
 
-	_area operator()(const _area& b) const noexcept; // применение трансформации
-	_xy  operator()(const _xy& b)    const noexcept; // применение трансформации
-	double operator()(double b)      const { return scale * b; } // применение трансформации
+	_area operator()(const _area& b) const noexcept; // РїСЂРёРјРµРЅРµРЅРёРµ С‚СЂР°РЅСЃС„РѕСЂРјР°С†РёРё
+	_xy  operator()(const _xy& b)    const noexcept; // РїСЂРёРјРµРЅРµРЅРёРµ С‚СЂР°РЅСЃС„РѕСЂРјР°С†РёРё
+	double operator()(double b)      const { return scale * b; } // РїСЂРёРјРµРЅРµРЅРёРµ С‚СЂР°РЅСЃС„РѕСЂРјР°С†РёРё
 
-	_trans operator*(_trans tr)      const noexcept; // сместить и промасштабировать
-	_trans operator/(_trans tr)      const noexcept; // обратно сместить и промасштабировать
+	_trans operator*(_trans tr)      const noexcept; // СЃРјРµСЃС‚РёС‚СЊ Рё РїСЂРѕРјР°СЃС€С‚Р°Р±РёСЂРѕРІР°С‚СЊ
+	_trans operator/(_trans tr)      const noexcept; // РѕР±СЂР°С‚РЅРѕ СЃРјРµСЃС‚РёС‚СЊ Рё РїСЂРѕРјР°СЃС€С‚Р°Р±РёСЂРѕРІР°С‚СЊ
 
 	void operator*=(_trans tr) { offset += tr.offset * scale; scale *= tr.scale; }
-	void operator/=(_trans tr); // обратно сместить и промасштабировать
+	void operator/=(_trans tr); // РѕР±СЂР°С‚РЅРѕ СЃРјРµСЃС‚РёС‚СЊ Рё РїСЂРѕРјР°СЃС€С‚Р°Р±РёСЂРѕРІР°С‚СЊ
 	bool operator!=(const _trans& b) const noexcept;
 
-	_trans inverse()                 const noexcept; // обратная трансформация
+	_trans inverse()                 const noexcept; // РѕР±СЂР°С‚РЅР°СЏ С‚СЂР°РЅСЃС„РѕСЂРјР°С†РёСЏ
 	_xy inverse(_xy b)               const noexcept;
 	_area inverse(const _area& b)    const noexcept;
 
-	void MasToch(_xy b, double m); // промасштабировать вокруг точки
+	void MasToch(_xy b, double m); // РїСЂРѕРјР°СЃС€С‚Р°Р±РёСЂРѕРІР°С‚СЊ РІРѕРєСЂСѓРі С‚РѕС‡РєРё
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _segment
 {
-
+	_xy p1;
+	_xy p2;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
