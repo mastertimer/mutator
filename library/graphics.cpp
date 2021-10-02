@@ -238,57 +238,29 @@ void _picture::line2(_ixy p1, _ixy p2, _color c, bool rep)
 		vertical_line(p1, p2, c, rep);
 		return;
 	}
-	double k = (double(p2.y - p1.y)) / (p2.x - p1.x);
 	_iinterval x_interval = _iinterval(p1.x) << p2.x;
-	_iinterval x_area_interval = x_interval & drawing_area.x;
-	if (x_area_interval.empty()) return;
 	_iinterval y_interval = _iinterval(p1.y) << p2.y;
+	_iinterval x_area_interval = x_interval & drawing_area.x;
 	_iinterval y_area_interval = y_interval & drawing_area.y;
-	if (y_area_interval.empty()) return;
-	_interval dx = x_area_interval / x_interval;
-	_interval dy;
-	if (k > 0)
-		 dy = y_area_interval / y_interval;
-	else
+	if (x_area_interval.empty() || y_area_interval.empty()) return;
+	_interval x1_interval = x_area_interval / x_interval;
+	_interval y1_interval = y_area_interval / y_interval;
+	double k = (double(p2.y - p1.y)) / (p2.x - p1.x);
+	if (k < 0) y1_interval = { 1.0 - y1_interval.max, 1.0 - y1_interval.min };
+	_interval dd = x1_interval & y1_interval;
+	if (dd.empty()) return;
+	_interval xx;
+	_interval yy;
+	double dx = 1.0;
+	double dy = 1.0;
+	if (rep || c.a == 0xff)
 	{
-
+		set_transparent(c);
+		for (double x = xx.min, y = yy.min; (x != xx.max) && (y != yy.max); x += dx, y += dy) pixel(x, y) = c;
+		return;
 	}
-
-	_xy t1 = p1;
-	_xy t2 = p2;
-	if (drawing_area.empty()) return;
-	if (t1.x > t2.x) std::swap(t1, t2);
-	double xmin = drawing_area.x.min + 0.5;
-	double xmax = drawing_area.x.max - 0.5;
-	if (t1.x < xmin)
-	{
-		t1.y += (xmin - t1.x) * k;
-		t1.x = xmin;
-	}
-	if (t2.x > xmax)
-	{
-		t2.y -= (t2.x - xmax) * k;
-		t2.x = xmax;
-	}
-	if (t1.x > t2.x) return;
-	if (t1.y > t2.y) std::swap(t1, t2);
-	double ymin = drawing_area.y.min + 0.5;
-	double ymax = drawing_area.y.max - 0.5;
-	if (t1.y < ymin)
-	{
-		t1.x += (ymin - t1.y) / k;
-		t1.y = ymin;
-	}
-	if (t2.y > ymax)
-	{
-		t2.x -= (t2.y - ymax) / k;
-		t2.y = ymax;
-	}
-	if (t1.y > t2.y) return;
-	if (abs(k) >= 1)
-	{ // цикл по y
-
-	}
+	_color_mixing cc(c, transparent);
+	for (double x = xx.min, y = yy.min; (x != xx.max) && (y != yy.max); x += dx, y += dy) cc.mix(pixel(x, y));
 }
 
 void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
