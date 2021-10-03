@@ -16,6 +16,15 @@ struct _color
 
 struct _picture
 {
+	union
+	{
+		uint* data = nullptr;
+		_color* data2;
+	};
+	_isize size;
+	bool transparent = false;
+	_iarea drawing_area; // разрешенная область для рисования
+
 	_picture() = default;
 	explicit _picture(_isize r);
 	explicit _picture(_isize r, _color c);
@@ -27,9 +36,8 @@ struct _picture
 	_picture& operator=(const _picture& copy);
 	bool operator==(const _picture& pic) const;
 
-	uint* scan_line(i64 y) const { return &data[y * size_.x]; }
+	uint* scan_line(i64 y) const { return &data[y * size.x]; }
 
-	_isize size() const { return size_; }
 	bool resize(_isize wh);
 	void set_drawing_area(const _iarea& q);
 
@@ -60,20 +68,9 @@ struct _picture
 
 	//	void text0(int x, int y, std::string_view s, int h, uint c, uint bg);
 
-protected:
-	friend _stack& operator>>(_stack& o, _picture& p);
-	friend _stack& operator<<(_stack& o, _picture const& p);
-	friend struct _wjson;
-	friend struct _rjson;
+	void set_transparent(); // узнать, есть ли прозрачные пиксели
 
-	union
-	{
-		uint* data = nullptr;
-		_color* data2;
-	};
-	_isize size_;
-	bool transparent = false;
-	_iarea drawing_area; // разрешенная область для рисования
+private:
 
 	void line_vert_rep_speed(_ixy p, i64 y2, uint c); // вертикальная линия замещения без проверок диапазона
 
@@ -86,10 +83,9 @@ protected:
 	void horizontal_line(_ixy p1, _ixy p2, _color c, bool rep);
 	void vertical_line(_ixy p1, _ixy p2, _color c, bool rep);
 
-	void set_transparent(); // узнать, есть ли прозрачные пиксели
 	void set_transparent(_color c); // изменить transparent
 
-	_color& pixel(i64 x, i64 y) { return data2[y * size_.x + x]; }
+	_color& pixel(i64 x, i64 y) { return data2[y * size.x + x]; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

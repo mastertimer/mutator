@@ -136,8 +136,10 @@ struct _iarea
 
 struct _interval // [...]
 {
-	double min = 1;
-	double max = 0;
+	double min         = 1.0;
+	double max         = 0.0;
+	bool  empty_       = true;
+	bool  right_closed = true;
 
 	_interval() = default;
 	_interval(double x) : min(x), max(x) {}

@@ -217,7 +217,7 @@ void _g_exchange_graph::ris2(_trans tr, bool final)
 			double yy = a.y.max - (y - y_.min) * a.y.length() / (y_.max - y_.min);
 			master_bm.line({ a.x.min + dex, yy }, { a.x.max - dex, yy }, col_setka);
 			master_bm.text16({ std::max(a.x.min, 0.0) + 2, (i64)(yy - 6) }, double_to_string(y, 2), col_setka_font);
-			master_bm.text16({ std::min((i64)a.x.max, master_bm.size().x) - dex, (i64)(yy - 6) }, double_to_string(y, 2),
+			master_bm.text16({ std::min((i64)a.x.max, master_bm.size.x) - dex, (i64)(yy - 6) }, double_to_string(y, 2),
 				col_setka_font);
 		}
 	}
@@ -276,7 +276,7 @@ void _g_exchange_graph::ris2(_trans tr, bool final)
 			ii = (time_[i] / dele[ido + 1]) % ost[ido + 1];
 			s[1] = '0' + (ii % 10);
 			s[0] = '0' + (ii / 10);*/
-			master_bm.text16({ x - 11 + a.x.min, std::min((i64)a.y.max, master_bm.size().y) - 13 }, s, col_setka_font);
+			master_bm.text16({ x - 11 + a.x.min, std::min((i64)a.y.max, master_bm.size.y) - 13 }, s, col_setka_font);
 			master_bm.text16({ x - 11 + a.x.min, std::max(a.y.min, 0.0) }, s, col_setka_font);
 			continue;
 		}

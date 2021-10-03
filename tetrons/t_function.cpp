@@ -647,7 +647,7 @@ void fun28(_tetron* tt0, _tetron* tt, u64 flags)
 void fun29(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	time_ris = !time_ris;
-	master_obl_izm = { {0.0, (double)master_bm.size().x}, {0.0, (double)master_bm.size().y} };
+	master_obl_izm = { {0.0, (double)master_bm.size.x}, {0.0, (double)master_bm.size.y} };
 }
 
 void fun30(_tetron* tt0, _tetron* tt, u64 flags)

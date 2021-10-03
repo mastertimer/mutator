@@ -342,7 +342,7 @@ _frozen::_frozen(_tetron* t, u64 flags_) : tetron(t), i(0), tetron2(nullptr), fl
 void add_obl_izm(_area a)
 {
 	if (a.empty()) return;
-	if ((a.x.max < 0) || (a.x.min > master_bm.size().x) || (a.y.max < 0) || (a.y.min > master_bm.size().y)) return;
+	if ((a.x.max < 0) || (a.x.min > master_bm.size.x) || (a.y.max < 0) || (a.y.min > master_bm.size.y)) return;
 	master_obl_izm |= a;
 }
 
@@ -1185,7 +1185,7 @@ void _g_line::pop(_rjson& b)
 
 void _g_picture::ris2(_trans tr, bool final)
 {
-	if (pic.size().x * pic.size().y == 0)
+	if (pic.size.x * pic.size.y == 0)
 	{
 		int rr = 100;
 		master_bm.line({ tr.offset.x, tr.offset.y }, { tr.offset.x + rr * tr.scale, tr.offset.y }, cc1);
@@ -1208,7 +1208,7 @@ void _g_picture::new_size(int rx3, int ry3)
 {
 	if (!pic.resize({ rx3, ry3 })) return;
 	del_area();
-	local_area = { {0, (double)pic.size().x}, {0, (double)pic.size().y} };
+	local_area = { {0, (double)pic.size.x}, {0, (double)pic.size.y} };
 	area_definite = false;
 	add_area();
 }
@@ -1217,7 +1217,7 @@ void _g_picture::set_pic(const _picture& pic2)
 {
 	pic = pic2;
 	del_area();
-	local_area = { {0, (double)pic.size().x}, {0, (double)pic.size().y} };
+	local_area = { {0, (double)pic.size.x}, {0, (double)pic.size.y} };
 	area_definite = false;
 	add_area();
 }
@@ -2119,10 +2119,10 @@ void _g_button::ris2(_trans tr, bool final)
 {
 	_area oo = tr(local_area);
 	uint c = 0;
-	if (picture.size().x * picture.size().y > 0)
+	if (picture.size.x * picture.size.y > 0)
 	{
-		i64 rx2 = (i64)(picture.size().x * tr.scale + 0.5);
-		i64 ry2 = (i64)(picture.size().y * tr.scale + 0.5);
+		i64 rx2 = (i64)(picture.size.x * tr.scale + 0.5);
+		i64 ry2 = (i64)(picture.size.y * tr.scale + 0.5);
 		_ixy ce = oo.center();
 		master_bm.stretch_draw(&picture, ce.x - rx2 / 2, ce.y - ry2 / 2, tr.scale);
 	}
@@ -3024,7 +3024,7 @@ void _g_graph::ris2(_trans tr, bool final)
 					_isize l = master_bm.size_text16(s);
 					if (xx < a.x.length() - 50)	master_bm.text16({ a.x.min + xx - l.x / 2, std::max(a.y.min, 0.0) },
 						s, col_font);
-					if (xx > 50) master_bm.text16({ a.x.min + xx - l.x / 2, std::min((i64)a.y.max, master_bm.size().y) - 13 },
+					if (xx > 50) master_bm.text16({ a.x.min + xx - l.x / 2, std::min((i64)a.y.max, master_bm.size.y) - 13 },
 						s, col_font);
 				}
 			}
@@ -3047,7 +3047,7 @@ void _g_graph::ris2(_trans tr, bool final)
 				std::string s = double_to_string(y, zn);
 				_isize l = master_bm.size_text16(s);
 				if (a.y.length() - yy > 16) master_bm.text16({ std::max(a.x.min, 0.0) + 2, a.y.max - yy - 6 }, s, col_font);
-				if (yy > 16) master_bm.text16({ std::min((i64)a.x.max, master_bm.size().x) - l.x - 2, a.y.max - yy - 6 },
+				if (yy > 16) master_bm.text16({ std::min((i64)a.x.max, master_bm.size.x) - l.x - 2, a.y.max - yy - 6 },
 					s, col_font);
 			}
 		}
@@ -3055,7 +3055,7 @@ void _g_graph::ris2(_trans tr, bool final)
 	if ((a.x.length() > 70) && (a.y.length() > 50))
 	{
 		i64 y = std::max(a.y.min, 0.0);
-		i64 x = std::min((i64)a.x.max, master_bm.size().x) - 70;
+		i64 x = std::min((i64)a.x.max, master_bm.size.x) - 70;
 		ng = -1;
 		for (auto& j : curve)
 		{
