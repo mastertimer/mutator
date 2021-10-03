@@ -2,6 +2,8 @@
 
 #include "basic.h"
 
+#include <optional>
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 constexpr double de_i = 0.001; // для больших чисел - не правильно!
@@ -30,20 +32,22 @@ struct _xy
 	double x;
 	double y;
 
-	operator _ixy()         const { return { x, y }; }
+	operator _ixy()               const { return { x, y }; }
 
-	_xy operator-()         const { return { -x,  -y }; }
+	_xy operator-()               const { return { -x,  -y }; }
 
-	_xy operator-(_xy b)    const { return { x - b.x, y - b.y }; }
-	_xy operator+(_xy b)    const { return { x + b.x, y + b.y }; }
+	_xy operator-(const _xy b)    const { return { x - b.x, y - b.y }; }
+	_xy operator+(const _xy b)    const { return { x + b.x, y + b.y }; }
 
-	_xy operator*(double b) const { return { x * b, y * b }; }
+	_xy operator*(const double b) const { return { x * b, y * b }; }
 
-	void operator+=(_xy b)        { x += b.x; y += b.y; }
-	void operator-=(_xy b)        { x -= b.x; y -= b.y; }
+	void operator+=(const _xy b)        { x += b.x; y += b.y; }
+	void operator-=(const _xy b)        { x -= b.x; y -= b.y; }
 
-	void operator*=(double b)     { x *= b; y *= b; }
-	void operator/=(double b)     { x /= b; y /= b; }
+	void operator*=(const double b)     { x *= b; y *= b; }
+	void operator/=(const double b)     { x /= b; y /= b; }
+
+	bool operator!=(const _xy b)  const { return (x != b.x) || (y != b.y); }
 
 	double len()            const { return sqrt(x * x + y * y); }
 	double len2()           const { return x * x + y * y; }
@@ -217,20 +221,20 @@ struct _trans
 	double scale = 1.0;
 	_xy offset = { 0.0, 0.0 };
 
-	_area operator()(const _area& b) const noexcept; // применение трансформации
-	_xy  operator()(const _xy& b)    const noexcept; // применение трансформации
-	double operator()(double b)      const { return scale * b; } // применение трансформации
+	_area  operator()(const _area& b)  const;
+	_xy    operator()(const _xy    b)  const;
+	double operator()(const double b)  const;
 
-	_trans operator*(_trans tr)      const noexcept; // сместить и промасштабировать
-	_trans operator/(_trans tr)      const noexcept; // обратно сместить и промасштабировать
+	_trans operator* (const _trans& b) const;
+	_trans operator/ (const _trans& b) const;
 
-	void operator*=(_trans tr) { offset += tr.offset * scale; scale *= tr.scale; }
-	void operator/=(_trans tr); // обратно сместить и промасштабировать
-	bool operator!=(const _trans& b) const noexcept;
+	void   operator*=(const _trans& b);
+	void   operator/=(const _trans& b);
+	bool   operator!=(const _trans& b) const;
 
-	_trans inverse()                 const noexcept; // обратная трансформация
-	_xy inverse(_xy b)               const noexcept;
-	_area inverse(const _area& b)    const noexcept;
+	_trans inverse()                   const;
+	_xy    inverse(_xy b)              const;
+	_area  inverse(const _area& b)     const;
 
 	void MasToch(_xy b, double m); // промасштабировать вокруг точки
 };
@@ -241,6 +245,8 @@ struct _segment
 {
 	_xy p1;
 	_xy p2;
+
+	std::optional<_segment> operator&(const _area& b);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

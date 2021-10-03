@@ -79,44 +79,63 @@ _area _area::scaling(double b) const noexcept
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_trans _trans::operator*(_trans tr) const noexcept
+_area _trans::operator()(const _area& b) const
 {
-	tr.offset.x = offset.x + tr.offset.x * scale;
-	tr.offset.y = offset.y + tr.offset.y * scale;
-	tr.scale *= scale;
-	return tr;
+	//	if (b.empty()) return b;
+	return { {b.x.min * scale + offset.x, b.x.max * scale + offset.x},
+			 {b.y.min * scale + offset.y, b.y.max * scale + offset.y} };
 }
 
-_xy _trans::inverse(_xy b) const noexcept
+_xy _trans::operator()(const _xy  b) const
 {
-	return { (b.x - offset.x) / scale, (b.y - offset.y) / scale };
+	return _xy{ b.x * scale + offset.x, b.y * scale + offset.y };
 }
 
-_trans _trans::inverse() const noexcept
+double _trans::operator()(const double b) const
+{
+	return scale * b;
+}
+
+_trans _trans::operator*(const _trans& b) const
+{
+	return { scale * b.scale, offset + b.offset * scale };
+}
+
+_trans _trans::operator/(const _trans& b) const
+{
+	double new_scale = scale / b.scale;
+	return { new_scale, offset - b.offset * new_scale };
+}
+
+void _trans::operator*=(const _trans& b)
+{
+	offset += b.offset * scale;
+	scale *= b.scale;
+}
+
+void _trans::operator/=(const _trans& b)
+{
+	scale /= b.scale;
+	offset -= b.offset * scale;
+}
+
+bool _trans::operator!=(const _trans& b) const
+{
+	return ((scale != b.scale) || (offset != b.offset));
+}
+
+_trans _trans::inverse() const
 {
 	double mm = 1.0 / scale;
 	return { mm, {-offset.x * mm, -offset.y * mm} };
 }
 
-_trans _trans::operator/(_trans tr) const noexcept
+_xy _trans::inverse(_xy b) const
 {
-	tr.scale = scale / tr.scale;
-	tr.offset.x = offset.x - tr.offset.x * tr.scale;
-	tr.offset.y = offset.y - tr.offset.y * tr.scale;
-	return tr;
+	return { (b.x - offset.x) / scale, (b.y - offset.y) / scale };
 }
 
-bool _trans::operator!=(const _trans& b) const noexcept
-{
-	return ((scale != b.scale) || (offset.x != b.offset.x) || (offset.y != b.offset.y));
-}
-
-_xy _trans::operator()(const _xy& b) const noexcept
-{
-	return _xy{ b.x * scale + offset.x, b.y * scale + offset.y };
-}
-
-_area _trans::inverse(const _area& b) const noexcept
+_area _trans::inverse(const _area& b) const
 {
 	if (b.empty()) return b;
 	_area c;
@@ -133,20 +152,6 @@ void _trans::MasToch(_xy b, double m)
 	offset.x = b.x + m * (offset.x - b.x);
 	offset.y = b.y + m * (offset.y - b.y);
 	scale *= m;
-}
-
-void _trans::operator/=(_trans tr)
-{
-	scale /= tr.scale;
-	offset.x -= tr.offset.x * scale;
-	offset.y -= tr.offset.y * scale;
-}
-
-_area _trans::operator()(const _area& b) const noexcept
-{
-	//	if (b.empty()) return b;
-	return { {b.x.min * scale + offset.x, b.x.max * scale + offset.x},
-			 {b.y.min * scale + offset.y, b.y.max * scale + offset.y} };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -207,6 +212,14 @@ bool _iarea::operator!=(_isize b) const
 {
 	if (b.empty() && empty()) return false;
 	return (x.min != 0) || (y.min != 0) || (x.max != b.x) || (y.max != b.y);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+std::optional<_segment> _segment::operator&(const _area& b)
+{
+	if (b.empty()) return {};
+	return {};
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
