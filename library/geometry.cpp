@@ -88,7 +88,7 @@ _area _trans::operator()(const _area& b) const
 
 _xy _trans::operator()(const _xy  b) const
 {
-	return _xy{ b.x * scale + offset.x, b.y * scale + offset.y };
+	return b * scale + offset;
 }
 
 double _trans::operator()(const double b) const
@@ -127,12 +127,12 @@ bool _trans::operator!=(const _trans& b) const
 _trans _trans::inverse() const
 {
 	double mm = 1.0 / scale;
-	return { mm, {-offset.x * mm, -offset.y * mm} };
+	return { mm, -offset * mm };
 }
 
 _xy _trans::inverse(_xy b) const
 {
-	return { (b.x - offset.x) / scale, (b.y - offset.y) / scale };
+	return (b - offset) / scale;
 }
 
 _area _trans::inverse(const _area& b) const
@@ -147,11 +147,10 @@ _area _trans::inverse(const _area& b) const
 	return c;
 }
 
-void _trans::MasToch(_xy b, double m)
+void _trans::scale_up(_xy b, double m)
 {
-	offset.x = b.x + m * (offset.x - b.x);
-	offset.y = b.y + m * (offset.y - b.y);
 	scale *= m;
+	offset = b + (offset - b) * m;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

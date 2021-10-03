@@ -36,25 +36,24 @@ struct _xy
 
 	_xy operator-()               const { return { -x,  -y }; }
 
-	_xy operator-(const _xy b)    const { return { x - b.x, y - b.y }; }
 	_xy operator+(const _xy b)    const { return { x + b.x, y + b.y }; }
-
+	_xy operator-(const _xy b)    const { return { x - b.x, y - b.y }; }
 	_xy operator*(const double b) const { return { x * b, y * b }; }
+	_xy operator/(const double b) const { double k = 1.0 / b; return { x * k, y * k }; }
 
 	void operator+=(const _xy b)        { x += b.x; y += b.y; }
 	void operator-=(const _xy b)        { x -= b.x; y -= b.y; }
-
 	void operator*=(const double b)     { x *= b; y *= b; }
-	void operator/=(const double b)     { x /= b; y /= b; }
+	void operator/=(const double b)     { double k = 1.0 / b; x *= k; y *= k; }
 
 	bool operator!=(const _xy b)  const { return (x != b.x) || (y != b.y); }
 
-	double len()            const { return sqrt(x * x + y * y); }
-	double len2()           const { return x * x + y * y; }
+	double len()                  const { return sqrt(x * x + y * y); }
+	double len2()                 const { return x * x + y * y; }
 
-	double scalar(_xy b)    const { return x * b.x + y * b.y; }
+	double scalar(_xy b)          const { return x * b.x + y * b.y; }
 
-	_xy rotation(double b)  const;
+	_xy rotation(double b)        const;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -230,13 +229,14 @@ struct _trans
 
 	void   operator*=(const _trans& b);
 	void   operator/=(const _trans& b);
+
 	bool   operator!=(const _trans& b) const;
 
 	_trans inverse()                   const;
 	_xy    inverse(_xy b)              const;
 	_area  inverse(const _area& b)     const;
 
-	void MasToch(_xy b, double m); // промасштабировать вокруг точки
+	void scale_up(_xy b, double m); // промасштабировать вокруг точки
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

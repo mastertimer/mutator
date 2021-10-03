@@ -349,7 +349,7 @@ void fun04(_tetron* tt0, _tetron* tt, u64 flags)
 		double kk = *n_wheel->operator i64 * ();
 		if ((kk > 0) && (kor->trans.scale > 1E12)) return;
 		kor->cha_area(kor->calc_area());
-		kor->trans.MasToch(tr, pow(1.1, kk));
+		kor->trans.scale_up(tr, pow(1.1, kk));
 		kor->cha_area(kor->calc_area());
 		n_move_all->run(0, n_move_all, flag_run);
 		return;
@@ -369,10 +369,10 @@ void fun04(_tetron* tt0, _tetron* tt, u64 flags)
 			_t_go* ra = *n_ramk2;
 			_t_trans* rat = ra->ttrans();
 			ra->del_area();
-			rat->trans.MasToch((ra->oko_trans() / rat->trans).inverse(tr), pow(1.1, *n_wheel->operator i64 * ()));
+			rat->trans.scale_up((ra->oko_trans() / rat->trans).inverse(tr), pow(1.1, *n_wheel->operator i64 * ()));
 			ra->add_area();
 			raa->del_area();
-			rat2->trans.MasToch((raa->oko_trans() / rat2->trans).inverse(tr), pow(1.1, *n_wheel->operator i64 * ()));
+			rat2->trans.scale_up((raa->oko_trans() / rat2->trans).inverse(tr), pow(1.1, *n_wheel->operator i64 * ()));
 			raa->add_area();
 		}
 		return;
@@ -625,7 +625,7 @@ void fun27(_tetron* tt0, _tetron* tt, u64 flags)
 	_xy tr = mouse_xy;
 	_t_trans* kor = *n_ko;
 	kor->cha_area(kor->calc_area());
-	kor->trans.MasToch(tr, 1 / kor->trans.scale);
+	kor->trans.scale_up(tr, 1 / kor->trans.scale);
 	kor->trans.scale = 1; // точно единица
 	kor->cha_area(kor->calc_area());
 	n_move_all->run(0, n_move_all, flag_run);
