@@ -21,8 +21,8 @@ inline u64 id_tetron = 1; // глобальный счетчик id тетрон
 inline bool run_before_del_link = true; // вызывать ли спец функции перед удалением связи
 inline _area master_obl_izm; // область изменений
 
-inline _xy mouse_xy; // координаты мышки
-inline _xy mouse_xy_pr; // предыдущие координаты мышки
+inline _xy mouse_xy(0, 0); // координаты мышки
+inline _xy mouse_xy_pr(0, 0); // предыдущие координаты мышки
 
 inline u64 inverted_flags(u64 a) { return (a << 32) | (a >> 32); }
 

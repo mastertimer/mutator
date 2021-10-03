@@ -21,8 +21,6 @@ struct _ixy // индекс, номер
 	_ixy(i64 x_,    double y_) : x(x_), y(y_) { if ((y_ < 0) && (y != y_)) y--; }
 	_ixy(double x_, i64 y_)    : x(x_), y(y_) { if ((x_ < 0) && (x != x_)) x--; }
 	_ixy(double x_, double y_) : x(x_), y(y_) {	if ((x_ < 0) && (x != x_)) x--;	if ((y_ < 0) && (y != y_)) y--;	}
-
-	inline operator _xy() const;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,6 +29,9 @@ struct _xy
 {
 	double x;
 	double y;
+
+	_xy(double x_, double y_) : x(x_), y(y_) {}
+	_xy(const _ixy b) : x(b.x + 0.5), y(b.y + 0.5) {}
 
 	operator _ixy()               const { return { x, y }; }
 
@@ -173,12 +174,10 @@ struct _area
 	_interval y;
 
 	_area() = default;
-	_area(_interval x_, _interval y_) : x(x_), y(y_) {}
-	_area(_isize b) : x{ 0.0, b.x - de_i }, y{ 0.0, b.y - de_i } {}
-	_area(_iarea b) : x(b.x), y(b.y) {}
-	_area(_xy b) : x{ b.x, b.x }, y{ b.y, b.y } {}
-
-	void operator=(const _isize b) { x = { 0, b.x - de_i }; y = { 0, b.y - de_i }; }
+	_area(_interval x_, _interval y_);
+	_area(_isize b);
+	_area(_iarea b);
+	_area(_xy b);
 
 	operator _iarea() const { return { x, y }; }
 
@@ -253,13 +252,6 @@ uint test_line(_xy p1, _xy p2, _xy b);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-_ixy::operator _xy() const
-{
-	return { x + 0.5, y + 0.5 };
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 _iarea _isize::move(_ixy d) const

@@ -11,6 +11,22 @@ _xy _xy::rotation(double b) const
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+_area::_area(_interval x_, _interval y_) : x(x_), y(y_)
+{
+}
+
+_area::_area(_isize b) : x{ 0.0, b.x - de_i }, y{ 0.0, b.y - de_i }
+{
+}
+
+_area::_area(_iarea b) : x(b.x), y(b.y)
+{
+}
+
+_area::_area(_xy b) : x(b.x), y(b.y)
+{
+}
+
 void _area::operator+=(const _area& b) noexcept
 {
 	if (b.empty()) return;
@@ -74,7 +90,7 @@ _area _area::scaling(double b) const noexcept
 
 _area _trans::operator()(const _area& b) const
 {
-	//	if (b.empty()) return b;
+	if (b.empty()) return b;
 	return { {b.x.min * scale + offset.x, b.x.max * scale + offset.x},
 			 {b.y.min * scale + offset.y, b.y.max * scale + offset.y} };
 }
