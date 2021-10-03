@@ -365,7 +365,7 @@ _area _t_basic_go::calc_area()
 	if (_t_go* tgo = *this)
 		area = tgo->local_area;
 	else
-		area.clear();
+		area = _area();
 	for (auto i : link)
 	{
 		_tetron* a = (*i)(this);
@@ -2759,7 +2759,7 @@ bool _g_link::test_local_area(_xy b)
 
 void _g_link::calc_local_area()
 {
-	local_area.clear();
+	local_area = _area();
 	_g_tetron* g1 = find1<_g_tetron>(flag_specialty);
 	_g_tetron* g2 = find1<_g_tetron>(flag_specialty2);
 	if ((g1 == nullptr) || (g2 == nullptr)) return;

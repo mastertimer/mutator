@@ -220,7 +220,7 @@ namespace mutator
 		master_bm.clear(cc0);
 		master_chain_go.clear();
 		n_ko->operator _t_trans* ()->ris(_trans(), false);
-		master_obl_izm.clear();
+		master_obl_izm = _area();
 	}
 
 	bool start(wstr fn)

@@ -169,10 +169,10 @@ inline double operator/(const double a, const _interval interv)
 
 struct _area
 {
-	_interval x, y; // [...] [...]
+	_interval x;
+	_interval y;
 
 	_area() = default;
-	_area(const _area&) = default;
 	_area(_interval x_, _interval y_) : x(x_), y(y_) {}
 	_area(_isize b) : x{ 0.0, b.x - de_i }, y{ 0.0, b.y - de_i } {}
 	_area(_iarea b) : x(b.x), y(b.y) {}
@@ -185,7 +185,6 @@ struct _area
 	bool operator==(const _area& b) const noexcept;
 	bool operator<=(const _area& b) const noexcept;
 	bool operator<(const _area& b)  const noexcept; // внутри, грани могут касаться, но не равно
-	bool inside(const _area& b)     const noexcept; // внутри, грани не касаются!
 
 	void operator&=(const _area& b) { x &= b.x; y &= b.y; }
 	void operator+=(const _area& b) noexcept;
@@ -194,7 +193,6 @@ struct _area
 	_area operator+(const _area& b) const { _area c(*this); c += b; return c; }
 
 	bool empty() const { return (x.min > x.max) || (y.min > y.max); }
-	void clear() { x = { 1.0, 0.0 }; }
 
 	_area expansion(double b) const noexcept; // расширенная область во все стороны на b
 	_area scaling(double b) const noexcept; // промасштабированная область во все стороны в b
