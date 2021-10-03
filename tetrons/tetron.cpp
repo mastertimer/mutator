@@ -343,7 +343,7 @@ void add_obl_izm(_area a)
 {
 	if (a.empty()) return;
 	if ((a.x.max < 0) || (a.x.min > master_bm.size().x) || (a.y.max < 0) || (a.y.min > master_bm.size().y)) return;
-	master_obl_izm += a;
+	master_obl_izm |= a;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -373,13 +373,13 @@ _area _t_basic_go::calc_area()
 		_t_basic_go* b = *a; if (b == nullptr) continue;
 		b->calc_area();
 		if (i->test_flags(this, flag_parent))
-			area += b->area;
+			area |= b->area;
 		else
 		{
 			if (_t_trans* ttr = *b)
-				area += ttr->trans(b->area);
+				area |= ttr->trans(b->area);
 			else
-				area += b->area;
+				area |= b->area;
 		}
 	}
 	return area;
@@ -658,7 +658,7 @@ bool _t_basic_go::mouse_wheel(_trans tr)
 
 bool _t_basic_go::final_fractal(const _trans& tr)
 {
-	if (tr(calc_area()).radius() < final_radius()) return true;
+	if (tr(calc_area()).min_length() * 0.5 < final_radius()) return true;
 	auto h = master_chain_go.hash.find(this);
 	if (!h) return false;
 	return (tr.scale >= h->a.tr.scale);
@@ -1144,7 +1144,7 @@ void _g_line::run(_tetron* tt0, _tetron* tt, u64 flags)
 
 void _g_line::calc_local_area()
 {
-	local_area = (_area(p1) + p2).expansion(width * 0.5);
+	local_area = (_area(p1) | p2).expansion(width * 0.5);
 }
 
 void _g_line::ris2(_trans tr, bool final)
@@ -2502,7 +2502,7 @@ void _g_tetron::ris2(_trans tr, bool final)
 {
 	_area a = tr(local_area);
 	_xy p = a.center();
-	double r = a.radius();
+	double r = a.min_length() * 0.5;
 	double d = log(1.001 + r) * 0.5;
 	double y = 0.7 * (r - d) * 2;
 	uint c = cc4;
@@ -2774,9 +2774,9 @@ void _g_link::calc_local_area()
 	_area a2 = tr2->trans(g2->local_area);
 	par->trans = _trans();
 	_xy p1 = a1.center();
-	double r1 = a1.radius();
+	double r1 = a1.min_length() * 0.5;
 	_xy p2 = a2.center();
-	double r2 = a2.radius();
+	double r2 = a2.min_length() * 0.5;
 	_xy d = p2 - p1;
 	if ((d.y == 0) && (d.x == 0)) return;
 	double alpha = atan2(d.y, d.x);
@@ -2785,12 +2785,12 @@ void _g_link::calc_local_area()
 	if (k < 0.9)
 		dv = (dv0 - (r1 + r2)) * k + r1 * (1 - cos(dalpha));
 	double kk = dv / dv0;
-	local_area += p11 = _xy{ p1.x + r1 * cos(alpha - dalpha), p1.y + r1 * sin(alpha - dalpha) };
-	local_area += p12 = _xy{ p1.x + r1 * cos(alpha + dalpha), p1.y + r1 * sin(alpha + dalpha) };
+	local_area |= p11 = _xy{ p1.x + r1 * cos(alpha - dalpha), p1.y + r1 * sin(alpha - dalpha) };
+	local_area |= p12 = _xy{ p1.x + r1 * cos(alpha + dalpha), p1.y + r1 * sin(alpha + dalpha) };
 	p21 = { p11.x + d.x * kk, p11.y + d.y * kk };
 	p22 = { p12.x + d.x * kk, p12.y + d.y * kk };
-	local_area += p21;
-	local_area += p22;
+	local_area |= p21;
+	local_area |= p22;
 }
 
 bool _g_link::mouse_down_left2(_xy r)

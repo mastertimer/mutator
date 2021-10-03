@@ -24,6 +24,24 @@ bool _interval::operator<=(const _interval& b) const
 	return (min >= b.min) && (max <= b.max);
 }
 
+void _interval::operator|=(const _interval& b)
+{
+	if (b.empty()) return;
+	if (empty())
+	{ 
+		*this = b;
+		return;
+	}
+	if (b.min < min) min = b.min;
+	if (b.max > max) max = b.max;
+}
+
+bool _interval::test(double b)
+{
+	if (empty()) return false;
+	return (b >= min) && (b <= max);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 _area::_area(_interval x_, _interval y_) : x(x_), y(y_)
@@ -68,42 +86,38 @@ bool _area::operator<(const _area& b) const
 	return *this <= b;
 }
 
-void _area::operator+=(const _area& b) noexcept
+void _area::operator&=(const _area& b)
+{
+	x &= b.x;
+	y &= b.y;
+}
+
+void _area::operator|=(const _area& b)
 {
 	if (b.empty()) return;
-	if (empty()) { *this = b; return; }
-	if (b.x.min < this->x.min) this->x.min = b.x.min;
-	if (b.x.max > this->x.max) this->x.max = b.x.max;
-	if (b.y.min < this->y.min) this->y.min = b.y.min;
-	if (b.y.max > this->y.max) this->y.max = b.y.max;
+	if (empty())
+	{
+		*this = b;
+		return;
+	}
+	x |= b.x;
+	y |= b.y;
 }
 
 bool _area::test(_xy b)
 {
-	if (empty()) return false;
-	return ((b.x >= this->x.min) && (b.x <= this->x.max) && (b.y >= this->y.min) && (b.y <= this->y.max));
+	return x.test(b.x) && y.test(b.y);
 }
 
-double _area::radius()
-{
-	if (empty()) return 0.0;
-	double dx = x.max - x.min;
-	double dy = y.max - y.min;
-	return ((dx < dy) ? dx : dy) / 2;
-}
-
-_area _area::expansion(double b) const noexcept
+_area _area::expansion(double b) const
 {
 	if (empty()) return *this;
 	return { {x.min - b, x.max + b}, {y.min - b, y.max + b} };
 }
 
-_area _area::scaling(double b) const noexcept
-{
-	if (empty()) return *this;
-	double k1 = (1 + b) / 2;
-	double k2 = (1 - b) / 2;
-	return { {x.min * k1 + x.max * k2, x.min * k2 + x.max * k1}, {y.min * k1 + y.max * k2, y.min * k2 + y.max * k1} };
+double _area::min_length()
+{ 
+	return std::min(x.length(), y.length());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

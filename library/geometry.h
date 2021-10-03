@@ -125,13 +125,11 @@ struct _iarea
 
 	void operator&=(const _iarea& b) { x &= b.x; y &= b.y; }
 
-	_iarea operator&(const _iarea& b) const { _iarea c(*this); c &= b; return c; }
+	_iarea operator&( _iarea b) const { b &= *this; return b; }
 
 	bool empty() const { return x.empty() || y.empty(); }
 	void clear() { x.clear(); }
 	_isize size() const { if (empty()) return { 0,0 }; return { x.max - x.min, y.max - y.min }; }
-
-	_iarea move(_ixy d) const { return { {x.min + d.x, x.max + d.x}, {y.min + d.y, y.max + d.y} }; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -151,12 +149,14 @@ struct _interval // [...]
 	bool operator==(const _interval& b) const;
 	bool operator<=(const _interval& b) const;
 
+	void operator|=(const _interval& b);
 	void operator&=(const _interval& b) { if (b.min > min) min = b.min; if (b.max < max) max = b.max; }
 	_interval operator&(const _interval& b) const { return { std::max(min, b.min), std::min(max, b.max) }; }
 
 	double length() const { return (max > min) ? (max - min) : 0; }
 	_interval& operator << (double x);
 	bool empty() const { return (max < min); }
+	bool test(double b); // принадлежит ли точка области
 };
 
 inline double operator*(const double a, const _interval interv)
@@ -188,16 +188,15 @@ struct _area
 	bool operator<=(const _area& b) const;
 	bool operator< (const _area& b) const;
 
-	void operator&=(const _area& b) { x &= b.x; y &= b.y; }
-	void operator+=(const _area& b) noexcept;
+	void operator&=(const _area& b);
+	void operator|=(const _area& b);
 
-	_area operator&(const _area& b) const { _area c(*this); c &= b;	return c; }
-	_area operator+(const _area& b) const { _area c(*this); c += b; return c; }
+	_area operator&(      _area  b) const { b &= *this; return b; }
+	_area operator|(      _area  b) const { b |= *this; return b; }
 
 	bool empty() const { return x.empty() || y.empty(); }
 
-	_area expansion(double b) const noexcept; // расширенная область во все стороны на b
-	_area scaling(double b) const noexcept; // промасштабированная область во все стороны в b
+	_area expansion(double b) const; // расширенная область во все стороны на b
 
 	_xy center()       const { return { (x.max + x.min) * 0.5, (y.max + y.min) * 0.5 }; }
 	_xy top_left()     const { return { x.min, y.min }; } // верхний левый угол
@@ -205,10 +204,7 @@ struct _area
 	_xy bottom_left()  const { return { x.min, y.max }; } // нижний левый угол
 	_xy bottom_right() const { return { x.max, y.max }; } // нижний правый угол
 
-	double radius(); // радиус вписанной окружности
-	double min_length() { if (empty()) return 0.0; return std::min(x.max - x.min, y.max - y.min); } // минимальный размер
-
-	_area move(_xy d) const { return { {x.min + d.x, x.max + d.x}, {y.min + d.y, y.max + d.y} }; }
+	double min_length();
 
 	bool test(_xy b); // принадлежит ли точка области
 };
