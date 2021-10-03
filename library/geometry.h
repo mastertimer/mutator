@@ -148,6 +148,9 @@ struct _interval // [...]
 
 	operator _iinterval() const { return _iinterval(min, max); }
 
+	bool operator==(const _interval& b) const;
+	bool operator<=(const _interval& b) const;
+
 	void operator&=(const _interval& b) { if (b.min > min) min = b.min; if (b.max < max) max = b.max; }
 	_interval operator&(const _interval& b) const { return { std::max(min, b.min), std::min(max, b.max) }; }
 
@@ -179,11 +182,11 @@ struct _area
 	_area(_iarea b);
 	_area(_xy b);
 
-	operator _iarea() const { return { x, y }; }
+	operator _iarea() const;
 
-	bool operator==(const _area& b) const noexcept;
-	bool operator<=(const _area& b) const noexcept;
-	bool operator<(const _area& b)  const noexcept; // внутри, грани могут касаться, но не равно
+	bool operator==(const _area& b) const;
+	bool operator<=(const _area& b) const;
+	bool operator< (const _area& b) const;
 
 	void operator&=(const _area& b) { x &= b.x; y &= b.y; }
 	void operator+=(const _area& b) noexcept;
@@ -191,7 +194,7 @@ struct _area
 	_area operator&(const _area& b) const { _area c(*this); c &= b;	return c; }
 	_area operator+(const _area& b) const { _area c(*this); c += b; return c; }
 
-	bool empty() const { return (x.min > x.max) || (y.min > y.max); }
+	bool empty() const { return x.empty() || y.empty(); }
 
 	_area expansion(double b) const noexcept; // расширенная область во все стороны на b
 	_area scaling(double b) const noexcept; // промасштабированная область во все стороны в b

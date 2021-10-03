@@ -11,6 +11,21 @@ _xy _xy::rotation(double b) const
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+bool _interval::operator==(const _interval& b) const
+{
+	if (empty() && b.empty()) return true;
+	return (min == b.min) && (max == b.max);
+}
+
+bool _interval::operator<=(const _interval& b) const
+{
+	if (empty()) return true;
+	if (b.empty()) return false;
+	return (min >= b.min) && (max <= b.max);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 _area::_area(_interval x_, _interval y_) : x(x_), y(y_)
 {
 }
@@ -27,6 +42,32 @@ _area::_area(_xy b) : x(b.x), y(b.y)
 {
 }
 
+_area::operator _iarea() const
+{ 
+	return { x, y };
+}
+
+bool _area::operator==(const _area& b) const
+{
+	if (empty() && b.empty()) return true;
+	return (x == b.x) && (y == b.y);
+}
+
+bool _area::operator<=(const _area& b) const
+{
+	if (empty()) return true;
+	if (b.empty()) return false;
+	return (x <= b.x) && (y <= b.y);
+}
+
+bool _area::operator<(const _area& b) const
+{
+	if (b.empty()) return false;
+	if (empty()) return true;
+	if (*this == b) return false;
+	return *this <= b;
+}
+
 void _area::operator+=(const _area& b) noexcept
 {
 	if (b.empty()) return;
@@ -35,27 +76,6 @@ void _area::operator+=(const _area& b) noexcept
 	if (b.x.max > this->x.max) this->x.max = b.x.max;
 	if (b.y.min < this->y.min) this->y.min = b.y.min;
 	if (b.y.max > this->y.max) this->y.max = b.y.max;
-}
-
-bool _area::operator==(const _area& b) const noexcept
-{
-	if (empty() && b.empty()) return true;
-	return ((x.min == b.x.min) && (x.max == b.x.max) && (y.min == b.y.min) && (y.max == b.y.max));
-}
-
-bool _area::operator<=(const _area& b) const noexcept
-{
-	if (empty()) return true;
-	if (b.empty()) return false;
-	return ((x.min >= b.x.min) && (x.max <= b.x.max) && (y.min >= b.y.min) && (y.max <= b.y.max));
-}
-
-bool _area::operator<(const _area& b) const noexcept
-{
-	if (b.empty()) return false;
-	if (empty()) return true;
-	if ((x.min == b.x.min) && (x.max == b.x.max) && (y.min == b.y.min) && (y.max == b.y.max)) return false;
-	return ((x.min >= b.x.min) && (x.max <= b.x.max) && (y.min >= b.y.min) && (y.max <= b.y.max));
 }
 
 bool _area::test(_xy b)
