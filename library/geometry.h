@@ -146,14 +146,16 @@ struct _interval // [...])
 	_interval(double min_, double max_) : min(min_), max(max_), empty(max < min) {}
 	_interval(_iinterval b) : min(b.min), max(b.max), empty(max <= min), right_closed(false) {}
 
-	operator _iinterval() const { return _iinterval(min, max); }
+	operator _iinterval() const { return (empty) ? _iinterval(0LL, 0LL) : _iinterval(min, max); }
 
 	bool operator==(const _interval& b) const;
 	bool operator<=(const _interval& b) const;
 
 	void operator|=(const _interval& b);
 	void operator&=(const _interval& b);
-	_interval operator&( _interval& b) const { b &= *this; return b; }
+	_interval operator&(const _interval& b) const { _interval res(b); res &= *this; return res; }
+
+	_interval operator/(const _interval& b) const;
 
 	double length() const { return empty ? 0 : (max - min); }
 	_interval& operator << (double x);
@@ -243,7 +245,7 @@ struct _segment
 	_xy p1;
 	_xy p2;
 
-	std::optional<_segment> operator&(const _area& b);
+	std::optional<_segment> operator&(const _area& b) const; // возвращает x1 <= x2
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

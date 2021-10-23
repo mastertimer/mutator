@@ -88,6 +88,14 @@ bool _interval::test(double b)
 	return (b >= min) && (b <= max);
 }
 
+_interval _interval::operator/(const _interval& b) const
+{
+	if (empty) return *this;
+	auto len = b.length();
+	if (len == 0) return _interval( -1e300, 1e300 );
+	return { (min - b.min) / len, (max - b.min) / len };
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 _area::_area(_interval x_, _interval y_) : x(x_), y(y_)
@@ -290,10 +298,22 @@ bool _iarea::operator!=(_isize b) const
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-std::optional<_segment> _segment::operator&(const _area& b)
+std::optional<_segment> _segment::operator&(const _area& b) const
 {
 	if (b.empty()) return {};
-	return {};
+	_interval x_interval = _interval(p1.x) << p2.x;
+	_interval y_interval = _interval(p1.y) << p2.y;
+	_interval x1_interval = (x_interval & b.x) / x_interval;
+	_interval y1_interval = (y_interval & b.y) / y_interval;
+	bool main_diagonal = ((p2.y - p1.y) * (p2.x - p1.x) >= 0);
+	if (!main_diagonal) y1_interval = { 1.0 - y1_interval.max, 1.0 - y1_interval.min }; // что это за действие?
+	_interval dd = x1_interval & y1_interval;
+	if (dd.empty) return {};
+	_segment res{ {dd.min * x_interval, 0.0}, {dd.max * x_interval, 0.0} };
+	if (!main_diagonal) dd = { 1.0 - dd.max, 1.0 - dd.min }; // что это за действие?
+	res.p1.y = dd.min * y_interval;
+	res.p2.y = dd.max * y_interval;
+	return res;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
