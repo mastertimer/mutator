@@ -96,14 +96,24 @@ _interval _interval::operator/(const _interval& b) const
 	return { (min - b.min) / len, (max - b.min) / len };
 }
 
+_interval::operator _iinterval() const
+{
+	if (empty) return { 0LL, 0LL };
+	_iinterval res{ min, max };
+	if (!right_closed && max == res.max) res.max--;
+	return res;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 _area::_area(_interval x_, _interval y_) : x(x_), y(y_)
 {
 }
 
-_area::_area(_isize b) : x{ 0.0, b.x - de_i }, y{ 0.0, b.y - de_i }
+_area::_area(_isize b) : x{ 0.0, b.x}, y{ 0.0, b.y}
 {
+	x.empty = b.empty();
+	x.right_closed = y.right_closed = false;
 }
 
 _area::_area(_iarea b) : x(b.x), y(b.y)

@@ -6,12 +6,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-constexpr double de_i = 0.001; // для больших чисел - не правильно!
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct _xy;
-
 struct _ixy // индекс, номер
 {
 	i64 x;
@@ -146,7 +140,7 @@ struct _interval // [...])
 	_interval(double min_, double max_) : min(min_), max(max_), empty(max < min) {}
 	_interval(_iinterval b) : min(b.min), max(b.max), empty(max <= min), right_closed(false) {}
 
-	operator _iinterval() const { return (empty) ? _iinterval(0LL, 0LL) : _iinterval(min, max); }
+	operator _iinterval() const;
 
 	bool operator==(const _interval& b) const;
 	bool operator<=(const _interval& b) const;
