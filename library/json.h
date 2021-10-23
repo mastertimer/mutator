@@ -68,6 +68,7 @@ struct _rjson
 	void read(std::string_view name, u64& b);
 	void read(std::string_view name, uint& b);
 	void read(std::string_view name, char& b);
+	void read(std::string_view name, bool& b);
 	void read(std::string_view name, std::wstring& b);
 
 	void read_mem(std::string_view name, void* b, u64 size); // блок памяти в виде строки

@@ -217,8 +217,8 @@ _wjson& _wjson::add(std::string_view name, _interval b)
 	str(name, true);
 	add("min", b.min);
 	add("max", b.max);
-//	add("empty", b.empty_);
-//	add("rclosed", b.right_closed);
+	add("empty", b.empty_);
+	add("rclosed", b.right_closed);
 	end();
 	return *this;
 }
@@ -431,6 +431,8 @@ _interval _rjson::read_area(std::string_view name)
 	if (!obj(name)) return res;
 	read("min", res.min);
 	read("max", res.max);
+	read("empty", res.empty_);
+	read("rclosed", res.right_closed);
 	end();
 	return res;
 }
@@ -535,6 +537,27 @@ void _rjson::read(std::string_view name, std::wstring& b)
 	astr ss = read_string(name);
 	if (error || null) return;
 	b = string_to_wstring2(ss);
+}
+
+void _rjson::read(std::string_view name, bool& b)
+{
+	if (!read_start(name)) return;
+	char s[6] = {};
+	file >> s[0];
+	for (int i = 1; i <= 3; i++) s[i] = file.get();
+	if (s[0] == 'f') s[4] = file.get();
+	std::string_view ss = s;
+	if (ss == "true")
+	{
+		b = true;
+		return;
+	}
+	if (ss == "false")
+	{
+		b = false;
+		return;
+	}
+	error = 16;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

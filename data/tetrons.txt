@@ -21,7 +21,7 @@
 		{
 			"name": "_g_button",
 			"id": 3,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "задать размер картинки",
 			"picture": [
@@ -35,7 +35,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 4,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "74000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 65, "flags": 0x1200000000 },
@@ -65,7 +65,7 @@
 		{
 			"name": "_g_button",
 			"id": 7,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "задать масштаб",
 			"picture": [
@@ -97,7 +97,7 @@
 		{
 			"name": "_g_picture",
 			"id": 11,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"pic": [
 				"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 			],
@@ -126,7 +126,7 @@
 		{
 			"name": "_g_picture",
 			"id": 14,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"pic": [
 				"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 			],
@@ -146,7 +146,7 @@
 		{
 			"name": "_g_line",
 			"id": 16,
-			"local_area": { "x": { "min": 22.7124430150744026, "max": 37.8540716917906721 }, "y": { "min": -99.8129839066680375, "max": -59.8877903440008197 } },
+			"local_area": { "x": { "min": 22.7124430150744026, "max": 37.8540716917906721, "empty": false, "rclosed": true }, "y": { "min": -99.8129839066680375, "max": -59.8877903440008197, "empty": false, "rclosed": true } },
 			"p1": { "x": 37.8540716917906721, "y": -99.8129839066680375 },
 			"p2": { "x": 22.7124430150744026, "y": -59.8877903440008197 },
 			"width": 1,
@@ -168,7 +168,7 @@
 		{
 			"name": "_g_button",
 			"id": 18,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "создать GEditMultiString",
 			"picture": [
@@ -182,7 +182,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 19,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 380, "flags": 0x1200000000 }
@@ -200,7 +200,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 21,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "fa000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 9, "flags": 0x1200000000 },
@@ -246,7 +246,7 @@
 		{
 			"name": "_g_rect",
 			"id": 26,
-			"local_area": { "x": { "min": 0, "max": 302 }, "y": { "min": 0, "max": 327 } },
+			"local_area": { "x": { "min": 0, "max": 302, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 327, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 53, "flags": 0x12 },
 				{ "id": 146, "flags": 0x12 },
@@ -336,7 +336,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 34,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "7f000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 409, "flags": 0x1 },
@@ -355,7 +355,7 @@
 		{
 			"name": "_g_circle",
 			"id": 36,
-			"local_area": { "x": { "min": -150.800000000000011, "max": 150.800000000000011 }, "y": { "min": -150.800000000000011, "max": 150.800000000000011 } },
+			"local_area": { "x": { "min": -150.800000000000011, "max": 150.800000000000011, "empty": false, "rclosed": true }, "y": { "min": -150.800000000000011, "max": 150.800000000000011, "empty": false, "rclosed": true } },
 			"center": { "x": 0, "y": 0 },
 			"radius": 150.800000000000011,
 			"width": 2.70000000000000018,
@@ -502,7 +502,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 48,
-			"local_area": { "x": { "min": 0, "max": 24 }, "y": { "min": 0, "max": 24 } },
+			"local_area": { "x": { "min": 0, "max": 24, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 24, "empty": false, "rclosed": true } },
 			"hint": "абстракный цвет фона",
 			"links": [
 				{ "id": 100, "flags": 0x80 },
@@ -512,7 +512,7 @@
 		{
 			"name": "_g_line",
 			"id": 49,
-			"local_area": { "x": { "min": -12.8672906172557919, "max": -7.72037437035347462 }, "y": { "min": -105.971672309967261, "max": -63.5830033859803549 } },
+			"local_area": { "x": { "min": -12.8672906172557919, "max": -7.72037437035347462, "empty": false, "rclosed": true }, "y": { "min": -105.971672309967261, "max": -63.5830033859803549, "empty": false, "rclosed": true } },
 			"p1": { "x": -12.8672906172557919, "y": -105.971672309967261 },
 			"p2": { "x": -7.72037437035347462, "y": -63.5830033859803549 },
 			"width": 1,
@@ -541,7 +541,7 @@
 		{
 			"name": "_g_button",
 			"id": 52,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "вставить",
 			"picture": [
@@ -564,7 +564,7 @@
 		{
 			"name": "_g_picture",
 			"id": 54,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"pic": [
 				"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 			],
@@ -655,7 +655,7 @@
 		{
 			"name": "_g_picture",
 			"id": 64,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"pic": [
 				"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 			],
@@ -764,7 +764,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 76,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "f1000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 409, "flags": 0x1 },
@@ -800,7 +800,7 @@
 		{
 			"name": "_g_line",
 			"id": 82,
-			"local_area": { "x": { "min": -12.8672906172557919, "max": -7.72037437035347462 }, "y": { "min": -105.971672309967261, "max": -63.5830033859803549 } },
+			"local_area": { "x": { "min": -12.8672906172557919, "max": -7.72037437035347462, "empty": false, "rclosed": true }, "y": { "min": -105.971672309967261, "max": -63.5830033859803549, "empty": false, "rclosed": true } },
 			"p1": { "x": -12.8672906172557919, "y": -105.971672309967261 },
 			"p2": { "x": -7.72037437035347462, "y": -63.5830033859803549 },
 			"width": 1,
@@ -838,7 +838,7 @@
 		{
 			"name": "_g_line",
 			"id": 86,
-			"local_area": { "x": { "min": -147.61002250194332, "max": -105.435730358530961 }, "y": { "min": -23.3791308002624802, "max": -16.6993791430446308 } },
+			"local_area": { "x": { "min": -147.61002250194332, "max": -105.435730358530961, "empty": false, "rclosed": true }, "y": { "min": -23.3791308002624802, "max": -16.6993791430446308, "empty": false, "rclosed": true } },
 			"p1": { "x": -147.61002250194332, "y": -23.3791308002624802 },
 			"p2": { "x": -105.435730358530961, "y": -16.6993791430446308 },
 			"width": 1,
@@ -860,7 +860,7 @@
 		{
 			"name": "_g_button",
 			"id": 89,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "создать линию",
 			"picture": [
@@ -900,7 +900,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 93,
-			"local_area": { "x": { "min": 0, "max": 28 }, "y": { "min": 0, "max": 30 } },
+			"local_area": { "x": { "min": 0, "max": 28, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 30, "empty": false, "rclosed": true } },
 			"hint": "",
 			"links": [
 				{ "id": 79, "flags": 0x2000000000 },
@@ -942,7 +942,7 @@
 		{
 			"name": "_g_line",
 			"id": 96,
-			"local_area": { "x": { "min": -94.522430738480125, "max": -56.7134584430880722 }, "y": { "min": 29.765519169403408, "max": 49.6091986156723479 } },
+			"local_area": { "x": { "min": -94.522430738480125, "max": -56.7134584430880722, "empty": false, "rclosed": true }, "y": { "min": 29.765519169403408, "max": 49.6091986156723479, "empty": false, "rclosed": true } },
 			"p1": { "x": -94.522430738480125, "y": 49.6091986156723479 },
 			"p2": { "x": -56.7134584430880722, "y": 29.765519169403408 },
 			"width": 1,
@@ -1032,7 +1032,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 105,
-			"local_area": { "x": { "min": 0, "max": 24 }, "y": { "min": 0, "max": 24 } },
+			"local_area": { "x": { "min": 0, "max": 24, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 24, "empty": false, "rclosed": true } },
 			"hint": "абстрактный предок номер слоя",
 			"links": [
 				{ "id": 325, "flags": 0x1200000000 },
@@ -1116,7 +1116,7 @@
 		{
 			"name": "_g_line",
 			"id": 110,
-			"local_area": { "x": { "min": 18.4896423707977675, "max": 55.4689271123932954 }, "y": { "min": 10.6749999999999989, "max": 32.0249999999999915 } },
+			"local_area": { "x": { "min": 18.4896423707977675, "max": 55.4689271123932954, "empty": false, "rclosed": true }, "y": { "min": 10.6749999999999989, "max": 32.0249999999999915, "empty": false, "rclosed": true } },
 			"p1": { "x": 55.4689271123932954, "y": 32.0249999999999915 },
 			"p2": { "x": 18.4896423707977675, "y": 10.6749999999999989 },
 			"width": 1,
@@ -1174,7 +1174,7 @@
 		{
 			"name": "_g_line",
 			"id": 116,
-			"local_area": { "x": { "min": 18.4896423707977675, "max": 55.4689271123932954 }, "y": { "min": 10.6749999999999989, "max": 32.0249999999999915 } },
+			"local_area": { "x": { "min": 18.4896423707977675, "max": 55.4689271123932954, "empty": false, "rclosed": true }, "y": { "min": 10.6749999999999989, "max": 32.0249999999999915, "empty": false, "rclosed": true } },
 			"p1": { "x": 55.4689271123932954, "y": 32.0249999999999915 },
 			"p2": { "x": 18.4896423707977675, "y": 10.6749999999999989 },
 			"width": 1,
@@ -1196,7 +1196,7 @@
 		{
 			"name": "_g_picture",
 			"id": 119,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"pic": [
 				"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 			],
@@ -1207,7 +1207,7 @@
 		{
 			"name": "_g_rect",
 			"id": 120,
-			"local_area": { "x": { "min": 0, "max": 214 }, "y": { "min": 0, "max": 151 } },
+			"local_area": { "x": { "min": 0, "max": 214, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 151, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 35, "flags": 0x12 },
 				{ "id": 72, "flags": 0x12 },
@@ -1258,7 +1258,7 @@
 		{
 			"name": "_g_button",
 			"id": 124,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "создать GText2",
 			"picture": [
@@ -1290,7 +1290,7 @@
 		{
 			"name": "_g_line",
 			"id": 127,
-			"local_area": { "x": { "min": -55.4689271123932954, "max": -18.4896423707977675 }, "y": { "min": 10.6749999999999989, "max": 32.0249999999999915 } },
+			"local_area": { "x": { "min": -55.4689271123932954, "max": -18.4896423707977675, "empty": false, "rclosed": true }, "y": { "min": 10.6749999999999989, "max": 32.0249999999999915, "empty": false, "rclosed": true } },
 			"p1": { "x": -55.4689271123932954, "y": 32.0249999999999915 },
 			"p2": { "x": -18.4896423707977675, "y": 10.6749999999999989 },
 			"width": 1,
@@ -1303,7 +1303,7 @@
 		{
 			"name": "_g_circle",
 			"id": 128,
-			"local_area": { "x": { "min": -65.4000000000000057, "max": 65.4000000000000057 }, "y": { "min": -65.4000000000000057, "max": 65.4000000000000057 } },
+			"local_area": { "x": { "min": -65.4000000000000057, "max": 65.4000000000000057, "empty": false, "rclosed": true }, "y": { "min": -65.4000000000000057, "max": 65.4000000000000057, "empty": false, "rclosed": true } },
 			"center": { "x": 0, "y": 0 },
 			"radius": 65.4000000000000057,
 			"width": 2.70000000000000018,
@@ -1339,7 +1339,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 130,
-			"local_area": { "x": { "min": 0, "max": 24 }, "y": { "min": 0, "max": 24 } },
+			"local_area": { "x": { "min": 0, "max": 24, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 24, "empty": false, "rclosed": true } },
 			"hint": "абстрактный конец mouse_move",
 			"links": [
 				{ "id": 287, "flags": 0x1200000000 },
@@ -1376,7 +1376,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 134,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "f3000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 164, "flags": 0x1200000000 },
@@ -1386,7 +1386,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 135,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "7a000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 409, "flags": 0x1 },
@@ -1420,7 +1420,7 @@
 		{
 			"name": "_g_picture",
 			"id": 139,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"pic": [
 				"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 			],
@@ -1431,7 +1431,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 140,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "90000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 24, "flags": 0x1200000000 },
@@ -1468,7 +1468,7 @@
 		{
 			"name": "_g_line",
 			"id": 144,
-			"local_area": { "x": { "min": -60.6409117135508708, "max": -36.3845470281305197 }, "y": { "min": 52.7121166104886925, "max": 87.8535276841478208 } },
+			"local_area": { "x": { "min": -60.6409117135508708, "max": -36.3845470281305197, "empty": false, "rclosed": true }, "y": { "min": 52.7121166104886925, "max": 87.8535276841478208, "empty": false, "rclosed": true } },
 			"p1": { "x": -60.6409117135508708, "y": 87.8535276841478208 },
 			"p2": { "x": -36.3845470281305197, "y": 52.7121166104886925 },
 			"width": 1,
@@ -1506,7 +1506,7 @@
 		{
 			"name": "_g_line",
 			"id": 148,
-			"local_area": { "x": { "min": -67.8488801860752488, "max": -48.4634858471966083 }, "y": { "min": 95.1149464571082746, "max": 133.160925039951564 } },
+			"local_area": { "x": { "min": -67.8488801860752488, "max": -48.4634858471966083, "empty": false, "rclosed": true }, "y": { "min": 95.1149464571082746, "max": 133.160925039951564, "empty": false, "rclosed": true } },
 			"p1": { "x": -67.8488801860752488, "y": 133.160925039951564 },
 			"p2": { "x": -48.4634858471966083, "y": 95.1149464571082746 },
 			"width": 1,
@@ -1519,7 +1519,7 @@
 		{
 			"name": "_g_line",
 			"id": 149,
-			"local_area": { "x": { "min": 75.4836488916639468, "max": 105.67710844832952 }, "y": { "min": 75.4836488916639468, "max": 105.67710844832952 } },
+			"local_area": { "x": { "min": 75.4836488916639468, "max": 105.67710844832952, "empty": false, "rclosed": true }, "y": { "min": 75.4836488916639468, "max": 105.67710844832952, "empty": false, "rclosed": true } },
 			"p1": { "x": 105.67710844832952, "y": 105.67710844832952 },
 			"p2": { "x": 75.4836488916639468, "y": 75.4836488916639468 },
 			"width": 1,
@@ -1532,7 +1532,7 @@
 		{
 			"name": "_g_line",
 			"id": 150,
-			"local_area": { "x": { "min": -12.8672906172557173, "max": -7.72037437035343022 }, "y": { "min": 63.5830033859803549, "max": 105.971672309967261 } },
+			"local_area": { "x": { "min": -12.8672906172557173, "max": -7.72037437035343022, "empty": false, "rclosed": true }, "y": { "min": 63.5830033859803549, "max": 105.971672309967261, "empty": false, "rclosed": true } },
 			"p1": { "x": -12.8672906172557173, "y": 105.971672309967261 },
 			"p2": { "x": -7.72037437035343022, "y": 63.5830033859803549 },
 			"width": 1,
@@ -1545,7 +1545,7 @@
 		{
 			"name": "_g_line",
 			"id": 151,
-			"local_area": { "x": { "min": 62.1888234061386314, "max": 103.648039010231059 }, "y": { "min": -25.5469471626967959, "max": -15.3281682976180758 } },
+			"local_area": { "x": { "min": 62.1888234061386314, "max": 103.648039010231059, "empty": false, "rclosed": true }, "y": { "min": -25.5469471626967959, "max": -15.3281682976180758, "empty": false, "rclosed": true } },
 			"p1": { "x": 103.648039010231059, "y": -25.5469471626967959 },
 			"p2": { "x": 62.1888234061386314, "y": -15.3281682976180758 },
 			"width": 1,
@@ -1576,7 +1576,7 @@
 		{
 			"name": "_g_button",
 			"id": 154,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "разное",
 			"picture": [
@@ -1590,7 +1590,7 @@
 		{
 			"name": "_g_circle",
 			"id": 155,
-			"local_area": { "x": { "min": -22.6999999999999993, "max": 22.6999999999999993 }, "y": { "min": -22.6999999999999993, "max": 22.6999999999999993 } },
+			"local_area": { "x": { "min": -22.6999999999999993, "max": 22.6999999999999993, "empty": false, "rclosed": true }, "y": { "min": -22.6999999999999993, "max": 22.6999999999999993, "empty": false, "rclosed": true } },
 			"center": { "x": 0, "y": 0 },
 			"radius": 22.6999999999999993,
 			"width": 2.70000000000000018,
@@ -1632,7 +1632,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 159,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 560, "flags": 0x1200000000 }
@@ -1742,7 +1742,7 @@
 		{
 			"name": "_g_circle",
 			"id": 165,
-			"local_area": { "x": { "min": -108.099999999999994, "max": 108.099999999999994 }, "y": { "min": -108.099999999999994, "max": 108.099999999999994 } },
+			"local_area": { "x": { "min": -108.099999999999994, "max": 108.099999999999994, "empty": false, "rclosed": true }, "y": { "min": -108.099999999999994, "max": 108.099999999999994, "empty": false, "rclosed": true } },
 			"center": { "x": 0, "y": 0 },
 			"radius": 108.099999999999994,
 			"width": 2.70000000000000018,
@@ -1784,7 +1784,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 166,
-			"local_area": { "x": { "min": 0, "max": 24 }, "y": { "min": 0, "max": 24 } },
+			"local_area": { "x": { "min": 0, "max": 24, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 24, "empty": false, "rclosed": true } },
 			"hint": "абстрактный mouse_move",
 			"links": [
 				{ "id": 227, "flags": 0x80 },
@@ -1794,7 +1794,7 @@
 		{
 			"name": "_g_line",
 			"id": 167,
-			"local_area": { "x": { "min": -106.75, "max": -64.0499999999999972 }, "y": { "min": -3.43334185705961883e-14, "max": -2.06000511423577149e-14 } },
+			"local_area": { "x": { "min": -106.75, "max": -64.0499999999999972, "empty": false, "rclosed": true }, "y": { "min": -3.43334185705961883e-14, "max": -2.06000511423577149e-14, "empty": false, "rclosed": true } },
 			"p1": { "x": -106.75, "y": -3.43334185705961883e-14 },
 			"p2": { "x": -64.0499999999999972, "y": -2.06000511423577149e-14 },
 			"width": 1,
@@ -1834,7 +1834,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 171,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "af000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 212, "flags": 0x1200000000 },
@@ -1880,7 +1880,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 176,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "f5000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 409, "flags": 0x1 },
@@ -1908,7 +1908,7 @@
 		{
 			"name": "_g_line",
 			"id": 179,
-			"local_area": { "x": { "min": -105.677108448329548, "max": -75.483648891663961 }, "y": { "min": -105.677108448329506, "max": -75.4836488916639468 } },
+			"local_area": { "x": { "min": -105.677108448329548, "max": -75.483648891663961, "empty": false, "rclosed": true }, "y": { "min": -105.677108448329506, "max": -75.4836488916639468, "empty": false, "rclosed": true } },
 			"p1": { "x": -105.677108448329548, "y": -105.677108448329506 },
 			"p2": { "x": -75.483648891663961, "y": -75.4836488916639468 },
 			"width": 1,
@@ -1976,7 +1976,7 @@
 		{
 			"name": "_g_edit_int",
 			"id": 186,
-			"local_area": { "x": { "min": 0, "max": 41 }, "y": { "min": 0, "max": 16 } },
+			"local_area": { "x": { "min": 0, "max": 41, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 16, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 197, "flags": 0x1200000000 },
 				{ "id": 525, "flags": 0x82 }
@@ -1994,7 +1994,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 188,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 502, "flags": 0x1200000000 }
@@ -2021,7 +2021,7 @@
 		{
 			"name": "_g_button",
 			"id": 191,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "создать фроглиф",
 			"picture": [
@@ -2171,7 +2171,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 208,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 381, "flags": 0x1200000000 }
@@ -2265,7 +2265,7 @@
 		{
 			"name": "_g_line",
 			"id": 219,
-			"local_area": { "x": { "min": -94.5224307384801818, "max": -56.7134584430881077 }, "y": { "min": -49.6091986156722413, "max": -29.7655191694033441 } },
+			"local_area": { "x": { "min": -94.5224307384801818, "max": -56.7134584430881077, "empty": false, "rclosed": true }, "y": { "min": -49.6091986156722413, "max": -29.7655191694033441, "empty": false, "rclosed": true } },
 			"p1": { "x": -94.5224307384801818, "y": -49.6091986156722413 },
 			"p2": { "x": -56.7134584430881077, "y": -29.7655191694033441 },
 			"width": 1,
@@ -2278,7 +2278,7 @@
 		{
 			"name": "_g_rect",
 			"id": 220,
-			"local_area": { "x": { "min": 0, "max": 121.314631038455673 }, "y": { "min": 0, "max": 121.31463103845563 } },
+			"local_area": { "x": { "min": 0, "max": 121.314631038455673, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 121.31463103845563, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 232, "flags": 0x12 },
 				{ "id": 454, "flags": 0x1200000000 }
@@ -2332,7 +2332,7 @@
 		{
 			"name": "_g_button",
 			"id": 226,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "изменить связь",
 			"picture": [
@@ -2362,7 +2362,7 @@
 		{
 			"name": "_g_line",
 			"id": 229,
-			"local_area": { "x": { "min": -23.3791308002624589, "max": -16.6993791430446166 }, "y": { "min": 105.435730358530961, "max": 147.61002250194332 } },
+			"local_area": { "x": { "min": -23.3791308002624589, "max": -16.6993791430446166, "empty": false, "rclosed": true }, "y": { "min": 105.435730358530961, "max": 147.61002250194332, "empty": false, "rclosed": true } },
 			"p1": { "x": -23.3791308002624589, "y": 147.61002250194332 },
 			"p2": { "x": -16.6993791430446166, "y": 105.435730358530961 },
 			"width": 1,
@@ -2375,7 +2375,7 @@
 		{
 			"name": "_g_edit_double",
 			"id": 230,
-			"local_area": { "x": { "min": 0, "max": 51 }, "y": { "min": 0, "max": 16 } },
+			"local_area": { "x": { "min": 0, "max": 51, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 16, "empty": false, "rclosed": true } },
 			"a": 5,
 			"links": [
 				{ "id": 286, "flags": 0x2000000000 },
@@ -2403,7 +2403,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 233,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "f6000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 409, "flags": 0x1 },
@@ -2413,7 +2413,7 @@
 		{
 			"name": "_g_picture",
 			"id": 234,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"pic": [
 				"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 			],
@@ -2440,7 +2440,7 @@
 		{
 			"name": "_g_picture",
 			"id": 237,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"pic": [
 				"0000000000000000000000000000000000000000005f0000040000040000449a7144668a44228a4422fa44220a44228a442272000000000000000000000000000000000000000000"
 			],
@@ -2480,7 +2480,7 @@
 		{
 			"name": "_g_line",
 			"id": 241,
-			"local_area": { "x": { "min": 22.7124430150744026, "max": 37.8540716917906721 }, "y": { "min": 59.8877903440008197, "max": 99.8129839066680375 } },
+			"local_area": { "x": { "min": 22.7124430150744026, "max": 37.8540716917906721, "empty": false, "rclosed": true }, "y": { "min": 59.8877903440008197, "max": 99.8129839066680375, "empty": false, "rclosed": true } },
 			"p1": { "x": 37.8540716917906721, "y": 99.8129839066680375 },
 			"p2": { "x": 22.7124430150744026, "y": 59.8877903440008197 },
 			"width": 1,
@@ -2554,7 +2554,7 @@
 		{
 			"name": "_g_line",
 			"id": 249,
-			"local_area": { "x": { "min": 1.3073104580897996e-15, "max": 3.9219313742693988e-15 }, "y": { "min": 21.3500000000000014, "max": 64.0499999999999972 } },
+			"local_area": { "x": { "min": 1.3073104580897996e-15, "max": 3.9219313742693988e-15, "empty": false, "rclosed": true }, "y": { "min": 21.3500000000000014, "max": 64.0499999999999972, "empty": false, "rclosed": true } },
 			"p1": { "x": 3.9219313742693988e-15, "y": 64.0499999999999972 },
 			"p2": { "x": 1.3073104580897996e-15, "y": 21.3500000000000014 },
 			"width": 1,
@@ -2600,7 +2600,7 @@
 		{
 			"name": "_g_picture",
 			"id": 254,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"pic": [
 				"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 			],
@@ -2611,7 +2611,7 @@
 		{
 			"name": "_g_rect",
 			"id": 255,
-			"local_area": { "x": { "min": 0, "max": 307.599999999999909 }, "y": { "min": 0, "max": 307.599999999999966 } },
+			"local_area": { "x": { "min": 0, "max": 307.599999999999909, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 307.599999999999966, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 9465, "flags": 0x22 },
 				{ "id": 9466, "flags": 0x22 },
@@ -2630,7 +2630,7 @@
 		{
 			"name": "_g_list_link",
 			"id": 257,
-			"local_area": { "x": { "min": 0, "max": 108 }, "y": { "min": 0, "max": 283 } },
+			"local_area": { "x": { "min": 0, "max": 108, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 283, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 6, "flags": 0x2000000000 },
 				{ "id": 28, "flags": 0x2000000000 },
@@ -2647,7 +2647,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 258,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "f2000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 409, "flags": 0x1 },
@@ -2684,7 +2684,7 @@
 		{
 			"name": "_g_line",
 			"id": 262,
-			"local_area": { "x": { "min": 62.1888234061386314, "max": 103.648039010231059 }, "y": { "min": 15.3281682976180722, "max": 25.5469471626967888 } },
+			"local_area": { "x": { "min": 62.1888234061386314, "max": 103.648039010231059, "empty": false, "rclosed": true }, "y": { "min": 15.3281682976180722, "max": 25.5469471626967888, "empty": false, "rclosed": true } },
 			"p1": { "x": 103.648039010231059, "y": 25.5469471626967888 },
 			"p2": { "x": 62.1888234061386314, "y": 15.3281682976180722 },
 			"width": 1,
@@ -2697,7 +2697,7 @@
 		{
 			"name": "_g_picture",
 			"id": 263,
-			"local_area": { "x": { "min": 0, "max": 24 }, "y": { "min": 0, "max": 24 } },
+			"local_area": { "x": { "min": 0, "max": 24, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 24, "empty": false, "rclosed": true } },
 			"pic": [
 				"000000000000fcff3f04002004002004002004002004002004002004002084002084002144b923e40b21243a23040020040020040020040000040000040020fcff73000020000000"
 			],
@@ -2739,7 +2739,7 @@
 		{
 			"name": "_g_button",
 			"id": 267,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "удалить тетрон с хвостами",
 			"picture": [
@@ -2777,7 +2777,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 271,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "fd000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 200, "flags": 0x1200000000 },
@@ -2796,7 +2796,7 @@
 		{
 			"name": "_g_line",
 			"id": 274,
-			"local_area": { "x": { "min": 18.4896423707977604, "max": 55.4689271123932741 }, "y": { "min": -32.025000000000027, "max": -10.6750000000000096 } },
+			"local_area": { "x": { "min": 18.4896423707977604, "max": 55.4689271123932741, "empty": false, "rclosed": true }, "y": { "min": -32.025000000000027, "max": -10.6750000000000096, "empty": false, "rclosed": true } },
 			"p1": { "x": 55.4689271123932741, "y": -32.025000000000027 },
 			"p2": { "x": 18.4896423707977604, "y": -10.6750000000000096 },
 			"width": 1,
@@ -2854,7 +2854,7 @@
 		{
 			"name": "_g_circle",
 			"id": 280,
-			"local_area": { "x": { "min": -65.4000000000000057, "max": 65.4000000000000057 }, "y": { "min": -65.4000000000000057, "max": 65.4000000000000057 } },
+			"local_area": { "x": { "min": -65.4000000000000057, "max": 65.4000000000000057, "empty": false, "rclosed": true }, "y": { "min": -65.4000000000000057, "max": 65.4000000000000057, "empty": false, "rclosed": true } },
 			"center": { "x": 0, "y": 0 },
 			"radius": 65.4000000000000057,
 			"width": 2.70000000000000018,
@@ -2890,7 +2890,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 282,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "fe000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 158, "flags": 0x1200000000 },
@@ -2945,7 +2945,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 288,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 129, "flags": 0x1200000000 },
@@ -3010,7 +3010,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 295,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "20000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 313, "flags": 0x1200000000 },
@@ -3029,7 +3029,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 297,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "50000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 121, "flags": 0x1200000000 },
@@ -3039,7 +3039,7 @@
 		{
 			"name": "_g_edit_multi_string",
 			"id": 298,
-			"local_area": { "x": { "min": 0, "max": 155 }, "y": { "min": 0, "max": 56 } },
+			"local_area": { "x": { "min": 0, "max": 155, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 56, "empty": false, "rclosed": true } },
 			"strings": [
 				""
 			],
@@ -3100,7 +3100,7 @@
 		{
 			"name": "_g_edit64bit",
 			"id": 305,
-			"local_area": { "x": { "min": 0, "max": 58 }, "y": { "min": 0, "max": 58 } },
+			"local_area": { "x": { "min": 0, "max": 58, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 58, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 6, "flags": 0x2000000000 },
 				{ "id": 28, "flags": 0x2000000000 },
@@ -3148,7 +3148,7 @@
 		{
 			"name": "_g_button",
 			"id": 310,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "копировать картинку",
 			"picture": [
@@ -3189,7 +3189,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 314,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "f8000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 205, "flags": 0x1200000000 },
@@ -3199,7 +3199,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 315,
-			"local_area": { "x": { "min": 0, "max": 24 }, "y": { "min": 0, "max": 24 } },
+			"local_area": { "x": { "min": 0, "max": 24, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 24, "empty": false, "rclosed": true } },
 			"hint": "",
 			"links": [
 				{ "id": 296, "flags": 0x1200000000 },
@@ -3251,7 +3251,7 @@
 		{
 			"name": "_g_line",
 			"id": 321,
-			"local_area": { "x": { "min": 47.9421134203590213, "max": 79.9035223672650403 }, "y": { "min": 42.4730062603229328, "max": 70.7883437672048927 } },
+			"local_area": { "x": { "min": 47.9421134203590213, "max": 79.9035223672650403, "empty": false, "rclosed": true }, "y": { "min": 42.4730062603229328, "max": 70.7883437672048927, "empty": false, "rclosed": true } },
 			"p1": { "x": 79.9035223672650403, "y": 70.7883437672048927 },
 			"p2": { "x": 47.9421134203590213, "y": 42.4730062603229328 },
 			"width": 1,
@@ -3282,7 +3282,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 324,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "a0000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 409, "flags": 0x1 },
@@ -3301,7 +3301,7 @@
 		{
 			"name": "_g_button",
 			"id": 326,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "создать GRect",
 			"picture": [
@@ -3342,7 +3342,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 330,
-			"local_area": { "x": { "min": 0, "max": 24 }, "y": { "min": 0, "max": 24 } },
+			"local_area": { "x": { "min": 0, "max": 24, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 24, "empty": false, "rclosed": true } },
 			"hint": "нажато колесо мышки",
 			"links": [
 				{ "id": 289, "flags": 0x80 },
@@ -3363,7 +3363,7 @@
 		{
 			"name": "_g_line",
 			"id": 332,
-			"local_area": { "x": { "min": 47.942113420359, "max": 79.9035223672650119 }, "y": { "min": -70.7883437672049354, "max": -42.4730062603229612 } },
+			"local_area": { "x": { "min": 47.942113420359, "max": 79.9035223672650119, "empty": false, "rclosed": true }, "y": { "min": -70.7883437672049354, "max": -42.4730062603229612, "empty": false, "rclosed": true } },
 			"p1": { "x": 79.9035223672650119, "y": -70.7883437672049354 },
 			"p2": { "x": 47.942113420359, "y": -42.4730062603229612 },
 			"width": 1,
@@ -3394,7 +3394,7 @@
 		{
 			"name": "_g_button",
 			"id": 335,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "поиск функции",
 			"picture": [
@@ -3442,7 +3442,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 340,
-			"local_area": { "x": { "min": 0, "max": 24 }, "y": { "min": 0, "max": 24 } },
+			"local_area": { "x": { "min": 0, "max": 24, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 24, "empty": false, "rclosed": true } },
 			"hint": "абстрактный радиус",
 			"links": [
 				{ "id": 199, "flags": 0x80 },
@@ -3461,7 +3461,7 @@
 		{
 			"name": "_g_button",
 			"id": 342,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "сохранить в файл",
 			"picture": [
@@ -3475,7 +3475,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 344,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "f4000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 95, "flags": 0x1200000000 },
@@ -3494,7 +3494,7 @@
 		{
 			"name": "_g_button",
 			"id": 346,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "создать GEditInt",
 			"picture": [
@@ -3517,7 +3517,7 @@
 		{
 			"name": "_g_picture",
 			"id": 348,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"pic": [
 				"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 			],
@@ -3546,7 +3546,7 @@
 		{
 			"name": "_g_line",
 			"id": 351,
-			"local_area": { "x": { "min": 47.942113420359, "max": 79.9035223672650119 }, "y": { "min": -70.7883437672049354, "max": -42.4730062603229612 } },
+			"local_area": { "x": { "min": 47.942113420359, "max": 79.9035223672650119, "empty": false, "rclosed": true }, "y": { "min": -70.7883437672049354, "max": -42.4730062603229612, "empty": false, "rclosed": true } },
 			"p1": { "x": 79.9035223672650119, "y": -70.7883437672049354 },
 			"p2": { "x": 47.942113420359, "y": -42.4730062603229612 },
 			"width": 1,
@@ -3559,7 +3559,7 @@
 		{
 			"name": "_g_line",
 			"id": 352,
-			"local_area": { "x": { "min": -60.6409117135508922, "max": -36.3845470281305339 }, "y": { "min": -87.8535276841478208, "max": -52.7121166104886854 } },
+			"local_area": { "x": { "min": -60.6409117135508922, "max": -36.3845470281305339, "empty": false, "rclosed": true }, "y": { "min": -87.8535276841478208, "max": -52.7121166104886854, "empty": false, "rclosed": true } },
 			"p1": { "x": -60.6409117135508922, "y": -87.8535276841478208 },
 			"p2": { "x": -36.3845470281305339, "y": -52.7121166104886854 },
 			"width": 1,
@@ -3572,7 +3572,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 353,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 397, "flags": 0x1200000000 }
@@ -3653,7 +3653,7 @@
 		{
 			"name": "_g_line",
 			"id": 357,
-			"local_area": { "x": { "min": 105.435730358530961, "max": 147.61002250194332 }, "y": { "min": 16.699379143044645, "max": 23.3791308002625016 } },
+			"local_area": { "x": { "min": 105.435730358530961, "max": 147.61002250194332, "empty": false, "rclosed": true }, "y": { "min": 16.699379143044645, "max": 23.3791308002625016, "empty": false, "rclosed": true } },
 			"p1": { "x": 147.61002250194332, "y": 23.3791308002625016 },
 			"p2": { "x": 105.435730358530961, "y": 16.699379143044645 },
 			"width": 1,
@@ -3684,7 +3684,7 @@
 		{
 			"name": "_g_line",
 			"id": 360,
-			"local_area": { "x": { "min": -60.6409117135508708, "max": -36.3845470281305197 }, "y": { "min": 52.7121166104886925, "max": 87.8535276841478208 } },
+			"local_area": { "x": { "min": -60.6409117135508708, "max": -36.3845470281305197, "empty": false, "rclosed": true }, "y": { "min": 52.7121166104886925, "max": 87.8535276841478208, "empty": false, "rclosed": true } },
 			"p1": { "x": -60.6409117135508708, "y": 87.8535276841478208 },
 			"p2": { "x": -36.3845470281305197, "y": 52.7121166104886925 },
 			"width": 1,
@@ -3706,7 +3706,7 @@
 		{
 			"name": "_g_picture",
 			"id": 362,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"pic": [
 				"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 			],
@@ -3717,7 +3717,7 @@
 		{
 			"name": "_g_line",
 			"id": 363,
-			"local_area": { "x": { "min": -55.4689271123933025, "max": -18.4896423707977711 }, "y": { "min": -32.0249999999999773, "max": -10.6749999999999954 } },
+			"local_area": { "x": { "min": -55.4689271123933025, "max": -18.4896423707977711, "empty": false, "rclosed": true }, "y": { "min": -32.0249999999999773, "max": -10.6749999999999954, "empty": false, "rclosed": true } },
 			"p1": { "x": -55.4689271123933025, "y": -32.0249999999999773 },
 			"p2": { "x": -18.4896423707977711, "y": -10.6749999999999954 },
 			"width": 1,
@@ -3757,7 +3757,7 @@
 		{
 			"name": "_g_line",
 			"id": 367,
-			"local_area": { "x": { "min": -23.3791308002625264, "max": -16.6993791430446628 }, "y": { "min": -147.61002250194332, "max": -105.435730358530947 } },
+			"local_area": { "x": { "min": -23.3791308002625264, "max": -16.6993791430446628, "empty": false, "rclosed": true }, "y": { "min": -147.61002250194332, "max": -105.435730358530947, "empty": false, "rclosed": true } },
 			"p1": { "x": -23.3791308002625264, "y": -147.61002250194332 },
 			"p2": { "x": -16.6993791430446628, "y": -105.435730358530947 },
 			"width": 1,
@@ -3788,7 +3788,7 @@
 		{
 			"name": "_g_picture",
 			"id": 370,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"pic": [
 				"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 			],
@@ -3823,7 +3823,7 @@
 		{
 			"name": "_g_button",
 			"id": 374,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "создать круг",
 			"picture": [
@@ -3855,7 +3855,7 @@
 		{
 			"name": "_g_button",
 			"id": 377,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "сохранить указатель",
 			"picture": [
@@ -3869,7 +3869,7 @@
 		{
 			"name": "_g_line",
 			"id": 378,
-			"local_area": { "x": { "min": 48.4634858471966297, "max": 67.8488801860752773 }, "y": { "min": 95.1149464571082603, "max": 133.160925039951564 } },
+			"local_area": { "x": { "min": 48.4634858471966297, "max": 67.8488801860752773, "empty": false, "rclosed": true }, "y": { "min": 95.1149464571082603, "max": 133.160925039951564, "empty": false, "rclosed": true } },
 			"p1": { "x": 67.8488801860752773, "y": 133.160925039951564 },
 			"p2": { "x": 48.4634858471966297, "y": 95.1149464571082603 },
 			"width": 1,
@@ -3918,7 +3918,7 @@
 		{
 			"name": "_g_circle",
 			"id": 383,
-			"local_area": { "x": { "min": -108.099999999999994, "max": 108.099999999999994 }, "y": { "min": -108.099999999999994, "max": 108.099999999999994 } },
+			"local_area": { "x": { "min": -108.099999999999994, "max": 108.099999999999994, "empty": false, "rclosed": true }, "y": { "min": -108.099999999999994, "max": 108.099999999999994, "empty": false, "rclosed": true } },
 			"center": { "x": 0, "y": 0 },
 			"radius": 108.099999999999994,
 			"width": 2.70000000000000018,
@@ -3959,7 +3959,7 @@
 		{
 			"name": "_g_line",
 			"id": 384,
-			"local_area": { "x": { "min": -107.25, "max": -63.5499999999999972 }, "y": { "min": -0.500000000000034306, "max": 0.499999999999979405 } },
+			"local_area": { "x": { "min": -107.25, "max": -63.5499999999999972, "empty": false, "rclosed": true }, "y": { "min": -0.500000000000034306, "max": 0.499999999999979405, "empty": false, "rclosed": true } },
 			"p1": { "x": -106.75, "y": -3.43334185705961883e-14 },
 			"p2": { "x": -64.0499999999999972, "y": -2.06000511423577149e-14 },
 			"width": 1,
@@ -3979,7 +3979,7 @@
 		{
 			"name": "_g_scrollbar",
 			"id": 386,
-			"local_area": { "x": { "min": 108, "max": 118 }, "y": { "min": 0, "max": 283 } },
+			"local_area": { "x": { "min": 108, "max": 118, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 283, "empty": false, "rclosed": true } },
 			"position": 0.113408207429413183,
 			"vid": 3,
 			"links": [
@@ -3989,7 +3989,7 @@
 		{
 			"name": "_g_edit_int",
 			"id": 387,
-			"local_area": { "x": { "min": 0, "max": 100 }, "y": { "min": 0, "max": 16 } },
+			"local_area": { "x": { "min": 0, "max": 100, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 16, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 46, "flags": 0x1200000000 },
 				{ "id": 252, "flags": 0x20 },
@@ -4017,7 +4017,7 @@
 		{
 			"name": "_g_line",
 			"id": 391,
-			"local_area": { "x": { "min": 48.4634858471966012, "max": 67.8488801860752346 }, "y": { "min": -133.160925039951593, "max": -95.1149464571082888 } },
+			"local_area": { "x": { "min": 48.4634858471966012, "max": 67.8488801860752346, "empty": false, "rclosed": true }, "y": { "min": -133.160925039951593, "max": -95.1149464571082888, "empty": false, "rclosed": true } },
 			"p1": { "x": 67.8488801860752346, "y": -133.160925039951593 },
 			"p2": { "x": 48.4634858471966012, "y": -95.1149464571082888 },
 			"width": 1,
@@ -4066,7 +4066,7 @@
 		{
 			"name": "_g_line",
 			"id": 396,
-			"local_area": { "x": { "min": 16.6993791430446237, "max": 23.3791308002624731 }, "y": { "min": -147.61002250194332, "max": -105.435730358530961 } },
+			"local_area": { "x": { "min": 16.6993791430446237, "max": 23.3791308002624731, "empty": false, "rclosed": true }, "y": { "min": -147.61002250194332, "max": -105.435730358530961, "empty": false, "rclosed": true } },
 			"p1": { "x": 23.3791308002624731, "y": -147.61002250194332 },
 			"p2": { "x": 16.6993791430446237, "y": -105.435730358530961 },
 			"width": 1,
@@ -4088,8 +4088,8 @@
 		{
 			"name": "_g1list",
 			"id": 398,
-			"local_area": { "x": { "min": 0, "max": 80 }, "y": { "min": 0, "max": 16 } },
-			"oo": { "x": { "min": 0, "max": 80 }, "y": { "min": 0, "max": 16 } },
+			"local_area": { "x": { "min": 0, "max": 80, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 16, "empty": false, "rclosed": true } },
+			"oo": { "x": { "min": 0, "max": 80, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 16, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 28, "flags": 0x2000000000 },
 				{ "id": 278, "flags": 0x2 },
@@ -4112,7 +4112,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 400,
-			"local_area": { "x": { "min": 0, "max": 24 }, "y": { "min": 0, "max": 24 } },
+			"local_area": { "x": { "min": 0, "max": 24, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 24, "empty": false, "rclosed": true } },
 			"hint": "абстрактная функция отпускания колеса мышки",
 			"links": [
 				{ "id": 194, "flags": 0x1200000000 },
@@ -4157,7 +4157,7 @@
 		{
 			"name": "_g_button",
 			"id": 405,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "удалить тетрон",
 			"picture": [
@@ -4192,7 +4192,7 @@
 		{
 			"name": "_g_line",
 			"id": 408,
-			"local_area": { "x": { "min": 22.7124430150744026, "max": 37.8540716917906721 }, "y": { "min": -99.8129839066680375, "max": -59.8877903440008197 } },
+			"local_area": { "x": { "min": 22.7124430150744026, "max": 37.8540716917906721, "empty": false, "rclosed": true }, "y": { "min": -99.8129839066680375, "max": -59.8877903440008197, "empty": false, "rclosed": true } },
 			"p1": { "x": 37.8540716917906721, "y": -99.8129839066680375 },
 			"p2": { "x": 22.7124430150744026, "y": -59.8877903440008197 },
 			"width": 1,
@@ -4247,7 +4247,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 410,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"hint": "",
 			"links": [
 				{ "id": 6, "flags": 0x2000000000 },
@@ -4260,7 +4260,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 411,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "70000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 156, "flags": 0x1200000000 },
@@ -4279,7 +4279,7 @@
 		{
 			"name": "_g_button",
 			"id": 413,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "создать GEditDouble",
 			"picture": [
@@ -4293,7 +4293,7 @@
 		{
 			"name": "_g_line",
 			"id": 414,
-			"local_area": { "x": { "min": 47.9421134203590213, "max": 79.9035223672650403 }, "y": { "min": 42.4730062603229328, "max": 70.7883437672048927 } },
+			"local_area": { "x": { "min": 47.9421134203590213, "max": 79.9035223672650403, "empty": false, "rclosed": true }, "y": { "min": 42.4730062603229328, "max": 70.7883437672048927, "empty": false, "rclosed": true } },
 			"p1": { "x": 79.9035223672650403, "y": 70.7883437672048927 },
 			"p2": { "x": 47.9421134203590213, "y": 42.4730062603229328 },
 			"width": 1,
@@ -4324,7 +4324,7 @@
 		{
 			"name": "_g_button",
 			"id": 417,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "загрузить из файла",
 			"picture": [
@@ -4347,7 +4347,7 @@
 		{
 			"name": "_g_line",
 			"id": 419,
-			"local_area": { "x": { "min": -105.677108448329506, "max": -75.4836488916639468 }, "y": { "min": 75.4836488916639468, "max": 105.67710844832952 } },
+			"local_area": { "x": { "min": -105.677108448329506, "max": -75.4836488916639468, "empty": false, "rclosed": true }, "y": { "min": 75.4836488916639468, "max": 105.67710844832952, "empty": false, "rclosed": true } },
 			"p1": { "x": -105.677108448329506, "y": 105.67710844832952 },
 			"p2": { "x": -75.4836488916639468, "y": 75.4836488916639468 },
 			"width": 1,
@@ -4367,7 +4367,7 @@
 		{
 			"name": "_g_line",
 			"id": 421,
-			"local_area": { "x": { "min": -147.61002250194332, "max": -105.435730358530947 }, "y": { "min": 16.6993791430446556, "max": 23.3791308002625193 } },
+			"local_area": { "x": { "min": -147.61002250194332, "max": -105.435730358530947, "empty": false, "rclosed": true }, "y": { "min": 16.6993791430446556, "max": 23.3791308002625193, "empty": false, "rclosed": true } },
 			"p1": { "x": -147.61002250194332, "y": 23.3791308002625193 },
 			"p2": { "x": -105.435730358530947, "y": 16.6993791430446556 },
 			"width": 1,
@@ -4441,7 +4441,7 @@
 		{
 			"name": "_g_picture",
 			"id": 429,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"pic": [
 				"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 			],
@@ -4461,7 +4461,7 @@
 		{
 			"name": "_g_line",
 			"id": 431,
-			"local_area": { "x": { "min": -1.17657941228081948e-14, "max": -3.9219313742693988e-15 }, "y": { "min": -64.0499999999999972, "max": -21.3500000000000014 } },
+			"local_area": { "x": { "min": -1.17657941228081948e-14, "max": -3.9219313742693988e-15, "empty": false, "rclosed": true }, "y": { "min": -64.0499999999999972, "max": -21.3500000000000014, "empty": false, "rclosed": true } },
 			"p1": { "x": -1.17657941228081948e-14, "y": -64.0499999999999972 },
 			"p2": { "x": -3.9219313742693988e-15, "y": -21.3500000000000014 },
 			"width": 1,
@@ -4483,7 +4483,7 @@
 		{
 			"name": "_g_line",
 			"id": 433,
-			"local_area": { "x": { "min": 95.1149464571082746, "max": 133.160925039951564 }, "y": { "min": 48.4634858471966155, "max": 67.8488801860752631 } },
+			"local_area": { "x": { "min": 95.1149464571082746, "max": 133.160925039951564, "empty": false, "rclosed": true }, "y": { "min": 48.4634858471966155, "max": 67.8488801860752631, "empty": false, "rclosed": true } },
 			"p1": { "x": 133.160925039951564, "y": 67.8488801860752631 },
 			"p2": { "x": 95.1149464571082746, "y": 48.4634858471966155 },
 			"width": 1,
@@ -4550,7 +4550,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 440,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "72000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 409, "flags": 0x1 },
@@ -4586,7 +4586,7 @@
 		{
 			"name": "_g_line",
 			"id": 444,
-			"local_area": { "x": { "min": 62.1888234061386314, "max": 103.648039010231059 }, "y": { "min": -25.5469471626967959, "max": -15.3281682976180758 } },
+			"local_area": { "x": { "min": 62.1888234061386314, "max": 103.648039010231059, "empty": false, "rclosed": true }, "y": { "min": -25.5469471626967959, "max": -15.3281682976180758, "empty": false, "rclosed": true } },
 			"p1": { "x": 103.648039010231059, "y": -25.5469471626967959 },
 			"p2": { "x": 62.1888234061386314, "y": -15.3281682976180758 },
 			"width": 1,
@@ -4599,7 +4599,7 @@
 		{
 			"name": "_g_button",
 			"id": 445,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "создать GEdit64Bit",
 			"picture": [
@@ -4622,7 +4622,7 @@
 		{
 			"name": "_g_scrollbar",
 			"id": 447,
-			"local_area": { "x": { "min": 155, "max": 165 }, "y": { "min": 0, "max": 56 } },
+			"local_area": { "x": { "min": 155, "max": 165, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 56, "empty": false, "rclosed": true } },
 			"position": 0.886798981615419701,
 			"vid": 3,
 			"links": [
@@ -4641,7 +4641,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 449,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "40000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 409, "flags": 0x1 },
@@ -4651,7 +4651,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 450,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 590, "flags": 0x1200000000 }
@@ -4660,7 +4660,7 @@
 		{
 			"name": "_g_picture",
 			"id": 451,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"pic": [
 				"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 			],
@@ -4680,7 +4680,7 @@
 		{
 			"name": "_g_button",
 			"id": 453,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "удалить связь",
 			"picture": [
@@ -4739,7 +4739,7 @@
 		{
 			"name": "_g_line",
 			"id": 460,
-			"local_area": { "x": { "min": -133.160925039951564, "max": -95.1149464571082603 }, "y": { "min": 48.4634858471966297, "max": 67.8488801860752773 } },
+			"local_area": { "x": { "min": -133.160925039951564, "max": -95.1149464571082603, "empty": false, "rclosed": true }, "y": { "min": 48.4634858471966297, "max": 67.8488801860752773, "empty": false, "rclosed": true } },
 			"p1": { "x": -133.160925039951564, "y": 67.8488801860752773 },
 			"p2": { "x": -95.1149464571082603, "y": 48.4634858471966297 },
 			"width": 1,
@@ -4797,7 +4797,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 465,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "f0000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 409, "flags": 0x1 },
@@ -4807,7 +4807,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 466,
-			"local_area": { "x": { "min": 0, "max": 24 }, "y": { "min": 0, "max": 24 } },
+			"local_area": { "x": { "min": 0, "max": 24, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 24, "empty": false, "rclosed": true } },
 			"hint": "абстрактная толщина",
 			"links": [
 				{ "id": 187, "flags": 0x1200000000 },
@@ -4862,7 +4862,7 @@
 		{
 			"name": "_g_picture",
 			"id": 472,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"pic": [
 				"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 			],
@@ -4882,7 +4882,7 @@
 		{
 			"name": "_g_picture",
 			"id": 475,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"pic": [
 				"001000001800001c00001a00001800001800001800001800001800001810001820ffff7ffeffff041800081800001800001800001800001800001800005800003800001800000800"
 			],
@@ -4913,7 +4913,7 @@
 		{
 			"name": "_g_rect",
 			"id": 478,
-			"local_area": { "x": { "min": 0, "max": 307.599999999999909 }, "y": { "min": 0, "max": 307.599999999999966 } },
+			"local_area": { "x": { "min": 0, "max": 307.599999999999909, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 307.599999999999966, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 9498, "flags": 0x22 },
 				{ "id": 9499, "flags": 0x22 }
@@ -4971,7 +4971,7 @@
 		{
 			"name": "_g_line",
 			"id": 485,
-			"local_area": { "x": { "min": -55.4689271123932954, "max": -18.4896423707977675 }, "y": { "min": 10.6749999999999989, "max": 32.0249999999999915 } },
+			"local_area": { "x": { "min": -55.4689271123932954, "max": -18.4896423707977675, "empty": false, "rclosed": true }, "y": { "min": 10.6749999999999989, "max": 32.0249999999999915, "empty": false, "rclosed": true } },
 			"p1": { "x": -55.4689271123932954, "y": 32.0249999999999915 },
 			"p2": { "x": -18.4896423707977675, "y": 10.6749999999999989 },
 			"width": 1,
@@ -4993,7 +4993,7 @@
 		{
 			"name": "_g_circle",
 			"id": 487,
-			"local_area": { "x": { "min": -22.6999999999999993, "max": 22.6999999999999993 }, "y": { "min": -22.6999999999999993, "max": 22.6999999999999993 } },
+			"local_area": { "x": { "min": -22.6999999999999993, "max": 22.6999999999999993, "empty": false, "rclosed": true }, "y": { "min": -22.6999999999999993, "max": 22.6999999999999993, "empty": false, "rclosed": true } },
 			"center": { "x": 0, "y": 0 },
 			"radius": 22.6999999999999993,
 			"width": 2.70000000000000018,
@@ -5026,7 +5026,7 @@
 		{
 			"name": "_g_button",
 			"id": 490,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "тестирование графики",
 			"picture": [
@@ -5040,7 +5040,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 491,
-			"local_area": { "x": { "min": 0, "max": 24 }, "y": { "min": 0, "max": 24 } },
+			"local_area": { "x": { "min": 0, "max": 24, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 24, "empty": false, "rclosed": true } },
 			"hint": "абстракная неактивность для мышки",
 			"links": [
 				{ "id": 207, "flags": 0x80 },
@@ -5059,7 +5059,7 @@
 		{
 			"name": "_g_button",
 			"id": 493,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "создать GEditString",
 			"picture": [
@@ -5073,7 +5073,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 494,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 22, "flags": 0x1200000000 }
@@ -5134,7 +5134,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 501,
-			"local_area": { "x": { "min": 0, "max": 24 }, "y": { "min": 0, "max": 24 } },
+			"local_area": { "x": { "min": 0, "max": 24, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 24, "empty": false, "rclosed": true } },
 			"hint": "абстрактный центр",
 			"links": [
 				{ "id": 211, "flags": 0x80 },
@@ -5153,7 +5153,7 @@
 		{
 			"name": "_g_line",
 			"id": 503,
-			"local_area": { "x": { "min": -94.5224307384801818, "max": -56.7134584430881077 }, "y": { "min": -49.6091986156722413, "max": -29.7655191694033441 } },
+			"local_area": { "x": { "min": -94.5224307384801818, "max": -56.7134584430881077, "empty": false, "rclosed": true }, "y": { "min": -49.6091986156722413, "max": -29.7655191694033441, "empty": false, "rclosed": true } },
 			"p1": { "x": -94.5224307384801818, "y": -49.6091986156722413 },
 			"p2": { "x": -56.7134584430881077, "y": -29.7655191694033441 },
 			"width": 1,
@@ -5174,7 +5174,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 505,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "ff000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 29, "flags": 0x1200000000 },
@@ -5184,7 +5184,7 @@
 		{
 			"name": "_g_line",
 			"id": 506,
-			"local_area": { "x": { "min": 16.6993791430446521, "max": 23.3791308002625087 }, "y": { "min": 105.435730358530961, "max": 147.61002250194332 } },
+			"local_area": { "x": { "min": 16.6993791430446521, "max": 23.3791308002625087, "empty": false, "rclosed": true }, "y": { "min": 105.435730358530961, "max": 147.61002250194332, "empty": false, "rclosed": true } },
 			"p1": { "x": 23.3791308002625087, "y": 147.61002250194332 },
 			"p2": { "x": 16.6993791430446521, "y": 105.435730358530961 },
 			"width": 1,
@@ -5224,7 +5224,7 @@
 		{
 			"name": "_g_line",
 			"id": 510,
-			"local_area": { "x": { "min": -94.522430738480125, "max": -56.7134584430880722 }, "y": { "min": 29.765519169403408, "max": 49.6091986156723479 } },
+			"local_area": { "x": { "min": -94.522430738480125, "max": -56.7134584430880722, "empty": false, "rclosed": true }, "y": { "min": 29.765519169403408, "max": 49.6091986156723479, "empty": false, "rclosed": true } },
 			"p1": { "x": -94.522430738480125, "y": 49.6091986156723479 },
 			"p2": { "x": -56.7134584430880722, "y": 29.765519169403408 },
 			"width": 1,
@@ -5255,7 +5255,7 @@
 		{
 			"name": "_g_line",
 			"id": 513,
-			"local_area": { "x": { "min": -60.6409117135508922, "max": -36.3845470281305339 }, "y": { "min": -87.8535276841478208, "max": -52.7121166104886854 } },
+			"local_area": { "x": { "min": -60.6409117135508922, "max": -36.3845470281305339, "empty": false, "rclosed": true }, "y": { "min": -87.8535276841478208, "max": -52.7121166104886854, "empty": false, "rclosed": true } },
 			"p1": { "x": -60.6409117135508922, "y": -87.8535276841478208 },
 			"p2": { "x": -36.3845470281305339, "y": -52.7121166104886854 },
 			"width": 1,
@@ -5304,7 +5304,7 @@
 		{
 			"name": "_g_button",
 			"id": 519,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "выполнить",
 			"picture": [
@@ -5353,7 +5353,7 @@
 		{
 			"name": "_g_button",
 			"id": 524,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "создать GPicture",
 			"picture": [
@@ -5383,7 +5383,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 527,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "71000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 25, "flags": 0x1200000000 },
@@ -5419,7 +5419,7 @@
 		{
 			"name": "_g_text",
 			"id": 531,
-			"local_area": { "x": { "min": 0, "max": 24 }, "y": { "min": 0, "max": 13 } },
+			"local_area": { "x": { "min": 0, "max": 24, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 13, "empty": false, "rclosed": true } },
 			"s": "цвет",
 			"links": [
 				{ "id": 600, "flags": 0x1200000000 }
@@ -5437,7 +5437,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 535,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 633, "flags": 0x1200000000 }
@@ -5482,7 +5482,7 @@
 		{
 			"name": "_g_edit_int",
 			"id": 540,
-			"local_area": { "x": { "min": 0, "max": 100 }, "y": { "min": 0, "max": 16 } },
+			"local_area": { "x": { "min": 0, "max": 100, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 16, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 256, "flags": 0x1200000000 },
 				{ "id": 512, "flags": 0x82 }
@@ -5527,7 +5527,7 @@
 		{
 			"name": "_g_line",
 			"id": 545,
-			"local_area": { "x": { "min": 62.1888234061386314, "max": 103.648039010231059 }, "y": { "min": 15.3281682976180722, "max": 25.5469471626967888 } },
+			"local_area": { "x": { "min": 62.1888234061386314, "max": 103.648039010231059, "empty": false, "rclosed": true }, "y": { "min": 15.3281682976180722, "max": 25.5469471626967888, "empty": false, "rclosed": true } },
 			"p1": { "x": 103.648039010231059, "y": 25.5469471626967888 },
 			"p2": { "x": 62.1888234061386314, "y": 15.3281682976180722 },
 			"width": 1,
@@ -5548,7 +5548,7 @@
 		{
 			"name": "_g_circle",
 			"id": 547,
-			"local_area": { "x": { "min": -20, "max": 20 }, "y": { "min": -20, "max": 20 } },
+			"local_area": { "x": { "min": -20, "max": 20, "empty": false, "rclosed": true }, "y": { "min": -20, "max": 20, "empty": false, "rclosed": true } },
 			"center": { "x": 0, "y": 0 },
 			"radius": 20,
 			"width": 3,
@@ -5574,7 +5574,7 @@
 		{
 			"name": "_g_edit_string",
 			"id": 549,
-			"local_area": { "x": { "min": 0, "max": 148 }, "y": { "min": 0, "max": 16 } },
+			"local_area": { "x": { "min": 0, "max": 148, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 16, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 93, "flags": 0xa0 },
 				{ "id": 602, "flags": 0x1200000000 }
@@ -5594,7 +5594,7 @@
 		{
 			"name": "_g_line",
 			"id": 551,
-			"local_area": { "x": { "min": 105.435730358530947, "max": 147.61002250194332 }, "y": { "min": -23.3791308002625335, "max": -16.6993791430446699 } },
+			"local_area": { "x": { "min": 105.435730358530947, "max": 147.61002250194332, "empty": false, "rclosed": true }, "y": { "min": -23.3791308002625335, "max": -16.6993791430446699, "empty": false, "rclosed": true } },
 			"p1": { "x": 147.61002250194332, "y": -23.3791308002625335 },
 			"p2": { "x": 105.435730358530947, "y": -16.6993791430446699 },
 			"width": 1,
@@ -5607,7 +5607,7 @@
 		{
 			"name": "_g_line",
 			"id": 552,
-			"local_area": { "x": { "min": 22.7124430150744026, "max": 37.8540716917906721 }, "y": { "min": 59.8877903440008197, "max": 99.8129839066680375 } },
+			"local_area": { "x": { "min": 22.7124430150744026, "max": 37.8540716917906721, "empty": false, "rclosed": true }, "y": { "min": 59.8877903440008197, "max": 99.8129839066680375, "empty": false, "rclosed": true } },
 			"p1": { "x": 37.8540716917906721, "y": 99.8129839066680375 },
 			"p2": { "x": 22.7124430150744026, "y": 59.8877903440008197 },
 			"width": 1,
@@ -5620,7 +5620,7 @@
 		{
 			"name": "_g_line",
 			"id": 553,
-			"local_area": { "x": { "min": -12.8672906172557173, "max": -7.72037437035343022 }, "y": { "min": 63.5830033859803549, "max": 105.971672309967261 } },
+			"local_area": { "x": { "min": -12.8672906172557173, "max": -7.72037437035343022, "empty": false, "rclosed": true }, "y": { "min": 63.5830033859803549, "max": 105.971672309967261, "empty": false, "rclosed": true } },
 			"p1": { "x": -12.8672906172557173, "y": 105.971672309967261 },
 			"p2": { "x": -7.72037437035343022, "y": 63.5830033859803549 },
 			"width": 1,
@@ -5660,7 +5660,7 @@
 		{
 			"name": "_g_button",
 			"id": 558,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "создать связь",
 			"picture": [
@@ -5719,7 +5719,7 @@
 		{
 			"name": "_g_button",
 			"id": 564,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "создать _g_color_ring",
 			"picture": [
@@ -5741,7 +5741,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 566,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 412, "flags": 0x1200000000 }
@@ -5785,7 +5785,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 571,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 388, "flags": 0x1200000000 }
@@ -5812,7 +5812,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 574,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "fc000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 409, "flags": 0x1 },
@@ -5892,7 +5892,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 583,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "fb000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 177, "flags": 0x1200000000 },
@@ -5911,7 +5911,7 @@
 		{
 			"name": "_g_button",
 			"id": 585,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "копировать GO++",
 			"picture": [
@@ -5925,7 +5925,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 586,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "f7000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 168, "flags": 0x1200000000 },
@@ -5935,7 +5935,7 @@
 		{
 			"name": "_g_line",
 			"id": 587,
-			"local_area": { "x": { "min": -133.160925039951564, "max": -95.1149464571082746 }, "y": { "min": -67.8488801860752346, "max": -48.4634858471966012 } },
+			"local_area": { "x": { "min": -133.160925039951564, "max": -95.1149464571082746, "empty": false, "rclosed": true }, "y": { "min": -67.8488801860752346, "max": -48.4634858471966012, "empty": false, "rclosed": true } },
 			"p1": { "x": -133.160925039951564, "y": -67.8488801860752346 },
 			"p2": { "x": -95.1149464571082746, "y": -48.4634858471966012 },
 			"width": 1,
@@ -5975,7 +5975,7 @@
 		{
 			"name": "_g_line",
 			"id": 591,
-			"local_area": { "x": { "min": -55.4689271123933025, "max": -18.4896423707977711 }, "y": { "min": -32.0249999999999773, "max": -10.6749999999999954 } },
+			"local_area": { "x": { "min": -55.4689271123933025, "max": -18.4896423707977711, "empty": false, "rclosed": true }, "y": { "min": -32.0249999999999773, "max": -10.6749999999999954, "empty": false, "rclosed": true } },
 			"p1": { "x": -55.4689271123933025, "y": -32.0249999999999773 },
 			"p2": { "x": -18.4896423707977711, "y": -10.6749999999999954 },
 			"width": 1,
@@ -6057,7 +6057,7 @@
 		{
 			"name": "_g_button",
 			"id": 595,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "создать GTetron",
 			"picture": [
@@ -6088,7 +6088,7 @@
 		{
 			"name": "_g_picture",
 			"id": 598,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"pic": [
 				"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 			],
@@ -6116,7 +6116,7 @@
 		{
 			"name": "_g_line",
 			"id": 601,
-			"local_area": { "x": { "min": 75.4836488916639325, "max": 105.677108448329491 }, "y": { "min": -105.677108448329548, "max": -75.483648891663961 } },
+			"local_area": { "x": { "min": 75.4836488916639325, "max": 105.677108448329491, "empty": false, "rclosed": true }, "y": { "min": -105.677108448329548, "max": -75.483648891663961, "empty": false, "rclosed": true } },
 			"p1": { "x": 105.677108448329491, "y": -105.677108448329548 },
 			"p2": { "x": 75.4836488916639325, "y": -75.483648891663961 },
 			"width": 1,
@@ -6138,7 +6138,7 @@
 		{
 			"name": "_g_line",
 			"id": 603,
-			"local_area": { "x": { "min": -67.8488801860752773, "max": -48.4634858471966368 }, "y": { "min": -133.160925039951564, "max": -95.1149464571082603 } },
+			"local_area": { "x": { "min": -67.8488801860752773, "max": -48.4634858471966368, "empty": false, "rclosed": true }, "y": { "min": -133.160925039951564, "max": -95.1149464571082603, "empty": false, "rclosed": true } },
 			"p1": { "x": -67.8488801860752773, "y": -133.160925039951564 },
 			"p2": { "x": -48.4634858471966368, "y": -95.1149464571082603 },
 			"width": 1,
@@ -6160,7 +6160,7 @@
 		{
 			"name": "_g_picture",
 			"id": 605,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"pic": [
 				"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 			],
@@ -6288,7 +6288,7 @@
 		{
 			"name": "_g_button",
 			"id": 619,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "очистить холст",
 			"picture": [
@@ -6302,7 +6302,7 @@
 		{
 			"name": "_g_picture",
 			"id": 620,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"pic": [
 				"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 			],
@@ -6348,7 +6348,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 625,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "79000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 371, "flags": 0x1200000000 },
@@ -6421,7 +6421,7 @@
 		{
 			"name": "_g_button",
 			"id": 634,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "создать тетрон",
 			"picture": [
@@ -6444,7 +6444,7 @@
 		{
 			"name": "_g_froglif",
 			"id": 636,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"f": "f9000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 			"links": [
 				{ "id": 70, "flags": 0x1200000000 },
@@ -6527,7 +6527,7 @@
 		{
 			"name": "_g_line",
 			"id": 639,
-			"local_area": { "x": { "min": -1.17657941228081948e-14, "max": -3.9219313742693988e-15 }, "y": { "min": -64.0499999999999972, "max": -21.3500000000000014 } },
+			"local_area": { "x": { "min": -1.17657941228081948e-14, "max": -3.9219313742693988e-15, "empty": false, "rclosed": true }, "y": { "min": -64.0499999999999972, "max": -21.3500000000000014, "empty": false, "rclosed": true } },
 			"p1": { "x": -1.17657941228081948e-14, "y": -64.0499999999999972 },
 			"p2": { "x": -3.9219313742693988e-15, "y": -21.3500000000000014 },
 			"width": 1,
@@ -6540,7 +6540,7 @@
 		{
 			"name": "_g_line",
 			"id": 640,
-			"local_area": { "x": { "min": 95.1149464571082603, "max": 133.160925039951564 }, "y": { "min": -67.8488801860752915, "max": -48.4634858471966368 } },
+			"local_area": { "x": { "min": 95.1149464571082603, "max": 133.160925039951564, "empty": false, "rclosed": true }, "y": { "min": -67.8488801860752915, "max": -48.4634858471966368, "empty": false, "rclosed": true } },
 			"p1": { "x": 133.160925039951564, "y": -67.8488801860752915 },
 			"p2": { "x": 95.1149464571082603, "y": -48.4634858471966368 },
 			"width": 1,
@@ -6598,7 +6598,7 @@
 		{
 			"name": "_g_line",
 			"id": 646,
-			"local_area": { "x": { "min": 18.4896423707977604, "max": 55.4689271123932741 }, "y": { "min": -32.025000000000027, "max": -10.6750000000000096 } },
+			"local_area": { "x": { "min": 18.4896423707977604, "max": 55.4689271123932741, "empty": false, "rclosed": true }, "y": { "min": -32.025000000000027, "max": -10.6750000000000096, "empty": false, "rclosed": true } },
 			"p1": { "x": 55.4689271123932741, "y": -32.025000000000027 },
 			"p2": { "x": 18.4896423707977604, "y": -10.6750000000000096 },
 			"width": 1,
@@ -6618,7 +6618,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 648,
-			"local_area": { "x": { "min": 0, "max": 24 }, "y": { "min": 0, "max": 24 } },
+			"local_area": { "x": { "min": 0, "max": 24, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 24, "empty": false, "rclosed": true } },
 			"hint": "абстрактное начало mouse_move",
 			"links": [
 				{ "id": 520, "flags": 0x80 },
@@ -6637,7 +6637,7 @@
 		{
 			"name": "_g_picture",
 			"id": 650,
-			"local_area": { "x": { "min": -12, "max": 12 }, "y": { "min": -12, "max": 12 } },
+			"local_area": { "x": { "min": -12, "max": 12, "empty": false, "rclosed": true }, "y": { "min": -12, "max": 12, "empty": false, "rclosed": true } },
 			"pic": [
 				"000000000000000000000000000000000000000000000102c08103000102001102000102000102000102000102000102001102000000000000000000000000000000000000000000"
 			],
@@ -6650,7 +6650,7 @@
 		{
 			"name": "_g_line",
 			"id": 651,
-			"local_area": { "x": { "min": 1.3073104580897996e-15, "max": 3.9219313742693988e-15 }, "y": { "min": 21.3500000000000014, "max": 64.0499999999999972 } },
+			"local_area": { "x": { "min": 1.3073104580897996e-15, "max": 3.9219313742693988e-15, "empty": false, "rclosed": true }, "y": { "min": 21.3500000000000014, "max": 64.0499999999999972, "empty": false, "rclosed": true } },
 			"p1": { "x": 3.9219313742693988e-15, "y": 64.0499999999999972 },
 			"p2": { "x": 1.3073104580897996e-15, "y": 21.3500000000000014 },
 			"width": 1,
@@ -6681,7 +6681,7 @@
 		{
 			"name": "_g_edit_int",
 			"id": 654,
-			"local_area": { "x": { "min": 0, "max": 156 }, "y": { "min": 0, "max": 16 } },
+			"local_area": { "x": { "min": 0, "max": 156, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 16, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 93, "flags": 0xa0 },
 				{ "id": 174, "flags": 0x1200000000 }
@@ -6690,7 +6690,7 @@
 		{
 			"name": "_g_exchange_graph",
 			"id": 671,
-			"local_area": { "x": { "min": 0, "max": 949 }, "y": { "min": 0, "max": 451 } },
+			"local_area": { "x": { "min": 0, "max": 949, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 451, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 672, "flags": 0x1200000000 },
 				{ "id": 737, "flags": 0x400000012 }
@@ -6708,7 +6708,7 @@
 		{
 			"name": "_g_scrollbar",
 			"id": 737,
-			"local_area": { "x": { "min": 0, "max": 949 }, "y": { "min": 451, "max": 461 } },
+			"local_area": { "x": { "min": 0, "max": 949, "empty": false, "rclosed": true }, "y": { "min": 451, "max": 461, "empty": false, "rclosed": true } },
 			"position": 0,
 			"vid": 2,
 			"links": [
@@ -6726,7 +6726,7 @@
 		{
 			"name": "_g_button",
 			"id": 901,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "загрузить статистику",
 			"picture": [
@@ -6749,7 +6749,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 1220,
-			"local_area": { "x": { "min": 0, "max": 24 }, "y": { "min": 0, "max": 24 } },
+			"local_area": { "x": { "min": 0, "max": 24, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 24, "empty": false, "rclosed": true } },
 			"hint": "абстрактный предок checkbox",
 			"links": [
 				{ "id": 112, "flags": 0x80 },
@@ -6778,7 +6778,7 @@
 		{
 			"name": "_g_button",
 			"id": 1329,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "чтение цен",
 			"picture": [
@@ -6811,7 +6811,7 @@
 		{
 			"name": "_g_button",
 			"id": 2845,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "торговля",
 			"picture": [
@@ -6844,7 +6844,7 @@
 		{
 			"name": "_g_button",
 			"id": 2924,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "купить",
 			"picture": [
@@ -6875,7 +6875,7 @@
 		{
 			"name": "_g_button",
 			"id": 3011,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "продать",
 			"picture": [
@@ -6906,7 +6906,7 @@
 		{
 			"name": "_g_button",
 			"id": 3117,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "size_el++",
 			"picture": [
@@ -6937,7 +6937,7 @@
 		{
 			"name": "_g_button",
 			"id": 3212,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "size_el--",
 			"picture": [
@@ -6975,7 +6975,7 @@
 		{
 			"name": "_g_button",
 			"id": 5113,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "сохранить статистику",
 			"picture": [
@@ -7015,7 +7015,7 @@
 		{
 			"name": "_g_button",
 			"id": 5837,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "создать _g_terminal",
 			"picture": [
@@ -7038,7 +7038,7 @@
 		{
 			"name": "_g_terminal",
 			"id": 6259,
-			"local_area": { "x": { "min": 0, "max": 1098.1571623279001 }, "y": { "min": 0, "max": 213.814204017399959 } },
+			"local_area": { "x": { "min": 0, "max": 1098.1571623279001, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 213.814204017399959, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 567, "flags": 0x400000000 },
 				{ "id": 6260, "flags": 0x1200000000 }
@@ -7093,7 +7093,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 6315,
-			"local_area": { "x": { "min": -1, "max": 1 }, "y": { "min": -1, "max": 1 } },
+			"local_area": { "x": { "min": -1, "max": 1, "empty": false, "rclosed": true }, "y": { "min": -1, "max": 1, "empty": false, "rclosed": true } },
 			"hint": "",
 			"links": [
 				{ "id": 356, "flags": 0x1 },
@@ -7108,7 +7108,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 6316,
-			"local_area": { "x": { "min": -1, "max": 1 }, "y": { "min": -1, "max": 1 } },
+			"local_area": { "x": { "min": -1, "max": 1, "empty": false, "rclosed": true }, "y": { "min": -1, "max": 1, "empty": false, "rclosed": true } },
 			"hint": "",
 			"links": [
 				{ "id": 97, "flags": 0x80 },
@@ -7130,7 +7130,7 @@
 		{
 			"name": "_g_link",
 			"id": 6318,
-			"local_area": { "x": { "min": 0.921060994002885325, "max": 1.41193900599711508 }, "y": { "min": -0.3894183423086503, "max": 0.389418342308650522 } },
+			"local_area": { "x": { "min": 0.921060994002885325, "max": 1.41193900599711508, "empty": false, "rclosed": true }, "y": { "min": -0.3894183423086503, "max": 0.389418342308650522, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 356, "flags": 0x1 },
 				{ "id": 6315, "flags": 0x100 },
@@ -7152,7 +7152,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 6320,
-			"local_area": { "x": { "min": -1, "max": 1 }, "y": { "min": -1, "max": 1 } },
+			"local_area": { "x": { "min": -1, "max": 1, "empty": false, "rclosed": true }, "y": { "min": -1, "max": 1, "empty": false, "rclosed": true } },
 			"hint": "",
 			"links": [
 				{ "id": 105, "flags": 0x80 },
@@ -7174,7 +7174,7 @@
 		{
 			"name": "_g_link",
 			"id": 6322,
-			"local_area": { "x": { "min": -1.04321568013747301, "max": -0.123284319862526665 }, "y": { "min": -1.41748421894197563, "max": -0.602953048087119914 } },
+			"local_area": { "x": { "min": -1.04321568013747301, "max": -0.123284319862526665, "empty": false, "rclosed": true }, "y": { "min": -1.41748421894197563, "max": -0.602953048087119914, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 356, "flags": 0x1 },
 				{ "id": 6315, "flags": 0x100 },
@@ -7196,7 +7196,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 6324,
-			"local_area": { "x": { "min": -1, "max": 1 }, "y": { "min": -1, "max": 1 } },
+			"local_area": { "x": { "min": -1, "max": 1, "empty": false, "rclosed": true }, "y": { "min": -1, "max": 1, "empty": false, "rclosed": true } },
 			"hint": "",
 			"links": [
 				{ "id": 356, "flags": 0x1 },
@@ -7218,7 +7218,7 @@
 		{
 			"name": "_g_link",
 			"id": 6326,
-			"local_area": { "x": { "min": -1.0432156801374739, "max": -0.123284319862527497 }, "y": { "min": 0.602953048087119914, "max": 1.41748421894197563 } },
+			"local_area": { "x": { "min": -1.0432156801374739, "max": -0.123284319862527497, "empty": false, "rclosed": true }, "y": { "min": 0.602953048087119914, "max": 1.41748421894197563, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 356, "flags": 0x1 },
 				{ "id": 6315, "flags": 0x100 },
@@ -7275,7 +7275,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 6331,
-			"local_area": { "x": { "min": -1, "max": 1 }, "y": { "min": -1, "max": 1 } },
+			"local_area": { "x": { "min": -1, "max": 1, "empty": false, "rclosed": true }, "y": { "min": -1, "max": 1, "empty": false, "rclosed": true } },
 			"hint": "",
 			"links": [
 				{ "id": 289, "flags": 0x80 },
@@ -7289,7 +7289,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 6332,
-			"local_area": { "x": { "min": -1, "max": 1 }, "y": { "min": -1, "max": 1 } },
+			"local_area": { "x": { "min": -1, "max": 1, "empty": false, "rclosed": true }, "y": { "min": -1, "max": 1, "empty": false, "rclosed": true } },
 			"hint": "",
 			"links": [
 				{ "id": 31, "flags": 0x80 },
@@ -7311,7 +7311,7 @@
 		{
 			"name": "_g_link",
 			"id": 6334,
-			"local_area": { "x": { "min": 0.921060994002885325, "max": 1.41193900599711508 }, "y": { "min": -0.3894183423086503, "max": 0.389418342308650522 } },
+			"local_area": { "x": { "min": 0.921060994002885325, "max": 1.41193900599711508, "empty": false, "rclosed": true }, "y": { "min": -0.3894183423086503, "max": 0.389418342308650522, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 356, "flags": 0x1 },
 				{ "id": 6331, "flags": 0x100 },
@@ -7333,7 +7333,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 6336,
-			"local_area": { "x": { "min": -1, "max": 1 }, "y": { "min": -1, "max": 1 } },
+			"local_area": { "x": { "min": -1, "max": 1, "empty": false, "rclosed": true }, "y": { "min": -1, "max": 1, "empty": false, "rclosed": true } },
 			"hint": "",
 			"links": [
 				{ "id": 330, "flags": 0x80 },
@@ -7355,7 +7355,7 @@
 		{
 			"name": "_g_link",
 			"id": 6338,
-			"local_area": { "x": { "min": -1.41193900599711508, "max": -0.921060994002885325 }, "y": { "min": -0.389418342308650689, "max": 0.389418342308650411 } },
+			"local_area": { "x": { "min": -1.41193900599711508, "max": -0.921060994002885325, "empty": false, "rclosed": true }, "y": { "min": -0.389418342308650689, "max": 0.389418342308650411, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 356, "flags": 0x1 },
 				{ "id": 6331, "flags": 0x100 },
@@ -7416,7 +7416,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 6343,
-			"local_area": { "x": { "min": -1, "max": 1 }, "y": { "min": -1, "max": 1 } },
+			"local_area": { "x": { "min": -1, "max": 1, "empty": false, "rclosed": true }, "y": { "min": -1, "max": 1, "empty": false, "rclosed": true } },
 			"hint": "",
 			"links": [
 				{ "id": 112, "flags": 0x80 },
@@ -7432,7 +7432,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 6344,
-			"local_area": { "x": { "min": -1, "max": 1 }, "y": { "min": -1, "max": 1 } },
+			"local_area": { "x": { "min": -1, "max": 1, "empty": false, "rclosed": true }, "y": { "min": -1, "max": 1, "empty": false, "rclosed": true } },
 			"hint": "",
 			"links": [
 				{ "id": 356, "flags": 0x1 },
@@ -7454,7 +7454,7 @@
 		{
 			"name": "_g_link",
 			"id": 6346,
-			"local_area": { "x": { "min": 0.921060994002885325, "max": 1.41193900599711508 }, "y": { "min": -0.3894183423086503, "max": 0.389418342308650522 } },
+			"local_area": { "x": { "min": 0.921060994002885325, "max": 1.41193900599711508, "empty": false, "rclosed": true }, "y": { "min": -0.3894183423086503, "max": 0.389418342308650522, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 356, "flags": 0x1 },
 				{ "id": 6343, "flags": 0x100 },
@@ -7476,7 +7476,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 6348,
-			"local_area": { "x": { "min": -1, "max": 1 }, "y": { "min": -1, "max": 1 } },
+			"local_area": { "x": { "min": -1, "max": 1, "empty": false, "rclosed": true }, "y": { "min": -1, "max": 1, "empty": false, "rclosed": true } },
 			"hint": "",
 			"links": [
 				{ "id": 356, "flags": 0x1 },
@@ -7498,7 +7498,7 @@
 		{
 			"name": "_g_link",
 			"id": 6350,
-			"local_area": { "x": { "min": -0.389418342308650633, "max": 0.389418342308650633 }, "y": { "min": -1.41193900599711508, "max": -0.921060994002885325 } },
+			"local_area": { "x": { "min": -0.389418342308650633, "max": 0.389418342308650633, "empty": false, "rclosed": true }, "y": { "min": -1.41193900599711508, "max": -0.921060994002885325, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 356, "flags": 0x1 },
 				{ "id": 6343, "flags": 0x100 },
@@ -7520,7 +7520,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 6352,
-			"local_area": { "x": { "min": -1, "max": 1 }, "y": { "min": -1, "max": 1 } },
+			"local_area": { "x": { "min": -1, "max": 1, "empty": false, "rclosed": true }, "y": { "min": -1, "max": 1, "empty": false, "rclosed": true } },
 			"hint": "",
 			"links": [
 				{ "id": 356, "flags": 0x1 },
@@ -7542,7 +7542,7 @@
 		{
 			"name": "_g_link",
 			"id": 6354,
-			"local_area": { "x": { "min": -1.41193900599711508, "max": -0.921060994002885325 }, "y": { "min": -0.389418342308650689, "max": 0.389418342308650411 } },
+			"local_area": { "x": { "min": -1.41193900599711508, "max": -0.921060994002885325, "empty": false, "rclosed": true }, "y": { "min": -0.389418342308650689, "max": 0.389418342308650411, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 356, "flags": 0x1 },
 				{ "id": 6343, "flags": 0x100 },
@@ -7564,7 +7564,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 6356,
-			"local_area": { "x": { "min": -1, "max": 1 }, "y": { "min": -1, "max": 1 } },
+			"local_area": { "x": { "min": -1, "max": 1, "empty": false, "rclosed": true }, "y": { "min": -1, "max": 1, "empty": false, "rclosed": true } },
 			"hint": "",
 			"links": [
 				{ "id": 356, "flags": 0x1 },
@@ -7586,7 +7586,7 @@
 		{
 			"name": "_g_link",
 			"id": 6358,
-			"local_area": { "x": { "min": -0.3894183423086508, "max": 0.389418342308650522 }, "y": { "min": 0.921060994002885325, "max": 1.4119390059971153 } },
+			"local_area": { "x": { "min": -0.3894183423086508, "max": 0.389418342308650522, "empty": false, "rclosed": true }, "y": { "min": 0.921060994002885325, "max": 1.4119390059971153, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 356, "flags": 0x1 },
 				{ "id": 6343, "flags": 0x100 },
@@ -7608,7 +7608,7 @@
 		{
 			"name": "_g_button",
 			"id": 6574,
-			"local_area": { "x": { "min": 0, "max": 26 }, "y": { "min": 0, "max": 26 } },
+			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
 			"checked": 0,
 			"hint": "Создать кнопку",
 			"picture": [
@@ -7666,7 +7666,7 @@
 		{
 			"name": "_g_tetron",
 			"id": 9467,
-			"local_area": { "x": { "min": -27, "max": -3 }, "y": { "min": 0, "max": 24 } },
+			"local_area": { "x": { "min": -27, "max": -3, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 24, "empty": false, "rclosed": true } },
 			"hint": "",
 			"links": [
 				{ "id": 36, "flags": 0x80 },
