@@ -11,34 +11,80 @@ _xy _xy::rotation(double b) const
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void _interval::operator&=(const _interval& b)
+{ 
+	if (empty) return;
+	if (b.empty)
+	{
+		empty = true;
+		return;
+	}
+	if (b.min > min) min = b.min; 
+	if (b.max < max)
+	{
+		max = b.max;
+		right_closed = b.right_closed;
+	}
+	else
+		if (b.max == max) right_closed &= b.right_closed;
+	empty = !((max > min) || ((max == min) && right_closed));
+}
+
+_interval& _interval::operator << (double x)
+{
+	if (empty)
+	{
+		min = max = x;
+		empty = false;
+		right_closed = true;
+		return *this;
+	}
+	if (x < min) min = x;
+	if (x >= max)
+	{
+		max = x;
+		right_closed = true;
+	}
+	return *this;
+}
+
 bool _interval::operator==(const _interval& b) const
 {
-	if (empty() && b.empty()) return true;
-	return (min == b.min) && (max == b.max);
+	if (empty && b.empty) return true;
+	return (min == b.min) && (max == b.max) && (right_closed == b.right_closed);
 }
 
 bool _interval::operator<=(const _interval& b) const
 {
-	if (empty()) return true;
-	if (b.empty()) return false;
-	return (min >= b.min) && (max <= b.max);
+	if (empty) return true;
+	if (b.empty) return false;
+	if (min < b.min) return false;
+	if (max == b.max) return (!right_closed) || b.right_closed;
+	return (max <= b.max);
 }
 
 void _interval::operator|=(const _interval& b)
 {
-	if (b.empty()) return;
-	if (empty())
+	if (b.empty) return;
+	if (empty)
 	{ 
 		*this = b;
 		return;
 	}
 	if (b.min < min) min = b.min;
-	if (b.max > max) max = b.max;
+	if (b.max > max)
+	{
+		max = b.max;
+		right_closed = b.right_closed;
+		return;
+	}
+	if (b.max == max) right_closed |= b.right_closed;
 }
 
 bool _interval::test(double b)
 {
-	if (empty()) return false;
+	if (empty) return false;
+	if (b == max) return right_closed;
 	return (b >= min) && (b <= max);
 }
 
@@ -232,20 +278,6 @@ _interval _iinterval::operator/(const _iinterval b)
 		return { -1e300, 1e300 };
 	}
 	return { (double(min - b.min)) / len, (double(max - b.min)) / len };
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-_interval& _interval::operator << (double x)
-{
-	if (empty())
-	{
-		min = max = x;
-		return *this;
-	}
-	if (x < min) min = x;
-	if (x > max) max = x;
-	return *this;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

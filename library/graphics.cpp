@@ -248,7 +248,7 @@ void _picture::line2(_ixy p1, _ixy p2, _color c, bool rep)
 	double k = (double(p2.y - p1.y)) / (p2.x - p1.x);
 	if (k < 0) y1_interval = { 1.0 - y1_interval.max, 1.0 - y1_interval.min };
 	_interval dd = x1_interval & y1_interval;
-	if (dd.empty()) return;
+	if (dd.empty) return;
 	_interval xx;
 	_interval yy;
 	double dx = 1.0;

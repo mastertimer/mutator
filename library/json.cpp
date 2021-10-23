@@ -217,7 +217,7 @@ _wjson& _wjson::add(std::string_view name, _interval b)
 	str(name, true);
 	add("min", b.min);
 	add("max", b.max);
-	add("empty", b.empty_);
+	add("empty", b.empty);
 	add("rclosed", b.right_closed);
 	end();
 	return *this;
@@ -431,7 +431,7 @@ _interval _rjson::read_area(std::string_view name)
 	if (!obj(name)) return res;
 	read("min", res.min);
 	read("max", res.max);
-	read("empty", res.empty_);
+	read("empty", res.empty);
 	read("rclosed", res.right_closed);
 	end();
 	return res;

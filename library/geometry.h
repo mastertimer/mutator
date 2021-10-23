@@ -138,13 +138,13 @@ struct _interval // [...])
 {
 	double min          = 1.0;
 	double max          = 0.0;
-	bool   empty_       = true;
+	bool   empty        = true;
 	bool   right_closed = true;
 
 	_interval() = default;
-	_interval(double x) : min(x), max(x), empty_(false) {}
-	_interval(double min_, double max_) : min(min_), max(max_), empty_(max < min) {}
-	_interval(_iinterval b) : min(b.min), max(b.max), empty_(max <= min), right_closed(false) {}
+	_interval(double x) : min(x), max(x), empty(false) {}
+	_interval(double min_, double max_) : min(min_), max(max_), empty(max < min) {}
+	_interval(_iinterval b) : min(b.min), max(b.max), empty(max <= min), right_closed(false) {}
 
 	operator _iinterval() const { return _iinterval(min, max); }
 
@@ -152,12 +152,11 @@ struct _interval // [...])
 	bool operator<=(const _interval& b) const;
 
 	void operator|=(const _interval& b);
-	void operator&=(const _interval& b) { if (b.min > min) min = b.min; if (b.max < max) max = b.max; }
-	_interval operator&(const _interval& b) const { return { std::max(min, b.min), std::min(max, b.max) }; }
+	void operator&=(const _interval& b);
+	_interval operator&( _interval& b) const { b &= *this; return b; }
 
-	double length() const { return (max > min) ? (max - min) : 0; }
+	double length() const { return empty ? 0 : (max - min); }
 	_interval& operator << (double x);
-	bool empty() const { return (max < min); }
 	bool test(double b); // принадлежит ли точка области
 };
 
@@ -196,7 +195,7 @@ struct _area
 	_area operator&(      _area  b) const { b &= *this; return b; }
 	_area operator|(      _area  b) const { b |= *this; return b; }
 
-	bool empty() const { return x.empty() || y.empty(); }
+	bool empty() const { return x.empty || y.empty; }
 
 	_area expansion(double b) const; // расширенная область во все стороны на b
 
