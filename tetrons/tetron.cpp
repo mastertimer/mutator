@@ -890,11 +890,11 @@ void _t_go::ris(_trans tr, bool final)
 		ris_all();
 		auto t = std::chrono::high_resolution_clock::now() - t0;
 		master_chain_go.pop();
-		_area oo = tr(local_area);
-		if (oo.x.min < 0) oo.x.min = 0;
-		if (oo.y.min < 0) oo.y.min = 0;
+		_xy oo = tr(local_area.top_left());
+		if (oo.x < 0) oo.x = 0;
+		if (oo.y < 0) oo.y = 0;
 		std::wstring s = double_to_wstring(t.count() / 1000000.0, 2);
-		master_bm.text({ (i64)(oo.x.min + 1), (i64)oo.y.min }, s.c_str(), 13, cc2, 0x00000000);
+		master_bm.text({ (i64)(oo.x + 1), (i64)oo.y }, s.c_str(), 13, cc2, 0x00000000);
 	}
 }
 

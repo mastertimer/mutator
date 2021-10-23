@@ -2147,9 +2147,9 @@ void _picture::rectangle(_iarea oo, uint c)
 {
 	if (oo.empty()) return;
 	line({ oo.x.min, oo.y.min }, { oo.x.max - 1, oo.y.min }, c);
-	if (oo.y.max - oo.y.min == 1) return;
+	if (oo.y.length() == 1) return;
 	line({ oo.x.min, oo.y.max - 1 }, { oo.x.max - 1, oo.y.max - 1 }, c);
-	if (oo.y.max - oo.y.min > 2)
+	if (oo.y.length() > 2)
 	{ // такие заморочки из за углов
 		line({ oo.x.min, oo.y.min + 1 }, { oo.x.min, oo.y.max - 2 }, c);
 		line({ oo.x.max - 1, oo.y.min + 1 }, { oo.x.max - 1, oo.y.max - 2 }, c);

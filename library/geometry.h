@@ -134,17 +134,17 @@ struct _iarea
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _interval // [...]
+struct _interval // [...])
 {
-	double min         = 1.0;
-	double max         = 0.0;
-	bool  empty_       = true;
-	bool  right_closed = true;
+	double min          = 1.0;
+	double max          = 0.0;
+	bool   empty_       = true;
+	bool   right_closed = true;
 
 	_interval() = default;
-	_interval(double x) : min(x), max(x) {}
-	_interval(double min_, double max_) : min(min_), max(max_) {}
-	_interval(_iinterval b) : min(b.min), max(b.max - de_i) {}
+	_interval(double x) : min(x), max(x), empty_(false) {}
+	_interval(double min_, double max_) : min(min_), max(max_), empty_(max < min) {}
+	_interval(_iinterval b) : min(b.min), max(b.max), empty_(max <= min), right_closed(false) {}
 
 	operator _iinterval() const { return _iinterval(min, max); }
 

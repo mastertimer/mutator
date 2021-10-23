@@ -217,6 +217,8 @@ _wjson& _wjson::add(std::string_view name, _interval b)
 	str(name, true);
 	add("min", b.min);
 	add("max", b.max);
+//	add("empty", b.empty_);
+//	add("rclosed", b.right_closed);
 	end();
 	return *this;
 }

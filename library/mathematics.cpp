@@ -535,8 +535,7 @@ void _interval_statistics::init_equiprobable(_basic_statistics& bs, i64 n, doubl
 			s += bs.data[ii];
 			ii++;
 		}
-		element[i].interval.min = (ii_p + bs.start - 0.5) * k;
-		element[i].interval.max = (ii + bs.start - 0.5) * k;
+		element[i].interval = { (ii_p + bs.start - 0.5) * k, (ii + bs.start - 0.5) * k };
 		if (s - s_p) mean /= (s - s_p);
 		element[i].mean = mean;
 		element[i].number = s - s_p;
