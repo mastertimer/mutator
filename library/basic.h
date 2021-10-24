@@ -35,8 +35,6 @@ constexpr i64 bit8[256] = {
 
 #define bit16(x) (bit8[(x)&255]+bit8[((x)>>8)&255]) // количество 1-бит в 16-битном числе
 
-#define mask1(b) (((b) >= 64) ? 0xffffffffffffffff : ((1ui64 << (b)) - 1)) // маска u64 из b бит
-
 constexpr uint color_set[32] = { // набор разных цветов одной яркости
 	0xFF0080FD, 0xFFEF0000, 0xFF9E3BFF, 0xFF938700, 0xFF12AA00, 0xFFD34E0D, 0xFF7470DC, 0xFF4D9682,
 	0xFFC80FCE, 0xFFB06381,	0xFFE22653, 0xFF009D93, 0xFFC4439D, 0xFF258ECB, 0xFF659B00, 0xFF3F77FF,
@@ -171,30 +169,6 @@ t_b _stack& _stack::operator>>(_b& a) noexcept
 	adata += sizeof(_b);
 	return *this;
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct _bit_vector // вектор с побитовой записью / чтением
-{
-	std::vector<u64> data;
-	uchar bit = 64; // сколько бит заполнено в последнем числе
-	i64 bit_read = 0; // позиция бита для чтения
-
-	void push1(u64 a) noexcept; // добавить 1 бит
-	void pushn(u64 a, uchar n) noexcept; // добавить n бит
-	void pushnod(u64 a, u64 n) noexcept; // добавить n одинаковых бит
-	void pushn1(u64 a) noexcept; // добавить ограниченное количество бит, 1xxxxxxxx
-	u64 pop1() noexcept; // прочитать 1 бит
-	u64 pop1_safely() noexcept; // прочитать 1 бит (безопасно)
-	u64 popn(uchar n) noexcept; // прочитать n бит
-	i64 size() const noexcept { return (i64)data.size() * 64 - (64 - bit); } // в битах!!!
-	bool empty() const noexcept { return (size() == 0); }
-	void resize(i64 v);
-	void clear() { data.clear(); bit = 64; bit_read = 0; }
-
-	void save(_stack& mem);
-	void load(_stack& mem);
-};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

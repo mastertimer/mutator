@@ -170,6 +170,7 @@
     <ClCompile Include="exchange\mediator.cpp" />
     <ClCompile Include="exchange\exchange_basic.cpp" />
     <ClCompile Include="library\basic.cpp" />
+    <ClCompile Include="library\bit_vector.cpp" />
     <ClCompile Include="library\compression.cpp" />
     <ClCompile Include="library\geometry.cpp" />
     <ClCompile Include="library\graphics.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="exchange\mediator.h" />
     <ClInclude Include="exchange\exchange_basic.h" />
     <ClInclude Include="library\basic.h" />
+    <ClInclude Include="library\bit_vector.h" />
     <ClInclude Include="library\compression.h" />
     <ClInclude Include="library\geometry.h" />
     <ClInclude Include="library\graphics.h" />

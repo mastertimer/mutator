@@ -238,17 +238,8 @@ void _picture::line2(_ixy p1, _ixy p2, _color c, bool rep)
 		vertical_line(p1, p2, c, rep);
 		return;
 	}
-	_iinterval x_interval = _iinterval(p1.x) << p2.x;
-	_iinterval y_interval = _iinterval(p1.y) << p2.y;
-	_iinterval x_area_interval = x_interval & drawing_area.x;
-	_iinterval y_area_interval = y_interval & drawing_area.y;
-	if (x_area_interval.empty() || y_area_interval.empty()) return;
-	_interval x1_interval = x_area_interval / x_interval;
-	_interval y1_interval = y_area_interval / y_interval;
-	double k = (double(p2.y - p1.y)) / (p2.x - p1.x);
-	if (k < 0) y1_interval = { 1.0 - y1_interval.max, 1.0 - y1_interval.min };
-	_interval dd = x1_interval & y1_interval;
-	if (dd.empty) return;
+	auto segment = _segment{ p1, p2 } & drawing_area;
+	if (!segment) return;
 	_interval xx;
 	_interval yy;
 	double dx = 1.0;
