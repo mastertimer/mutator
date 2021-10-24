@@ -209,8 +209,22 @@ struct _cmd_test : public _g_terminal::_command
 
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
-//		auto a = test_mask(1000000000);
-//		t->add_text(std::to_wstring(a));
+		_bit_vector a, b;
+		for (int i = 0; i < 10000; i++)
+		{
+			a.clear();
+			i64 n = rnd(10000);
+			for (i64 j = 0; j < n; j++) a.push(rnd());
+			b = a;
+			i64 n2 = rnd(500);
+			for (i64 j = 0; j < n2; j++) b.push(rnd());
+			b.resize(n);
+			if (b != a)
+			{
+				t->add_text(L"несовпадение");
+				break;
+			}
+		}
 	}
 };
 

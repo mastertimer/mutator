@@ -27,49 +27,51 @@ void _bit_vector::clear()
 	bit_read = 0;
 }
 
-void _bit_vector::save(_stack& mem)
-{
-	mem << data << bit;
+_stack& operator<<(_stack& o, const _bit_vector& p)
+{ // *
+	o << p.data << p.bit;
+	return o;
 }
 
-void _bit_vector::load(_stack& mem)
-{
-	mem >> data >> bit;
-	bit_read = 0;
+_stack& operator>>(_stack& o, _bit_vector& p)
+{ // *
+	o >> p.data >> p.bit;
+	p.bit_read = 0;
+	return o;
+}
+
+bool _bit_vector::operator==(const _bit_vector& b) const
+{ // *
+	return (bit == b.bit) && (data == b.data);
 }
 
 void _bit_vector::resize(i64 v)
-{
-	i64 rp = (i64)data.size();
-	i64 r = (v + 63) >> 6;
+{ // *
+	if (v < 0) v = 0;
+	data.resize((v + 63) >> 6);
 	bit = v & 63;
 	if (bit == 0) bit = 64;
-	if (rp == r)
-	{
-		if (r > 0) data.back() &= mask1(bit);
-		return;
-	}
-	data.resize(r);
+	if (v > 0) data.back() &= mask1(bit);
 }
 
-u64 _bit_vector::pop() noexcept
-{
+u64 _bit_vector::pop()
+{ // *
 	i64 r = bit_read >> 6;
 	uchar bi = bit_read & 63;
 	bit_read++;
-	return ((data[r] >> bi) & 1);
+	return (data[r] >> bi) & 1;
 }
 
-u64 _bit_vector::pop_safely() noexcept
-{
+u64 _bit_vector::pop_safely()
+{ // *
 	i64 r = bit_read >> 6;
 	uchar bi = bit_read & 63;
 	bit_read++;
 	if (r >= (i64)data.size()) return 0;
-	return ((data[r] >> bi) & 1);
+	return (data[r] >> bi) & 1;
 }
 
-u64 _bit_vector::pop(uchar n) noexcept
+u64 _bit_vector::pop(uchar n)
 {
 	if (n == 0) return 0;
 	i64 r = bit_read >> 6;
@@ -79,7 +81,7 @@ u64 _bit_vector::pop(uchar n) noexcept
 	return ((data[r] >> bi) | (data[r + 1] << (64ui8 - bi))) & mask1(n);
 }
 
-void _bit_vector::push(u64 a) noexcept
+void _bit_vector::push(u64 a)
 { // *
 	a &= 1;
 	if (bit == 64)
@@ -91,7 +93,7 @@ void _bit_vector::push(u64 a) noexcept
 	data.back() |= (a << bit++);
 }
 
-void _bit_vector::pushnod(u64 a, u64 n) noexcept
+void _bit_vector::pushnod(u64 a, u64 n)
 {
 	u64 aa = (a & 1) ? 0xffffffffffffffff : 0;
 	if (n <= 64)
@@ -109,7 +111,7 @@ void _bit_vector::pushnod(u64 a, u64 n) noexcept
 	push(aa, n);
 }
 
-void _bit_vector::push(u64 a, uchar n) noexcept
+void _bit_vector::push(u64 a, uchar n)
 {
 	if (n == 0) return;
 	a &= mask1(n);
@@ -126,7 +128,7 @@ void _bit_vector::push(u64 a, uchar n) noexcept
 	data.push_back(a >> (n - bit));
 }
 
-void _bit_vector::pushn1(u64 a) noexcept
+void _bit_vector::pushn1(u64 a)
 {
 	uchar n = 0;
 	while ((a >> n) > 1) n++;

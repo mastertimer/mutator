@@ -760,14 +760,12 @@ bool _compressed_exchange_data::read(_supply_and_demand& c)
 
 void _compressed_exchange_data::push_to(_stack& mem)
 {
-	data.save(mem);
-	mem << size;
+	mem << data << size;
 }
 
 void _compressed_exchange_data::pop_from(_stack& mem)
 {
-	data.load(mem);
-	mem >> size;
+	mem >> data >> size;
 }
 
 bool _compressed_exchange_data::add0(const _supply_and_demand& c)
