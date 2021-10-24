@@ -1,6 +1,31 @@
-#include "bit_vector.h"
+п»ї#include "bit_vector.h"
 
-#define mask1(b) (((b) >= 64) ? 0xffffffffffffffff : ((1ui64 << (b)) - 1)) // маска u64 из b бит
+namespace
+{
+
+	inline u64 mask1(uchar b) noexcept // b РµРґРёРЅРёС†
+	{ // *
+		return (b >= 64) ? 0xffffffffffffffff : ((1ULL << b) - 1);
+	}
+
+}
+
+i64 _bit_vector::size() const
+{ // *
+	return data.size() * 64 + bit - 64;
+}
+
+bool _bit_vector::empty() const
+{ // *
+	return size() == 0;
+}
+
+void _bit_vector::clear()
+{ // *
+	data.clear();
+	bit = 64;
+	bit_read = 0;
+}
 
 void _bit_vector::save(_stack& mem)
 {
@@ -27,7 +52,7 @@ void _bit_vector::resize(i64 v)
 	data.resize(r);
 }
 
-u64 _bit_vector::pop1() noexcept
+u64 _bit_vector::pop() noexcept
 {
 	i64 r = bit_read >> 6;
 	uchar bi = bit_read & 63;
@@ -35,7 +60,7 @@ u64 _bit_vector::pop1() noexcept
 	return ((data[r] >> bi) & 1);
 }
 
-u64 _bit_vector::pop1_safely() noexcept
+u64 _bit_vector::pop_safely() noexcept
 {
 	i64 r = bit_read >> 6;
 	uchar bi = bit_read & 63;
@@ -44,7 +69,7 @@ u64 _bit_vector::pop1_safely() noexcept
 	return ((data[r] >> bi) & 1);
 }
 
-u64 _bit_vector::popn(uchar n) noexcept
+u64 _bit_vector::pop(uchar n) noexcept
 {
 	if (n == 0) return 0;
 	i64 r = bit_read >> 6;
@@ -54,8 +79,8 @@ u64 _bit_vector::popn(uchar n) noexcept
 	return ((data[r] >> bi) | (data[r + 1] << (64ui8 - bi))) & mask1(n);
 }
 
-void _bit_vector::push1(u64 a) noexcept
-{
+void _bit_vector::push(u64 a) noexcept
+{ // *
 	a &= 1;
 	if (bit == 64)
 	{
@@ -71,20 +96,20 @@ void _bit_vector::pushnod(u64 a, u64 n) noexcept
 	u64 aa = (a & 1) ? 0xffffffffffffffff : 0;
 	if (n <= 64)
 	{
-		pushn(aa, n);
+		push(aa, n);
 		return;
 	}
 	if (bit < 64)
 	{
 		u64 nn = 64 - bit;
-		pushn(aa, nn);
+		push(aa, nn);
 		n -= nn;
 	}
-	for (; n >= 64; n -= 64) pushn(aa, 64);
-	pushn(aa, n);
+	for (; n >= 64; n -= 64) push(aa, 64);
+	push(aa, n);
 }
 
-void _bit_vector::pushn(u64 a, uchar n) noexcept
+void _bit_vector::push(u64 a, uchar n) noexcept
 {
 	if (n == 0) return;
 	a &= mask1(n);
@@ -105,5 +130,5 @@ void _bit_vector::pushn1(u64 a) noexcept
 {
 	uchar n = 0;
 	while ((a >> n) > 1) n++;
-	pushn(a, n);
+	push(a, n);
 }

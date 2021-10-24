@@ -287,15 +287,15 @@ bool _cdf::coding(i64 a, _bit_vector& bs) const noexcept
 	if (bst) bst->push(a);
 	n--;
 	bs.pushn1(n->prefix);
-	bs.pushn(a - n->first, n->bit);
+	bs.push(a - n->first, n->bit);
 	return true;
 }
 
 i64 _cdf::decoding(_bit_vector& bs) const noexcept
 {
 	const _mapf* d = &frd;
-	while (d->next[0]) d = d->next[bs.pop1()];
-	return d->first + bs.popn(d->bit);
+	while (d->next[0]) d = d->next[bs.pop()];
+	return d->first + bs.pop(d->bit);
 }
 
 _cdf::_cdf(const std::vector<_frequency>& a, _basic_statistics* b) : fr(a), bst(b)
@@ -536,7 +536,7 @@ bool _cdf3::coding(i64 a, _bit_vector& bs) const noexcept
 i64 _cdf3::decoding(_bit_vector& bs) const noexcept
 {
 	const _mapf* d = &frd;
-	while (d->next[0]) d = d->next[bs.pop1()];
+	while (d->next[0]) d = d->next[bs.pop()];
 	return d->first;
 }
 
@@ -577,7 +577,7 @@ i64  _compressed_exchange_data::decoding_delta_number(i64 a)
 
 bool _compressed_exchange_data::read0(_supply_and_demand& c)
 {
-	c.demand.offer[size_offer - 1].price = data.popn(16);
+	c.demand.offer[size_offer - 1].price = data.pop(16);
 	for (i64 i = size_offer - 1; i >= 0; i--)
 	{
 		if (i != size_offer - 1) c.demand.offer[i].price = c.demand.offer[i + 1].price + f_delta.decoding(data);
@@ -601,7 +601,7 @@ bool _compressed_exchange_data::read0(_supply_and_demand& c)
 
 bool _compressed_exchange_data::read1(_supply_and_demand& c)
 {
-	if (data.pop1() == 0) return read0(c);
+	if (data.pop() == 0) return read0(c);
 	if (!read12(c.demand.offer, base_buy)) return false;
 	if (!read12(c.supply.offer, base_sale)) return false;
 	return true;
@@ -703,7 +703,7 @@ bool _compressed_exchange_data::read12(_offer* v1, std::vector<_offer>& v0)
 		}
 		if (tip == 0)
 		{
-			if (data.pop1())
+			if (data.pop())
 				v0.erase(v0.begin() + n);
 			else
 			{
@@ -741,16 +741,16 @@ bool _compressed_exchange_data::read(_supply_and_demand& c)
 {
 	if (back_time == 0)
 	{
-		c.time = data.popn(31);
+		c.time = data.pop(31);
 		if (!read0(c)) return false;
 	}
 	else
 	{
 		time_t dt;
-		if (data.pop1() == 0)
+		if (data.pop() == 0)
 			dt = 1;
 		else
-			dt = data.popn(31);
+			dt = data.pop(31);
 		c.time = back_time + dt;
 		if (!read1(c)) return false;
 	}
@@ -772,7 +772,7 @@ void _compressed_exchange_data::pop_from(_stack& mem)
 
 bool _compressed_exchange_data::add0(const _supply_and_demand& c)
 {
-	data.pushn(c.demand.offer[size_offer - 1].price, 16);
+	data.push(c.demand.offer[size_offer - 1].price, 16);
 	for (i64 i = size_offer - 1; i >= 0; i--)
 	{
 		if (i != size_offer - 1)
@@ -905,7 +905,7 @@ bool _compressed_exchange_data::add12(const _offer* v1, std::vector<_offer>& v0,
 		if (tip == 0)
 		{
 			i64 buy_izm2 = calc_delta_del_add1(v1, v0, n);
-			data.push1(buy_izm2 < 0);
+			data.push(buy_izm2 < 0);
 			if (buy_izm2 < 0)
 				v0.erase(v0.begin() + n);
 			else
@@ -946,10 +946,10 @@ bool _compressed_exchange_data::add1(const _supply_and_demand& c)
 	i64 sale_izm = calc_delta_del_add(c.supply.offer, base_sale);
 	if (std::max(abs(buy_izm), abs(sale_izm)) > 12)
 	{
-		data.push1(0);
+		data.push(0);
 		return add0(c);
 	}
-	data.push1(1);
+	data.push(1);
 
 	std::vector<_offer> bbuy = base_buy;
 	std::vector<_offer> bsale = base_sale;
@@ -967,13 +967,13 @@ bool _compressed_exchange_data::add(const _supply_and_demand& c)
 	auto s_data = data.size();
 	if (size == 0)
 	{
-		data.pushn(c.time, 31);
+		data.push(c.time, 31);
 		if (!add0(c)) goto err;
 	}
 	else
 	{
 		time_t dt = c.time - back_time;
-		if (dt == 1) data.push1(0); else { data.push1(1); data.pushn(dt, 31); }
+		if (dt == 1) data.push(0); else { data.push(1); data.push(dt, 31); }
 		if (!add1(c)) goto err;
 	}
 	size++;

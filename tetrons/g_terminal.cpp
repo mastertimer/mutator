@@ -205,16 +205,12 @@ double f1(double p)
 
 struct _cmd_test : public _g_terminal::_command
 {
-	std::wstring help() override { return L"тестирование перемешивания"; }
+	std::wstring help() override { return L"тестирование mask1"; }
 
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
-		std::vector<double> m = minimum(f1, { 0.0, 1.0 });
-		for (auto i : m) t->add_text(double_to_wstring(i, 13) + L" " + double_to_wstring(f1(i), 13));
-		t->add_text(L"---");
-		m = minimum(f1, { 0.0, 1.0 }, 5);
-		for (auto i : m) t->add_text(double_to_wstring(i, 13) + L" " + double_to_wstring(f1(i), 13));
-		t->add_text(L"---");
+//		auto a = test_mask(1000000000);
+//		t->add_text(std::to_wstring(a));
 	}
 };
 
