@@ -72,7 +72,7 @@ u64 _bit_vector::pop_safely()
 }
 
 u64 _bit_vector::pop(uchar n)
-{
+{ // *
 	if (n == 0) return 0;
 	i64 r = bit_read >> 6;
 	uchar bi = bit_read & 63;
@@ -129,8 +129,6 @@ void _bit_vector::push(u64 a, uchar n)
 }
 
 void _bit_vector::pushn1(u64 a)
-{
-	uchar n = 0;
-	while ((a >> n) > 1) n++;
-	push(a, n);
+{ // *
+	push(a, position1_64(a >> 1));
 }
