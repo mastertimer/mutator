@@ -94,7 +94,7 @@ void _bit_vector::push(u64 a)
 }
 
 void _bit_vector::pushnod(u64 a, u64 n)
-{
+{ // *
 	u64 aa = (a & 1) ? 0xffffffffffffffff : 0;
 	if (n <= 64)
 	{
@@ -107,12 +107,12 @@ void _bit_vector::pushnod(u64 a, u64 n)
 		push(aa, nn);
 		n -= nn;
 	}
-	for (; n >= 64; n -= 64) push(aa, 64);
+	for (; n >= 64; n -= 64) data.push_back(aa);
 	push(aa, n);
 }
 
 void _bit_vector::push(u64 a, uchar n)
-{
+{ // *
 	if (n == 0) return;
 	a &= mask1(n);
 	if (bit == 64)
