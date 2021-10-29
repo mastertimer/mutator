@@ -62,7 +62,7 @@ void _exchange_data::load_from_file()
 }
 
 void _exchange_data::push_back(const _supply_and_demand& c)
-{
+{ // *
 	if (!sad.empty())
 	{
 		if (c == sad.back()) return;

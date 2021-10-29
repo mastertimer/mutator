@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool _offers::operator==(const _offers& p) const
-{
+{ // *
 	for (i64 i = 0; i < size_offer; i++) if (offer[i] != p.offer[i]) return false;
 	return true;
 }
@@ -11,19 +11,19 @@ bool _offers::operator==(const _offers& p) const
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool _supply_and_demand::operator==(const _supply_and_demand& p) const
-{
+{ // *
 	return (demand == p.demand) && (supply == p.supply);
 }
 
 i64 _supply_and_demand::time_hour()
-{
+{ // *
 	tm t3;
 	localtime_s(&t3, &time);
 	return t3.tm_hour;
 }
 
 i64 _supply_and_demand::time_minute()
-{
+{ // *
 	tm t3;
 	localtime_s(&t3, &time);
 	return t3.tm_min;

@@ -7,7 +7,7 @@
 
 struct _cmd_load_sable_stat : public _g_terminal::_command
 {
-	std::wstring help() override { return L"конвертация статистики"; }
+	std::wstring help() override { return L"статистика цен"; }
 
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
@@ -19,7 +19,7 @@ struct _cmd_load_sable_stat : public _g_terminal::_command
 
 struct _cmd_test_stat : public _g_terminal::_command
 {
-	std::wstring help() override { return L"сравнение статистик"; }
+	std::wstring help() override { return L"ещё статистика цен"; }
 
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
