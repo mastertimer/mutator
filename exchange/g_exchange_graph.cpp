@@ -54,7 +54,7 @@ struct _prices_curve2 : public _basic_curve // посекундный спрос
 
 void start_stock()
 {
-	if (!exchange_data->empty()) return;
+	if (!exchange_data.empty()) return;
 	exchange_data.load_from_file();
 
 	if (!graph) return;

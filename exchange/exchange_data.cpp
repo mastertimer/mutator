@@ -20,8 +20,8 @@ void _exchange_data::save_to_file()
 
 	for (i64 i = 0; i < number_thread; i++)
 	{
-		threads.emplace_back(fun, &cs[i], &sad[sad.size() * i / number_thread],
-			(sad.size() * (i + 1) / number_thread) - (sad.size() * i / number_thread));
+		threads.emplace_back(fun, &cs[i], &(*this)[size() * i / number_thread],
+			(size() * (i + 1) / number_thread) - (size() * i / number_thread));
 	}
 	for (auto& th : threads) th.join();
 	_stack mem;
@@ -45,7 +45,7 @@ void _exchange_data::load_from_file()
 		cs[i].pop_from(mem);
 		v += cs[i].size;
 	}
-	sad.resize(v);
+	resize(v);
 
 	auto fun = [](_compressed_exchange_data* co, _supply_and_demand* sad)
 	{
@@ -55,7 +55,7 @@ void _exchange_data::load_from_file()
 	v = 0;
 	for (i64 i = 0; i < number_thread; i++)
 	{
-		threads.emplace_back(fun, &cs[i], &sad[v]);
+		threads.emplace_back(fun, &cs[i], &(*this)[v]);
 		v += cs[i].size;
 	}
 	for (auto& th : threads) th.join();
@@ -63,23 +63,23 @@ void _exchange_data::load_from_file()
 
 void _exchange_data::push_back(const _supply_and_demand& c)
 { // *
-	if (!sad.empty())
+	if (!empty())
 	{
-		if (c == sad.back()) return;
-		if (c.time <= sad.back().time) return;
+		if (c == back()) return;
+		if (c.time <= back().time) return;
 	}
-	sad.push_back(c);
+	std::vector<_supply_and_demand>::push_back(c);
 }
 
 void _exchange_data::operator=(_compressed_exchange_data& cs)
 {
-	sad.clear();
-	sad.reserve(cs.size);
+	clear();
+	reserve(cs.size);
 	_supply_and_demand c;
 	for (i64 i = 0; i < cs.size; i++)
 	{
 		cs.read(c);
-		sad.push_back(c);
+		std::vector<_supply_and_demand>::push_back(c);
 	}
 }
 
@@ -89,14 +89,14 @@ bool update_index_data()
 {
 	i64 vcc = 0;
 	if (!index_data.empty()) vcc = index_data.back().ncc.max;
-	if (vcc == (i64)exchange_data->size()) return false; // ничего не изменилось
-	if (vcc > (i64)exchange_data->size())
+	if (vcc == (i64)exchange_data.size()) return false; // ничего не изменилось
+	if (vcc > (i64)exchange_data.size())
 	{
 		index_data.clear(); // обработанных данных больше, чем исходных, потому пусть будет полный перерасчет
 		vcc = 0;
 	}
-	if (exchange_data->size() < 2) return false; // мало данных для обработки
-	i64 back_minute = exchange_data->back().time_to_minute();
+	if (exchange_data.size() < 2) return false; // мало данных для обработки
+	i64 back_minute = exchange_data.back().time_to_minute();
 	if (!index_data.empty())
 	{
 		if (back_minute == index_data.back().time + 1) return false; // еще рано
@@ -106,10 +106,10 @@ bool update_index_data()
 			vcc = 0;
 		}
 	}
-	if (exchange_data->size() - vcc < 2) return false; // мало данных для обработки
+	if (exchange_data.size() - vcc < 2) return false; // мало данных для обработки
 	time_t t = 0;
 	_index cp;
-	for (i64 i = vcc; i < (i64)exchange_data->size(); i++)
+	for (i64 i = vcc; i < (i64)exchange_data.size(); i++)
 	{
 		const _supply_and_demand& cc = exchange_data[i];
 		time_t t2 = cc.time_to_minute();
