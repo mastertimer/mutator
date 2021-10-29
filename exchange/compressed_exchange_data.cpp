@@ -7,6 +7,9 @@
 
 namespace
 {
+
+	inline i64 bit_for_value(u64 k) { return (k == 0) ? 0 : position1_64(k - 1); } // k - кол-во чисел. 1=0, 2=1, 4=2
+
 	struct _cdf // структура частот для сжатия чисел с переменным количеством бит
 	{
 		struct _frequency

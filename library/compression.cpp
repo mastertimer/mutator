@@ -183,7 +183,7 @@ void arithmetic_coding(const std::vector<uchar>& data, _bit_vector& res)
 {
 	res.clear();
 	if (data.empty()) return;
-	u64 bit_size = bit_for_value(data.size() + 1);
+	u64 bit_size = position1_64(data.size());
 	res.push(bit_size, 6);
 	res.push(data.size(), bit_size);
 	u64 frequency[256];

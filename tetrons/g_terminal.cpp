@@ -209,7 +209,15 @@ struct _cmd_test : public _g_terminal::_command
 
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
-/*		u64 r = 0;
+/*		u64 err = 0;
+		for (u64 i = 0; i < 100000; i++)
+		{
+			u64 k = rnd(256) << rnd(57);
+			if (position1_64_2(k) != position1_64(k)) err++;
+		}
+		t->add_text(L"err=" + std::to_wstring(err));*/
+
+		u64 r = 0;
 		for (u64 i = 0; i < 8; i++)
 		{
 			t->start_timer();
@@ -217,13 +225,12 @@ struct _cmd_test : public _g_terminal::_command
 			{
 				for (u64 k = 0; k < 256; k++)
 				{
-//					r += position1_64(k << (i * 8));
-					r += test456(k << (i * 8));
+					r += position1_64(k << (i * 8));
 				}
 			}
 			t->stop_timer(std::to_wstring(i));
 		}
-		t->add_text(L"r="+std::to_wstring(r));*/
+		t->add_text(L"r="+std::to_wstring(r));
 	}
 };
 

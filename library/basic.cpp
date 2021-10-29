@@ -1,28 +1,24 @@
 ﻿#include "basic.h"
 
 i64 position1_64(u64 a)
-{ // *
-	if (i64 k = position1_8[((uchar*)&a)[7]]) return k + 56;
-	if (i64 k = position1_8[((uchar*)&a)[6]]) return k + 48;
-	if (i64 k = position1_8[((uchar*)&a)[5]]) return k + 40;
-	if (i64 k = position1_8[((uchar*)&a)[4]]) return k + 32;
-	if (i64 k = position1_8[((uchar*)&a)[3]]) return k + 24;
-	if (i64 k = position1_8[((uchar*)&a)[2]]) return k + 16;
-	if (i64 k = position1_8[((uchar*)&a)[1]]) return k + 8;
-	return position1_8[((uchar*)&a)[0]];
-}
-
-i64 bit_for_value(u64 k) // k - количество чисел. (1) = 0, (2) = 1, (4) = 2
-{
-	if (k == 0) return 0;
-	k--;
-	i64 n = 0;
-	while (k)
+{ // **
+	if (a >> 32)
 	{
-		n++;
-		k >>= 1;
+		if (a >> 48)
+		{
+			if (i64 k = position1_8[a >> 56]) return k + 56;
+			return position1_8[(a >> 48) & 255] + 48;
+		}
+		if (i64 k = position1_8[(a >> 40) & 255]) return k + 40;
+		return position1_8[(a >> 32) & 255] + 32;
 	}
-	return n;
+	if (a & 0xffff0000ULL)
+	{
+		if (i64 k = position1_8[(a >> 24) & 255]) return k + 24;
+		return position1_8[(a >> 16) & 255] + 16;
+	}
+	if (i64 k = position1_8[(a >> 8) & 255]) return k + 8;
+	return position1_8[a & 255];
 }
 
 void os_pordis(double min, double max, i64 maxN, double& mi, double& step, double min_step)
