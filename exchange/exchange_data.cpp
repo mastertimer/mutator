@@ -118,8 +118,8 @@ bool update_index_data()
 			double aa = ((i64)cc.demand.offer[0].price + cc.supply.offer[0].price) * (c_unpak * 0.5);
 			if (aa < cp.min) cp.min = aa;
 			if (aa > cp.max) cp.max = aa;
-			if (cc.demand.offer[size_offer - 1].price * c_unpak < cp.minmin) cp.minmin = cc.demand.offer[size_offer - 1].price * c_unpak;
-			if (cc.supply.offer[size_offer - 1].price * c_unpak > cp.maxmax) cp.maxmax = cc.supply.offer[size_offer - 1].price * c_unpak;
+			if (cc.demand.offer.back().price * c_unpak < cp.minmin) cp.minmin = cc.demand.offer.back().price * c_unpak;
+			if (cc.supply.offer.back().price * c_unpak > cp.maxmax) cp.maxmax = cc.supply.offer.back().price * c_unpak;
 			cp.ncc.max++;
 			cp.last = aa;
 			if (cc.time % 60 == 3)
@@ -139,8 +139,8 @@ bool update_index_data()
 		cp.ncc.min = i;
 		cp.ncc.max = i + 1;
 		cp.max = cp.min = cp.last = cp.first = ((i64)cc.demand.offer[0].price + cc.supply.offer[0].price) * (c_unpak * 0.5);
-		cp.minmin = cc.demand.offer[size_offer - 1].price * c_unpak;
-		cp.maxmax = cc.supply.offer[size_offer - 1].price * c_unpak;
+		cp.minmin = cc.demand.offer.back().price * c_unpak;
+		cp.maxmax = cc.supply.offer.back().price * c_unpak;
 		cp.c3_buy = cc.demand.offer[0].price * c_unpak;
 		cp.c3_sale = cc.supply.offer[0].price * c_unpak;
 	}

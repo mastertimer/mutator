@@ -580,7 +580,7 @@ i64  _compressed_exchange_data::decoding_delta_number(i64 a)
 
 bool _compressed_exchange_data::read0(_supply_and_demand& c)
 {
-	c.demand.offer[size_offer - 1].price = data.pop(16);
+	c.demand.offer.back().price = data.pop(16);
 	for (i64 i = size_offer - 1; i >= 0; i--)
 	{
 		if (i != size_offer - 1) c.demand.offer[i].price = c.demand.offer[i + 1].price + f_delta.decoding(data);
@@ -773,7 +773,7 @@ void _compressed_exchange_data::pop_from(_stack& mem)
 
 bool _compressed_exchange_data::add0(const _supply_and_demand& c)
 {
-	data.push(c.demand.offer[size_offer - 1].price, 16);
+	data.push(c.demand.offer.back().price, 16);
 	for (i64 i = size_offer - 1; i >= 0; i--)
 	{
 		if (i != size_offer - 1)
