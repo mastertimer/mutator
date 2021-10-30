@@ -5,22 +5,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _delta_offer
-{
-	int price;
-	int delta_number;
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct _delta_offers
-{
-	_delta_offer delta_offer[size_offer];
-	i64 size;
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 struct _delta_number
 {
 	int old_number;
@@ -29,36 +13,26 @@ struct _delta_number
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _delta_offers2
+struct _delta_offers
 {
 	std::vector<_delta_number> delta_number;
-	int start_price;
-	int delta_price;
+	i64 start_price;
+	i64 delta_price;
 
-	_delta_offers2(const _offers& a, const _offers& b);
+	_delta_offers(const _offers& a, const _offers& b);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _delta_supply_and_demand // предложение и спрос
+struct _delta_supply_and_demand // изменение предложения и спроса
 {
 	_delta_offers delta_demand; // желающие купить
 	_delta_offers delta_supply; // желающие продать
 
-	_delta_supply_and_demand(const _supply_and_demand& a, const _supply_and_demand& b); // =a-b
+	_delta_supply_and_demand(const _supply_and_demand& a, const _supply_and_demand& b);
 };
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct _delta_supply_and_demand2 // изменение предложения и спроса
-{
-	_delta_offers2 delta_demand; // желающие купить
-	_delta_offers2 delta_supply; // желающие продать
-
-	_delta_supply_and_demand2(const _supply_and_demand& a, const _supply_and_demand& b);
-};
-
-_delta_supply_and_demand2 operator-(const _supply_and_demand& a, const _supply_and_demand& b);
+_delta_supply_and_demand operator-(const _supply_and_demand& a, const _supply_and_demand& b);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

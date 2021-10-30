@@ -4,66 +4,45 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_delta_offer operator-(_offer a, _offer b) // =a-b
+_delta_offers::_delta_offers(const _offers& a, const _offers& b)
 {
-	return { a.price, a.number - b.number };
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-_delta_offers operator-(const _offers& a, const _offers& b)
-{
-	_delta_offers res;
-	res.size = 0;
-	bool increase = a.offer[1].price > a.offer[0].price;
-	for (i64 ia = 0, ib = 0; ia < size_offer && ib < size_offer;)
-	{
-		if (a.offer[ia].price != b.offer[ib].price)
-		{
-			if (increase ^ (a.offer[ia].price < b.offer[ib].price)) ib++; else ia++;
-			continue;
-		}
-		res.delta_offer[res.size++] = a.offer[ia++] - b.offer[ib++];
-	}
-	return res;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-_delta_offers2::_delta_offers2(const _offers& a, const _offers& b)
-{
+	i64 end_price;
 	if (a.offer[1].price > a.offer[0].price)
 	{
 		delta_price = 1;
-		start_price = std::min(a.offer[0].price, b.offer[0].price);
-//		int end_price = std::min(a.offer[0].price, b.offer[0].price);
+		start_price = std::min(a.offer.front().price, b.offer.front().price);
+		end_price = std::min(a.offer.back().price, b.offer.back().price);
 	}
 	else
 	{
 		delta_price = -1;
 		start_price = std::max(a.offer[0].price, b.offer[0].price);
-
+		end_price = std::max(a.offer.back().price, b.offer.back().price);
+	}
+	delta_number.resize((end_price - start_price) * delta_price + 1, { 0, 0 });
+	for (auto i : a.offer)
+	{
+		i64 n = (i.price - start_price) * delta_price;
+		if ((n >= 0) && (n < (i64)delta_number.size())) delta_number[n].old_number = i.number;
+	}
+	for (auto i : b.offer)
+	{
+		i64 n = (i.price - start_price) * delta_price;
+		if ((n >= 0) && (n < (i64)delta_number.size())) delta_number[n].new_number = i.number;
 	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 _delta_supply_and_demand::_delta_supply_and_demand(const _supply_and_demand& a, const _supply_and_demand& b):
-	delta_demand{ a.demand - b.demand }, delta_supply{ a.supply - b.supply }
-{
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-_delta_supply_and_demand2::_delta_supply_and_demand2(const _supply_and_demand& a, const _supply_and_demand& b):
 	delta_demand(a.demand, b.demand), delta_supply(a.supply, b.supply)
 {
 
 }
 
-_delta_supply_and_demand2 operator-(const _supply_and_demand& a, const _supply_and_demand& b)
+_delta_supply_and_demand operator-(const _supply_and_demand& a, const _supply_and_demand& b)
 {
-	return _delta_supply_and_demand2(a, b);
+	return _delta_supply_and_demand(b, a);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,7 +59,6 @@ void exchange_fun1(_g_terminal* t)
 			if (i.time - prev->time == 1)
 			{
 				auto ee = i - *prev;
-				_delta_supply_and_demand delta(i, *prev);
 			}
 		prev = &i;
 	}
