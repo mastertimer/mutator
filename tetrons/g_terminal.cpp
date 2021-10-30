@@ -36,25 +36,25 @@ struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 	std::wstring help() override { return L"тестирование арифметического кодирования"; }
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
-		t->add_text(L"файл: " + test_file);
+		t->print(L"файл: " + test_file);
 		std::vector<uchar> data, data2;
 		_bit_vector res;
 		if (!load_file(test_file, data))
 		{
-			t->add_text(L"ошибка загрузки!");
+			t->print(L"ошибка загрузки!");
 			return;
 		}
-		t->add_text(L"размер:            " + std::to_wstring(data.size()));
+		t->print(L"размер:            " + std::to_wstring(data.size()));
 		double com1 = 0.0, com2 = 0.0;
 		double com = information(data, &com1, &com2);
-		t->add_text(L"информация:        " + double_to_wstring(com, 1) + L" (" + double_to_wstring(com1, 1) + L" + " +
+		t->print(L"информация:        " + double_to_wstring(com, 1) + L" (" + double_to_wstring(com1, 1) + L" + " +
 			double_to_wstring(com2, 1) + L")");
-		t->add_text(L"идеал:             " + double_to_wstring(size_arithmetic_coding(data), 1));
+		t->print(L"идеал:             " + double_to_wstring(size_arithmetic_coding(data), 1));
 
 		i64 n = 1;
 		if (!parameters.empty()) n = std::stoi(parameters[0]);
 		if (n < 1) n = 1;
-		if (n > 1) t->add_text(std::to_wstring(n) + L" испытаний");
+		if (n > 1) t->print(std::to_wstring(n) + L" испытаний");
 
 		i64 mindt = 1000000000;
 		i64 maxdt = 0;
@@ -73,11 +73,11 @@ struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 
 
 		double v = res.size() / 8.0;
-		t->add_text(L"arithmetic_coding: " + double_to_wstring(v, 1));
-		t->add_text(L"разница:           " + double_to_wstring(v - com, 1));
-		t->add_text(L"среднее время, мксек:      " + std::to_wstring(summdt / n));
-		t->add_text(L"минимальное время, мксек:  " + std::to_wstring(mindt));
-		t->add_text(L"максимальное время, мксек: " + std::to_wstring(maxdt));
+		t->print(L"arithmetic_coding: " + double_to_wstring(v, 1));
+		t->print(L"разница:           " + double_to_wstring(v - com, 1));
+		t->print(L"среднее время, мксек:      " + std::to_wstring(summdt / n));
+		t->print(L"минимальное время, мксек:  " + std::to_wstring(mindt));
+		t->print(L"максимальное время, мксек: " + std::to_wstring(maxdt));
 
 		mindt = 1000000000;
 		maxdt = 0;
@@ -94,12 +94,12 @@ struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 			summdt += dtt;
 		}
 		if (data == data2)
-			t->add_text(L"расжатие норма");
+			t->print(L"расжатие норма");
 		else
-			t->add_text(L"!!ошибка!! расжатый файл не равен исходному!");
-		t->add_text(L"среднее время, мксек:      " + std::to_wstring(summdt / n));
-		t->add_text(L"минимальное время, мксек:  " + std::to_wstring(mindt));
-		t->add_text(L"максимальное время, мксек: " + std::to_wstring(maxdt));
+			t->print(L"!!ошибка!! расжатый файл не равен исходному!");
+		t->print(L"среднее время, мксек:      " + std::to_wstring(summdt / n));
+		t->print(L"минимальное время, мксек:  " + std::to_wstring(mindt));
+		t->print(L"максимальное время, мксек: " + std::to_wstring(maxdt));
 	}
 };
 
@@ -110,18 +110,18 @@ struct _cmd_test_arithmetic_coding2 : public _g_terminal::_command
 	std::wstring help() override { return L"тестирование арифметического кодирования"; }
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
-		t->add_text(L"файл: " + test_file);
+		t->print(L"файл: " + test_file);
 		std::vector<uchar> data, data2;
 		_bit_vector res;
 		if (!load_file(test_file, data))
 		{
-			t->add_text(L"ошибка загрузки!");
+			t->print(L"ошибка загрузки!");
 			return;
 		}
 		double f0 = 0.01;
-		t->add_text(L"размер: " + std::to_wstring(data.size()));
-		t->add_text(L"идеал1: " + double_to_wstring(size_arithmetic_coding(data), 1));
-		t->add_text(L"идеал0: " + double_to_wstring(size_arithmetic_coding(data, f0), 1));
+		t->print(L"размер: " + std::to_wstring(data.size()));
+		t->print(L"идеал1: " + double_to_wstring(size_arithmetic_coding(data), 1));
+		t->print(L"идеал0: " + double_to_wstring(size_arithmetic_coding(data, f0), 1));
 
 		i64 n = 1;
 		if (!parameters.empty()) n = std::stoi(parameters[0]);
@@ -129,7 +129,7 @@ struct _cmd_test_arithmetic_coding2 : public _g_terminal::_command
 		for (i64 i = 0; i < n; i++)
 		{
 			stir_vector(data);
-			t->add_text(L"идеал:  " + double_to_wstring(size_arithmetic_coding(data, f0), 1));
+			t->print(L"идеал:  " + double_to_wstring(size_arithmetic_coding(data, f0), 1));
 		}
 	}
 };
@@ -141,19 +141,19 @@ struct _cmd_test_ppm : public _g_terminal::_command
 	std::wstring help() override { return L"тестирование ppm сжатия"; }
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
-		t->add_text(L"файл: " + test_file);
+		t->print(L"файл: " + test_file);
 		std::vector<uchar> data, data2, res;
 		if (!load_file(test_file, data))
 		{
-			t->add_text(L"ошибка загрузки!");
+			t->print(L"ошибка загрузки!");
 			return;
 		}
-		t->add_text(L"размер: " + std::to_wstring(data.size()));
+		t->print(L"размер: " + std::to_wstring(data.size()));
 
 		i64 n = 0;
 		if (!parameters.empty()) n = std::stoi(parameters[0]);
 		if (n < 0) n = 0;
-		t->add_text(L"порядок = " + std::to_wstring(n));
+		t->print(L"порядок = " + std::to_wstring(n));
 
 		i64 mindt = 1000000000;
 		i64 maxdt = 0;
@@ -170,8 +170,8 @@ struct _cmd_test_ppm : public _g_terminal::_command
 		}
 
 		double v = res.size();
-		t->add_text(L"ppm:    " + double_to_wstring(v, 0));
-		t->add_text(L"время, мксек:  " + std::to_wstring(mindt));
+		t->print(L"ppm:    " + double_to_wstring(v, 0));
+		t->print(L"время, мксек:  " + std::to_wstring(mindt));
 
 	}
 };
@@ -209,7 +209,7 @@ struct _cmd_test : public _g_terminal::_command
 
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
-		t->add_text(std::to_wstring(sizeof(_offers)));
+		t->print(std::to_wstring(sizeof(_offers)));
 
 /*		u64 err = 0;
 		for (u64 i = 0; i < 100000; i++)
@@ -217,7 +217,7 @@ struct _cmd_test : public _g_terminal::_command
 			u64 k = rnd(256) << rnd(57);
 			if (position1_64_2(k) != position1_64(k)) err++;
 		}
-		t->add_text(L"err=" + std::to_wstring(err));*/
+		t->print(L"err=" + std::to_wstring(err));*/
 
 /*		u64 r = 0;
 		for (u64 i = 0; i < 8; i++)
@@ -232,7 +232,7 @@ struct _cmd_test : public _g_terminal::_command
 			}
 			t->stop_timer(std::to_wstring(i));
 		}
-		t->add_text(L"r="+std::to_wstring(r));*/
+		t->print(L"r="+std::to_wstring(r));*/
 	}
 };
 
@@ -254,7 +254,7 @@ struct _cmd_help : public _g_terminal::_command
 	std::wstring help() override { return L"вывод справки"; }
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
-		for (auto& i : t->command) t->add_text(i.first + L" - " + i.second->help());
+		for (auto& i : t->command) t->print(i.first + L" - " + i.second->help());
 	}
 };
 
@@ -291,9 +291,9 @@ struct _cmd_line : public _g_terminal::_command
 		}
 		t->stop_timer(L"line2");
 		if (k1 == k2)
-			t->add_text(L"картинки равны");
+			t->print(L"картинки равны");
 		else
-			t->add_text(L"!!НЕСОВПАДЕНИЕ");
+			t->print(L"!!НЕСОВПАДЕНИЕ");
 	}
 };
 
@@ -456,7 +456,7 @@ void _g_terminal::run_cmd()
 	cmd.clear();
 }
 
-void _g_terminal::add_text(std::wstring_view s)
+void _g_terminal::print(std::wstring_view s)
 {
 	text.emplace_back(s);
 	if (text.size() > 20000) text.erase(text.begin(), text.begin() + 10000);

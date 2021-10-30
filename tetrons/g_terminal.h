@@ -43,7 +43,7 @@ struct _g_terminal : public _t_go
 	bool mouse_down_left2(_xy r) override;
 	void mouse_move_left2(_xy r) override;
 	void run_cmd(); // выволнить введенную команду
-	void add_text(std::wstring_view s); // добавить текст
+	void print(std::wstring_view s); // добавить текст
 	void text_clear() { text.clear(); }
 	void start_timer();
 	void stop_timer(std::wstring_view s);

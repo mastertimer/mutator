@@ -1,8 +1,9 @@
-﻿#include <map>
+﻿#include "json.h"
+#include "graphics.h"
+
+#include <map>
 #include <iomanip>
 #include <sstream>
-
-#include "json.h"
 
 _wjson& _wjson::str(std::string_view name, bool lin)
 {
