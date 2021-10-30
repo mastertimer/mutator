@@ -2,6 +2,8 @@
 
 #include "basic.h"
 
+#include <array>
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 constexpr i64    size_offer = 20;   // предложений продажи, предложений покупки ( ВСЕГО = size_offer * 2 );
@@ -22,7 +24,7 @@ struct _offer
 
 struct _offers
 {
-	_offer offer[size_offer];
+	std::array<_offer, size_offer> offer;
 
 	bool operator==(const _offers& p) const;
 };

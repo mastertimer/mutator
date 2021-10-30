@@ -605,8 +605,8 @@ bool _compressed_exchange_data::read0(_supply_and_demand& c)
 bool _compressed_exchange_data::read1(_supply_and_demand& c)
 {
 	if (data.pop() == 0) return read0(c);
-	if (!read12(c.demand.offer, base_buy)) return false;
-	if (!read12(c.supply.offer, base_sale)) return false;
+	if (!read12(c.demand.offer.data(), base_buy)) return false;
+	if (!read12(c.supply.offer.data(), base_sale)) return false;
 	return true;
 }
 
@@ -943,8 +943,8 @@ bool _compressed_exchange_data::add12(const _offer* v1, std::vector<_offer>& v0,
 
 bool _compressed_exchange_data::add1(const _supply_and_demand& c)
 {
-	i64 buy_izm = calc_delta_del_add(c.demand.offer, base_buy);
-	i64 sale_izm = calc_delta_del_add(c.supply.offer, base_sale);
+	i64 buy_izm = calc_delta_del_add(c.demand.offer.data(), base_buy);
+	i64 sale_izm = calc_delta_del_add(c.supply.offer.data(), base_sale);
 	if (std::max(abs(buy_izm), abs(sale_izm)) > 12)
 	{
 		data.push(0);
@@ -955,8 +955,8 @@ bool _compressed_exchange_data::add1(const _supply_and_demand& c)
 	std::vector<_offer> bbuy = base_buy;
 	std::vector<_offer> bsale = base_sale;
 
-	if (!add12(c.demand.offer, bbuy, buy_izm)) return false;
-	if (!add12(c.supply.offer, bsale, sale_izm)) return false;
+	if (!add12(c.demand.offer.data(), bbuy, buy_izm)) return false;
+	if (!add12(c.supply.offer.data(), bsale, sale_izm)) return false;
 
 	base_buy = std::move(bbuy);
 	base_sale = std::move(bsale);

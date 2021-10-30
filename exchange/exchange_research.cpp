@@ -30,9 +30,40 @@ _delta_offers operator-(const _offers& a, const _offers& b)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+_delta_offers2::_delta_offers2(const _offers& a, const _offers& b)
+{
+	if (a.offer[1].price > a.offer[0].price)
+	{
+		delta_price = 1;
+		start_price = std::min(a.offer[0].price, b.offer[0].price);
+//		int end_price = std::min(a.offer[0].price, b.offer[0].price);
+	}
+	else
+	{
+		delta_price = -1;
+		start_price = std::max(a.offer[0].price, b.offer[0].price);
+
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 _delta_supply_and_demand::_delta_supply_and_demand(const _supply_and_demand& a, const _supply_and_demand& b):
 	delta_demand{ a.demand - b.demand }, delta_supply{ a.supply - b.supply }
 {
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+_delta_supply_and_demand2::_delta_supply_and_demand2(const _supply_and_demand& a, const _supply_and_demand& b):
+	delta_demand(a.demand, b.demand), delta_supply(a.supply, b.supply)
+{
+
+}
+
+_delta_supply_and_demand2 operator-(const _supply_and_demand& a, const _supply_and_demand& b)
+{
+	return _delta_supply_and_demand2(a, b);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,6 +79,7 @@ void exchange_fun1(_g_terminal* t)
 		if (prev)
 			if (i.time - prev->time == 1)
 			{
+				auto ee = i - *prev;
 				_delta_supply_and_demand delta(i, *prev);
 			}
 		prev = &i;
