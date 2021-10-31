@@ -50,10 +50,10 @@ _delta_supply_and_demand operator-(const _supply_and_demand& a, const _supply_an
 void exchange_fun1(_g_terminal* t)
 { // общая информация
 	start_stock();
-	t->print(L"количество цен: " + std::to_wstring(exchange_data.size()));
-	t->print(L"размер сжатой записи: " + double_to_wstring(double(exchange_data.info_compressed_size) / exchange_data.size(), 1)); // 20.2
+	t->print(L"количество цен: " + std::to_wstring(ed.size()));
+	t->print(L"размер сжатой записи: " + double_to_wstring(double(ed.info_compressed_size) / ed.size(), 1)); // 20.2
 	const _supply_and_demand* prev = nullptr;
-	for (auto& i : exchange_data)
+	for (auto& i : ed)
 	{
 		if (prev)
 			if (i.time - prev->time == 1)
@@ -70,8 +70,8 @@ void exchange_fun2(_g_terminal* t, std::vector<std::wstring>& parameters)
 	if (parameters.empty()) return;
 	start_stock();
 	auto n = std::stoll(parameters[0]);
-	if ((n < 0) || (n >= (i64)exchange_data.size())) return;
-	*t << exchange_data[n];
+	if ((n < 0) || (n >= (i64)ed.size())) return;
+	*t << ed[n];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

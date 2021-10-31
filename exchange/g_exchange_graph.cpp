@@ -54,8 +54,8 @@ struct _prices_curve2 : public _basic_curve // посекундный спрос
 
 void start_stock()
 {
-	if (!exchange_data.empty()) return;
-	exchange_data.load_from_file();
+	if (!ed.empty()) return;
+	ed.load_from_file();
 
 	if (!graph) return;
 	if (!graph->find1<_g_scrollbar>(flag_part))
@@ -285,7 +285,7 @@ void _g_exchange_graph::ris2(_trans tr, bool final)
 		date_to_ansi_string(mintime).data(), 4, cc2 - 0x80000000);
 	// рисование количества элементов
 	master_bm.text16n(std::max(a.x.min, 0.0) + dex + 10, std::max(a.y.min, 0.0) + 60,
-		std::to_string(exchange_data.size()).data(), 2, 0x60ff0000);
+		std::to_string(ed.size()).data(), 2, 0x60ff0000);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -383,7 +383,7 @@ void _prices_curve::draw(i64 n, _area area)
 				}
 		}
 		i64 ii = i - begin_ss;
-		if (part_ss[ii].empty()) part_ss[ii] = exchange_data[i];
+		if (part_ss[ii].empty()) part_ss[ii] = ed[i];
 		pri[part_ss[ii].time % 60] = part_ss[ii];
 	}
 	min = index_data[n].minmin - c_unpak;
@@ -505,7 +505,7 @@ void _prices_curve2::draw(i64 n, _area area)
 				}
 		}
 		i64 ii = i - begin_ss;
-		if (part_ss[ii].empty()) part_ss[ii] = exchange_data[i];
+		if (part_ss[ii].empty()) part_ss[ii] = ed[i];
 		pri[part_ss[ii].time % 60] = part_ss[ii];
 	}
 	min = index_data[n].minmin - c_unpak;

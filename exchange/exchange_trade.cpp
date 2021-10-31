@@ -25,7 +25,7 @@ void scan_supply_and_demand()
 		#endif // DEBUG_MMM*/
 		return;
 	}
-	exchange_data.push_back(a);
+	ed.push_back(a);
 	update_index_data();
 
 	graph->run(nullptr, graph, flag_run);

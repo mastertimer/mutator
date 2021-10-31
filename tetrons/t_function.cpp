@@ -657,7 +657,7 @@ void fun30(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun31(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	exchange_data.save_to_file();
+	ed.save_to_file();
 }
 
 void fun32(_tetron* tt0, _tetron* tt, u64 flags)

@@ -89,14 +89,14 @@ bool update_index_data()
 {
 	i64 vcc = 0;
 	if (!index_data.empty()) vcc = index_data.back().ncc.max;
-	if (vcc == (i64)exchange_data.size()) return false; // ничего не изменилось
-	if (vcc > (i64)exchange_data.size())
+	if (vcc == (i64)ed.size()) return false; // ничего не изменилось
+	if (vcc > (i64)ed.size())
 	{
 		index_data.clear(); // обработанных данных больше, чем исходных, потому пусть будет полный перерасчет
 		vcc = 0;
 	}
-	if (exchange_data.size() < 2) return false; // мало данных для обработки
-	i64 back_minute = exchange_data.back().time_to_minute();
+	if (ed.size() < 2) return false; // мало данных для обработки
+	i64 back_minute = ed.back().time_to_minute();
 	if (!index_data.empty())
 	{
 		if (back_minute == index_data.back().time + 1) return false; // еще рано
@@ -106,12 +106,12 @@ bool update_index_data()
 			vcc = 0;
 		}
 	}
-	if (exchange_data.size() - vcc < 2) return false; // мало данных для обработки
+	if (ed.size() - vcc < 2) return false; // мало данных для обработки
 	time_t t = 0;
 	_index cp;
-	for (i64 i = vcc; i < (i64)exchange_data.size(); i++)
+	for (i64 i = vcc; i < (i64)ed.size(); i++)
 	{
-		const _supply_and_demand& cc = exchange_data[i];
+		const _supply_and_demand& cc = ed[i];
 		time_t t2 = cc.time_to_minute();
 		if (t2 == t)
 		{
