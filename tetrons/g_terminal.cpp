@@ -29,6 +29,18 @@ struct _cmd_sad : public _g_terminal::_command
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+struct _cmd_delta : public _g_terminal::_command
+{
+	std::wstring help() override { return L"разность цен"; }
+
+	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
+	{
+		exchange_fun3(t, parameters);
+	}
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 std::wstring test_file = L"e:\\mutator\\data\\t110521.txt";
 
 struct _cmd_test_arithmetic_coding : public _g_terminal::_command
@@ -320,6 +332,7 @@ _g_terminal::_g_terminal()
 	command.insert({ L"ppm",   std::unique_ptr<_command>(new _cmd_test_ppm) });
 	command.insert({ L"1",     std::unique_ptr<_command>(new _cmd_load_sable_stat) });
 	command.insert({ L"sad",   std::unique_ptr<_command>(new _cmd_sad) });
+	command.insert({ L"delta", std::unique_ptr<_command>(new _cmd_delta) });
 	command.insert({ L"line",  std::unique_ptr<_command>(new _cmd_line) });
 }
 
