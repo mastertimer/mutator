@@ -140,9 +140,9 @@ uchar ppm(const std::vector<uchar>& data, std::vector<uchar>& res, u64 g)
 
 
 
-		u64 ed = end - begin;
-		end = begin + ed * frequency[c + 1] / frequency[256];
-		begin += ed * frequency[c] / frequency[256];
+		u64 eb = end - begin;
+		end = begin + eb * frequency[c + 1] / frequency[256];
+		begin += eb * frequency[c] / frequency[256];
 	start:
 		if (end <= h2)
 		{
@@ -195,9 +195,9 @@ void arithmetic_coding(const std::vector<uchar>& data, _bit_vector& res)
 	{
 		u64 chs = 0;
 		for (u64 i = 0; i < c; i++) chs += frequency[i];
-		u64 ed = end - begin;
-		end = begin + ed * (chs + frequency[c]++) / summ_frequency;
-		begin += ed * chs / summ_frequency++;
+		u64 eb = end - begin;
+		end = begin + eb * (chs + frequency[c]++) / summ_frequency;
+		begin += eb * chs / summ_frequency++;
 		for (;;)
 		{
 			if (u64 bi = (begin >= h2); bi || (end <= h2))
@@ -235,10 +235,10 @@ void arithmetic_decoding(_bit_vector& data, std::vector<uchar>& res)
 	{
 		i64 c = 0;
 		u64 chs = 0;
-		u64 ed = end - begin;
-		for (u64 y = ((x - begin + 1) * summ_frequency - 1) / ed; y >= (chs += frequency[c]); c++);
-		end = begin + ed * chs / summ_frequency;
-		begin += ed * (chs - frequency[c]++) / summ_frequency++;
+		u64 eb = end - begin;
+		for (u64 y = ((x - begin + 1) * summ_frequency - 1) / eb; y >= (chs += frequency[c]); c++);
+		end = begin + eb * chs / summ_frequency;
+		begin += eb * (chs - frequency[c]++) / summ_frequency++;
 		res.push_back(c);
 		for (;;)
 		{

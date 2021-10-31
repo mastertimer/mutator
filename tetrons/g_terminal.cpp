@@ -17,13 +17,13 @@ struct _cmd_load_sable_stat : public _g_terminal::_command
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _cmd_test_stat : public _g_terminal::_command
+struct _cmd_sad : public _g_terminal::_command
 {
-	std::wstring help() override { return L"ещё статистика цен"; }
+	std::wstring help() override { return L"спрос и предложение"; }
 
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
-		exchange_fun2(t);
+		exchange_fun2(t, parameters);
 	}
 };
 
@@ -319,7 +319,7 @@ _g_terminal::_g_terminal()
 	command.insert({ L"aa",    std::unique_ptr<_command>(new _cmd_test_arithmetic_coding2) });
 	command.insert({ L"ppm",   std::unique_ptr<_command>(new _cmd_test_ppm) });
 	command.insert({ L"1",     std::unique_ptr<_command>(new _cmd_load_sable_stat) });
-	command.insert({ L"2",     std::unique_ptr<_command>(new _cmd_test_stat) });
+	command.insert({ L"sad",   std::unique_ptr<_command>(new _cmd_sad) });
 	command.insert({ L"line",  std::unique_ptr<_command>(new _cmd_line) });
 }
 
@@ -465,7 +465,7 @@ void _g_terminal::run_cmd()
 }
 
 void _g_terminal::print(std::wstring_view s)
-{
+{ // *
 	text.emplace_back(s);
 	if (text.size() > 20000) text.erase(text.begin(), text.begin() + 10000);
 }
