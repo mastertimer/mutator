@@ -35,7 +35,7 @@ _g_terminal& operator << (_g_terminal& t, const _supply_and_demand& sd)
 	t.print(L"предложение:");
 	for (i64 i = size_offer - 1; i >= 0; i--)
 	{
-		t.print(std::to_wstring(sd.demand[i].price) + L": " + std::to_wstring(sd.demand[i].number));
+		t.print(double_to_wstring(sd.supply[i].price * c_unpak, 2) + L": " + std::to_wstring(sd.supply[i].number));
 	}
 	return t;
 }

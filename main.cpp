@@ -234,7 +234,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	wcex.lpszClassName = szWindowClass;
 	wcex.hIconSm = 0;
 	if (!RegisterClassEx(&wcex)) return 2;
-	HWND hWnd = CreateWindow(szWindowClass, L"mutator", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1200, 800,
+	HWND hWnd = CreateWindow(szWindowClass, L"mutator", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1600, 800,
 		NULL, NULL, hInstance, NULL);
 	if (!hWnd) return 3;
 	ShowWindow(hWnd, nCmdShow);
