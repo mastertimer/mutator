@@ -110,8 +110,8 @@
 			"id": 12,
 			"links": [
 				{ "id": 354, "flags": 0x100000000 },
-				{ "id": 9465, "flags": 0x100000000 },
-				{ "id": 9498, "flags": 0x100000000 }
+				{ "id": 9555, "flags": 0x100000000 },
+				{ "id": 9566, "flags": 0x100000000 }
 			]
 		},
 		{
@@ -404,8 +404,7 @@
 				{ "id": 584, "flags": 0x16 },
 				{ "id": 590, "flags": 0x12 },
 				{ "id": 604, "flags": 0x16 },
-				{ "id": 633, "flags": 0x12 },
-				{ "id": 9467, "flags": 0x8000000000 }
+				{ "id": 633, "flags": 0x12 }
 			]
 		},
 		{
@@ -989,8 +988,8 @@
 				{ "id": 180, "flags": 0x100000000 },
 				{ "id": 300, "flags": 0x100000000 },
 				{ "id": 443, "flags": 0x100000000 },
-				{ "id": 9466, "flags": 0x100000000 },
-				{ "id": 9499, "flags": 0x100000000 }
+				{ "id": 9556, "flags": 0x100000000 },
+				{ "id": 9567, "flags": 0x100000000 }
 			]
 		},
 		{
@@ -1071,7 +1070,7 @@
 		{
 			"name": "_t_trans",
 			"id": 109,
-			"trans": { "scale": 1, "offset": { "x": 1032.29456268990202, "y": -835.402770236739116 } },
+			"trans": { "scale": 1, "offset": { "x": 1614.29456268990202, "y": -843.402770236739116 } },
 			"links": [
 				{ "id": 37, "flags": 0x12 },
 				{ "id": 46, "flags": 0x12 },
@@ -2611,11 +2610,11 @@
 		{
 			"name": "_g_rect",
 			"id": 255,
-			"local_area": { "x": { "min": 0, "max": 307.599999999999909, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 307.599999999999966, "empty": false, "rclosed": true } },
+			"local_area": { "x": { "min": 0, "max": 955, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 698, "empty": false, "rclosed": true } },
 			"links": [
-				{ "id": 9465, "flags": 0x22 },
-				{ "id": 9466, "flags": 0x22 },
-				{ "id": 9467, "flags": 0x12 }
+				{ "id": 9555, "flags": 0x22 },
+				{ "id": 9556, "flags": 0x22 },
+				{ "id": 9557, "flags": 0x12 }
 			]
 		},
 		{
@@ -4913,10 +4912,10 @@
 		{
 			"name": "_g_rect",
 			"id": 478,
-			"local_area": { "x": { "min": 0, "max": 307.599999999999909, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 307.599999999999966, "empty": false, "rclosed": true } },
+			"local_area": { "x": { "min": 0, "max": 1089, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 698, "empty": false, "rclosed": true } },
 			"links": [
-				{ "id": 9498, "flags": 0x22 },
-				{ "id": 9499, "flags": 0x22 }
+				{ "id": 9566, "flags": 0x22 },
+				{ "id": 9567, "flags": 0x22 }
 			]
 		},
 		{
@@ -6690,16 +6689,17 @@
 		{
 			"name": "_g_exchange_graph",
 			"id": 671,
-			"local_area": { "x": { "min": 0, "max": 949, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 451, "empty": false, "rclosed": true } },
+			"local_area": { "x": { "min": 0, "max": 1083, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 692, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 672, "flags": 0x1200000000 },
-				{ "id": 737, "flags": 0x400000012 }
+				{ "id": 737, "flags": 0x400000012 },
+				{ "id": 9557, "flags": 0x8000000000 }
 			]
 		},
 		{
 			"name": "_t_trans",
 			"id": 672,
-			"trans": { "scale": 1, "offset": { "x": -998, "y": 883 } },
+			"trans": { "scale": 1, "offset": { "x": -1130, "y": 882 } },
 			"links": [
 				{ "id": 109, "flags": 0x1200000000 },
 				{ "id": 671, "flags": 0x12 }
@@ -6708,7 +6708,7 @@
 		{
 			"name": "_g_scrollbar",
 			"id": 737,
-			"local_area": { "x": { "min": 0, "max": 949, "empty": false, "rclosed": true }, "y": { "min": 451, "max": 461, "empty": false, "rclosed": true } },
+			"local_area": { "x": { "min": 0, "max": 1083, "empty": false, "rclosed": true }, "y": { "min": 692, "max": 702, "empty": false, "rclosed": true } },
 			"position": 0,
 			"vid": 2,
 			"links": [
@@ -7038,7 +7038,7 @@
 		{
 			"name": "_g_terminal",
 			"id": 6259,
-			"local_area": { "x": { "min": 0, "max": 1098.1571623279001, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 213.814204017399959, "empty": false, "rclosed": true } },
+			"local_area": { "x": { "min": 0, "max": 465.157162327900096, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 722.814204017400016, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 567, "flags": 0x400000000 },
 				{ "id": 6260, "flags": 0x1200000000 }
@@ -7047,7 +7047,7 @@
 		{
 			"name": "_t_trans",
 			"id": 6260,
-			"trans": { "scale": 1, "offset": { "x": -1010.24167533566253, "y": 1366.98003783443187 } },
+			"trans": { "scale": 1, "offset": { "x": -1600.24167533566242, "y": 855.980037834431869 } },
 			"links": [
 				{ "id": 109, "flags": 0x1200000000 },
 				{ "id": 6259, "flags": 0x12 }
@@ -7647,7 +7647,7 @@
 		},
 		{
 			"name": "_t_int",
-			"id": 9465,
+			"id": 9555,
 			"a": 4290838464,
 			"links": [
 				{ "id": 12, "flags": 0x1 },
@@ -7656,7 +7656,7 @@
 		},
 		{
 			"name": "_t_int",
-			"id": 9466,
+			"id": 9556,
 			"a": 807436352,
 			"links": [
 				{ "id": 100, "flags": 0x1 },
@@ -7665,17 +7665,17 @@
 		},
 		{
 			"name": "_g_tetron",
-			"id": 9467,
+			"id": 9557,
 			"local_area": { "x": { "min": -27, "max": -3, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 24, "empty": false, "rclosed": true } },
 			"hint": "",
 			"links": [
-				{ "id": 36, "flags": 0x80 },
-				{ "id": 255, "flags": 0x1200000000 }
+				{ "id": 255, "flags": 0x1200000000 },
+				{ "id": 671, "flags": 0x80 }
 			]
 		},
 		{
 			"name": "_t_int",
-			"id": 9498,
+			"id": 9566,
 			"a": 4286644096,
 			"links": [
 				{ "id": 12, "flags": 0x1 },
@@ -7684,7 +7684,7 @@
 		},
 		{
 			"name": "_t_int",
-			"id": 9499,
+			"id": 9567,
 			"a": 807436352,
 			"links": [
 				{ "id": 100, "flags": 0x1 },
@@ -7711,7 +7711,7 @@
 		442,
 		9494,
 		252,
-		671,
+		0,
 		612,
 		268,
 		255,
@@ -7746,5 +7746,5 @@
 		443,
 		354
 	],
-	"id_tetron": 9503
+	"id_tetron": 9568
 }
