@@ -209,6 +209,10 @@ struct _cmd_test : public _g_terminal::_command
 
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
+		_area ee{ {0,1.3}, {0,2.2} };
+		_area bb;
+		bb = ee;
+
 		_offer a{ 4, 4 };
 		_offer b{ 4, 4 };
 

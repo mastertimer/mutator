@@ -245,13 +245,9 @@ _xy _trans::inverse(_xy b) const
 _area _trans::inverse(const _area& b) const
 {
 	if (b.empty()) return b;
-	_area c;
 	double mm = 1.0 / scale;
-	c.x.min = (b.x.min - offset.x) * mm;
-	c.x.max = (b.x.max - offset.x) * mm;
-	c.y.min = (b.y.min - offset.y) * mm;
-	c.y.max = (b.y.max - offset.y) * mm;
-	return c;
+	return { { (b.x.min - offset.x) * mm, (b.x.max - offset.x) * mm},
+		{(b.y.min - offset.y) * mm, (b.y.max - offset.y) * mm} };
 }
 
 void _trans::scale_up(_xy b, double m)
