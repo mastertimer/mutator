@@ -4,14 +4,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool _offers::operator==(const _offers& p) const
-{ // *
-	for (i64 i = 0; i < size_offer; i++) if (offer[i] != p.offer[i]) return false;
-	return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 bool _supply_and_demand::operator==(const _supply_and_demand& p) const
 { // *
 	return (demand == p.demand) && (supply == p.supply);
@@ -35,7 +27,16 @@ i64 _supply_and_demand::time_minute()
 
 _g_terminal& operator << (_g_terminal& t, const _supply_and_demand& sd)
 {
-	t.print(L"цены");
+	tm a;
+	localtime_s(&a, &sd.time);
+	char s[20];
+	strftime(s, sizeof(s), "%d.%m.%G %T", &a);
+	t.print(L"цены от " + string_to_wstring(s));
+	t.print(L"предложение:");
+	for (i64 i = size_offer - 1; i >= 0; i--)
+	{
+		t.print(std::to_wstring(sd.demand[i].price) + L": " + std::to_wstring(sd.demand[i].number));
+	}
 	return t;
 }
 

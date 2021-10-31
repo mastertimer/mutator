@@ -115,17 +115,17 @@ bool update_index_data()
 		time_t t2 = cc.time_to_minute();
 		if (t2 == t)
 		{
-			double aa = ((i64)cc.demand.offer[0].price + cc.supply.offer[0].price) * (c_unpak * 0.5);
+			double aa = ((i64)cc.demand[0].price + cc.supply[0].price) * (c_unpak * 0.5);
 			if (aa < cp.min) cp.min = aa;
 			if (aa > cp.max) cp.max = aa;
-			if (cc.demand.offer.back().price * c_unpak < cp.minmin) cp.minmin = cc.demand.offer.back().price * c_unpak;
-			if (cc.supply.offer.back().price * c_unpak > cp.maxmax) cp.maxmax = cc.supply.offer.back().price * c_unpak;
+			if (cc.demand.back().price * c_unpak < cp.minmin) cp.minmin = cc.demand.back().price * c_unpak;
+			if (cc.supply.back().price * c_unpak > cp.maxmax) cp.maxmax = cc.supply.back().price * c_unpak;
 			cp.ncc.max++;
 			cp.last = aa;
 			if (cc.time % 60 == 3)
 			{
-				cp.c3_buy = cc.demand.offer[0].price * c_unpak;
-				cp.c3_sale = cc.supply.offer[0].price * c_unpak;
+				cp.c3_buy = cc.demand[0].price * c_unpak;
+				cp.c3_sale = cc.supply[0].price * c_unpak;
 			}
 			continue;
 		}
@@ -138,11 +138,11 @@ bool update_index_data()
 		cp.time = t;
 		cp.ncc.min = i;
 		cp.ncc.max = i + 1;
-		cp.max = cp.min = cp.last = cp.first = ((i64)cc.demand.offer[0].price + cc.supply.offer[0].price) * (c_unpak * 0.5);
-		cp.minmin = cc.demand.offer.back().price * c_unpak;
-		cp.maxmax = cc.supply.offer.back().price * c_unpak;
-		cp.c3_buy = cc.demand.offer[0].price * c_unpak;
-		cp.c3_sale = cc.supply.offer[0].price * c_unpak;
+		cp.max = cp.min = cp.last = cp.first = ((i64)cc.demand[0].price + cc.supply[0].price) * (c_unpak * 0.5);
+		cp.minmin = cc.demand.back().price * c_unpak;
+		cp.maxmax = cc.supply.back().price * c_unpak;
+		cp.c3_buy = cc.demand[0].price * c_unpak;
+		cp.c3_sale = cc.supply[0].price * c_unpak;
 	}
 	return true;
 }

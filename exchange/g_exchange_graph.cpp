@@ -125,19 +125,12 @@ _g_exchange_graph::_g_exchange_graph()
 }
 
 std::string date_to_ansi_string(time_t time)
-{
-	std::string res = "22.12.20";
+{ // *
 	tm a;
 	localtime_s(&a, &time);
-	res[0] = (a.tm_mday / 10) + '0';
-	res[1] = (a.tm_mday % 10) + '0';
-	int m = a.tm_mon + 1;
-	res[3] = (m / 10) + '0';
-	res[4] = (m % 10) + '0';
-	int g = (a.tm_year + 1900) % 100;
-	res[6] = (g / 10) + '0';
-	res[7] = (g % 10) + '0';
-	return res;
+	char s[9];
+	strftime(s, sizeof(s), "%d.%m.%g", &a);
+	return s;
 }
 
 void _g_exchange_graph::ris2(_trans tr, bool final)
@@ -425,30 +418,30 @@ void _prices_curve::draw(i64 n, _area area)
 		if (pri[ss_].empty()) continue;
 		i64 xx1 = xx.min + dx * i / kol;
 		i64 xx2 = xx.min + dx * (i + 1) / kol - 1;
-		if (pri[ss_].supply.offer[3].price < pri[ss_].demand.offer[3].price)
+		if (pri[ss_].supply[3].price < pri[ss_].demand[3].price)
 		{
 			//		xx1++;
 		}
 		for (int j = size_offer - 1; j >= 0; j--)
 		{
-			double ce = pri[ss_].supply.offer[j].price * c_unpak;
+			double ce = pri[ss_].supply[j].price * c_unpak;
 			_iinterval yy(area.y.min + (max - ce) * ddy / dd, area.y.min + (max - ce + c_unpak) * ddy / dd);
 			yy.min++;
 			yy.max--;
 			if (yy.empty()) continue;
-			uint q = (uint)sqrt(pri[ss_].supply.offer[j].number) + 32;
+			uint q = (uint)sqrt(pri[ss_].supply[j].number) + 32;
 			if (q > 255) q = 255;
 			uint cc = (q << 8) + (q << 16) + 0x60000000;
 			master_bm.fill_rectangle({ {xx1, xx2}, yy }, cc);
 		}
 		for (int j = 0; j < size_offer; j++)
 		{
-			double ce = pri[ss_].demand.offer[j].price * c_unpak;
+			double ce = pri[ss_].demand[j].price * c_unpak;
 			_iinterval yy(area.y.min + (max - ce) * ddy / dd, area.y.min + (max - ce + c_unpak) * ddy / dd);
 			yy.min++;
 			yy.max--;
 			if (yy.empty()) continue;
-			uint q = (uint)sqrt(pri[ss_].demand.offer[j].number) + 32;
+			uint q = (uint)sqrt(pri[ss_].demand[j].number) + 32;
 			if (q > 255) q = 255;
 			uint cc = q + (q << 8) + 0x60000000;
 			master_bm.fill_rectangle({ {xx1, xx2}, yy }, cc);
@@ -550,7 +543,7 @@ void _prices_curve2::draw(i64 n, _area area)
 		i64 xx2 = xx.min + dx * (i + 1) / kol - 1;
 		for (int j = size_offer - 1; j >= 0; j--)
 		{
-			double ce = pri[ss_].supply.offer[j].price * c_unpak;
+			double ce = pri[ss_].supply[j].price * c_unpak;
 			_iinterval yy(area.y.min + (max - ce) * ddy / dd, area.y.min + (max - ce + c_unpak) * ddy / dd);
 			yy.min++;
 			yy.max--;
@@ -559,8 +552,8 @@ void _prices_curve2::draw(i64 n, _area area)
 			uint cc = 0x40ffffff;
 			if (ss_pr >= 0)
 			{
-				if (pri[ss_].supply.offer[j].number > pri[ss_pr].supply.offer[j].number) cc = 0x9000ff00;
-				if (pri[ss_].supply.offer[j].number < pri[ss_pr].supply.offer[j].number) cc = 0x70ff0000;
+				if (pri[ss_].supply[j].number > pri[ss_pr].supply[j].number) cc = 0x9000ff00;
+				if (pri[ss_].supply[j].number < pri[ss_pr].supply[j].number) cc = 0x70ff0000;
 			}
 			if (cc != 0x40ffffff) master_bm.fill_rectangle({ {xx1, xx2}, yy }, cc);
 		}

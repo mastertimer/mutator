@@ -209,7 +209,11 @@ struct _cmd_test : public _g_terminal::_command
 
 	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
 	{
-		t->print(std::to_wstring(sizeof(_offers)));
+		_offer a{ 4, 4 };
+		_offer b{ 4, 4 };
+
+//		t->print(std::to_wstring(sizeof(_offers)));
+		t->print((a<b)?L"<":L"!<");
 
 /*		u64 err = 0;
 		for (u64 i = 0; i < 100000; i++)

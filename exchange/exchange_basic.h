@@ -17,24 +17,21 @@ struct _offer
 	int price;
 	int number;
 
-	bool operator!=(const _offer p) const { return (price != p.price) || (number != p.number); }
+	auto operator<=>(const _offer&) const = default;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _offers
+struct _offers: public std::array<_offer, size_offer>
 {
-	std::array<_offer, size_offer> offer;
-
-	bool operator==(const _offers& p) const;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _supply_and_demand // предложение и спрос
 {
-	_offers demand; // желающие купить
-	_offers supply; // желающие продать
+	_offers demand; // покупка, спрос
+	_offers supply; // продажа, предложение
 	time_t  time;
 
 	bool operator==(const _supply_and_demand& p) const; // время не учитывается при сравнении

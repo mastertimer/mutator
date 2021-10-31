@@ -7,25 +7,25 @@
 _delta_offers::_delta_offers(const _offers& a, const _offers& b)
 {
 	i64 end_price;
-	if (a.offer[1].price > a.offer[0].price)
+	if (a[1].price > a[0].price)
 	{
 		delta_price = 1;
-		start_price = std::min(a.offer.front().price, b.offer.front().price);
-		end_price = std::min(a.offer.back().price, b.offer.back().price);
+		start_price = std::min(a.front().price, b.front().price);
+		end_price = std::min(a.back().price, b.back().price);
 	}
 	else
 	{
 		delta_price = -1;
-		start_price = std::max(a.offer[0].price, b.offer[0].price);
-		end_price = std::max(a.offer.back().price, b.offer.back().price);
+		start_price = std::max(a.front().price, b.front().price);
+		end_price = std::max(a.back().price, b.back().price);
 	}
 	delta_number.resize((end_price - start_price) * delta_price + 1, { 0, 0 });
-	for (auto i : a.offer)
+	for (auto i : a)
 	{
 		i64 n = (i.price - start_price) * delta_price;
 		if ((n >= 0) && (n < (i64)delta_number.size())) delta_number[n].old_number = i.number;
 	}
-	for (auto i : b.offer)
+	for (auto i : b)
 	{
 		i64 n = (i.price - start_price) * delta_price;
 		if ((n >= 0) && (n < (i64)delta_number.size())) delta_number[n].new_number = i.number;
