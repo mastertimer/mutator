@@ -21,6 +21,9 @@
     <Filter Include="Исходные файлы\exchange">
       <UniqueIdentifier>{5d5e97c9-7d36-430b-9833-5e718f4e4c94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\piano">
+      <UniqueIdentifier>{1248ac0b-b904-4f9f-8575-58082dbe8255}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -80,6 +83,9 @@
     <ClCompile Include="library\bit_vector.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
+    <ClCompile Include="piano\RtMidi.cpp">
+      <Filter>Исходные файлы\piano</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\basic.h">
@@ -138,6 +144,9 @@
     </ClInclude>
     <ClInclude Include="library\bit_vector.h">
       <Filter>Исходные файлы\library</Filter>
+    </ClInclude>
+    <ClInclude Include="piano\RtMidi.h">
+      <Filter>Исходные файлы\piano</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

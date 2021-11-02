@@ -107,7 +107,7 @@
       <BrowseInformation>false</BrowseInformation>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir);library;exchange;tetrons</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);library;exchange;tetrons;piano</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4100;4244</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -149,7 +149,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);library;exchange;tetrons</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);library;exchange;tetrons;piano</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4100;4244</DisableSpecificWarnings>
       <AdditionalUsingDirectories>
       </AdditionalUsingDirectories>
@@ -178,6 +178,7 @@
     <ClCompile Include="library\mathematics.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mutator.cpp" />
+    <ClCompile Include="piano\RtMidi.cpp" />
     <ClCompile Include="tetrons\g_terminal.cpp" />
     <ClCompile Include="tetrons\tetron.cpp" />
     <ClCompile Include="tetrons\t_function.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="library\json.h" />
     <ClInclude Include="library\mathematics.h" />
     <ClInclude Include="mutator.h" />
+    <ClInclude Include="piano\RtMidi.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="tetrons\g_terminal.h" />
     <ClInclude Include="tetrons\tetron.h" />
