@@ -324,7 +324,7 @@ struct _cmd_piano : public _g_terminal::_command
 		t->print(L"количество портов: " + std::to_wstring(n_ports));
 		midiin->openPort(0);
 		midiin->setCallback(&fun_piano, t);
-		midiin->ignoreTypes(false, false, false);
+		midiin->ignoreTypes(false, true, true);
 		t->print(L"пианино стартануло!");
 	}
 };
