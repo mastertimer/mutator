@@ -2,6 +2,8 @@
 
 #include "tetron.h"
 
+#include <mutex>
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct _g_terminal : public _t_go
@@ -60,6 +62,8 @@ private:
 	i64 scrollbar0_move_slider = 0; // начальное положение scrollbar
 	i64 full_lines = 0; // полное количество строк
 	i64 cmd_vis_len = 0; // количество символов по x
+	std::mutex mtx;
+	bool need_to_update = false;
 
 	void set_clipboard(); // скопировать выделенный текст в буффер обмена
 };
