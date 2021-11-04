@@ -199,6 +199,7 @@
     <ClInclude Include="library\graphics.h" />
     <ClInclude Include="library\json.h" />
     <ClInclude Include="library\mathematics.h" />
+    <ClInclude Include="library\speed.h" />
     <ClInclude Include="mutator.h" />
     <ClInclude Include="piano\RtMidi.h" />
     <ClInclude Include="resource.h" />

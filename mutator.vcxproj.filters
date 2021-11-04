@@ -148,6 +148,9 @@
     <ClInclude Include="piano\RtMidi.h">
       <Filter>Исходные файлы\piano</Filter>
     </ClInclude>
+    <ClInclude Include="library\speed.h">
+      <Filter>Исходные файлы\library</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mutator.rc">
