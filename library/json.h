@@ -2,6 +2,8 @@
 
 #include "basic.h"
 
+#include <fstream>
+
 struct _trans;
 struct _xy;
 struct _area;

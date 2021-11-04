@@ -1,5 +1,9 @@
 ﻿#include "basic.h"
 
+#include <fstream>
+#define NOMINMAX
+#include <windows.h>
+
 i64 position1_64(u64 a)
 { // **
 	if (a >> 32)
