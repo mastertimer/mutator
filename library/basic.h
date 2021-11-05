@@ -20,6 +20,8 @@ using wstr   = const wchar_t*;
 
 constexpr double pi = 3.1415926535897932384626;
 
+inline std::wstring exe_path; // путь к запущенному exe файлу
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 constexpr i64 bit8[256] = {
@@ -50,13 +52,10 @@ i64 position1_64(u64 a);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-inline std::wstring exe_path; // путь к запущенному exe файлу
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void memset32(uint* destination, uint value, i64 size);
 
 void set_clipboard_text(astr text);
 void set_clipboard_text(std::wstring_view text);
-void os_pordis(double min, double max, i64 maxN, double& mi, double& step, double min_step = 0.0);
 
 bool save_file(std::wstring_view fn, const char* data, i64 n);
 bool load_file(std::wstring_view fn, char** data, i64* n);
@@ -64,13 +63,12 @@ bool load_file(std::wstring_view fn, std::vector<uchar>& res);
 
 std::wstring string_to_wstring(std::string_view s);
 std::string wstring_to_string(std::wstring_view b);
-wstr uint64_to_wstr_hex(u64 a);
-std::wstring substr(std::wstring_view s, i64 n, i64 k); // подстрока которая не кидает исключения
 
 std::wstring double_to_wstring(double a, int z);
 std::string  double_to_string(double a, int z);
+wstr uint64_to_wstr_hex(u64 a);
 
-void memset32(uint* destination, uint value, i64 size);
+std::wstring substr(std::wstring_view s, i64 n, i64 k); // подстрока которая не кидает исключения
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -81,30 +79,30 @@ struct _stack
 	i64   size;
 	i64   adata; // активный указатель
 
-	_stack(i64 r = 0)              noexcept; // r - зарезервировать размер
-	_stack(const _stack &a)        noexcept;
-	_stack(_stack&& a)             noexcept;
-	_stack(void* data2, int vdata) noexcept; // инициализация куском памяти
+	_stack(i64 r = 0); // r - зарезервировать размер
+	_stack(const _stack &a);
+	_stack(_stack&& a);
+	_stack(void* data2, int vdata); // инициализация куском памяти
 	~_stack() { delete[] data; }
 
-	bool operator==(const _stack& a) const noexcept;
+	bool operator==(const _stack& a) const;
 
 	void clear() { size  = 0; adata = 0; }
 	void erase(i64 n, i64 k);
 	bool save_to_file(std::wstring_view fn);
 	bool load_from_file(std::wstring_view fn);
 
-	t_b _stack& operator<<(const std::vector<_b>& b) noexcept;
-	t_b _stack& operator<<(_b a) noexcept;
-	    _stack& operator<<(const _stack& a) noexcept;
-	    _stack& operator<<(const std::wstring& a) noexcept;
+	t_b _stack& operator<<(const std::vector<_b>& b);
+	t_b _stack& operator<<(_b a);
+	    _stack& operator<<(const _stack& a);
+	    _stack& operator<<(const std::wstring& a);
 	    void    push_data(const void* data2, i64 vdata);
 	    void    push_fill(int vdata, char c); // занести кучу одинаковых символов
 
-	    _stack& operator>>(_stack& a) noexcept;
-	    _stack& operator>>(std::wstring& s) noexcept;
-	t_b _stack& operator>>(std::vector<_b>& b) noexcept;
-	t_b _stack& operator>>(_b& a) noexcept;
+	    _stack& operator>>(_stack& a);
+	    _stack& operator>>(std::wstring& s);
+	t_b _stack& operator>>(std::vector<_b>& b);
+	t_b _stack& operator>>(_b& a);
 	    void    pop_data(void* data2, i64 vdata);
 
 	void revert(i64 bytes); // вернуть данные
@@ -114,16 +112,14 @@ private:
 	void set_capacity(i64 rdata); // изменить размер массива в большую сторону
 };
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-t_b _stack& _stack::operator<<(const std::vector<_b>& b) noexcept
+t_b _stack& _stack::operator<<(const std::vector<_b>& b)
 {
 	*this << (uint)b.size();
 	for (auto& i : b) *this << i;
 	return *this;
 }
 
-t_b _stack& _stack::operator<<(_b a) noexcept
+t_b _stack& _stack::operator<<(_b a)
 {
 	if (size + (i64)sizeof(_b) > capacity) set_capacity((size + sizeof(_b)) * 2);
 	*((_b*)(data + size)) = a;
@@ -131,7 +127,7 @@ t_b _stack& _stack::operator<<(_b a) noexcept
 	return *this;
 }
 
-t_b _stack& _stack::operator>>(std::vector<_b>& b) noexcept
+t_b _stack& _stack::operator>>(std::vector<_b>& b)
 {
 	uint v;
 	*this >> v;
@@ -140,7 +136,7 @@ t_b _stack& _stack::operator>>(std::vector<_b>& b) noexcept
 	return *this;
 }
 
-t_b _stack& _stack::operator>>(_b& a) noexcept
+t_b _stack& _stack::operator>>(_b& a)
 {
 	if (adata + (i64)sizeof(_b) > size) return *this;
 	a = *((_b*)(data + adata));

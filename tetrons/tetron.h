@@ -27,6 +27,8 @@ inline _cursor g_cursor = _cursor::normal; // установленный кур�
 
 void set_cursor(_cursor x);
 
+void os_pordis(double min, double max, i64 maxN, double& mi, double& step, double min_step = 0.0);
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 inline u64 id_tetron = 1; // глобальный счетчик id тетронов

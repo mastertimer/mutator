@@ -25,45 +25,6 @@ i64 position1_64(u64 a)
 	return position1_8[a & 255];
 }
 
-void os_pordis(double min, double max, i64 maxN, double& mi, double& step, double min_step)
-{
-	i64 n;
-	double step2;
-	if (maxN < 2) maxN = 2;
-	step = exp(round(log((max - min) / maxN) / log(10)) * log(10));
-	auto fun = [&]()
-	{
-		mi = (i64(min / step)) * step;
-		if (mi < min) mi += step;
-		n = (i64((max - mi) / step)) + 1;
-	};
-	do
-	{
-		fun();
-		if (n < maxN) step = step * 0.1; else break;
-	} while (true);
-	while (n > maxN)
-	{
-		step = step * 10;
-		fun();
-	}
-	step2 = step;
-	step = step2 * 0.2;
-	fun();
-	if (n <= maxN) goto end;
-	step = step2 * 0.5;
-	fun();
-	if (n <= maxN) goto end;
-	step = step2;
-	fun();
-end:
-	if (step < min_step)
-	{
-		step = min_step;
-		fun();
-	}
-}
-
 void set_clipboard_text(std::wstring_view text)
 {
 	if (OpenClipboard(0))//открываем буфер обмена
@@ -153,13 +114,13 @@ bool load_file(std::wstring_view fn, std::vector<uchar>& res)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool _stack::operator==(const _stack& a) const noexcept
+bool _stack::operator==(const _stack& a) const
 {
 	if (size != a.size) return false;
 	return (memcmp(data, a.data, size) == 0);
 }
 
-_stack::_stack(i64 r) noexcept
+_stack::_stack(i64 r)
 {
 	data     = (r) ? new char[r] : 0;
 	capacity = r;
@@ -167,19 +128,19 @@ _stack::_stack(i64 r) noexcept
 	adata    = 0;
 }
 
-_stack::_stack(const _stack& a) noexcept : capacity(a.size), size(a.size), adata(a.adata)
+_stack::_stack(const _stack& a) : capacity(a.size), size(a.size), adata(a.adata)
 {
 	data = new char[capacity];
 	memcpy(data, a.data, size);
 }
 
-_stack::_stack(_stack&& a) noexcept : data(a.data), capacity(a.capacity), size(a.size), adata(a.adata)
+_stack::_stack(_stack&& a) : data(a.data), capacity(a.capacity), size(a.size), adata(a.adata)
 {
 	a.data = nullptr;
 	a.capacity = a.size = a.adata = 0;
 }
 
-_stack::_stack(void* data2, int vdata) noexcept
+_stack::_stack(void* data2, int vdata)
 {
 	adata    = 0;
 	size     = vdata;
@@ -216,14 +177,14 @@ bool _stack::load_from_file(std::wstring_view fn)
 	return true;
 }
 
-_stack& _stack::operator<<(const _stack& a) noexcept
+_stack& _stack::operator<<(const _stack& a)
 {
 	*this << a.size;
 	push_data(a.data, a.size);
 	return *this;
 }
 
-_stack& _stack::operator<<(const std::wstring& a) noexcept
+_stack& _stack::operator<<(const std::wstring& a)
 {
 	uint l = (uint)a.size();
 	*this << l;
@@ -245,7 +206,7 @@ void _stack::push_fill(int vdata, char c)
 	size += vdata;
 }
 
-_stack& _stack::operator>>(_stack& a) noexcept
+_stack& _stack::operator>>(_stack& a)
 {
 	u64 v = 0;
 	*this >> v;
@@ -258,7 +219,7 @@ _stack& _stack::operator>>(_stack& a) noexcept
 	return *this;
 }
 
-_stack& _stack::operator>>(std::wstring& s) noexcept
+_stack& _stack::operator>>(std::wstring& s)
 {
 	uint v = 0;
 	*this >> v;
