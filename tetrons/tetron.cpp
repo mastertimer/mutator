@@ -2151,7 +2151,7 @@ void _g_button::push(_wjson& b)
 	_t_go::push(b);
 	b.add("checked", checked);
 	b.add("hint", hint);
-	b.add("picture", picture);
+	b.add("picture", picture, c00, cc1);
 }
 
 void _g_button::pop(_rjson& b)
@@ -2159,7 +2159,7 @@ void _g_button::pop(_rjson& b)
 	_t_go::pop(b);
 	b.read("checked", checked);
 	b.read("hint", hint);
-	b.read("picture", picture);
+	b.read("picture", picture, c00, cc1);
 }
 
 _g_button::_g_button() : checked(0)

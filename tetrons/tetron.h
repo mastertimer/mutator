@@ -11,6 +11,15 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+constexpr uint c00 = 0;          // прозрачный цвет
+constexpr uint cc0 = 0xFF000000; // цвет фона
+constexpr uint cc1 = 0xFF208040; // цвет 1
+constexpr uint cc2 = 0xFF40FF80; // цвет 2
+constexpr uint cc3 = 0xFFA0FFC0; // цвет 3
+constexpr uint cc4 = 0xFF104020; // цвет 4
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum class _cursor { normal, size_all, hand_point, size_we, size_ns, drag, vcursor }; // виды курсора
 
 inline _cursor g_cursor = _cursor::normal; // установленный курсор
@@ -731,8 +740,8 @@ struct _g_picture : public _t_go
 	int   get_froglif()     override { return 0xF6; }
 	void  push(_stack* mem) override { _t_go::push(mem); *mem << pic; }
 	void  pop(_stack* mem)  override { _t_go::pop(mem);  *mem >> pic; }
-	void  push(_wjson& b)   override { _t_go::push(b);   b.add("pic", pic); }
-	void  pop(_rjson& b)    override { _t_go::pop(b);    b.read("pic", pic); }
+	void  push(_wjson& b)   override { _t_go::push(b);   b.add("pic", pic, c00, cc1); }
+	void  pop(_rjson& b)    override { _t_go::pop(b);    b.read("pic", pic, c00, cc1); }
 
 	operator _g_picture* () override { return this; }
 	operator _picture* ()   override { return &pic; }

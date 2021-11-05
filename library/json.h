@@ -32,7 +32,7 @@ struct _wjson
 	_wjson& add(std::string_view name, _trans b);
 	_wjson& add(std::string_view name, _xy b);
 	_wjson& add(std::string_view name, _area b);
-	_wjson& add(std::string_view name, const _picture& b);
+	_wjson& add(std::string_view name, const _picture& b, uint c00, uint cc1);
 	_wjson& add(std::string_view name, _interval b);
 
 	template <typename _t> _wjson& add(_t& b) { return add("", b); }
@@ -68,7 +68,7 @@ struct _rjson
 	_trans    read_trans( std::string_view name = "");
 	_interval read_area(  std::string_view name = "");
 
-	void read(std::string_view name, _picture& b);
+	void read(std::string_view name, _picture& b, uint c00, uint cc1);
 	void read(std::string_view name, _multi_string& b);
 	void read(std::string_view name, _xy& b);
 	void read(std::string_view name, double& b);

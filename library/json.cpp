@@ -224,7 +224,7 @@ _wjson& _wjson::add(std::string_view name, _interval b)
 	return *this;
 }
 
-_wjson& _wjson::add(std::string_view name, const _picture& b)
+_wjson& _wjson::add(std::string_view name, const _picture& b, uint c00, uint cc1)
 {
 	arr(name);
 	bool pak = false;
@@ -488,7 +488,7 @@ void _rjson::read(std::string_view name, _multi_string& b)
 	end();
 }
 
-void _rjson::read(std::string_view name, _picture& b)
+void _rjson::read(std::string_view name, _picture& b, uint c00, uint cc1)
 {
 	std::vector<std::string> temp;
 	if (!arr(name)) return;
