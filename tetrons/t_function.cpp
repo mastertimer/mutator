@@ -1,7 +1,8 @@
-﻿#include "g_exchange_graph.h"
+﻿#include "t_function.h"
+#include "g_exchange_graph.h"
 #include "exchange_trade.h"
 #include "mediator.h"
-#include "t_function.h"
+#include "rnd.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

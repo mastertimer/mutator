@@ -1,4 +1,5 @@
 ﻿#include "tetron.h"
+#include "rnd.h"
 
 #include <chrono>
 

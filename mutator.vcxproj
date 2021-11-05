@@ -177,6 +177,7 @@
     <ClCompile Include="library\graphics.cpp" />
     <ClCompile Include="library\json.cpp" />
     <ClCompile Include="library\mathematics.cpp" />
+    <ClCompile Include="library\rnd.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mutator.cpp" />
     <ClCompile Include="piano\RtMidi.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="library\hash.h" />
     <ClInclude Include="library\json.h" />
     <ClInclude Include="library\mathematics.h" />
+    <ClInclude Include="library\rnd.h" />
     <ClInclude Include="library\speed.h" />
     <ClInclude Include="mutator.h" />
     <ClInclude Include="piano\RtMidi.h" />
