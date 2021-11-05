@@ -4,6 +4,16 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+namespace
+{
+	constexpr uint color_set[32] = { // набор разных цветов одной яркости
+		0xFF0080FD, 0xFFEF0000, 0xFF9E3BFF, 0xFF938700, 0xFF12AA00, 0xFFD34E0D, 0xFF7470DC, 0xFF4D9682,
+		0xFFC80FCE, 0xFFB06381,	0xFFE22653, 0xFF009D93, 0xFFC4439D, 0xFF258ECB, 0xFF659B00, 0xFF3F77FF,
+		0xFF887E87, 0xFF9659DD, 0xFFB57000, 0xFF39A337, 0xFF5D84BE, 0xFFAF1FFB, 0xFFDE028A, 0xFF768F51,
+		0xFFB400FC,	0xFFE23700, 0xFFCB29B2, 0xFFA3755A, 0xFFC45D37, 0xFFEB171B, 0xFF966DA8, 0xFFAC4ACF };
+}
+
+
 __hash_table<_link> glink;
 
 uint hash_func(const _he_intermediate& a)
