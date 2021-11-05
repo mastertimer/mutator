@@ -594,7 +594,7 @@ void fun25(_tetron* tt0, _tetron* tt, u64 flags)
 	_g_picture* p = tt->find1<_g_picture>(flag_information);
 	i64* r = tt->find1<i64>(flag_information);
 	if ((!p) || (!r)) return;
-	p->new_size((int)*r, (int)*r);
+	p->new_size({ *r, *r });
 }
 
 void fun26(_tetron* tt0, _tetron* tt, u64 flags)

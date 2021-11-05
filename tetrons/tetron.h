@@ -751,7 +751,7 @@ struct _g_picture : public _t_go
 
 	void ris2(_trans tr, bool final) override;
 
-	void new_size(int rx3, int ry3);
+	void new_size(_isize ns);
 	bool load_from_file(wstr fn);
 	bool save_to_file(wstr fn) const;
 	void set_pic(const _picture& pic2);

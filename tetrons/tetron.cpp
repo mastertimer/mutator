@@ -1257,11 +1257,11 @@ void _g_picture::ris2(_trans tr, bool final)
 	master_bm.stretch_draw(&pic, (int)oo.x.min, (int)oo.y.min, tr.scale);
 }
 
-void _g_picture::new_size(int rx3, int ry3)
+void _g_picture::new_size(_isize ns)
 {
-	if (!pic.resize({ rx3, ry3 })) return;
+	if (!pic.resize(ns)) return;
 	del_area();
-	local_area = { {0, (double)pic.size.x}, {0, (double)pic.size.y} };
+	local_area = pic.size;
 	area_definite = false;
 	add_area();
 }
@@ -1270,7 +1270,7 @@ void _g_picture::set_pic(const _picture& pic2)
 {
 	pic = pic2;
 	del_area();
-	local_area = { {0, (double)pic.size.x}, {0, (double)pic.size.y} };
+	local_area = pic.size;
 	area_definite = false;
 	add_area();
 }

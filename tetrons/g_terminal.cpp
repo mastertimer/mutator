@@ -3,6 +3,7 @@
 #include "compression.h"
 #include "RtMidi.h"
 #include "rnd.h"
+#include "piano.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -331,6 +332,21 @@ struct _cmd_piano : public _g_terminal::_command
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+struct _cmd_piano2 : public _g_terminal::_command
+{
+	~_cmd_piano2()
+	{
+		stop_piano();
+	}
+
+	std::wstring help() override { return L"игра на пианино"; }
+	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
+	{
+		start_piano();
+	}
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct _cmd_line : public _g_terminal::_command
 {
 	std::wstring help() override { return L"тест скорости рисования линий"; }
@@ -386,6 +402,7 @@ _g_terminal::_g_terminal()
 	command.insert({ L"delta", std::unique_ptr<_command>(new _cmd_delta) });
 	command.insert({ L"line",  std::unique_ptr<_command>(new _cmd_line) });
 	command.insert({ L"p",     std::unique_ptr<_command>(new _cmd_piano) });
+	command.insert({ L"piano", std::unique_ptr<_command>(new _cmd_piano2) });
 }
 
 void _g_terminal::start_timer()

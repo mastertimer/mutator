@@ -38,7 +38,6 @@ _delta_offers::_delta_offers(const _offers& a, const _offers& b)
 _delta_supply_and_demand::_delta_supply_and_demand(const _supply_and_demand& a, const _supply_and_demand& b):
 	demand(a.demand, b.demand), supply(a.supply, b.supply)
 {
-
 }
 
 _delta_supply_and_demand operator-(const _supply_and_demand& a, const _supply_and_demand& b)
@@ -110,6 +109,5 @@ _g_terminal& operator << (_g_terminal& t, const _delta_supply_and_demand& delta)
 	}
 	return t;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
