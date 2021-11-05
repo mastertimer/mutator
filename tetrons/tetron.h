@@ -1,12 +1,13 @@
 ﻿#pragma once
 
-#include <map>
-#include <chrono>
-
 #include "graphics.h" 
 #include "json.h" 
 #include "speed.h" 
 #include "mathematics.h"
+#include "hash.h" 
+
+#include <map>
+#include <chrono>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

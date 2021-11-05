@@ -151,6 +151,9 @@
     <ClInclude Include="library\speed.h">
       <Filter>Исходные файлы\library</Filter>
     </ClInclude>
+    <ClInclude Include="library\hash.h">
+      <Filter>Исходные файлы\library</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mutator.rc">

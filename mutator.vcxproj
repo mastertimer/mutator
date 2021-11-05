@@ -197,6 +197,7 @@
     <ClInclude Include="library\compression.h" />
     <ClInclude Include="library\geometry.h" />
     <ClInclude Include="library\graphics.h" />
+    <ClInclude Include="library\hash.h" />
     <ClInclude Include="library\json.h" />
     <ClInclude Include="library\mathematics.h" />
     <ClInclude Include="library\speed.h" />

@@ -1,8 +1,8 @@
 ﻿#include "basic.h"
 
-#include <fstream>
 #define NOMINMAX
 #include <windows.h>
+#include <fstream>
 
 i64 position1_64(u64 a)
 { // **
