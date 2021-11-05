@@ -5,6 +5,7 @@
 #include "speed.h" 
 #include "mathematics.h"
 #include "hash.h" 
+#include "multi_string.h" 
 
 #include <map>
 #include <chrono>

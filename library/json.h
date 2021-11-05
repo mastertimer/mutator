@@ -9,6 +9,7 @@ struct _xy;
 struct _area;
 struct _interval;
 struct _picture;
+struct _multi_string;
 
 struct _wjson
 {

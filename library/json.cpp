@@ -1,5 +1,6 @@
 ﻿#include "json.h"
 #include "graphics.h"
+#include "multi_string.h" 
 
 #include <map>
 #include <iomanip>

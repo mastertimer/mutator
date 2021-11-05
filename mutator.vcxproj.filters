@@ -89,6 +89,9 @@
     <ClCompile Include="library\rnd.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
+    <ClCompile Include="library\multi_string.cpp">
+      <Filter>Исходные файлы\library</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\basic.h">
@@ -158,6 +161,9 @@
       <Filter>Исходные файлы\library</Filter>
     </ClInclude>
     <ClInclude Include="library\rnd.h">
+      <Filter>Исходные файлы\library</Filter>
+    </ClInclude>
+    <ClInclude Include="library\multi_string.h">
       <Filter>Исходные файлы\library</Filter>
     </ClInclude>
   </ItemGroup>
