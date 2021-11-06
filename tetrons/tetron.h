@@ -735,7 +735,7 @@ private:
 
 struct _g_picture : public _t_go
 {
-	_picture pic;
+	_bitmap pic;
 
 	_g_picture() { local_area = { {0, 100}, {0, 100} }; }
 

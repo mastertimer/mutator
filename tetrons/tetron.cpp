@@ -1268,7 +1268,7 @@ void _g_picture::new_size(_isize ns)
 
 void _g_picture::set_pic(const _picture& pic2)
 {
-	pic = pic2;
+	(_picture)pic = pic2;
 	del_area();
 	local_area = pic.size;
 	area_definite = false;

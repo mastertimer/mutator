@@ -119,8 +119,8 @@ struct _bitmap : public _picture
 
 	bool resize(_isize wh);
 
-	void text(_ixy p, std::wstring_view s, int h, uint c, uint bg);
-	void text(_ixy p, std::string_view s, int h, uint c, uint bg);
+	void text(_ixy p, std::wstring_view s, int h, uint c, uint bg = 0);
+	void text(_ixy p, std::string_view s, int h, uint c, uint bg = 0);
 	_isize size_text(std::wstring_view s, int h);
 	_isize size_text(std::string_view s, int h);
 
