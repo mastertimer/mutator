@@ -65,6 +65,7 @@ struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 		t->print(L"информация:        " + double_to_wstring(com, 1) + L" (" + double_to_wstring(com1, 1) + L" + " +
 			double_to_wstring(com2, 1) + L")");
 		t->print(L"идеал:             " + double_to_wstring(size_arithmetic_coding(data), 1));
+		t->print(L"идеал0:            " + double_to_wstring(size_arithmetic_coding(data, 0.01), 1));
 
 		i64 n = 1;
 		if (!parameters.empty()) n = std::stoi(parameters[0]);
@@ -115,37 +116,6 @@ struct _cmd_test_arithmetic_coding : public _g_terminal::_command
 		t->print(L"среднее время, мксек:      " + std::to_wstring(summdt / n));
 		t->print(L"минимальное время, мксек:  " + std::to_wstring(mindt));
 		t->print(L"максимальное время, мксек: " + std::to_wstring(maxdt));
-	}
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct _cmd_test_arithmetic_coding2 : public _g_terminal::_command
-{
-	std::wstring help() override { return L"тестирование арифметического кодирования"; }
-	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
-	{
-		t->print(L"файл: " + test_file);
-		std::vector<uchar> data, data2;
-		_bit_vector res;
-		if (!load_file(test_file, data))
-		{
-			t->print(L"ошибка загрузки!");
-			return;
-		}
-		double f0 = 0.01;
-		t->print(L"размер: " + std::to_wstring(data.size()));
-		t->print(L"идеал1: " + double_to_wstring(size_arithmetic_coding(data), 1));
-		t->print(L"идеал0: " + double_to_wstring(size_arithmetic_coding(data, f0), 1));
-
-		i64 n = 1;
-		if (!parameters.empty()) n = std::stoi(parameters[0]);
-
-		for (i64 i = 0; i < n; i++)
-		{
-			stir_vector(data);
-			t->print(L"идеал:  " + double_to_wstring(size_arithmetic_coding(data, f0), 1));
-		}
 	}
 };
 
@@ -396,7 +366,6 @@ _g_terminal::_g_terminal()
 	command.insert({ L"help",  std::unique_ptr<_command>(new _cmd_help) });
 	command.insert({ L"test",  std::unique_ptr<_command>(new _cmd_test) });
 	command.insert({ L"a",     std::unique_ptr<_command>(new _cmd_test_arithmetic_coding) });
-	command.insert({ L"aa",    std::unique_ptr<_command>(new _cmd_test_arithmetic_coding2) });
 	command.insert({ L"ppm",   std::unique_ptr<_command>(new _cmd_test_ppm) });
 	command.insert({ L"1",     std::unique_ptr<_command>(new _cmd_load_sable_stat) });
 	command.insert({ L"sad",   std::unique_ptr<_command>(new _cmd_sad) });
