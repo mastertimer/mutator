@@ -1,6 +1,7 @@
 ﻿#include "g_terminal.h"
 #include "exchange_research.h"
 #include "compression.h"
+#include "arithmetic_coding.h"
 #include "RtMidi.h"
 #include "rnd.h"
 #include "piano.h"

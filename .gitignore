@@ -4,6 +4,4 @@
 *.user
 /data/cen_bak
 /data/mmm.txt
-/data/base.c2
-/data/*.bin
 /data/base.c3

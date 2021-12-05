@@ -95,6 +95,9 @@
     <ClCompile Include="piano\piano.cpp">
       <Filter>Исходные файлы\piano</Filter>
     </ClCompile>
+    <ClCompile Include="library\arithmetic_coding.cpp">
+      <Filter>Исходные файлы\library</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\basic.h">
@@ -171,6 +174,9 @@
     </ClInclude>
     <ClInclude Include="piano\piano.h">
       <Filter>Исходные файлы\piano</Filter>
+    </ClInclude>
+    <ClInclude Include="library\arithmetic_coding.h">
+      <Filter>Исходные файлы\library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
