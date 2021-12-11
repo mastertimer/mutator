@@ -62,7 +62,6 @@ bool load_file(std::wstring_view fn, char** data, i64* n);
 bool load_file(std::wstring_view fn, std::vector<uchar>& res);
 
 std::wstring string_to_wstring(std::string_view s);
-std::string wstring_to_string(std::wstring_view b);
 
 std::wstring double_to_wstring(double a, int z);
 std::string  double_to_string(double a, int z);
