@@ -77,9 +77,6 @@
     <ClCompile Include="library\geometry.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
-    <ClCompile Include="library\bit_vector.cpp">
-      <Filter>Исходные файлы\library</Filter>
-    </ClCompile>
     <ClCompile Include="piano\RtMidi.cpp">
       <Filter>Исходные файлы\piano</Filter>
     </ClCompile>
@@ -140,9 +137,6 @@
       <Filter>Исходные файлы\tetrons</Filter>
     </ClInclude>
     <ClInclude Include="library\geometry.h">
-      <Filter>Исходные файлы\library</Filter>
-    </ClInclude>
-    <ClInclude Include="library\bit_vector.h">
       <Filter>Исходные файлы\library</Filter>
     </ClInclude>
     <ClInclude Include="piano\RtMidi.h">

@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "exchange_basic.h"
-#include "bit_vector.h"
 
 struct _compressed_exchange_data
 {
