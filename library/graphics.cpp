@@ -2737,7 +2737,7 @@ _bitmap::_bitmap(int rx3, int ry3) : _picture({ rx3, ry3 })
 	font.lfItalic         = 0;               // курсивный шрифт
 	font.lfUnderline      = 0;               // подчеркнутый шрифт
 	font.lfStrikeOut      = 0;               // зачеркнутый шрифт
-	font.lfCharSet        = RUSSIAN_CHARSET; // набор символов
+	font.lfCharSet        = DEFAULT_CHARSET; // набор символов
 	font.lfOutPrecision   = 0;               // точность вывода
 	font.lfClipPrecision  = 0;               // точность отсечения
 	font.lfQuality        = 0;               // качество вывода
