@@ -1,5 +1,4 @@
 ﻿#include "mathematics.h"
-#include "rnd.h"
 
 #include <algorithm>
 

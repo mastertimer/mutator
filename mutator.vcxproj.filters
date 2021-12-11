@@ -83,9 +83,6 @@
     <ClCompile Include="piano\RtMidi.cpp">
       <Filter>Исходные файлы\piano</Filter>
     </ClCompile>
-    <ClCompile Include="library\rnd.cpp">
-      <Filter>Исходные файлы\library</Filter>
-    </ClCompile>
     <ClCompile Include="library\multi_string.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
@@ -155,9 +152,6 @@
       <Filter>Исходные файлы\library</Filter>
     </ClInclude>
     <ClInclude Include="library\hash.h">
-      <Filter>Исходные файлы\library</Filter>
-    </ClInclude>
-    <ClInclude Include="library\rnd.h">
       <Filter>Исходные файлы\library</Filter>
     </ClInclude>
     <ClInclude Include="library\multi_string.h">
