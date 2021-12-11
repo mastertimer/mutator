@@ -38,9 +38,6 @@
     <ClCompile Include="library\mathematics.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
-    <ClCompile Include="library\compression.cpp">
-      <Filter>Исходные файлы\library</Filter>
-    </ClCompile>
     <ClCompile Include="tetrons\tetron.cpp">
       <Filter>Исходные файлы\tetrons</Filter>
     </ClCompile>
@@ -95,9 +92,6 @@
     <ClCompile Include="piano\piano.cpp">
       <Filter>Исходные файлы\piano</Filter>
     </ClCompile>
-    <ClCompile Include="library\arithmetic_coding.cpp">
-      <Filter>Исходные файлы\library</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\basic.h">
@@ -111,9 +105,6 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="library\compression.h">
-      <Filter>Исходные файлы\library</Filter>
     </ClInclude>
     <ClInclude Include="tetrons\tetron.h">
       <Filter>Исходные файлы\tetrons</Filter>
@@ -174,9 +165,6 @@
     </ClInclude>
     <ClInclude Include="piano\piano.h">
       <Filter>Исходные файлы\piano</Filter>
-    </ClInclude>
-    <ClInclude Include="library\arithmetic_coding.h">
-      <Filter>Исходные файлы\library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

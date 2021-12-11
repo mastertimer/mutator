@@ -1,7 +1,5 @@
 ﻿#include "g_terminal.h"
 #include "exchange_research.h"
-#include "compression.h"
-#include "arithmetic_coding.h"
 #include "RtMidi.h"
 #include "rnd.h"
 #include "piano.h"
@@ -43,150 +41,6 @@ struct _cmd_delta : public _g_terminal::_command
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-std::wstring test_file = L"e:\\mutator\\data\\t110521.txt";
-
-struct _cmd_test_arithmetic_coding : public _g_terminal::_command
-{
-	std::wstring help() override { return L"тестирование арифметического кодирования"; }
-	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
-	{
-		t->print(L"файл: " + test_file);
-		std::vector<uchar> data, data2;
-		_bit_vector res;
-		if (!load_file(test_file, data))
-		{
-			t->print(L"ошибка загрузки!");
-			return;
-		}
-		t->print(L"размер:            " + std::to_wstring(data.size()));
-		double com1 = 0.0, com2 = 0.0;
-		double com = information(data, &com1, &com2);
-		t->print(L"информация:        " + double_to_wstring(com, 1) + L" (" + double_to_wstring(com1, 1) + L" + " +
-			double_to_wstring(com2, 1) + L")");
-		t->print(L"идеал:             " + double_to_wstring(size_arithmetic_coding(data), 1));
-		t->print(L"идеал0:            " + double_to_wstring(size_arithmetic_coding(data, 0.01), 1));
-
-		i64 n = 1;
-		if (!parameters.empty()) n = std::stoi(parameters[0]);
-		if (n < 1) n = 1;
-		if (n > 1) t->print(std::to_wstring(n) + L" испытаний");
-
-		i64 mindt = 1000000000;
-		i64 maxdt = 0;
-		i64 summdt = 0;
-
-		for (i64 i = 0; i < n; i++)
-		{
-			auto tt = std::chrono::high_resolution_clock::now();
-			arithmetic_coding(data, res);
-			std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - tt;
-			i64 dtt = dt.count() / 1000;
-			if (dtt < mindt) mindt = dtt;
-			if (dtt > maxdt) maxdt = dtt;
-			summdt += dtt;
-		}
-
-
-		double v = res.size() / 8.0;
-		t->print(L"arithmetic_coding: " + double_to_wstring(v, 1));
-		t->print(L"разница:           " + double_to_wstring(v - com, 1));
-		t->print(L"среднее время, мксек:      " + std::to_wstring(summdt / n));
-		t->print(L"минимальное время, мксек:  " + std::to_wstring(mindt));
-		t->print(L"максимальное время, мксек: " + std::to_wstring(maxdt));
-
-		mindt = 1000000000;
-		maxdt = 0;
-		summdt = 0;
-
-		for (i64 i = 0; i < n; i++)
-		{
-			auto tt = std::chrono::high_resolution_clock::now();
-			arithmetic_decoding(res, data2);
-			std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - tt;
-			i64 dtt = dt.count() / 1000;
-			if (dtt < mindt) mindt = dtt;
-			if (dtt > maxdt) maxdt = dtt;
-			summdt += dtt;
-		}
-		if (data == data2)
-			t->print(L"расжатие норма");
-		else
-			t->print(L"!!ошибка!! расжатый файл не равен исходному!");
-		t->print(L"среднее время, мксек:      " + std::to_wstring(summdt / n));
-		t->print(L"минимальное время, мксек:  " + std::to_wstring(mindt));
-		t->print(L"максимальное время, мксек: " + std::to_wstring(maxdt));
-	}
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct _cmd_test_ppm : public _g_terminal::_command
-{
-	std::wstring help() override { return L"тестирование ppm сжатия"; }
-	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
-	{
-		t->print(L"файл: " + test_file);
-		std::vector<uchar> data, data2, res;
-		if (!load_file(test_file, data))
-		{
-			t->print(L"ошибка загрузки!");
-			return;
-		}
-		t->print(L"размер: " + std::to_wstring(data.size()));
-
-		i64 n = 0;
-		if (!parameters.empty()) n = std::stoi(parameters[0]);
-		if (n < 0) n = 0;
-		t->print(L"порядок = " + std::to_wstring(n));
-
-		i64 mindt = 1000000000;
-		i64 maxdt = 0;
-		i64 summdt = 0;
-
-		{
-			auto tt = std::chrono::high_resolution_clock::now();
-			ppm(data, res, n);
-			std::chrono::nanoseconds dt = std::chrono::high_resolution_clock::now() - tt;
-			i64 dtt = dt.count() / 1000;
-			if (dtt < mindt) mindt = dtt;
-			if (dtt > maxdt) maxdt = dtt;
-			summdt += dtt;
-		}
-
-		double v = res.size();
-		t->print(L"ppm:    " + double_to_wstring(v, 0));
-		t->print(L"время, мксек:  " + std::to_wstring(mindt));
-
-	}
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-const double kln2 = -1.0 / log(2.0);
-
-// p - реальная вероятность
-// k - оценочная вероятность
-
-double entropy01(double p) // энтропия 01: p(1) = p, p(0) = 1-p
-{
-	return kln2 * (p * log(p) + (1.0 - p) * log(1.0 - p));
-}
-
-double entropy2(double p, double k) // энтропия второго символа по предсказанию
-{
-	return kln2 * (p * (p * log(k) + (1.0 - p) * log(1.0 - k)) + (1.0 - p) * (p * log(1.0 - k) + (1.0 - p) * log(k)));
-}
-
-double ratio_entropy2(double p, double k) // во сколько раз энтропия хуже идеальной
-{
-	return entropy2(p, k) / entropy01(p);
-}
-
-double f1(double p)
-{
-	return ratio_entropy2(p, 0.82);
-}
 
 struct _cmd_test : public _g_terminal::_command
 {
@@ -365,8 +219,6 @@ _g_terminal::_g_terminal()
 	command.insert({ L"clear", std::unique_ptr<_command>(new _cmd_clear) });
 	command.insert({ L"help",  std::unique_ptr<_command>(new _cmd_help) });
 	command.insert({ L"test",  std::unique_ptr<_command>(new _cmd_test) });
-	command.insert({ L"a",     std::unique_ptr<_command>(new _cmd_test_arithmetic_coding) });
-	command.insert({ L"ppm",   std::unique_ptr<_command>(new _cmd_test_ppm) });
 	command.insert({ L"1",     std::unique_ptr<_command>(new _cmd_load_sable_stat) });
 	command.insert({ L"sad",   std::unique_ptr<_command>(new _cmd_sad) });
 	command.insert({ L"delta", std::unique_ptr<_command>(new _cmd_delta) });
