@@ -102,7 +102,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;__WINDOWS_MM__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <BrowseInformation>false</BrowseInformation>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -114,7 +114,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(AMDAPPSDKROOT)lib\x86_64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -145,7 +145,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;__WINDOWS_MM__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -159,7 +159,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -178,7 +178,6 @@
     <ClCompile Include="library\multi_string.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mutator.cpp" />
-    <ClCompile Include="piano\RtMidi.cpp" />
     <ClCompile Include="tetrons\g_terminal.cpp" />
     <ClCompile Include="tetrons\tetron.cpp" />
     <ClCompile Include="tetrons\t_function.cpp" />
@@ -200,7 +199,6 @@
     <ClInclude Include="library\multi_string.h" />
     <ClInclude Include="library\speed.h" />
     <ClInclude Include="mutator.h" />
-    <ClInclude Include="piano\RtMidi.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="tetrons\g_terminal.h" />
     <ClInclude Include="tetrons\tetron.h" />

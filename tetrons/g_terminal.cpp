@@ -1,6 +1,5 @@
 ﻿#include "g_terminal.h"
 #include "exchange_research.h"
-#include "RtMidi.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -105,56 +104,6 @@ struct _cmd_help : public _g_terminal::_command
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void fun_piano(double deltatime, std::vector< unsigned char >* message, void* userData)
-{
-	_g_terminal* t = (_g_terminal*)userData;
-	auto nBytes = message->size();
-	for (auto i = 0; i < nBytes; i++)
-		t->print(L"Byte " + std::to_wstring(i) + L" = " + std::to_wstring((int)message->at(i)) + L", ");
-	if (nBytes > 0)
-		t->print(L"stamp = " + std::to_wstring(deltatime));
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct _cmd_piano : public _g_terminal::_command
-{
-	RtMidiIn* midiin = nullptr;
-
-	~_cmd_piano()
-	{
-		if (midiin) delete midiin;
-	}
-
-	std::wstring help() override { return L"пианино"; }
-	void run(_g_terminal* t, std::vector<std::wstring>& parameters) override
-	{
-		if (midiin)
-		{
-			delete midiin;
-			midiin = nullptr;
-			t->print(L"пианино удалено");
-			return;
-		}
-		midiin = new RtMidiIn();
-		unsigned int n_ports = midiin->getPortCount();
-		if (n_ports == 0)
-		{
-			t->print(L"нет портов для пианино");
-			delete midiin;
-			midiin = nullptr;
-			return;
-		}
-		t->print(L"количество портов: " + std::to_wstring(n_ports));
-		midiin->openPort(0);
-		midiin->setCallback(&fun_piano, t);
-		midiin->ignoreTypes(false, true, true);
-		t->print(L"пианино стартануло!");
-	}
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 struct _cmd_line : public _g_terminal::_command
 {
 	std::wstring help() override { return L"тест скорости рисования линий"; }
@@ -206,7 +155,6 @@ _g_terminal::_g_terminal()
 	command.insert({ L"sad",   std::unique_ptr<_command>(new _cmd_sad) });
 	command.insert({ L"delta", std::unique_ptr<_command>(new _cmd_delta) });
 	command.insert({ L"line",  std::unique_ptr<_command>(new _cmd_line) });
-	command.insert({ L"p",     std::unique_ptr<_command>(new _cmd_piano) });
 }
 
 void _g_terminal::start_timer()
