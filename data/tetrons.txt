@@ -110,8 +110,8 @@
 			"id": 12,
 			"links": [
 				{ "id": 354, "flags": 0x100000000 },
-				{ "id": 9865, "flags": 0x100000000 },
-				{ "id": 9890, "flags": 0x100000000 }
+				{ "id": 9893, "flags": 0x100000000 },
+				{ "id": 9922, "flags": 0x100000000 }
 			]
 		},
 		{
@@ -988,8 +988,8 @@
 				{ "id": 180, "flags": 0x100000000 },
 				{ "id": 300, "flags": 0x100000000 },
 				{ "id": 443, "flags": 0x100000000 },
-				{ "id": 9866, "flags": 0x100000000 },
-				{ "id": 9891, "flags": 0x100000000 }
+				{ "id": 9894, "flags": 0x100000000 },
+				{ "id": 9923, "flags": 0x100000000 }
 			]
 		},
 		{
@@ -1099,7 +1099,6 @@
 				{ "id": 593, "flags": 0x12 },
 				{ "id": 600, "flags": 0x12 },
 				{ "id": 627, "flags": 0x12 },
-				{ "id": 672, "flags": 0x12 },
 				{ "id": 1221, "flags": 0x12 },
 				{ "id": 6260, "flags": 0x12 }
 			]
@@ -2600,11 +2599,11 @@
 		{
 			"name": "_g_rect",
 			"id": 255,
-			"local_area": { "x": { "min": 0, "max": 32, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 32, "empty": false, "rclosed": true } },
+			"local_area": { "x": { "min": 0, "max": 1089, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 698, "empty": false, "rclosed": true } },
 			"links": [
-				{ "id": 9865, "flags": 0x22 },
-				{ "id": 9866, "flags": 0x22 },
-				{ "id": 9867, "flags": 0x12 }
+				{ "id": 9893, "flags": 0x22 },
+				{ "id": 9894, "flags": 0x22 },
+				{ "id": 9895, "flags": 0x12 }
 			]
 		},
 		{
@@ -4902,10 +4901,10 @@
 		{
 			"name": "_g_rect",
 			"id": 478,
-			"local_area": { "x": { "min": 0, "max": 32, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 32, "empty": false, "rclosed": true } },
+			"local_area": { "x": { "min": 0, "max": 1089, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 698, "empty": false, "rclosed": true } },
 			"links": [
-				{ "id": 9890, "flags": 0x22 },
-				{ "id": 9891, "flags": 0x22 }
+				{ "id": 9922, "flags": 0x22 },
+				{ "id": 9923, "flags": 0x22 }
 			]
 		},
 		{
@@ -6677,34 +6676,6 @@
 			]
 		},
 		{
-			"name": "_g_exchange_graph",
-			"id": 671,
-			"local_area": { "x": { "min": 0, "max": 1083, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 692, "empty": false, "rclosed": true } },
-			"links": [
-				{ "id": 672, "flags": 0x1200000000 },
-				{ "id": 737, "flags": 0x400000012 }
-			]
-		},
-		{
-			"name": "_t_trans",
-			"id": 672,
-			"trans": { "scale": 1, "offset": { "x": -1130, "y": 882 } },
-			"links": [
-				{ "id": 109, "flags": 0x1200000000 },
-				{ "id": 671, "flags": 0x12 }
-			]
-		},
-		{
-			"name": "_g_scrollbar",
-			"id": 737,
-			"local_area": { "x": { "min": 0, "max": 1083, "empty": false, "rclosed": true }, "y": { "min": 692, "max": 702, "empty": false, "rclosed": true } },
-			"position": 0,
-			"vid": 2,
-			"links": [
-				{ "id": 671, "flags": 0x1200000004 }
-			]
-		},
-		{
 			"name": "_g_tetron",
 			"id": 1220,
 			"local_area": { "x": { "min": 0, "max": 24, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 24, "empty": false, "rclosed": true } },
@@ -7382,7 +7353,7 @@
 		},
 		{
 			"name": "_t_int",
-			"id": 9865,
+			"id": 9893,
 			"a": 4290838464,
 			"links": [
 				{ "id": 12, "flags": 0x1 },
@@ -7391,7 +7362,7 @@
 		},
 		{
 			"name": "_t_int",
-			"id": 9866,
+			"id": 9894,
 			"a": 807436352,
 			"links": [
 				{ "id": 100, "flags": 0x1 },
@@ -7400,7 +7371,7 @@
 		},
 		{
 			"name": "_g_tetron",
-			"id": 9867,
+			"id": 9895,
 			"local_area": { "x": { "min": -27, "max": -3, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 24, "empty": false, "rclosed": true } },
 			"hint": "",
 			"links": [
@@ -7409,7 +7380,7 @@
 		},
 		{
 			"name": "_t_int",
-			"id": 9890,
+			"id": 9922,
 			"a": 4286644096,
 			"links": [
 				{ "id": 12, "flags": 0x1 },
@@ -7418,7 +7389,7 @@
 		},
 		{
 			"name": "_t_int",
-			"id": 9891,
+			"id": 9923,
 			"a": 807436352,
 			"links": [
 				{ "id": 100, "flags": 0x1 },
@@ -7443,7 +7414,7 @@
 		526,
 		424,
 		442,
-		9886,
+		9918,
 		252,
 		0,
 		612,
@@ -7480,5 +7451,5 @@
 		443,
 		354
 	],
-	"id_tetron": 9892
+	"id_tetron": 9924
 }
