@@ -110,8 +110,8 @@
 			"id": 12,
 			"links": [
 				{ "id": 354, "flags": 0x100000000 },
-				{ "id": 9555, "flags": 0x100000000 },
-				{ "id": 9566, "flags": 0x100000000 }
+				{ "id": 9865, "flags": 0x100000000 },
+				{ "id": 9890, "flags": 0x100000000 }
 			]
 		},
 		{
@@ -988,8 +988,8 @@
 				{ "id": 180, "flags": 0x100000000 },
 				{ "id": 300, "flags": 0x100000000 },
 				{ "id": 443, "flags": 0x100000000 },
-				{ "id": 9556, "flags": 0x100000000 },
-				{ "id": 9567, "flags": 0x100000000 }
+				{ "id": 9866, "flags": 0x100000000 },
+				{ "id": 9891, "flags": 0x100000000 }
 			]
 		},
 		{
@@ -1100,15 +1100,7 @@
 				{ "id": 600, "flags": 0x12 },
 				{ "id": 627, "flags": 0x12 },
 				{ "id": 672, "flags": 0x12 },
-				{ "id": 902, "flags": 0x10 },
 				{ "id": 1221, "flags": 0x12 },
-				{ "id": 1330, "flags": 0x10 },
-				{ "id": 2846, "flags": 0x10 },
-				{ "id": 2925, "flags": 0x10 },
-				{ "id": 3012, "flags": 0x10 },
-				{ "id": 3118, "flags": 0x10 },
-				{ "id": 3213, "flags": 0x10 },
-				{ "id": 5114, "flags": 0x10 },
 				{ "id": 6260, "flags": 0x12 }
 			]
 		},
@@ -1140,8 +1132,6 @@
 			"links": [
 				{ "id": 410, "flags": 0x8000000000 },
 				{ "id": 1220, "flags": 0x8000000000 },
-				{ "id": 1329, "flags": 0x100000000 },
-				{ "id": 2845, "flags": 0x100000000 },
 				{ "id": 6343, "flags": 0x8000000000 }
 			]
 		},
@@ -2610,11 +2600,11 @@
 		{
 			"name": "_g_rect",
 			"id": 255,
-			"local_area": { "x": { "min": 0, "max": 955, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 698, "empty": false, "rclosed": true } },
+			"local_area": { "x": { "min": 0, "max": 32, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 32, "empty": false, "rclosed": true } },
 			"links": [
-				{ "id": 9555, "flags": 0x22 },
-				{ "id": 9556, "flags": 0x22 },
-				{ "id": 9557, "flags": 0x12 }
+				{ "id": 9865, "flags": 0x22 },
+				{ "id": 9866, "flags": 0x22 },
+				{ "id": 9867, "flags": 0x12 }
 			]
 		},
 		{
@@ -4912,10 +4902,10 @@
 		{
 			"name": "_g_rect",
 			"id": 478,
-			"local_area": { "x": { "min": 0, "max": 1089, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 698, "empty": false, "rclosed": true } },
+			"local_area": { "x": { "min": 0, "max": 32, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 32, "empty": false, "rclosed": true } },
 			"links": [
-				{ "id": 9566, "flags": 0x22 },
-				{ "id": 9567, "flags": 0x22 }
+				{ "id": 9890, "flags": 0x22 },
+				{ "id": 9891, "flags": 0x22 }
 			]
 		},
 		{
@@ -6692,8 +6682,7 @@
 			"local_area": { "x": { "min": 0, "max": 1083, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 692, "empty": false, "rclosed": true } },
 			"links": [
 				{ "id": 672, "flags": 0x1200000000 },
-				{ "id": 737, "flags": 0x400000012 },
-				{ "id": 9557, "flags": 0x8000000000 }
+				{ "id": 737, "flags": 0x400000012 }
 			]
 		},
 		{
@@ -6713,37 +6702,6 @@
 			"vid": 2,
 			"links": [
 				{ "id": 671, "flags": 0x1200000004 }
-			]
-		},
-		{
-			"name": "_t_function",
-			"id": 900,
-			"a": 13,
-			"links": [
-				{ "id": 901, "flags": 0x600000000 }
-			]
-		},
-		{
-			"name": "_g_button",
-			"id": 901,
-			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
-			"checked": 0,
-			"hint": "загрузить статистику",
-			"picture": [
-				"00000000000000000000ff0f000108000108fc3f0804200808400808400810800810800820000920000940000a40000a80000c80000c00010800ff0f000000000000000000000000"
-			],
-			"links": [
-				{ "id": 900, "flags": 0x6 },
-				{ "id": 902, "flags": 0x1200000000 }
-			]
-		},
-		{
-			"name": "_t_trans",
-			"id": 902,
-			"trans": { "scale": 1, "offset": { "x": -879.515034418155324, "y": 845.481410136434192 } },
-			"links": [
-				{ "id": 109, "flags": 0x1000000000 },
-				{ "id": 901, "flags": 0x12 }
 			]
 		},
 		{
@@ -6768,231 +6726,10 @@
 			]
 		},
 		{
-			"name": "_t_function",
-			"id": 1328,
-			"a": 15,
-			"links": [
-				{ "id": 1329, "flags": 0x600000000 }
-			]
-		},
-		{
-			"name": "_g_button",
-			"id": 1329,
-			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
-			"checked": 0,
-			"hint": "чтение цен",
-			"picture": [
-				"00000000000000380000fe0000830100010180010380010380010300010100830100ff00803900c000006000003000001800000c0000060000020000000000000000000000000000"
-			],
-			"links": [
-				{ "id": 112, "flags": 0x1 },
-				{ "id": 1328, "flags": 0x6 },
-				{ "id": 1330, "flags": 0x1200000000 },
-				{ "id": 6352, "flags": 0x8000000000 }
-			]
-		},
-		{
-			"name": "_t_trans",
-			"id": 1330,
-			"trans": { "scale": 1, "offset": { "x": -789.515034418155324, "y": 847.481410136434192 } },
-			"links": [
-				{ "id": 109, "flags": 0x1000000000 },
-				{ "id": 1329, "flags": 0x12 }
-			]
-		},
-		{
-			"name": "_t_function",
-			"id": 2844,
-			"a": 19,
-			"links": [
-				{ "id": 2845, "flags": 0x600000000 }
-			]
-		},
-		{
-			"name": "_g_button",
-			"id": 2845,
-			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
-			"checked": 0,
-			"hint": "торговля",
-			"picture": [
-				"000000000000000000006000007c08003608001804001c02000e02000301008101808000c0c00040220020120030920000de00003c00000400000000000000000000000000000000"
-			],
-			"links": [
-				{ "id": 112, "flags": 0x1 },
-				{ "id": 2844, "flags": 0x6 },
-				{ "id": 2846, "flags": 0x1200000000 },
-				{ "id": 6356, "flags": 0x8000000000 }
-			]
-		},
-		{
-			"name": "_t_trans",
-			"id": 2846,
-			"trans": { "scale": 1, "offset": { "x": -766.515034418155324, "y": 848.481410136434192 } },
-			"links": [
-				{ "id": 109, "flags": 0x1000000000 },
-				{ "id": 2845, "flags": 0x12 }
-			]
-		},
-		{
-			"name": "_t_function",
-			"id": 2923,
-			"a": 20,
-			"links": [
-				{ "id": 2924, "flags": 0x600000000 }
-			]
-		},
-		{
-			"name": "_g_button",
-			"id": 2924,
-			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
-			"checked": 0,
-			"hint": "купить",
-			"picture": [
-				"00000000000000000000000000800300c00300e00100fc00006600007000003000002c00002400000300800100c00000400000200000000000000000000000000000000000000000"
-			],
-			"links": [
-				{ "id": 2923, "flags": 0x6 },
-				{ "id": 2925, "flags": 0x1200000000 }
-			]
-		},
-		{
-			"name": "_t_trans",
-			"id": 2925,
-			"trans": { "scale": 1, "offset": { "x": -741.515034418155324, "y": 848.481410136434192 } },
-			"links": [
-				{ "id": 109, "flags": 0x1000000000 },
-				{ "id": 2924, "flags": 0x12 }
-			]
-		},
-		{
-			"name": "_t_function",
-			"id": 3010,
-			"a": 21,
-			"links": [
-				{ "id": 3011, "flags": 0x600000000 }
-			]
-		},
-		{
-			"name": "_g_button",
-			"id": 3011,
-			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
-			"checked": 0,
-			"hint": "продать",
-			"picture": [
-				"00000000000000000000000000001800000c00000400000200800100c000006000002000001100800900803400801a00800700800300800000000000000000000000000000000000"
-			],
-			"links": [
-				{ "id": 3010, "flags": 0x6 },
-				{ "id": 3012, "flags": 0x1200000000 }
-			]
-		},
-		{
-			"name": "_t_trans",
-			"id": 3012,
-			"trans": { "scale": 1, "offset": { "x": -720.515034418155324, "y": 847.481410136434192 } },
-			"links": [
-				{ "id": 109, "flags": 0x1000000000 },
-				{ "id": 3011, "flags": 0x12 }
-			]
-		},
-		{
-			"name": "_t_function",
-			"id": 3116,
-			"a": 22,
-			"links": [
-				{ "id": 3117, "flags": 0x600000000 }
-			]
-		},
-		{
-			"name": "_g_button",
-			"id": 3117,
-			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
-			"checked": 0,
-			"hint": "size_el++",
-			"picture": [
-				"00000000000000000000000000000000000000ff0380010a90001a880022cc006246007efe001acc000a90000280000280000280810300ff00000000000000000000000000000000"
-			],
-			"links": [
-				{ "id": 3116, "flags": 0x6 },
-				{ "id": 3118, "flags": 0x1200000000 }
-			]
-		},
-		{
-			"name": "_t_trans",
-			"id": 3118,
-			"trans": { "scale": 1, "offset": { "x": -694.515034418155324, "y": 847.481410136434192 } },
-			"links": [
-				{ "id": 109, "flags": 0x1000000000 },
-				{ "id": 3117, "flags": 0x12 }
-			]
-		},
-		{
-			"name": "_t_function",
-			"id": 3211,
-			"a": 30,
-			"links": [
-				{ "id": 3212, "flags": 0x600000000 }
-			]
-		},
-		{
-			"name": "_g_button",
-			"id": 3212,
-			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
-			"checked": 0,
-			"hint": "size_el--",
-			"picture": [
-				"00000000000000000000000000fc0000870000810180000180003398001a90000eb700fefc0003a00007b0003d880001800001801f0100f000000000000000000000000000000000"
-			],
-			"links": [
-				{ "id": 3211, "flags": 0x6 },
-				{ "id": 3213, "flags": 0x1200000000 }
-			]
-		},
-		{
-			"name": "_t_trans",
-			"id": 3213,
-			"trans": { "scale": 1, "offset": { "x": -665.515034418155324, "y": 846.481410136434192 } },
-			"links": [
-				{ "id": 109, "flags": 0x1000000000 },
-				{ "id": 3212, "flags": 0x12 }
-			]
-		},
-		{
 			"name": "_t_int",
 			"id": 4577,
 			"a": 250,
 			"links": [
-			]
-		},
-		{
-			"name": "_t_function",
-			"id": 5112,
-			"a": 31,
-			"links": [
-				{ "id": 5113, "flags": 0x600000000 }
-			]
-		},
-		{
-			"name": "_g_button",
-			"id": 5113,
-			"local_area": { "x": { "min": 0, "max": 26, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 26, "empty": false, "rclosed": true } },
-			"checked": 0,
-			"hint": "сохранить статистику",
-			"picture": [
-				"000000000000fcff0744000a440012440022440022440022c4002284ff21040020040020040020040020040020040020040020040020040020040020040020fcff3f000000000000"
-			],
-			"links": [
-				{ "id": 5112, "flags": 0x6 },
-				{ "id": 5114, "flags": 0x1200000000 }
-			]
-		},
-		{
-			"name": "_t_trans",
-			"id": 5114,
-			"trans": { "scale": 1, "offset": { "x": -836.515034418155324, "y": 845.481410136434192 } },
-			"links": [
-				{ "id": 109, "flags": 0x1000000000 },
-				{ "id": 5113, "flags": 0x12 }
 			]
 		},
 		{
@@ -7524,7 +7261,6 @@
 			"hint": "",
 			"links": [
 				{ "id": 356, "flags": 0x1 },
-				{ "id": 1329, "flags": 0x80 },
 				{ "id": 6353, "flags": 0x1200000000 },
 				{ "id": 6354, "flags": 0x8000000000 }
 			]
@@ -7568,7 +7304,6 @@
 			"hint": "",
 			"links": [
 				{ "id": 356, "flags": 0x1 },
-				{ "id": 2845, "flags": 0x80 },
 				{ "id": 6357, "flags": 0x1200000000 },
 				{ "id": 6358, "flags": 0x8000000000 }
 			]
@@ -7647,7 +7382,7 @@
 		},
 		{
 			"name": "_t_int",
-			"id": 9555,
+			"id": 9865,
 			"a": 4290838464,
 			"links": [
 				{ "id": 12, "flags": 0x1 },
@@ -7656,7 +7391,7 @@
 		},
 		{
 			"name": "_t_int",
-			"id": 9556,
+			"id": 9866,
 			"a": 807436352,
 			"links": [
 				{ "id": 100, "flags": 0x1 },
@@ -7665,17 +7400,16 @@
 		},
 		{
 			"name": "_g_tetron",
-			"id": 9557,
+			"id": 9867,
 			"local_area": { "x": { "min": -27, "max": -3, "empty": false, "rclosed": true }, "y": { "min": 0, "max": 24, "empty": false, "rclosed": true } },
 			"hint": "",
 			"links": [
-				{ "id": 255, "flags": 0x1200000000 },
-				{ "id": 671, "flags": 0x80 }
+				{ "id": 255, "flags": 0x1200000000 }
 			]
 		},
 		{
 			"name": "_t_int",
-			"id": 9566,
+			"id": 9890,
 			"a": 4286644096,
 			"links": [
 				{ "id": 12, "flags": 0x1 },
@@ -7684,7 +7418,7 @@
 		},
 		{
 			"name": "_t_int",
-			"id": 9567,
+			"id": 9891,
 			"a": 807436352,
 			"links": [
 				{ "id": 100, "flags": 0x1 },
@@ -7709,7 +7443,7 @@
 		526,
 		424,
 		442,
-		9494,
+		9886,
 		252,
 		0,
 		612,
@@ -7746,5 +7480,5 @@
 		443,
 		354
 	],
-	"id_tetron": 9568
+	"id_tetron": 9892
 }
