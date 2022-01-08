@@ -32,8 +32,6 @@
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "t_function.h"
-#include "g_terminal.h"
-#include "g_exchange_graph.h"
 #include "mutator.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,9 +67,7 @@ _tetron* create_tetron(const std::string& name)
 		make(_g_edit_double),
 		make(_g_button),
 		make(_g_tetron),
-		make(_g_exchange_graph),
-		make(_g_graph),
-		make(_g_terminal)
+		make(_g_graph)
 	};
 #undef make
 	auto fun = ss_tetron.find(name);
@@ -92,7 +88,7 @@ _tetron* create_tetron(uchar type)
 	case  6: return new _g_test_graph;        // 0xF2
 	case  7: return new _t_double;            // 0x50
 	case  8: return new _g_link;              // 0x7A
-	case  9: return new _g_exchange_graph;    // 0x71
+
 	case 10: return new _g_circle;            // 0x74
 	case 11: return new _g_line;              // 0x70
 	case 12: return new _g_rect;              // 0xF4
@@ -100,8 +96,6 @@ _tetron* create_tetron(uchar type)
 	case 14: return new _g_froglif;           // 0x7F
 	case 15: return new _t_xy;                // 0x30
 	case 16: return new _g_scrollbar;         // 0xF8
-
-	case 18: return new _g_terminal;          // 0x73
 
 	case 24: return new _t_string;            // 0x10
 	case 25: return new _g_edit_string;       // 0xFB

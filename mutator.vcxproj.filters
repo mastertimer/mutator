@@ -18,12 +18,6 @@
     <Filter Include="Исходные файлы\tetrons">
       <UniqueIdentifier>{5094bb71-0e68-406b-8a8c-30558c4e4b1e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Исходные файлы\exchange">
-      <UniqueIdentifier>{5d5e97c9-7d36-430b-9833-5e718f4e4c94}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Исходные файлы\piano">
-      <UniqueIdentifier>{1248ac0b-b904-4f9f-8575-58082dbe8255}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -47,32 +41,8 @@
     <ClCompile Include="library\json.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
-    <ClCompile Include="exchange\compressed_exchange_data.cpp">
-      <Filter>Исходные файлы\exchange</Filter>
-    </ClCompile>
-    <ClCompile Include="exchange\exchange_data.cpp">
-      <Filter>Исходные файлы\exchange</Filter>
-    </ClCompile>
-    <ClCompile Include="exchange\g_exchange_graph.cpp">
-      <Filter>Исходные файлы\exchange</Filter>
-    </ClCompile>
-    <ClCompile Include="exchange\mediator.cpp">
-      <Filter>Исходные файлы\exchange</Filter>
-    </ClCompile>
-    <ClCompile Include="exchange\exchange_basic.cpp">
-      <Filter>Исходные файлы\exchange</Filter>
-    </ClCompile>
-    <ClCompile Include="exchange\exchange_trade.cpp">
-      <Filter>Исходные файлы\exchange</Filter>
-    </ClCompile>
-    <ClCompile Include="exchange\exchange_research.cpp">
-      <Filter>Исходные файлы\exchange</Filter>
-    </ClCompile>
     <ClCompile Include="library\graphics.cpp">
       <Filter>Исходные файлы\library</Filter>
-    </ClCompile>
-    <ClCompile Include="tetrons\g_terminal.cpp">
-      <Filter>Исходные файлы\tetrons</Filter>
     </ClCompile>
     <ClCompile Include="library\geometry.cpp">
       <Filter>Исходные файлы\library</Filter>
@@ -103,32 +73,8 @@
     <ClInclude Include="library\json.h">
       <Filter>Исходные файлы\library</Filter>
     </ClInclude>
-    <ClInclude Include="exchange\compressed_exchange_data.h">
-      <Filter>Исходные файлы\exchange</Filter>
-    </ClInclude>
-    <ClInclude Include="exchange\exchange_data.h">
-      <Filter>Исходные файлы\exchange</Filter>
-    </ClInclude>
-    <ClInclude Include="exchange\g_exchange_graph.h">
-      <Filter>Исходные файлы\exchange</Filter>
-    </ClInclude>
-    <ClInclude Include="exchange\mediator.h">
-      <Filter>Исходные файлы\exchange</Filter>
-    </ClInclude>
-    <ClInclude Include="exchange\exchange_basic.h">
-      <Filter>Исходные файлы\exchange</Filter>
-    </ClInclude>
-    <ClInclude Include="exchange\exchange_trade.h">
-      <Filter>Исходные файлы\exchange</Filter>
-    </ClInclude>
-    <ClInclude Include="exchange\exchange_research.h">
-      <Filter>Исходные файлы\exchange</Filter>
-    </ClInclude>
     <ClInclude Include="library\graphics.h">
       <Filter>Исходные файлы\library</Filter>
-    </ClInclude>
-    <ClInclude Include="tetrons\g_terminal.h">
-      <Filter>Исходные файлы\tetrons</Filter>
     </ClInclude>
     <ClInclude Include="library\geometry.h">
       <Filter>Исходные файлы\library</Filter>

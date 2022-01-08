@@ -107,7 +107,7 @@
       <BrowseInformation>false</BrowseInformation>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir);library;exchange;tetrons;piano</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);library;tetrons</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4100;4244</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -149,7 +149,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);library;exchange;tetrons;piano</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);library;tetrons</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4100;4244</DisableSpecificWarnings>
       <AdditionalUsingDirectories>
       </AdditionalUsingDirectories>
@@ -163,13 +163,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="exchange\compressed_exchange_data.cpp" />
-    <ClCompile Include="exchange\exchange_data.cpp" />
-    <ClCompile Include="exchange\exchange_research.cpp" />
-    <ClCompile Include="exchange\exchange_trade.cpp" />
-    <ClCompile Include="exchange\g_exchange_graph.cpp" />
-    <ClCompile Include="exchange\mediator.cpp" />
-    <ClCompile Include="exchange\exchange_basic.cpp" />
     <ClCompile Include="library\basic.cpp" />
     <ClCompile Include="library\geometry.cpp" />
     <ClCompile Include="library\graphics.cpp" />
@@ -178,18 +171,10 @@
     <ClCompile Include="library\multi_string.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mutator.cpp" />
-    <ClCompile Include="tetrons\g_terminal.cpp" />
     <ClCompile Include="tetrons\tetron.cpp" />
     <ClCompile Include="tetrons\t_function.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="exchange\compressed_exchange_data.h" />
-    <ClInclude Include="exchange\exchange_data.h" />
-    <ClInclude Include="exchange\exchange_research.h" />
-    <ClInclude Include="exchange\exchange_trade.h" />
-    <ClInclude Include="exchange\g_exchange_graph.h" />
-    <ClInclude Include="exchange\mediator.h" />
-    <ClInclude Include="exchange\exchange_basic.h" />
     <ClInclude Include="library\basic.h" />
     <ClInclude Include="library\geometry.h" />
     <ClInclude Include="library\graphics.h" />
@@ -200,7 +185,6 @@
     <ClInclude Include="library\speed.h" />
     <ClInclude Include="mutator.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="tetrons\g_terminal.h" />
     <ClInclude Include="tetrons\tetron.h" />
     <ClInclude Include="tetrons\t_function.h" />
   </ItemGroup>

@@ -1,7 +1,4 @@
 ﻿#include "t_function.h"
-#include "g_exchange_graph.h"
-#include "exchange_trade.h"
-#include "mediator.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -457,7 +454,6 @@ void fun12(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun13(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	start_stock();
 }
 
 void fun14(_tetron* tt0, _tetron* tt, u64 flags)
@@ -479,19 +475,10 @@ void fun14(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun15(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	for (_frozen i(n_timer1000, flag_run); i; i++)
-	{
-		_t_function* f = *i;
-		if (!f) continue;
-		if (f->a == 16) delete f;
-	}
-	_g_button* b = *tt0;
-	if (b->checked) n_timer1000->add_flags(new _t_function(16), flag_run);
 }
 
 void fun16(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	scan_supply_and_demand();
 }
 
 void fun17(_tetron* tt0, _tetron* tt, u64 flags)
@@ -544,23 +531,18 @@ void fun18(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun19(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	_g_button* b = *tt0;
-	change_can_trade(b->checked);
 }
 
 void fun20(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	buy_shares();
 }
 
 void fun21(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	sell_shares();
 }
 
 void fun22(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	expand_elements_graph();
 }
 
 void fun23(_tetron* tt0, _tetron* tt, u64 flags)
@@ -652,12 +634,10 @@ void fun29(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun30(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	narrow_graph_elements();
 }
 
 void fun31(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	ed.save_to_file();
 }
 
 void fun32(_tetron* tt0, _tetron* tt, u64 flags)
@@ -796,12 +776,10 @@ void fun34(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun35(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	buy_stock(tt, true);
 }
 
 void fun36(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	buy_stock(tt, false);
 }
 
 void fun37(_tetron* tt0, _tetron* tt, u64 flags)
@@ -1131,16 +1109,16 @@ void _t_function::run(_tetron* tt0, _tetron* tt, u64 flags)
 	case 10: fun10(tt0, tt, flags); return; // ! к вызывающему удалить флаги(inf2) к тетронам(inf1)
 	case 11: fun11(tt0, tt, flags); return; // ! к вызывающему добавить флаги(inf2) к тетронам(inf1)
 	case 12: fun12(tt0, tt, flags); return; // отжато колесо мышки
-	case 13: fun13(tt0, tt, flags); return; // загрузка цен
+	case 13: fun13(tt0, tt, flags); return;
 	case 14: fun14(tt0, tt, flags); return; // создать графический объект
-	case 15: fun15(tt0, tt, flags); return; // переключение режима сканирования цен
-	case 16: fun16(tt0, tt, flags); return; // сканирование цен
+	case 15: fun15(tt0, tt, flags); return;
+	case 16: fun16(tt0, tt, flags); return;
 	case 17: fun17(tt0, tt, flags); return; // перетаскивание гвоздя активного объекта
 	case 18: fun18(tt0, tt, flags); return; // НОВОЕ изменение активного тетрона
-	case 19: fun19(tt0, tt, flags); return; // режим торговли
-	case 20: fun20(tt0, tt, flags); return; // кнопка купить акции
-	case 21: fun21(tt0, tt, flags); return; // кнопка продать акции
-	case 22: fun22(tt0, tt, flags); return; // size_el++
+	case 19: fun19(tt0, tt, flags); return;
+	case 20: fun20(tt0, tt, flags); return;
+	case 21: fun21(tt0, tt, flags); return;
+	case 22: fun22(tt0, tt, flags); return;
 	case 23: fun23(tt0, tt, flags); return; // открыть картинку
 	case 24: fun24(tt0, tt, flags); return; // центрирование графического объекта постоянно висячим
 	case 25: fun25(tt0, tt, flags); return; // задать размер GPicture
@@ -1148,13 +1126,13 @@ void _t_function::run(_tetron* tt0, _tetron* tt, u64 flags)
 	case 27: fun27(tt0, tt, flags); return; // глобальный масштаб = 1
 	case 28: fun28(tt0, tt, flags); return; // смена режима переноса
 	case 29: fun29(tt0, tt, flags); return; // смена режима отображения времени
-	case 30: fun30(tt0, tt, flags); return; // size_el--
-	case 31: fun31(tt0, tt, flags); return; // сохраниние цен
+	case 30: fun30(tt0, tt, flags); return;
+	case 31: fun31(tt0, tt, flags); return;
 	case 32: fun32(tt0, tt, flags); return;
 	case 33: fun33(tt0, tt, flags); return; // РАЗНОЕ
 	case 34: fun34(tt0, tt, flags); return;
-	case 35: fun35(tt0, tt, flags); return; // купить акции
-	case 36: fun36(tt0, tt, flags); return; // продать акции
+	case 35: fun35(tt0, tt, flags); return;
+	case 36: fun36(tt0, tt, flags); return;
 	case 37: fun37(tt0, tt, flags); return; // ! создать тетрон
 	case 38: fun38(tt0, tt, flags); return; // ! присвоить внутренние значения
 	case 39: fun39(tt0, tt, flags); return; // задать масштаб графического объекта
