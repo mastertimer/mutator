@@ -29,9 +29,6 @@
     <ClCompile Include="library\basic.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
-    <ClCompile Include="library\mathematics.cpp">
-      <Filter>Исходные файлы\library</Filter>
-    </ClCompile>
     <ClCompile Include="tetrons\tetron.cpp">
       <Filter>Исходные файлы\tetrons</Filter>
     </ClCompile>
@@ -53,9 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\basic.h">
-      <Filter>Исходные файлы\library</Filter>
-    </ClInclude>
-    <ClInclude Include="library\mathematics.h">
       <Filter>Исходные файлы\library</Filter>
     </ClInclude>
     <ClInclude Include="mutator.h">

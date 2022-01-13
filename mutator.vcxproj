@@ -167,7 +167,6 @@
     <ClCompile Include="library\geometry.cpp" />
     <ClCompile Include="library\graphics.cpp" />
     <ClCompile Include="library\json.cpp" />
-    <ClCompile Include="library\mathematics.cpp" />
     <ClCompile Include="library\multi_string.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mutator.cpp" />
@@ -180,7 +179,6 @@
     <ClInclude Include="library\graphics.h" />
     <ClInclude Include="library\hash.h" />
     <ClInclude Include="library\json.h" />
-    <ClInclude Include="library\mathematics.h" />
     <ClInclude Include="library\multi_string.h" />
     <ClInclude Include="library\speed.h" />
     <ClInclude Include="mutator.h" />

@@ -31,6 +31,8 @@
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#include <functional>
+
 #include "t_function.h"
 #include "mutator.h"
 
@@ -66,8 +68,7 @@ _tetron* create_tetron(const std::string& name)
 		make(_t_function),
 		make(_g_edit_double),
 		make(_g_button),
-		make(_g_tetron),
-		make(_g_graph)
+		make(_g_tetron)
 	};
 #undef make
 	auto fun = ss_tetron.find(name);
@@ -92,7 +93,7 @@ _tetron* create_tetron(uchar type)
 	case 10: return new _g_circle;            // 0x74
 	case 11: return new _g_line;              // 0x70
 	case 12: return new _g_rect;              // 0xF4
-	case 13: return new _g_graph;             // 0xFC
+
 	case 14: return new _g_froglif;           // 0x7F
 	case 15: return new _t_xy;                // 0x30
 	case 16: return new _g_scrollbar;         // 0xF8
