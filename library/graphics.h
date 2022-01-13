@@ -39,6 +39,9 @@ struct _picture
 	_picture& operator=(const _picture& copy);
 	bool operator==(const _picture& pic) const;
 
+	bool save_to_file(std::wstring_view file_name);
+	bool load_from_file(std::wstring_view file_name);
+
 	uint* scan_line(i64 y) const { return &data[y * size.x]; }
 
 	bool resize(_isize wh);

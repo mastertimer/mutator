@@ -51,6 +51,54 @@ struct _color_mixing
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+bool _picture::load_from_file(std::wstring_view file_name)
+{
+	_stack mem;
+	if (!mem.load_from_file(file_name)) return false;
+	char b, m;
+	uint bfSize, bfReserved, bfOffBits;
+	uint biSize, biCompression, biSizeImage, biClrUsed, biClrImportant;
+	int biWidth, biHeigh, biXPelsPerMeter, biYPelsPerMeter;
+	ushort biPlanes, biBitCount;
+	// BITMAPFILEHEADER
+	mem >> b >> m >> bfSize >> bfReserved >> bfOffBits;
+	// BITMAPINFOHEADER
+	mem >> biSize >> biWidth >> biHeigh >> biPlanes >> biBitCount >> biCompression >> biSizeImage >> biXPelsPerMeter;
+	mem >> biYPelsPerMeter >> biClrUsed >> biClrImportant;
+	if (b != 'B' || m != 'M' || bfOffBits < 54 || biWidth < 0 || biHeigh > 0 || biBitCount != 32) return false;
+	biHeigh = -biHeigh;
+	if (bfOffBits + biHeigh * biWidth * 4 > mem.size) return false;
+	mem.adata = bfOffBits;
+	return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool _picture::save_to_file(std::wstring_view file_name)
+{
+	_stack mem;
+	// BITMAPFILEHEADER
+	mem << 'B' << 'M';   // bfType
+	mem << uint(size.square() * 4 + 54); // bfSize
+	mem << uint(0);      // bfReserved1 bfReserved2
+	mem << uint(54);     // bfOffBits
+	// BITMAPINFOHEADER
+	mem << uint(40);     // biSize
+	mem << int(size.x);  // biWidth
+	mem << int(-size.y); // biHeigh
+	mem << ushort(1);    // biPlanes
+	mem << ushort(32);   // biBitCount
+	mem << uint(0);      // biCompression
+	mem << uint(0);      // biSizeImage
+	mem << uint(0);      // biXPelsPerMeter
+	mem << uint(0);      // biYPelsPerMeter
+	mem << uint(0);      // biClrUsed
+	mem << uint(0);      // biClrImportant
+	mem.push_data(data, size.square() * 4);
+
+	return mem.save_to_file(file_name);
+}
+
 void _picture::set_drawing_area(const _iarea& q)
 { 
 	drawing_area = q & size;
