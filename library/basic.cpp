@@ -85,22 +85,22 @@ bool save_file(std::wstring_view fn, const char* data, i64 n)
 
 bool load_file(std::wstring_view fn, char** data, i64* n)
 {
-	*data = 0;
+	*data = nullptr;
 	*n    = 0;
 	std::ifstream f(fn.data(), std::ofstream::binary);
 	if (!f) return false;
 	f.seekg(0, f.end);
-	auto siz = f.tellg();
-	*data    = new char[siz];
+	auto size = f.tellg();
+	*data = new char[i64(size) + 1]; // дополнительный байт на разные нужды. ?сделать параметром
 	f.seekg(0);
-	f.read(*data, siz);
+	f.read(*data, size);
 	if (!f.good())
 	{
 		delete[] * data;
-		*data = 0;
+		*data = nullptr;
 		return false;
 	}
-	*n = siz;
+	*n = size;
 	return true;
 }
 
