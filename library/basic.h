@@ -58,7 +58,7 @@ void set_clipboard_text(astr text);
 void set_clipboard_text(std::wstring_view text);
 
 bool save_file(std::wstring_view fn, const char* data, i64 n);
-bool load_file(std::wstring_view fn, char** data, i64* n);
+bool load_file(std::wstring_view fn, char** data, i64* n, i64 spare_bytes = 0);
 bool load_file(std::wstring_view fn, std::vector<uchar>& res);
 
 std::wstring string_to_wstring(std::string_view s);

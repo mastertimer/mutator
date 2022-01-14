@@ -83,7 +83,7 @@ bool save_file(std::wstring_view fn, const char* data, i64 n)
 	return f.good();
 }
 
-bool load_file(std::wstring_view fn, char** data, i64* n)
+bool load_file(std::wstring_view fn, char** data, i64* n, i64 spare_bytes)
 {
 	*data = nullptr;
 	*n    = 0;
@@ -91,7 +91,7 @@ bool load_file(std::wstring_view fn, char** data, i64* n)
 	if (!f) return false;
 	f.seekg(0, f.end);
 	auto size = f.tellg();
-	*data = new char[i64(size) + 1]; // дополнительный байт на разные нужды. ?сделать параметром
+	*data = new char[i64(size) + spare_bytes];
 	f.seekg(0);
 	f.read(*data, size);
 	if (!f.good())
