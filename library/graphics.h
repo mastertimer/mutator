@@ -44,7 +44,7 @@ struct _picture
 
 	uint* scan_line(i64 y) const { return &data[y * size.x]; }
 
-	bool resize(_isize wh);
+	virtual bool resize(_isize wh);
 	void set_drawing_area(const _iarea& q);
 
 	void clear(_color c = 0xFF000000);
@@ -120,7 +120,7 @@ struct _bitmap : public _picture
 	explicit _bitmap(int rx3 = 0, int ry3 = 0);
 	~_bitmap();
 
-	bool resize(_isize wh);
+	virtual bool resize(_isize wh);
 
 	void text(_ixy p, std::wstring_view s, int h, uint c, uint bg = 0);
 	void text(_ixy p, std::string_view s, int h, uint c, uint bg = 0);

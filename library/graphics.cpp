@@ -69,6 +69,8 @@ bool _picture::load_from_file(std::wstring_view file_name)
 	biHeigh = -biHeigh;
 	if (bfOffBits + biHeigh * biWidth * 4 > mem.size) return false;
 	mem.adata = bfOffBits;
+	resize({ biWidth, biHeigh });
+	mem.pop_data(data, size.square() * 4);
 	return true;
 }
 
