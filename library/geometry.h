@@ -67,6 +67,8 @@ struct _isize // [0...x), [0...y)
 
 	bool operator==(const _isize s) const { return ((x == s.x) && (y == s.y)) || (empty() && s.empty()); }
 	bool operator!=(const _isize s) const { return !(*this == s); }
+
+	void operator|=(const _isize& b);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

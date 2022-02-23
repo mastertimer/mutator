@@ -2882,11 +2882,11 @@ wstr _bitmap::get_font_name()
 	return font.lfFaceName;
 }
 
-void _bitmap::set_font(wstr name, bool bold)
+void _bitmap::set_font(std::wstring_view name, bool bold)
 {
 	izm_font = true;
 	font.lfWeight = (bold) ? 700 : 100;
-	wcscpy_s(font.lfFaceName, name);
+	wcscpy_s(font.lfFaceName, name.data());
 }
 
 void _bitmap::grab_ecran_oo2(HWND hwnd)
