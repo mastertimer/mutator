@@ -2808,7 +2808,7 @@ _bitmap::~_bitmap()
 	DeleteDC(hdc);
 	DeleteObject(bitmap2);
 	if (hfont != 0) DeleteObject(hfont);
-	data = 0; // чтобы ~Picture не выругался
+	data = nullptr;
 }
 
 void _bitmap::text(_ixy p, std::wstring_view s, int h, uint c, uint bg)

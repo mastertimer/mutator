@@ -42,7 +42,8 @@ struct _picture
 	bool save_to_file(std::wstring_view file_name);
 	bool load_from_file(std::wstring_view file_name);
 
-	uint* scan_line(i64 y) const { return &data[y * size.x]; }
+	uint* scan_line(i64 y) const { return &data[y * size.x]; } //!!удалить
+	_color* scan_line2(i64 y) const { return &data2[y * size.x]; }
 
 	virtual bool resize(_isize wh);
 	void set_drawing_area(const _iarea& q);

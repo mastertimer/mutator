@@ -23,6 +23,12 @@ void _isize::operator|=(const _isize& b)
 	if (b.y > y) y = b.y;
 }
 
+_isize _isize::extended(_ixy delta) const
+{
+	if (empty()) return { delta.x, delta.y };
+	return { x + delta.x, y + delta.y };
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void _interval::operator&=(const _interval& b)

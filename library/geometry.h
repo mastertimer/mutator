@@ -11,6 +11,7 @@ struct _ixy // индекс, номер
 	i64 x;
 	i64 y;
 
+	_ixy(int x_,    int y_)    : x(x_), y(y_) {}
 	_ixy(i64 x_,    i64 y_)    : x(x_), y(y_) {}
 	_ixy(i64 x_,    double y_) : x(x_), y(y_) { if ((y_ < 0) && (y != y_)) y--; }
 	_ixy(double x_, i64 y_)    : x(x_), y(y_) { if ((x_ < 0) && (x != x_)) x--; }
@@ -64,6 +65,7 @@ struct _isize // [0...x), [0...y)
 	i64  square() const { return (empty()) ? 0 : (x * y); }
 	_xy  center() const { return { x * 0.5, y * 0.5 }; }
 	inline _iarea move(_ixy d) const;
+	[[nodiscard]] _isize extended(_ixy delta) const;
 
 	bool operator==(const _isize s) const { return ((x == s.x) && (y == s.y)) || (empty() && s.empty()); }
 	bool operator!=(const _isize s) const { return !(*this == s); }
