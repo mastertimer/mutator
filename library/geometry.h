@@ -84,6 +84,7 @@ struct _iinterval // [...)
 
 	_iinterval() = default;
 	_iinterval(i64 x) : min(x), max(x + 1) {}
+	_iinterval(int min_, int max_) : min(min_), max(max_) {}
 	_iinterval(i64 min_, i64 max_) : min(min_), max(max_) {}
 	_iinterval(i64 min_, double max_) : min(min_), max(max_) { if ((max_ > 0) || (max == max_)) max++; }
 	_iinterval(double min_, i64 max_) : min(min_), max(max_) { if ((min_ < 0) && (min != min_)) min--; }
