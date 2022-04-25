@@ -117,6 +117,8 @@ struct _bitmap : public _picture
 	void set_font(std::wstring_view name, bool bold);
 	void podg_font(int r); // подготовка шрифта в выводу
 	void podg_cc(uint c, uint cf); // подготовка цветов к выводу
+	_bitmap& operator=(const _picture& copy);
+	_bitmap& operator=(const _bitmap& copy);
 
 	explicit _bitmap(int rx3 = 0, int ry3 = 0);
 	~_bitmap();

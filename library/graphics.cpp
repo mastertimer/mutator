@@ -2904,4 +2904,16 @@ void _bitmap::grab_ecran_oo2(HWND hwnd)
 	if (ee == eemax)*((unsigned int*)ee) |= 0xff000000;
 }
 
+_bitmap& _bitmap::operator=(const _picture& copy)
+{
+	*((_picture*)this) = copy;
+	return *this;
+}
+
+_bitmap& _bitmap::operator=(const _bitmap& copy)
+{
+	*((_picture*)this) = copy;
+	return *this;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
