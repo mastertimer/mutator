@@ -649,125 +649,15 @@ void show_message(std::string_view s, double b)
 	MessageBoxA(0, ((std::string)s + " = " + std::to_string(b)).c_str(), "информация", MB_OK | MB_TASKMODAL);
 }
 
-void test2()
-{
-	double p[256] = { 1 }; // частоты (ненормированные)
-	for (i64 i = 1; i < 21; i++) p[i] = 0.0064;
-
-	constexpr i64 n = 1000000; // длина последовательности
-
-	double s = 0;
-	for (auto i : p) s += i;
-	for (auto& i : p) i /= s;
-
-	i64 c[256]; // количество символов
-	i64 ss = 0;
-	for (i64 i = 255; i > 0; i--)
-	{
-		c[i] = p[i] * n + 0.5;
-		ss += c[i];
-	}
-	c[0] = n - ss;
-
-	double e0 = 0; // идеальный размер
-	for (auto i : c)
-		if (i > 0)
-			e0 += i * log(((double)i) / n);
-	e0 /= -log(2.0);
-	show_message("e0 (%)", 100.0 * e0 / (8 * n));
-
-	//	return;
-
-	std::vector<uchar> a;
-
-	i64 nn = n;
-	while (nn) // пока не исчерпаны цифры
-	{
-		i64 ii = rnd(nn);
-		i64 q = 0;
-		for (i64 i = 0; i < 256; i++) // i - сработавший символ
-		{
-			q += c[i];
-			if (ii >= q) continue;
-			a.push_back(i);
-			c[i]--;
-			break;
-		}
-		nn--;
-	}
-
-	auto calc_de = [&](double k)
-	{
-		double pp[256];
-		for (auto& i : pp) i = k;
-		double summ_pp = k * 256;
-
-		double e = 0; // реальный размер
-
-		for (auto i : a) // сгенерированная заранее последовательность
-		{
-			e += log(pp[i] / summ_pp);
-			pp[i]++;
-			summ_pp++;
-		}
-		e /= -log(2.0);
-		return (e - e0) / 8;
-	};
-
-	// подбор идельного k
-	double dk = 2;
-	double k = 1;
-	double e = calc_de(k);
-	for (;;)
-	{
-		double k1 = k * dk;
-		double e1 = calc_de(k1);
-		if (e1 < e)
-		{
-			e = e1;
-			k = k1;
-			continue;
-		}
-		k1 = k / dk;
-		e1 = calc_de(k1);
-		if (e1 < e)
-		{
-			e = e1;
-			k = k1;
-			continue;
-		}
-		break;
-	}
-	// еще разочек
-	dk = 1.02;
-	for (;;)
-	{
-		double k1 = k * dk;
-		double e1 = calc_de(k1);
-		if (e1 < e)
-		{
-			e = e1;
-			k = k1;
-			continue;
-		}
-		k1 = k / dk;
-		e1 = calc_de(k1);
-		if (e1 < e)
-		{
-			e = e1;
-			k = k1;
-			continue;
-		}
-		break;
-	}
-
-	show_message("k", k);
-	show_message("e", e);
-}
-
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	test2();
+	_bitmap ee(101, 101);
+	ee.clear(0xff000000);
+	for (i64 y = 0; y <= 100; y++)
+		for (i64 x = 0; x <= 100; x++)
+			if (rnd(100) + 1 <= y)
+				ee.scan_line2(y)[x] = 0xffffffff;
+	ee.save_to_file(L"e:\\11.bmp");
 }
 
 void fun34(_tetron* tt0, _tetron* tt, u64 flags)
