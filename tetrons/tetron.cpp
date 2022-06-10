@@ -1374,7 +1374,7 @@ void _g_test_graph::ris2(_trans tr, bool final)
 		for (int i = 0; i < 100; i++)
 			te.line({ rnd(120), rnd(90) }, { rnd(120), rnd(90) }, 0xFF2080FF);
 		first = false;
-		a.clear(0xFF0000FF);
+		a.clear({ 0xFF0000FF });
 		_iarea ogr({ 30LL, 225LL }, { 25LL, 125LL });
 		a.set_drawing_area(ogr);
 		a.stretch_draw(&te, 0, 0, 3.3);
@@ -2128,7 +2128,7 @@ void _g_edit64bit::run(_tetron* tt0, _tetron* tt, u64 flags) { cha_area(); }
 void _g_button::RisIco(astr kod, const char* s)
 {
 	picture.resize({ 24, 24 });
-	picture.clear(0xFF000000);
+	picture.clear({ 0xFF000000 });
 	for (; *kod; kod++)
 	{
 		if (*kod == 'a')
@@ -2235,7 +2235,7 @@ void _g_button::mouse_finish_move()
 
 bool _g_button::mouse_down_left2(_xy r)
 {
-	if (test_flags(n_checkbox, flag_parent)) checked = !checked;
+	if (test_flags(n_checkbox, flag_parent)) checked = i64(!bool(checked));
 	run(this, this, flag_run);
 	cha_area();
 	return true;

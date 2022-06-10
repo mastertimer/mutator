@@ -7,12 +7,13 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _color
+union _color
 {
-	uchar b, g, r, a;
-
-	_color(uint c) { *((uint*)this) = c; }
-	operator uint() { return *((uint*)this); }
+	uint c;
+	struct
+	{
+		uchar b, g, r, a;
+	};
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,7 +49,7 @@ struct _picture
 	virtual bool resize(_isize wh);
 	void set_drawing_area(const _iarea& q);
 
-	void clear(_color c = 0xFF000000);
+	void clear(_color c = { 0xFF000000 });
 
 	// ниже не проверенные, или не универсальные функции
 

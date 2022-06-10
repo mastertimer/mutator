@@ -615,7 +615,7 @@ void fun27(_tetron* tt0, _tetron* tt, u64 flags)
 
 void fun28(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	*n_perenos->operator i64* () = !(*n_perenos->operator i64 * ());
+	*n_perenos->operator i64* () = i64(!bool(*n_perenos->operator i64 * ()));
 	set_cursor((*n_perenos->operator i64 * ()) ? (_cursor::size_all) : ((*n_s_right->operator i64 * ()) ?
 		_cursor::hand_point : _cursor::normal));
 
@@ -652,11 +652,11 @@ void show_message(std::string_view s, double b)
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	_bitmap ee(101, 101);
-	ee.clear(0xff000000);
+	ee.clear({ 0xff000000 });
 	for (i64 y = 0; y <= 100; y++)
 		for (i64 x = 0; x <= 100; x++)
 			if (rnd(100) + 1 <= y)
-				ee.scan_line2(y)[x] = 0xffffffff;
+				ee.scan_line2(y)[x] = { 0xffffffff };
 	ee.save_to_file(L"e:\\11.bmp");
 }
 
@@ -747,7 +747,7 @@ void fun47(_tetron* tt0, _tetron* tt, u64 flags)
 	_g_picture* g = tt->find1<_g_picture>(flag_information);
 	i64* c = tt->find1<i64>(flag_information);
 	if ((c == nullptr) || (g == nullptr)) return;
-	g->pic.clear((uint)(*c));
+	g->pic.clear({ (uint)(*c) });
 	g->cha_area();
 }
 

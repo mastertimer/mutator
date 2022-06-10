@@ -228,11 +228,11 @@ void _picture::clear(_color c)
 {
 	if (drawing_area != size)
 	{
-		fill_rectangle(size, c, true);
+		fill_rectangle(size, c.c, true);
 		return;
 	}
-	transparent = ((c >> 24) != 0xff);
-	memset32(data, c, size.square());
+	transparent = ((c.c >> 24) != 0xff);
+	memset32(data, c.c, size.square());
 }
 
 void _picture::horizontal_line(_ixy p1, _ixy p2, _color c, bool rep)
@@ -243,7 +243,7 @@ void _picture::horizontal_line(_ixy p1, _ixy p2, _color c, bool rep)
 	if (rep || c.a == 0xff)
 	{
 		set_transparent(c);
-		memset32((uint*)&pixel(interval.min, p1.y), c, interval.length());
+		memset32((uint*)&pixel(interval.min, p1.y), c.c, interval.length());
 		return;
 	}
 	_color_mixing cc(c, transparent);

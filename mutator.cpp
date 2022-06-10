@@ -213,7 +213,7 @@ namespace mutator
 		if (master_obl_izm.empty()) return;
 		master_bm.set_drawing_area(master_obl_izm);
 		master_obl_izm &= master_bm.size;
-		master_bm.clear(cc0);
+		master_bm.clear({ cc0 });
 		master_chain_go.clear();
 		n_ko->operator _t_trans* ()->ris(_trans(), false);
 		master_obl_izm = _area();

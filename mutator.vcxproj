@@ -108,7 +108,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalIncludeDirectories>$(ProjectDir);library;tetrons</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4100;4244</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4100;4201;4244</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -150,7 +150,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir);library;tetrons</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4100;4244</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4100;4201;4244</DisableSpecificWarnings>
       <AdditionalUsingDirectories>
       </AdditionalUsingDirectories>
     </ClCompile>
