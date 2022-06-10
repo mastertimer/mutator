@@ -105,7 +105,7 @@ struct _iinterval // [...)
 	i64  center() const { i64 s = min + max; if (s < 0) s--; return s >> 1; }
 	i64  length() const { i64 r = max - min; return (r < 0) ? 0 : r; }
 	_iinterval& operator << (i64 x);
-	bool contains(i64 x) const { return (x >= min) && (x < max); }
+	bool test(i64 x) const { return (x >= min) && (x < max); }
 
 	void clear() { min = max = 0; }
 };
@@ -158,7 +158,7 @@ struct _interval // [...])
 
 	double length() const { return empty ? 0 : (max - min); }
 	_interval& operator << (double x);
-	bool test(double b); // принадлежит ли точка области
+	bool test(double b) const; // принадлежит ли точка области
 };
 
 inline double operator*(const double a, const _interval interv)
@@ -208,7 +208,7 @@ struct _area
 
 	double min_length();
 
-	bool test(_xy b); // принадлежит ли точка области
+	bool test(_xy b) const; // принадлежит ли точка области
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

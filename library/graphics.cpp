@@ -237,7 +237,7 @@ void _picture::clear(_color c)
 
 void _picture::horizontal_line(_ixy p1, _ixy p2, _color c, bool rep)
 {
-	if (!drawing_area.y.contains(p1.y)) return;
+	if (!drawing_area.y.test(p1.y)) return;
 	auto interval = (_iinterval(p1.x) << p2.x) & drawing_area.x;
 	if (interval.empty()) return;
 	if (rep || c.a == 0xff)
@@ -253,7 +253,7 @@ void _picture::horizontal_line(_ixy p1, _ixy p2, _color c, bool rep)
 
 void _picture::vertical_line(_ixy p1, _ixy p2, _color c, bool rep)
 {
-	if (!drawing_area.x.contains(p1.x)) return;
+	if (!drawing_area.x.test(p1.x)) return;
 	auto interval = (_iinterval(p1.y) << p2.y) & drawing_area.y;
 	if (interval.empty()) return;
 	_color* c2 = &pixel(p1.x, interval.min);

@@ -101,7 +101,7 @@ void _interval::operator|=(const _interval& b)
 	if (b.max == max) right_closed |= b.right_closed;
 }
 
-bool _interval::test(double b)
+bool _interval::test(double b) const
 {
 	if (empty) return false;
 	if (b == max) return right_closed;
@@ -188,7 +188,7 @@ void _area::operator|=(const _area& b)
 	y |= b.y;
 }
 
-bool _area::test(_xy b)
+bool _area::test(_xy b) const
 {
 	return x.test(b.x) && y.test(b.y);
 }
@@ -325,8 +325,9 @@ bool _iarea::operator!=(_isize b) const
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 std::optional<_segment> _segment::operator&(const _area& b) const
-{
+{ // не проверена
 	if (b.empty()) return {};
+	if (b.test(p1) && b.test(p2)) return *this;
 	_interval x_interval = _interval(p1.x) << p2.x;
 	_interval y_interval = _interval(p1.y) << p2.y;
 	_interval x1_interval = (x_interval & b.x) / x_interval;
@@ -339,6 +340,15 @@ std::optional<_segment> _segment::operator&(const _area& b) const
 	if (!main_diagonal) dd = { 1.0 - dd.max, 1.0 - dd.min }; // что это за действие?
 	res.p1.y = dd.min * y_interval;
 	res.p2.y = dd.max * y_interval;
+	// коррекция микро выступов
+	if (res.p1.x < b.x.min) res.p1.x = b.x.min;
+	if (res.p1.y < b.y.min) res.p1.y = b.y.min;
+	if (res.p2.x < b.x.min) res.p2.x = b.x.min;
+	if (res.p2.y < b.y.min) res.p2.y = b.y.min;
+	if (res.p1.x > b.x.max) res.p1.x = b.x.max;
+	if (res.p1.y > b.y.max) res.p1.y = b.y.max;
+	if (res.p2.x > b.x.max) res.p2.x = b.x.max;
+	if (res.p2.y > b.y.max) res.p2.y = b.y.max;
 	return res;
 }
 
