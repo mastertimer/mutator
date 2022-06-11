@@ -278,30 +278,86 @@ void _picture::vertical_line(_ixy p1, _ixy p2, _color c, bool rep)
 void _picture::line2(_ixy p1, _ixy p2, _color c, bool rep)
 {
 	if (c.a == 0 && !rep) return; // полностью прозрачная
-	if (p1.y == p2.y)
+	if (p1.y == p2.y) { horizontal_line(p1, p2, c, rep); return; }
+	if (p1.x == p2.x) { vertical_line(p1, p2, c, rep); return; }
+	double dy_dx = (p2.y - p1.y) / (p2.x - p1.x);
+	double dx_dy = 1.0 / dy_dx;
+	if (abs(dx_dy) >= 1.0)
 	{
-		horizontal_line(p1, p2, c, rep);
+		if (p2.x < p1.x) std::swap(p1, p2);
+		double y1 = p1.y + 0.5;
+		double y2 = p2.y + 0.5;
+		if (p1.x < drawing_area.x.min)
+		{
+			if (p2.x < drawing_area.x.min) return;
+			y1 += (drawing_area.x.min - p1.x) * dy_dx;
+			p1.x = drawing_area.x.min;
+		}
+		if (p2.x >= drawing_area.x.max)
+		{
+			if (p2.x >= drawing_area.x.max) return;
+			y2 -= (p2.x - drawing_area.x.max + 1) * dy_dx;
+			p1.x = drawing_area.x.max - 1;
+		}
+		if (y1 < drawing_area.y.min)
+		{
+			if (y2 < drawing_area.y.min) return;
+			i64 dx = (drawing_area.y.min - y1) * dx_dy;
+			p1.x += dx;
+			y1 += dx * dy_dx;
+			while (y1 < drawing_area.y.min) { p1.x++; y1 += dy_dx; }
+			if (p2.x < p1.x) return;
+		}
+		else if (y1 >= drawing_area.y.max)
+		{
+			if (y2 >= drawing_area.y.max) return;
+			i64 dx = (drawing_area.y.max - y1) * dx_dy;
+			p1.x += dx;
+			y1 += dx * dy_dx;
+			while (y1 >= drawing_area.y.max) { p1.x++; y1 += dy_dx; }
+			if (p2.x < p1.x) return;
+		}
+		double y = y1;
+		if (rep || c.a == 0xff)
+		{
+			set_transparent(c);
+			if (dy_dx > 0)
+			{
+				for (i64 x = p1.x; x <= p2.x; x++)
+				{
+					if (y >= drawing_area.y.max) break;
+					pixel(x, y) = c;
+					y += dy_dx;
+				}
+				return;
+			}
+			for (i64 x = p1.x; x <= p2.x; x++)
+			{
+				if (y < drawing_area.y.min) break;
+				pixel(x, y) = c;
+				y += dy_dx;
+			}
+			return;
+		}
+		_color_mixing cc(c, transparent);
+		if (dy_dx > 0)
+		{
+			for (i64 x = p1.x; x <= p2.x; x++)
+			{
+				if (y >= drawing_area.y.max) break;
+				cc.mix(pixel(x, y));
+				y += dy_dx;
+			}
+			return;
+		}
+		for (i64 x = p1.x; x <= p2.x; x++)
+		{
+			if (y < drawing_area.y.min) break;
+			cc.mix(pixel(x, y));
+			y += dy_dx;
+		}
 		return;
 	}
-	if (p1.x == p2.x)
-	{
-		vertical_line(p1, p2, c, rep);
-		return;
-	}
-	auto segment = _segment{ p1, p2 } & drawing_area;
-	if (!segment) return;
-	_interval xx;
-	_interval yy;
-	double dx = 1.0;
-	double dy = 1.0;
-	if (rep || c.a == 0xff)
-	{
-		set_transparent(c);
-		for (double x = xx.min, y = yy.min; (x != xx.max) && (y != yy.max); x += dx, y += dy) pixel(x, y) = c;
-		return;
-	}
-	_color_mixing cc(c, transparent);
-	for (double x = xx.min, y = yy.min; (x != xx.max) && (y != yy.max); x += dx, y += dy) cc.mix(pixel(x, y));
 }
 
 void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)
