@@ -322,40 +322,16 @@ void _picture::line2(_ixy p1, _ixy p2, _color c, bool rep)
 		{
 			set_transparent(c);
 			if (dy_dx > 0)
-			{
-				for (i64 x = p1.x; x <= p2.x; x++)
-				{
-					if (y >= drawing_area.y.max) break;
-					pixel(x, y) = c;
-					y += dy_dx;
-				}
-				return;
-			}
-			for (i64 x = p1.x; x <= p2.x; x++)
-			{
-				if (y < drawing_area.y.min) break;
-				pixel(x, y) = c;
-				y += dy_dx;
-			}
+				for (i64 x = p1.x; (x <= p2.x) && (y < drawing_area.y.max); x++, y += dy_dx) pixel(x, y) = c;
+			else
+				for (i64 x = p1.x; (x <= p2.x) && (y >= drawing_area.y.min); x++, y += dy_dx) pixel(x, y) = c;
 			return;
 		}
 		_color_mixing cc(c, transparent);
 		if (dy_dx > 0)
-		{
-			for (i64 x = p1.x; x <= p2.x; x++)
-			{
-				if (y >= drawing_area.y.max) break;
-				cc.mix(pixel(x, y));
-				y += dy_dx;
-			}
-			return;
-		}
-		for (i64 x = p1.x; x <= p2.x; x++)
-		{
-			if (y < drawing_area.y.min) break;
-			cc.mix(pixel(x, y));
-			y += dy_dx;
-		}
+			for (i64 x = p1.x; (x <= p2.x) && (y < drawing_area.y.max); x++, y += dy_dx) cc.mix(pixel(x, y));
+		else
+			for (i64 x = p1.x; (x <= p2.x) && (y >= drawing_area.y.min); x++, y += dy_dx) cc.mix(pixel(x, y));
 		return;
 	}
 }
