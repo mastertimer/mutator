@@ -49,7 +49,8 @@ struct _picture
 	virtual bool resize(_isize wh);
 	void set_drawing_area(const _iarea& q);
 
-	void clear(_color c = { 0xFF000000 });
+	void clear(_color c = { 0xFF000000 }); // *
+	void set_transparent(); // * узнать, есть ли прозрачные пиксели
 
 	// ниже не проверенные, или не универсальные функции
 
@@ -76,8 +77,6 @@ struct _picture
 
 	//	void text0(int x, int y, std::string_view s, int h, uint c, uint bg);
 
-	void set_transparent(); // узнать, есть ли прозрачные пиксели
-
 private:
 
 	void line_vert_rep_speed(_ixy p, i64 y2, uint c); // вертикальная линия замещения без проверок диапазона
@@ -89,13 +88,14 @@ private:
 	void line3_x(_ixy p1, _ixy p2, _color c, bool rep = false);
 	void line3_y(_ixy p1, _ixy p2, _color c, bool rep = false);
 	void line3_x_compact(_ixy p1, _ixy p2, _color c, bool rep = false);
+	void line3_y_compact(_ixy p1, _ixy p2, _color c, bool rep = false);
 
 	// ниже проверенные функции
 
 	void horizontal_line(_ixy p1, i64 p2x, _color c, bool rep = false); // *
 	void vertical_line(_ixy p1, i64 p2y, _color c, bool rep = false); // *
 
-	void set_transparent(_color c); // изменить transparent
+	void set_transparent(const _color c) { transparent |= c.a != 0xff; } // *
 
 	_color& pixel(const i64 x, const i64 y) { return data2[y * size.x + x]; }
 };
