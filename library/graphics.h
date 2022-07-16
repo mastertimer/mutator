@@ -53,8 +53,8 @@ struct _picture
 
 	// ниже не проверенные, или не универсальные функции
 
-	void line2(_ixy p1, _ixy p2, _color c, bool rep = false); // линия rep - полное замещение цвета
-	void line(_ixy p1, _ixy p2, uint c, bool rep = false); // линия rep - полное замещение цвета
+	void line3(_ixy p1, _ixy p2, _color c, bool rep = false);
+	void line(_ixy p1, _ixy p2, uint c, bool rep = false);
 	void lines(_xy p1, _xy p2, double l, uint c); // точная линия заданной толщины
 	void text16(_ixy p, std::string_view st, uint c, uint bg = 0); // простой текст высотой 16
 	void text16n(i64 x, i64 y, astr s, i64 n, uint c, uint bg = 0); // простой текст высотой 16*n
@@ -86,14 +86,18 @@ private:
 	void fill_rect_transparent_speed(_iarea r, uint c);
 	void fill_rect_speed(_iarea r, uint c);
 
+	void line3_x(_ixy p1, _ixy p2, _color c, bool rep = false);
+	void line3_y(_ixy p1, _ixy p2, _color c, bool rep = false);
+	void line3_x_compact(_ixy p1, _ixy p2, _color c, bool rep = false);
+
 	// ниже проверенные функции
 
-	void horizontal_line(_ixy p1, i64 p2x, _color c, bool rep);
-	void vertical_line(_ixy p1, i64 p2y, _color c, bool rep);
+	void horizontal_line(_ixy p1, i64 p2x, _color c, bool rep = false); // *
+	void vertical_line(_ixy p1, i64 p2y, _color c, bool rep = false); // *
 
 	void set_transparent(_color c); // изменить transparent
 
-	_color& pixel(i64 x, i64 y) { return data2[y * size.x + x]; }
+	_color& pixel(const i64 x, const i64 y) { return data2[y * size.x + x]; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
