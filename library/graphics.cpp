@@ -74,13 +74,38 @@ bool _picture::load_from_file(std::wstring_view file_name)
 	// BITMAPINFOHEADER
 	mem >> biSize >> biWidth >> biHeigh >> biPlanes >> biBitCount >> biCompression >> biSizeImage >> biXPelsPerMeter;
 	mem >> biYPelsPerMeter >> biClrUsed >> biClrImportant;
-	if (b != 'B' || m != 'M' || bfOffBits < 54 || biWidth < 0 || biHeigh > 0 || biBitCount != 32) return false;
-	biHeigh = -biHeigh;
-	if (bfOffBits + biHeigh * biWidth * 4 > mem.size) return false;
+	if (b != 'B' || m != 'M' || bfOffBits < 54 || biWidth <= 0 || biHeigh == 0) return false;
+	bool upend = biHeigh > 0;
+	biHeigh = abs(biHeigh);
+	if (bfOffBits + biHeigh * biWidth * (biBitCount / 8) > mem.size) return false;
 	mem.adata = bfOffBits;
 	resize({ biWidth, biHeigh });
-	mem.pop_data(data, size.square() * 4);
-	return true;
+	if (biBitCount == 24)
+	{
+		i64 finish = biWidth % 4;
+		for (i64 y = 0; y < biHeigh; y++)
+		{
+			auto yy = (upend) ? biHeigh - 1 - y : y;
+			_color* c = &data2[yy * size.x];
+			for (i64 x = 0; x < biWidth; x++)
+			{
+				ushort a;
+				uchar b;
+				mem >> a >> b;
+				uint cc = 0xff000000 + a + (uint(b) << 16);
+				c[x] = { cc };
+			}
+			char a;
+			for (i64 i = 0; i < finish; i++) mem >> a;
+		}
+		return true;
+	}
+	if (biBitCount == 32)
+	{
+		mem.pop_data(data, size.square() * 4);
+		return true;
+	}
+	return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

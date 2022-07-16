@@ -1274,17 +1274,11 @@ void _g_picture::set_pic(const _picture& pic2)
 
 bool _g_picture::load_from_file(wstr fn)
 {
-	/*	del_area();
-		_stack fs;
-		fs.load_from_file(fn);
-		_bitmap_file bf;
-		fs >> bf;
-		if (!bf) return false;
-		pic = std::move(bf);
-		local_area = _area_old(0, (double)pic.size.x, 0, (double)pic.size.y);
-		area_definite = false;
-		add_area();
-		return true;*/
+	if (!pic.load_from_file(fn)) return false;
+	del_area();
+	local_area = pic.size;
+	area_definite = false;
+	add_area();
 	return true;
 }
 

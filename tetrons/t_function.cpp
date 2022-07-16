@@ -651,13 +651,11 @@ void show_message(std::string_view s, double b)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	_bitmap ee(101, 101);
-	ee.clear({ 0xff000000 });
-	for (i64 y = 0; y <= 100; y++)
-		for (i64 x = 0; x <= 100; x++)
-			if (rnd(100) + 1 <= y)
-				ee.scan_line2(y)[x] = { 0xffffffff };
-	ee.save_to_file(L"e:\\11.bmp");
+	_g_picture* a = new _g_picture;
+	a->load_from_file(L"e:\\test.bmp");
+	_t_trans* ttr = new _t_trans;
+	ttr->add_flags(a, flag_sub_go + flag_part);
+	n_ko->add_flags(ttr, flag_sub_go + flag_part);
 }
 
 void fun34(_tetron* tt0, _tetron* tt, u64 flags)
