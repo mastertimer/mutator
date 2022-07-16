@@ -345,33 +345,30 @@ void _picture::vertical_line(_ixy p1, i64 p2y, _color c, bool rep)
 
 void _picture::line3_x_compact(_ixy p1, _ixy p2, _color c, bool rep)
 {
-	if (p2.x >= drawing_area.x.max)
-	{
-		if (p1.x >= drawing_area.x.max) return;
-		p2.x = drawing_area.x.max - 1;
-	}
 	double y = p1.y + 0.5;
 	double dy_dx = double(p2.y - p1.y) / (p2.x - p1.x);
 	if (p1.x < drawing_area.x.min)
 	{
-		if (p2.x < drawing_area.x.min) return;
 		y += (drawing_area.x.min - p1.x) * dy_dx;
 		p1.x = drawing_area.x.min;
 	}
+	if (p2.x >= drawing_area.x.max) p2.x = drawing_area.x.max - 1;
+	if (p2.x < p1.x) return;
 	if (rep || c.a == 0xff)
 	{
 		set_transparent(c);
 		for (i64 x = p1.x; x <= p2.x; x++, y += dy_dx) pixel(x, y) = c;
-		return;
 	}
-	if (transparent)
+	else if (transparent)
 	{
 		_color_mixing3 cc(c);
 		for (i64 x = p1.x; x <= p2.x; x++, y += dy_dx) cc.mix(pixel(x, y));
-		return;
 	}
-	_color_mixing2 cc(c);
-	for (i64 x = p1.x; x <= p2.x; x++, y += dy_dx) cc.mix(pixel(x, y));
+	else
+	{
+		_color_mixing2 cc(c);
+		for (i64 x = p1.x; x <= p2.x; x++, y += dy_dx) cc.mix(pixel(x, y));
+	}
 }
 
 void _picture::line3_x(_ixy p1, _ixy p2, _color c, bool rep)
