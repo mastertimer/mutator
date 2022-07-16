@@ -14,6 +14,28 @@ union _color
 	{
 		uchar b, g, r, a;
 	};
+
+	void mix(const _color c2)
+	{
+		uint kk = 255 - c2.a;
+		uint k2 = uint(c2.a) + 1;
+		b = (b * kk + c2.b * k2) >> 8;
+		g = (g * kk + c2.g * k2) >> 8;
+		r = (r * kk + c2.r * k2) >> 8;
+	}
+
+	void mix2(const _color c2)
+	{
+		uint kk = 255 - c2.a;
+		uint k2 = (uint(c2.a) + 1) * 255;
+		uint kk_ = 255 - a;
+		uint k2_ = (uint(a) + 1) * kk;
+		uint znam = 65535 - kk * kk_;
+		b = (b * k2_ + c2.b * k2) / znam;
+		g = (g * k2_ + c2.g * k2) / znam;
+		r = (r * k2_ + c2.r * k2) / znam;
+		a = 255 - ((kk_ * kk) >> 8);
+	}
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,7 +93,8 @@ struct _picture
 
 	void rectangle(_iarea oo, uint c);
 
-	void draw(_ixy r, _picture& bm);
+	void draw(_ixy r, const _picture& bm);
+	void draw_old(_ixy r, const _picture& bm);
 	void stretch_draw(_picture* bm, i64 x, i64 y, double m);
 	void stretch_draw_speed(_picture* bm, i64 nXDest, i64 nYDest, double m);
 
@@ -98,6 +121,7 @@ private:
 	void set_transparent(const _color c) { transparent |= c.a != 0xff; } // *
 
 	_color& pixel(const i64 x, const i64 y) { return data2[y * size.x + x]; }
+	const _color& pixel(const i64 x, const i64 y) const { return data2[y * size.x + x]; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -16,7 +16,7 @@ struct _color_mixing
 	_color_mixing(_color c)
 	{
 		kk = 255 - c.a;
-		uint k2 = c.a + 1;
+		uint k2 = uint(c.a) + 1;
 		d_b = c.b * k2;
 		d_g = c.g * k2;
 		d_r = c.r * k2;
@@ -49,8 +49,8 @@ struct _color_mixing2
 	void mix(_color& c) const
 	{
 		uint kk_ = 255 - c.a;
-		uint k2_ = (256 - kk_) * kk;
-		uint znam = 65536 - kk * kk_;
+		uint k2_ = (uint(c.a) + 1) * kk;
+		uint znam = 65535 - kk * kk_;
 		c.b = (c.b * k2_ + d_b) / znam;
 		c.g = (c.g * k2_ + d_g) / znam;
 		c.r = (c.r * k2_ + d_r) / znam;
@@ -185,7 +185,28 @@ void _picture::set_transparent()
 	transparent = false;
 }
 
-void _picture::draw(_ixy r, _picture& bm)
+void _picture::draw(_ixy r, const _picture& bm)
+{
+	_iarea b = bm.size.move(r) & drawing_area;
+	if (b.empty()) return;
+	if (!bm.transparent)
+	{
+		size_t len_line = b.x.length() * 4;
+		for (i64 y = b.y.min; y < b.y.max; y++)	memcpy(&pixel(b.x.min, y), &bm.pixel(b.x.min - r.x, y - r.y), len_line);
+		return;
+	}
+	for (i64 y = b.y.min; y < b.y.max; y++)
+	{
+		_color* c1 = &pixel(b.x.min, y);
+		const _color* c2 = &bm.pixel(b.x.min - r.x, y - r.y);
+		if (transparent)
+			for (i64 x = b.x.min; x < b.x.max; x++, c1++, c2++) c1->mix2(*c2);
+		else
+			for (i64 x = b.x.min; x < b.x.max; x++, c1++, c2++) c1->mix(*c2);
+	}
+}
+
+void _picture::draw_old(_ixy r, const _picture& bm)
 {
 	_iarea b = bm.size.move(r) & drawing_area;
 	if (b.empty()) return;
@@ -211,6 +232,7 @@ void _picture::draw(_ixy r, _picture& bm)
 		}
 	}
 }
+
 
 bool _picture::resize(_isize wh)
 {
