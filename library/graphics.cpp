@@ -49,6 +49,58 @@ struct _color_mixing
 	}
 };
 
+struct _color_mixing2
+{
+	uint kk;
+	uint d_b;
+	uint d_g;
+	uint d_r;
+
+	_color_mixing2(_color c)
+	{
+		kk = 255 - c.a;
+		uint k2 = c.a + 1;
+		d_b = c.b * k2;
+		d_g = c.g * k2;
+		d_r = c.r * k2;
+	}
+
+	void mix(_color& c) const
+	{
+		c.b = (c.b * kk + d_b) >> 8;
+		c.g = (c.g * kk + d_g) >> 8;
+		c.r = (c.r * kk + d_r) >> 8;
+	}
+};
+
+struct _color_mixing3
+{
+	uint kk;
+	uint d_b;
+	uint d_g;
+	uint d_r;
+
+	_color_mixing3(_color c)
+	{
+		kk = 255 - c.a;
+		uint k2 = (uint(c.a) + 1) * 255;
+		d_b = c.b * k2;
+		d_g = c.g * k2;
+		d_r = c.r * k2;
+	}
+
+	void mix(_color& c) const
+	{
+		uint kk_ = 255 - c.a;
+		uint k2_ = (256 - kk_) * kk;
+		uint znam = 65536 - kk * kk_;
+		c.b = (c.b * k2_ + d_b) / znam;
+		c.g = (c.g * k2_ + d_g) / znam;
+		c.r = (c.r * k2_ + d_r) / znam;
+		c.a = 255 - ((kk_ * kk) >> 8);
+	}
+};
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool _picture::load_from_file(std::wstring_view file_name)
@@ -235,10 +287,10 @@ void _picture::clear(_color c)
 	memset32(data, c.c, size.square());
 }
 
-void _picture::horizontal_line(_ixy p1, _ixy p2, _color c, bool rep)
-{
+void _picture::horizontal_line(_ixy p1, i64 p2x, _color c, bool rep)
+{ // *
 	if (!drawing_area.y.test(p1.y)) return;
-	auto interval = (_iinterval(p1.x) << p2.x) & drawing_area.x;
+	auto interval = (_iinterval(p1.x) << p2x) & drawing_area.x;
 	if (interval.empty()) return;
 	if (rep || c.a == 0xff)
 	{
@@ -246,15 +298,21 @@ void _picture::horizontal_line(_ixy p1, _ixy p2, _color c, bool rep)
 		memset32((uint*)&pixel(interval.min, p1.y), c.c, interval.length());
 		return;
 	}
-	_color_mixing cc(c, transparent);
 	_color* c2 = &pixel(interval.min, p1.y);
+	if (transparent)
+	{
+		_color_mixing3 cc(c);
+		for (i64 i = interval.min; i < interval.max; i++) cc.mix(*c2++);
+		return;
+	}
+	_color_mixing2 cc(c);
 	for (i64 i = interval.min; i < interval.max; i++) cc.mix(*c2++);
 }
 
-void _picture::vertical_line(_ixy p1, _ixy p2, _color c, bool rep)
-{
+void _picture::vertical_line(_ixy p1, i64 p2y, _color c, bool rep)
+{ // *
 	if (!drawing_area.x.test(p1.x)) return;
-	auto interval = (_iinterval(p1.y) << p2.y) & drawing_area.y;
+	auto interval = (_iinterval(p1.y) << p2y) & drawing_area.y;
 	if (interval.empty()) return;
 	_color* c2 = &pixel(p1.x, interval.min);
 	if (rep || c.a == 0xff)
@@ -267,7 +325,17 @@ void _picture::vertical_line(_ixy p1, _ixy p2, _color c, bool rep)
 		}
 		return;
 	}
-	_color_mixing cc(c, transparent);
+	if (transparent)
+	{
+		_color_mixing3 cc(c);
+		for (i64 i = interval.min; i < interval.max; i++)
+		{
+			cc.mix(*c2);
+			c2 += size.x;
+		}
+
+	}
+	_color_mixing2 cc(c);
 	for (i64 i = interval.min; i < interval.max; i++)
 	{
 		cc.mix(*c2);
@@ -278,8 +346,8 @@ void _picture::vertical_line(_ixy p1, _ixy p2, _color c, bool rep)
 void _picture::line2(_ixy p1, _ixy p2, _color c, bool rep)
 {
 	if (c.a == 0 && !rep) return; // полностью прозрачная
-	if (p1.y == p2.y) { horizontal_line(p1, p2, c, rep); return; }
-	if (p1.x == p2.x) { vertical_line(p1, p2, c, rep); return; }
+	if (p1.y == p2.y) { horizontal_line(p1, p2.x, c, rep); return; }
+	if (p1.x == p2.x) { vertical_line(p1, p2.y, c, rep); return; }
 	double dy_dx = (p2.y - p1.y) / (p2.x - p1.x);
 	double dx_dy = 1.0 / dy_dx;
 	if (abs(dx_dy) >= 1.0)

@@ -88,8 +88,8 @@ private:
 
 	// ниже проверенные функции
 
-	void horizontal_line(_ixy p1, _ixy p2, _color c, bool rep);
-	void vertical_line(_ixy p1, _ixy p2, _color c, bool rep);
+	void horizontal_line(_ixy p1, i64 p2x, _color c, bool rep);
+	void vertical_line(_ixy p1, i64 p2y, _color c, bool rep);
 
 	void set_transparent(_color c); // изменить transparent
 
