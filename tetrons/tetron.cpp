@@ -410,8 +410,7 @@ void smena_avt();
 
 _area _t_basic_go::calc_area()
 { // рекурсия невозможна
-	if (area_definite) return area;
-	area_definite = true;
+	if (area) return *area;
 	if (_t_go* tgo = *this)
 		area = tgo->local_area;
 	else
@@ -423,16 +422,16 @@ _area _t_basic_go::calc_area()
 		_t_basic_go* b = *a; if (b == nullptr) continue;
 		b->calc_area();
 		if (i->test_flags(this, flag_parent))
-			area |= b->area;
+			*area |= *b->area;
 		else
 		{
 			if (_t_trans* ttr = *b)
-				area |= ttr->trans(b->area);
+				*area |= ttr->trans(*b->area);
 			else
-				area |= b->area;
+				*area |= *b->area;
 		}
 	}
-	return area;
+	return *area;
 }
 
 void _t_basic_go::add_area(_area a, bool first)
@@ -446,7 +445,7 @@ void _t_basic_go::add_area(_area a, bool first)
 		a = calc_area();
 	else
 	{
-		if (!(a <= area)) area_definite = false;
+		if (!(a <= area)) area.reset();
 		if (n_ko == this)
 		{
 			add_obl_izm((tgo) ? a : ttr->trans(a));
@@ -513,7 +512,7 @@ void _t_basic_go::del_area(_area a, bool first)
 		a = calc_area();
 	else
 	{
-		if (!(a < area)) area_definite = false;
+		if (!(a < area)) area.reset();
 		if (n_ko == this)
 		{
 			add_obl_izm((tgo) ? a : ttr->trans(a));
@@ -603,7 +602,7 @@ bool _t_basic_go::mouse_down_left(_trans tr)
 				tr2 = tr;
 			else
 				tr2 = tr * a->operator _t_trans * ()->trans;
-			if (!aa->area.test(tr2.inverse(mouse_xy))) continue;
+			if (!aa->area->test(tr2.inverse(mouse_xy))) continue;
 			if (aa->mouse_down_left(tr2)) return true;
 		}
 	}
@@ -636,7 +635,7 @@ bool _t_basic_go::mouse_down_left(_trans tr)
 		if (!link[i]->test_flags(this, flag_parent)) continue;
 		if (_t_basic_go* aa = *a)
 		{
-			if (!aa->area.test(r)) continue;
+			if (!aa->area->test(r)) continue;
 			if (aa->mouse_down_left(tr)) return true;
 		}
 	}
@@ -682,7 +681,7 @@ bool _t_basic_go::mouse_wheel(_trans tr)
 				tr2 = tr;
 			else
 				tr2 = tr * a->operator _t_trans * ()->trans;
-			if (!aa->area.test(tr2.inverse(mouse_xy))) continue;
+			if (!aa->area->test(tr2.inverse(mouse_xy))) continue;
 			if (aa->mouse_wheel(tr2)) return true;
 		}
 	}
@@ -699,7 +698,7 @@ bool _t_basic_go::mouse_wheel(_trans tr)
 		if (!link[i]->test_flags(this, flag_parent)) continue;
 		if (_t_basic_go* aa = *a)
 		{
-			if (!aa->area.test(r)) continue;
+			if (!aa->area->test(r)) continue;
 			if (aa->mouse_wheel(tr)) return true;
 		}
 	}
@@ -723,7 +722,7 @@ void _t_basic_go::priem_gv()
 	_t_trans* trr = set_t_trans(c, flag_part + flag_sub_go);
 	trr->del_area();
 	trr->trans = oko_trans().inverse() * tr;
-	trr->area_definite = false;
+	trr->area.reset();
 	trr->add_area();
 }
 
@@ -1146,7 +1145,7 @@ void _g_circle::run(_tetron* tt0, _tetron* tt, u64 flags)
 	if (aa) width = aa->a;
 	del_area();
 	calc_local_area();
-	area_definite = false;
+	area.reset();
 	add_area();
 	_t_go::run(tt0, tt, flags);
 }
@@ -1187,7 +1186,7 @@ void _g_line::run(_tetron* tt0, _tetron* tt, u64 flags)
 	if (aa) width = aa->a;
 	del_area();
 	calc_local_area();
-	area_definite = false;
+	area.reset();
 	add_area();
 	_t_go::run(tt0, tt, flags);
 }
@@ -1259,7 +1258,7 @@ void _g_picture::new_size(_isize ns)
 	if (!pic.resize(ns)) return;
 	del_area();
 	local_area = pic.size;
-	area_definite = false;
+	area.reset();
 	add_area();
 }
 
@@ -1268,7 +1267,7 @@ void _g_picture::set_pic(const _picture& pic2)
 	(_picture)pic = pic2;
 	del_area();
 	local_area = pic.size;
-	area_definite = false;
+	area.reset();
 	add_area();
 }
 
@@ -1277,7 +1276,7 @@ bool _g_picture::load_from_file(wstr fn)
 	if (!pic.load_from_file(fn)) return false;
 	del_area();
 	local_area = pic.size;
-	area_definite = false;
+	area.reset();
 	add_area();
 	return true;
 }
@@ -1308,7 +1307,7 @@ void _g_text::value_changed()
 	del_area();
 	_isize size = master_bm.size_text(s, 13);
 	local_area = { {-1, std::max((double)size.x, 13.0)}, {0, std::max((double)size.y, 13.0)} };
-	area_definite = false;
+	area.reset();
 	add_area();
 }
 
@@ -1410,7 +1409,7 @@ void _g_scrollbar::prilip(_t_go* r)
 	if (vid == 4) local_area = { {o.x.min, o.x.max}, {o.y.min - l, o.y.min} };
 	if (vid == 5) local_area = { {o.x.min - l, o.x.min}, {o.y.min, o.y.max} };
 	//	if (vid > 1) trans = _trans(); //глобальная замена trans
-	area_definite = false;
+	area.reset();
 	add_area();
 }
 
@@ -2417,7 +2416,7 @@ void _g1list::calc_local_area()
 	}
 	local_area.y.max += ((i64)n - na) * 16;
 	local_area.y.min -= (na - 1LL) * 16;
-	area_definite = false;
+	area.reset();
 }
 
 _g1list::_g1list()
@@ -2694,7 +2693,7 @@ void _g_tetron::ris2(_trans tr, bool final)
 			ttr->add_flags(ttr3, flag_part + flag_sub_go, false);
 			gl->k = kr / (n_orb * (2 + kr) - 2); // 0==0 k=1, 0= 0 k=0.5
 			gl->calc_local_area();
-			gl->area_definite = false;
+			gl->area.reset();
 			inn++;
 		}
 		uze_nar += nn;

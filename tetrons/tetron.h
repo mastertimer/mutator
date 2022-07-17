@@ -526,8 +526,7 @@ struct _t_xy : public _tetron
 
 struct _t_basic_go : public _tetron
 {
-	_area area; // визуальная область полная
-	bool area_definite = false; // area задана
+	std::optional<_area> area; // визуальная область полная
 
 	operator _t_basic_go* () { return this; }
 	void after_create_link(_link* li);          // вызывается после создания связи
