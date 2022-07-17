@@ -324,36 +324,6 @@ bool _iarea::operator!=(_isize b) const
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-std::optional<_segment> _segment::operator&(const _area& b) const
-{ // не проверена
-	if (b.empty()) return {};
-	if (b.test(p1) && b.test(p2)) return *this;
-	_interval x_interval = _interval(p1.x) << p2.x;
-	_interval y_interval = _interval(p1.y) << p2.y;
-	_interval x1_interval = (x_interval & b.x) / x_interval;
-	_interval y1_interval = (y_interval & b.y) / y_interval;
-	bool main_diagonal = ((p2.y - p1.y) * (p2.x - p1.x) >= 0);
-	if (!main_diagonal) y1_interval = { 1.0 - y1_interval.max, 1.0 - y1_interval.min }; // что это за действие?
-	_interval dd = x1_interval & y1_interval;
-	if (dd.empty) return {};
-	_segment res{ {dd.min * x_interval, 0.0}, {dd.max * x_interval, 0.0} };
-	if (!main_diagonal) dd = { 1.0 - dd.max, 1.0 - dd.min }; // что это за действие?
-	res.p1.y = dd.min * y_interval;
-	res.p2.y = dd.max * y_interval;
-	// коррекция микро выступов
-	if (res.p1.x < b.x.min) res.p1.x = b.x.min;
-	if (res.p1.y < b.y.min) res.p1.y = b.y.min;
-	if (res.p2.x < b.x.min) res.p2.x = b.x.min;
-	if (res.p2.y < b.y.min) res.p2.y = b.y.min;
-	if (res.p1.x > b.x.max) res.p1.x = b.x.max;
-	if (res.p1.y > b.y.max) res.p1.y = b.y.max;
-	if (res.p2.x > b.x.max) res.p2.x = b.x.max;
-	if (res.p2.y > b.y.max) res.p2.y = b.y.max;
-	return res;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 uint test_line(_xy p1, _xy p2, _xy b)
 {
 	if (p2.x < p1.x) std::swap(p1, p2);
