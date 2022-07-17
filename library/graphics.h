@@ -74,6 +74,8 @@ struct _picture
 	void clear(_color c = { 0xFF000000 }); // *
 	void set_transparent(); // * узнать, есть ли прозрачные пиксели
 
+	void draw(_ixy r, const _picture& bm);
+
 	// ниже не проверенные, или не универсальные функции
 
 	void line3(_ixy p1, _ixy p2, _color c, bool rep = false);
@@ -93,8 +95,6 @@ struct _picture
 
 	void rectangle(_iarea oo, uint c);
 
-	void draw(_ixy r, const _picture& bm);
-	void draw_old(_ixy r, const _picture& bm);
 	void stretch_draw(_picture* bm, i64 x, i64 y, double m);
 	void stretch_draw_speed(_picture* bm, i64 nXDest, i64 nYDest, double m);
 

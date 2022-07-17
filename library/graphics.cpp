@@ -90,9 +90,9 @@ bool _picture::load_from_file(std::wstring_view file_name)
 			for (i64 x = 0; x < biWidth; x++)
 			{
 				ushort a;
-				uchar b;
-				mem >> a >> b;
-				uint cc = 0xff000000 + a + (uint(b) << 16);
+				uchar aa;
+				mem >> a >> aa;
+				uint cc = 0xff000000 + a + (uint(aa) << 16);
 				c[x] = { cc };
 			}
 			char a;
@@ -230,34 +230,6 @@ void _picture::draw(_ixy r, const _picture& bm)
 			for (i64 x = b.x.min; x < b.x.max; x++, c1++, c2++) c1->mix(*c2);
 	}
 }
-
-void _picture::draw_old(_ixy r, const _picture& bm)
-{
-	_iarea b = bm.size.move(r) & drawing_area;
-	if (b.empty()) return;
-	if (!bm.transparent)
-	{
-		for (i64 j = b.y.min; j < b.y.max; j++)
-			memcpy(px(b.x.min, j), (bm.data + ((j - r.y) * bm.size.x + (b.x.min - r.x))), (b.x.max - b.x.min) * 4);
-		return;
-	}
-	for (i64 j = b.y.min; j < b.y.max; j++)
-	{
-		uchar* s1_ = px(b.x.min, j);
-		uchar* s2_ = (uchar*)(bm.data + ((j - r.y) * bm.size.x + (b.x.min - r.x)));
-		for (i64 i = b.x.min; i < b.x.max; i++)
-		{
-			uint pp2 = s2_[3];
-			uint pp1 = 256 - pp2;
-			s1_[0] = (s1_[0] * pp1 + s2_[0] * pp2) >> 8;
-			s1_[1] = (s1_[1] * pp1 + s2_[1] * pp2) >> 8;
-			s1_[2] = (s1_[2] * pp1 + s2_[2] * pp2) >> 8;
-			s1_ += 4;
-			s2_ += 4;
-		}
-	}
-}
-
 
 bool _picture::resize(_isize wh)
 {

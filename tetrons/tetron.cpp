@@ -943,7 +943,7 @@ void _t_go::ris(_trans tr, bool final)
 		_xy oo = tr(local_area.top_left());
 		if (oo.x < 0) oo.x = 0;
 		if (oo.y < 0) oo.y = 0;
-		std::wstring s = double_to_wstring(t.count() / 1000000.0, 2);
+		std::wstring s = double_to_wstring(t.count() / 1000.0, 2);
 		master_bm.text({ (i64)(oo.x + 1), (i64)oo.y }, s.c_str(), 13, cc2, 0x00000000);
 	}
 }
