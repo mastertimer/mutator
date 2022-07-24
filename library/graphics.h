@@ -65,8 +65,7 @@ struct _picture
 	bool save_to_file(std::wstring_view file_name);
 	bool load_from_file(std::wstring_view file_name);
 
-	uint* scan_line(i64 y) const { return &data[y * size.x]; } //!!удалить
-	_color* scan_line2(i64 y) const { return &data2[y * size.x]; }
+	_color* scan_line(i64 y) const { return &data2[y * size.x]; }
 
 	virtual bool resize(_isize wh);
 	void set_drawing_area(const _iarea& q);
@@ -91,6 +90,7 @@ struct _picture
 	void ring(_xy p, double r, double d, uint c);
 
 	void fill_rectangle(_iarea r, uint c, bool rep = false);
+	void fill_rectangle(_area r, _color c);
 	void fill_rect_d(double x1, double y1, double x2, double y2, uint c); // полупрозрачный пр-к на !!непр-й!! подложке
 
 	void rectangle(_iarea oo, uint c);

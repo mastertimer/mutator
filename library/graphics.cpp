@@ -6,6 +6,13 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+struct _color_mixing0
+{
+	_color cc;
+	_color_mixing0(_color c): cc(c) {}
+	void mix(_color& c) const { c = cc; }
+};
+
 struct _color_mixing
 {
 	uint kk;
@@ -2408,6 +2415,109 @@ _stack& operator>>(_stack& o, _picture& p)
 	p.resize(r);
 	o.pop_data(p.data, 4 * p.size.square());
 	return o;
+}
+
+void _picture::fill_rectangle(_area r, _color c)
+{
+	if (c.a == 0) return;
+	r &= drawing_area;
+	if ((r.x.length() < 0.004) || (r.y.length() < 0.004)) return;
+	_iarea a = r;
+	auto ca = c.a;
+	if (a.y.length() == 1) // горизонтальная линия
+	{
+		auto c2 = &pixel(a.x.min, a.y.min);
+		if (a.x.length() == 1) // точка
+		{
+			c.a *= (r.x.max - r.x.min) * (r.y.max - r.y.min);
+			if (transparent) c2->mix2(c); else c2->mix(c);
+			return;
+		}
+
+		c.a = ca * (r.y.max - r.y.min) * (a.x.min + 1 - r.x.min);
+		if (transparent) c2->mix2(c); else c2->mix(c);
+		c2++;
+
+		c.a = ca * (r.y.max - r.y.min);
+		i64 d = a.x.min - a.x.max + 3;
+		if (transparent)
+		{
+			_color_mixing2 cmix(c);
+			while (d <= 0) { cmix.mix(*c2); c2++; d++; }
+		}
+		else
+		{
+			_color_mixing cmix(c);
+			while (d <= 0) { cmix.mix(*c2); c2++; d++; }
+		}
+
+		c.a = ca * (r.y.max - r.y.min) * (r.x.max - a.x.max + 1);
+		if (transparent) c2->mix2(c); else c2->mix(c);
+
+		return;
+	}
+	if (a.x.length() == 1) // вертикальная линия
+	{
+		auto c2 = &pixel(a.x.min, a.y.min);
+
+		c.a = ca * (r.x.max - r.x.min) * (a.y.min + 1 - r.y.min);
+		if (transparent) c2->mix2(c); else c2->mix(c);
+		c2 += size.x;
+
+		c.a = ca * (r.x.max - r.x.min);
+		i64 d = a.y.min - a.y.max + 3;
+		if (transparent)
+		{
+			_color_mixing2 cmix(c);
+			while (d <= 0) { cmix.mix(*c2); c2 += size.x; d++; }
+		}
+		else
+		{
+			_color_mixing cmix(c);
+			while (d <= 0) { cmix.mix(*c2); c2 += size.x; d++; }
+		}
+
+		c.a = ca * (r.x.max - r.x.min) * (r.y.max - a.y.max + 1);
+		if (transparent) c2->mix2(c); else c2->mix(c);
+
+		return;
+	}
+	for (i64 y = a.y.min; y < a.y.max; y++)
+	{
+		auto c2 = &pixel(a.x.min, y);
+
+		double k2 = 1;
+		if (y == a.y.min) k2 = a.y.min + 1 - r.y.min;
+		if (y == a.y.max - 1) k2 = r.y.max - a.y.max + 1;
+
+		c.a = ca * k2 * (a.x.min + 1 - r.x.min);
+		if (transparent) c2->mix2(c); else c2->mix(c);
+		c2++;
+
+		c.a = ca * k2;
+		if (c.a == 255)
+		{
+			auto d = a.x.max - a.x.min - 2;
+			memset32((uint*)c2, c.c, d);
+			c2 += d;
+		}
+		else
+		{
+			i64 d = a.x.min - a.x.max + 3;
+			if (transparent)
+			{
+				_color_mixing2 cmix(c);
+				while (d <= 0) { cmix.mix(*c2); c2++; d++; }
+			}
+			else
+			{
+				_color_mixing cmix(c);
+				while (d <= 0) { cmix.mix(*c2); c2++; d++; }
+			}
+		}
+		c.a = ca * k2 * (r.x.max - a.x.max + 1);
+		if (transparent) c2->mix2(c); else c2->mix(c);
+	}
 }
 
 void _picture::fill_rect_d(double x1, double y1, double x2, double y2, uint c)

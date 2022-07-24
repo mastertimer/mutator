@@ -117,10 +117,10 @@ _interval _interval::operator/(const _interval& b) const
 }
 
 _interval::operator _iinterval() const
-{
+{ // *
 	if (empty) return { 0LL, 0LL };
 	_iinterval res{ min, max };
-	if (!right_closed && max == res.max) res.max--;
+	if (!right_closed && max == res.max - 1) res.max--;
 	return res;
 }
 
