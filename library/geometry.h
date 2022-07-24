@@ -98,10 +98,9 @@ struct _iinterval // [...)
 
 	_interval operator/(const _iinterval b);
 
-	i64  size()   const { return (min < max) ? (max - min) : 0; }
 	bool empty()  const { return (max <= min); }
 	i64  center() const { i64 s = min + max; if (s < 0) s--; return s >> 1; }
-	i64  length() const { i64 r = max - min; return (r < 0) ? 0 : r; }
+	i64  length() const { return (min < max) ? (max - min) : 0; }
 	_iinterval& operator << (i64 x);
 	bool test(i64 x) const { return (x >= min) && (x < max); }
 

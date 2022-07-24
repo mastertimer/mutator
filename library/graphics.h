@@ -90,6 +90,7 @@ struct _picture
 	void ring(_xy p, double r, double d, uint c);
 
 	void fill_rectangle(_iarea r, uint c, bool rep = false);
+	void fill_rectangle2(_iarea r, _color c, bool rep = false);
 	void fill_rectangle(_area r, _color c);
 	void fill_rect_d(double x1, double y1, double x2, double y2, uint c); // полупрозрачный пр-к на !!непр-й!! подложке
 
@@ -99,6 +100,7 @@ struct _picture
 	void stretch_draw_speed(_picture* bm, i64 nXDest, i64 nYDest, double m);
 
 	//	void text0(int x, int y, std::string_view s, int h, uint c, uint bg);
+	friend struct _picture_functions;
 
 private:
 

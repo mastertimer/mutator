@@ -6,21 +6,27 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _color_mixing0
+struct _picture_functions : public _picture
+{
+	t_t void vertical_line(i64 x, _iinterval y, _color c); // без проверки диапазона
+	t_t void fill_rectangle3(_iarea r, _color c); // без проверки диапазона
+};
+
+struct _color_substitution
 {
 	_color cc;
-	_color_mixing0(_color c): cc(c) {}
+	_color_substitution(_color c): cc(c) {}
 	void mix(_color& c) const { c = cc; }
 };
 
-struct _color_mixing
+struct _color_overlay
 {
 	uint kk;
 	uint d_b;
 	uint d_g;
 	uint d_r;
 
-	_color_mixing(_color c)
+	_color_overlay(_color c)
 	{
 		kk = 255 - c.a;
 		uint k2 = uint(c.a) + 1;
@@ -37,14 +43,14 @@ struct _color_mixing
 	}
 };
 
-struct _color_mixing2
+struct _color_mixing
 {
 	uint kk;
 	uint d_b;
 	uint d_g;
 	uint d_r;
 
-	_color_mixing2(_color c)
+	_color_mixing(_color c)
 	{
 		kk = 255 - c.a;
 		uint k2 = (uint(c.a) + 1) * 255;
@@ -274,12 +280,19 @@ void _picture::horizontal_line(_ixy p1, i64 p2x, _color c, bool rep)
 	_color* c2 = &pixel(interval.min, p1.y);
 	if (transparent)
 	{
-		_color_mixing2 cc(c);
+		_color_mixing cc(c);
 		for (i64 i = interval.min; i < interval.max; i++) cc.mix(*c2++);
 		return;
 	}
-	_color_mixing cc(c);
+	_color_overlay cc(c);
 	for (i64 i = interval.min; i < interval.max; i++) cc.mix(*c2++);
+}
+
+t_t void _picture_functions::vertical_line(i64 x, _iinterval y, _color c)
+{
+	_t cmix(c);
+	_color* cс_max = &pixel(x, y.max);
+	for (auto cc = &pixel(x, y.min); cc < cс_max; cc += size.x) cmix.mix(*cc);
 }
 
 void _picture::vertical_line(_ixy p1, i64 p2y, _color c, bool rep)
@@ -300,7 +313,7 @@ void _picture::vertical_line(_ixy p1, i64 p2y, _color c, bool rep)
 	}
 	if (transparent)
 	{
-		_color_mixing2 cc(c);
+		_color_mixing cc(c);
 		for (i64 i = interval.min; i < interval.max; i++)
 		{
 			cc.mix(*c2);
@@ -308,7 +321,7 @@ void _picture::vertical_line(_ixy p1, i64 p2y, _color c, bool rep)
 		}
 		return;
 	}
-	_color_mixing cc(c);
+	_color_overlay cc(c);
 	for (i64 i = interval.min; i < interval.max; i++)
 	{
 		cc.mix(*c2);
@@ -334,12 +347,12 @@ void _picture::line3_x_compact(_ixy p1, _ixy p2, _color c, bool rep)
 	}
 	else if (transparent)
 	{
-		_color_mixing2 cc(c);
+		_color_mixing cc(c);
 		for (i64 x = p1.x; x <= p2.x; x++, y += dy_dx) cc.mix(pixel(x, y));
 	}
 	else
 	{
-		_color_mixing cc(c);
+		_color_overlay cc(c);
 		for (i64 x = p1.x; x <= p2.x; x++, y += dy_dx) cc.mix(pixel(x, y));
 	}
 }
@@ -362,12 +375,12 @@ void _picture::line3_y_compact(_ixy p1, _ixy p2, _color c, bool rep)
 	}
 	else if (transparent)
 	{
-		_color_mixing2 cc(c);
+		_color_mixing cc(c);
 		for (i64 y = p1.y; y <= p2.y; y++, x += dx_dy) cc.mix(pixel(x, y));
 	}
 	else
 	{
-		_color_mixing cc(c);
+		_color_overlay cc(c);
 		for (i64 y = p1.y; y <= p2.y; y++, x += dx_dy) cc.mix(pixel(x, y));
 	}
 }
@@ -418,7 +431,7 @@ void _picture::line3_x(_ixy p1, _ixy p2, _color c, bool rep)
 	}
 	else if (transparent)
 	{
-		_color_mixing2 cc(c);
+		_color_mixing cc(c);
 		if (dy_dx > 0)
 			for (i64 x = p1.x; (x <= p2.x) && (y < drawing_area.y.max); x++, y += dy_dx) cc.mix(pixel(x, y));
 		else
@@ -426,7 +439,7 @@ void _picture::line3_x(_ixy p1, _ixy p2, _color c, bool rep)
 	}
 	else
 	{
-		_color_mixing cc(c);
+		_color_overlay cc(c);
 		if (dy_dx > 0)
 			for (i64 x = p1.x; (x <= p2.x) && (y < drawing_area.y.max); x++, y += dy_dx) cc.mix(pixel(x, y));
 		else
@@ -480,7 +493,7 @@ void _picture::line3_y(_ixy p1, _ixy p2, _color c, bool rep)
 	}
 	else if (transparent)
 	{
-		_color_mixing2 cc(c);
+		_color_mixing cc(c);
 		if (dx_dy > 0)
 			for (i64 y = p1.y; (y <= p2.y) && (x < drawing_area.x.max); y++, x += dx_dy) cc.mix(pixel(x, y));
 		else
@@ -488,7 +501,7 @@ void _picture::line3_y(_ixy p1, _ixy p2, _color c, bool rep)
 	}
 	else
 	{
-		_color_mixing cc(c);
+		_color_overlay cc(c);
 		if (dy_dx > 0)
 			for (i64 y = p1.y; (y <= p2.y) && (x < drawing_area.x.max); y++, x += dx_dy) cc.mix(pixel(x, y));
 		else
@@ -978,7 +991,7 @@ void _picture::line_vert_rep_speed(_ixy p, i64 y2, uint c)
 
 void _picture::fill_rect_rep_speed(_iarea r, uint c)
 {
-	if (r.x.size() == 1)
+	if (r.x.length() == 1)
 	{
 		line_vert_rep_speed({ r.x.min, r.y.min }, r.y.max - 1, c);
 		return;
@@ -991,6 +1004,33 @@ void _picture::fill_rect_rep_speed(_iarea r, uint c)
 		while (ee < eemax) *ee++ = cc;
 		if (ee == eemax) *((uint*)ee) = c;
 	}
+}
+
+t_t void _picture_functions::fill_rectangle3(_iarea r, _color c)
+{
+	if (r.x.length() == 1) { vertical_line<_t>(r.x.min, r.y, c); return; }
+	_t cmix(c);
+	for (i64 y = r.y.min; y < r.y.max; y++)
+	{
+		_color* cс_max = &pixel(r.x.max, y);
+		for (auto cc = &pixel(r.x.min, y); cc < cс_max; cc++) cmix.mix(*cc);
+	}
+}
+
+void _picture::fill_rectangle2(_iarea r, _color c, bool rep)
+{
+	if (c.a == 0 && !rep) return;
+	r &= drawing_area;
+	if (r.empty()) return;
+	if (rep || c.a == 0xff)
+	{
+		set_transparent(c);
+		((_picture_functions*)this)->fill_rectangle3<_color_substitution>(r, c);
+	}
+	else if (transparent)
+		((_picture_functions*)this)->fill_rectangle3<_color_mixing>(r, c);
+	else
+		((_picture_functions*)this)->fill_rectangle3<_color_overlay>(r, c);
 }
 
 void _picture::fill_rectangle(_iarea r, uint c, bool rep)
@@ -1008,7 +1048,7 @@ void _picture::fill_rectangle(_iarea r, uint c, bool rep)
 
 void _picture::fill_rect_transparent_speed(_iarea r, uint c)
 {
-	i64 dx = r.x.size();
+	i64 dx = r.x.length();
 	if (dx == 1) // вертикальная линия
 	{
 		line({ r.x.min, r.y.min }, { r.x.min, r.y.max - 1 }, c); // !!!!!!!!!!!!!!!! вызвать нужную
@@ -1041,7 +1081,7 @@ void _picture::fill_rect_transparent_speed(_iarea r, uint c)
 
 void _picture::fill_rect_speed(_iarea r, uint c)
 {
-	i64 dx = r.x.size();
+	i64 dx = r.x.length();
 	if (dx == 1) // вертикальная линия
 	{
 		line({ r.x.min, r.y.min }, { r.x.min, r.y.max - 1 }, c); // !!!!!!!!!!!!!!!! вызвать нужную
@@ -2442,12 +2482,12 @@ void _picture::fill_rectangle(_area r, _color c)
 		i64 d = a.x.min - a.x.max + 3;
 		if (transparent)
 		{
-			_color_mixing2 cmix(c);
+			_color_mixing cmix(c);
 			while (d <= 0) { cmix.mix(*c2); c2++; d++; }
 		}
 		else
 		{
-			_color_mixing cmix(c);
+			_color_overlay cmix(c);
 			while (d <= 0) { cmix.mix(*c2); c2++; d++; }
 		}
 
@@ -2468,12 +2508,12 @@ void _picture::fill_rectangle(_area r, _color c)
 		i64 d = a.y.min - a.y.max + 3;
 		if (transparent)
 		{
-			_color_mixing2 cmix(c);
+			_color_mixing cmix(c);
 			while (d <= 0) { cmix.mix(*c2); c2 += size.x; d++; }
 		}
 		else
 		{
-			_color_mixing cmix(c);
+			_color_overlay cmix(c);
 			while (d <= 0) { cmix.mix(*c2); c2 += size.x; d++; }
 		}
 
@@ -2506,12 +2546,12 @@ void _picture::fill_rectangle(_area r, _color c)
 			i64 d = a.x.min - a.x.max + 3;
 			if (transparent)
 			{
-				_color_mixing2 cmix(c);
+				_color_mixing cmix(c);
 				while (d <= 0) { cmix.mix(*c2); c2++; d++; }
 			}
 			else
 			{
-				_color_mixing cmix(c);
+				_color_overlay cmix(c);
 				while (d <= 0) { cmix.mix(*c2); c2++; d++; }
 			}
 		}
