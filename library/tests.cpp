@@ -1,6 +1,7 @@
 ﻿#include "tests.h"
 #include "graphics.h"
 #include <algorithm>
+#include <chrono>
 
 namespace
 {
@@ -21,6 +22,20 @@ namespace
 		if (rnd(7) == 1) result.iarea.x.max = result.iarea.x.min + 1 + rnd(3);
 		if (rnd(7) == 1) result.iarea.y.max = result.iarea.y.min + 1 + rnd(3);
 		result.rep = (rnd(3) == 1) && with_rep;
+		result.c.c = rnd();
+		if (result.rep && !picture.transparent) result.c.a = 255;
+		return result;
+	}
+
+	_coordinates generate_coordinates(const _picture& picture, bool rep, bool vertical, bool gorisontal)
+	{
+		_coordinates result;
+		auto ss = std::max(picture.size.x, picture.size.y);
+		result.iarea = _ixy(rnd(ss * 2) - ss / 2, rnd(ss * 2) - ss / 2);
+		result.iarea |= _ixy(rnd(ss * 2) - ss / 2, rnd(ss * 2) - ss / 2);
+		if (vertical) result.iarea.x.max = result.iarea.x.min + 1;
+		if (gorisontal) result.iarea.y.max = result.iarea.y.min + 1;
+		result.rep = rep;
 		result.c.c = rnd();
 		if (result.rep && !picture.transparent) result.c.a = 255;
 		return result;
@@ -58,6 +73,11 @@ namespace
 			}
 		}
 		return res;
+	}
+
+	void draw_figure_0(_picture& picture, const _coordinates& coo)
+	{
+		picture.fill_rectangle2(coo.iarea, {0}); // минимальная функция
 	}
 
 	void draw_figure_old(_picture& picture, const _coordinates& coo)
@@ -124,12 +144,44 @@ bool test_graph_matching(bool with_transparent, bool with_rep)
 			draw_figure_new(picture_new, coo);
 			auto delta = max_delta(picture_old, picture_new);
 			if (delta == 0) continue;
-			if (delta > 1)
-			{
-				return false;
-			}
+			if (delta > 1) return false;
 			picture_new = picture_old;
 		}
 	}
 	return true;
+}
+
+std::pair<i64, i64> test_graph_speed(i64 n, bool transparent, bool rep, bool vertical, bool gorisontal)
+{
+	_picture picture({ 1920 , 1080 });
+	picture.clear(transparent ? _color{0} : _color{0xFF000000});
+	rnd.init(0);
+	auto t_start = std::chrono::high_resolution_clock::now();
+	for (i64 i = 0; i < n; i++)
+	{
+		auto coo = generate_coordinates(picture, rep, vertical, gorisontal);
+		draw_figure_0(picture, coo);
+	}
+	auto t0 = std::chrono::high_resolution_clock::now() - t_start;
+	picture.clear(transparent ? _color{ 0 } : _color{ 0xFF000000 });
+	rnd.init(0);
+	t_start = std::chrono::high_resolution_clock::now();
+	for (i64 i = 0; i < n; i++)
+	{
+		auto coo = generate_coordinates(picture, rep, vertical, gorisontal);
+		draw_figure_old(picture, coo);
+	}
+	auto t1 = std::chrono::high_resolution_clock::now() - t_start;
+	picture.clear(transparent ? _color{ 0 } : _color{ 0xFF000000 });
+	rnd.init(0);
+	t_start = std::chrono::high_resolution_clock::now();
+	for (i64 i = 0; i < n; i++)
+	{
+		auto coo = generate_coordinates(picture, rep, vertical, gorisontal);
+		draw_figure_new(picture, coo);
+	}
+	auto t2 = std::chrono::high_resolution_clock::now() - t_start;
+	t1 -= t0;
+	t2 -= t0;
+	return { t1.count() / 1000000, t2.count() / 1000000 };
 }

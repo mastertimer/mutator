@@ -650,6 +650,11 @@ void show_message(std::string_view s, double b)
 	MessageBoxA(0, ((std::string)s + " = " + std::to_string(b)).c_str(), "информация", MB_OK | MB_TASKMODAL);
 }
 
+void show_message(std::string_view s, i64 b)
+{
+	MessageBoxA(0, ((std::string)s + " = " + std::to_string(b)).c_str(), "информация", MB_OK | MB_TASKMODAL);
+}
+
 void show_message(std::string_view s)
 {
 	MessageBoxA(0, s.data(), "информация", MB_OK | MB_TASKMODAL);
@@ -657,11 +662,14 @@ void show_message(std::string_view s)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	if (!test_graph_climbing_out_of_bounds()) show_message("ОШИБКА - выход за границу!!");
+/*	if (!test_graph_climbing_out_of_bounds()) show_message("ОШИБКА - выход за границу!!");
 	if (test_graph_matching(false, true))
 		show_message("результат одинаковый))");
 	else
-		show_message("ОШИБКА - картинки не совпадают!!");
+		show_message("ОШИБКА - картинки не совпадают!!");*/
+	auto time = test_graph_speed(1000000, false, false, false, true);
+	show_message("время1", time.first);
+	show_message("время2", time.second);
 }
 
 void fun34(_tetron* tt0, _tetron* tt, u64 flags)
