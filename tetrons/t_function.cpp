@@ -657,11 +657,11 @@ void show_message(std::string_view s)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-	if (test_graph_climbing_out_of_bounds())
-		show_message("тест пройден))");
+	if (!test_graph_climbing_out_of_bounds()) show_message("ОШИБКА - выход за границу!!");
+	if (test_graph_matching(false, true))
+		show_message("результат одинаковый))");
 	else
-		show_message("ОШИБКА!!");
-
+		show_message("ОШИБКА - картинки не совпадают!!");
 }
 
 void fun34(_tetron* tt0, _tetron* tt, u64 flags)

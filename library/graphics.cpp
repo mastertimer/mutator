@@ -194,8 +194,7 @@ bool _picture::operator==(const _picture& pic) const
 {
 	if (size != pic.size) return false;
 	auto r = size.square();
-	for (auto i = 0; i < r; i++)
-		if (data[i] != pic.data[i]) return false;
+	for (auto i = 0; i < r; i++) if (data[i] != pic.data[i]) return false;
 	return true;
 }
 
