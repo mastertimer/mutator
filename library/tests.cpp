@@ -23,11 +23,6 @@ namespace
 		return result;
 	}
 
-	void draw_figure_new(_picture& picture, const _coordinates& coo)
-	{
-		picture.fill_rectangle(coo.iarea, coo.c.c, coo.rep);
-	}
-
 	bool test_climbing_out_of_bounds(const _picture& picture, _color c)
 	{
 		for (i64 y = 0; y < picture.size.y; y++)
@@ -35,11 +30,21 @@ namespace
 			auto sl = picture.scan_line(y);
 			for (i64 x = 0; x < picture.size.x; x++)
 			{
-				if (!picture.drawing_area.test({ x,y })) continue;
+				if (picture.drawing_area.test({ x,y })) continue;
 				if (sl[x].c != c.c) return false;
 			}
 		}
 		return true;
+	}
+
+	void draw_figure_old(_picture& picture, const _coordinates& coo)
+	{
+		picture.fill_rectangle(coo.iarea, coo.c.c, coo.rep);
+	}
+
+	void draw_figure_new(_picture& picture, const _coordinates& coo)
+	{
+		picture.fill_rectangle2(coo.iarea, coo.c, coo.rep);
 	}
 
 }
@@ -65,12 +70,12 @@ bool test_graph_climbing_out_of_bounds()
 				{
 					draw_figure_new(picture, generate_coordinates(picture));
 				}
-				if (!test_climbing_out_of_bounds(picture, color[j])) return false;
 				if (save1file)
 				{
 					save1file = false;
 					picture.save_to_file(L"e:\\cob_tests.bmp");
 				}
+				if (!test_climbing_out_of_bounds(picture, color[j])) return false;
 			}
 		}
 	}

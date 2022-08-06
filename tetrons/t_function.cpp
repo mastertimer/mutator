@@ -1,4 +1,5 @@
 ﻿#include "t_function.h"
+#include "tests.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -649,8 +650,18 @@ void show_message(std::string_view s, double b)
 	MessageBoxA(0, ((std::string)s + " = " + std::to_string(b)).c_str(), "информация", MB_OK | MB_TASKMODAL);
 }
 
+void show_message(std::string_view s)
+{
+	MessageBoxA(0, s.data(), "информация", MB_OK | MB_TASKMODAL);
+}
+
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
+	if (test_graph_climbing_out_of_bounds())
+		show_message("тест пройден))");
+	else
+		show_message("ОШИБКА!!");
+
 }
 
 void fun34(_tetron* tt0, _tetron* tt, u64 flags)
