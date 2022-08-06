@@ -3,7 +3,6 @@
 
 namespace
 {
-	i64 max_size = 200;
 
 	struct _coordinates
 	{
@@ -15,8 +14,9 @@ namespace
 	_coordinates generate_coordinates(const _picture& picture)
 	{
 		_coordinates result;
-		result.iarea = _ixy(rnd(max_size * 2) - max_size / 2, rnd(max_size * 2) - max_size / 2);
-		result.iarea |= _ixy(rnd(max_size * 2) - max_size / 2, rnd(max_size * 2) - max_size / 2);
+		auto ss = std::max(picture.size.x, picture.size.y);
+		result.iarea = _ixy(rnd(ss * 2) - ss / 2, rnd(ss * 2) - ss / 2);
+		result.iarea |= _ixy(rnd(ss * 2) - ss / 2, rnd(ss * 2) - ss / 2);
 		result.rep = (rnd(3) == 1);
 		result.c.c = rnd();
 		if (result.rep && !picture.transparent) result.c.a = 255;
@@ -53,6 +53,7 @@ bool test_graph_climbing_out_of_bounds()
 {
 	static bool save1file = true;
 	constexpr int number_of_graphic_elements = 1000;
+	constexpr i64 max_size = 200;
 	_isize picture_size[2] = { {max_size, i64(max_size * 0.7)}, {i64(max_size * 0.7), max_size} };
 	_ixy delta[2] = { {15, 20}, {15, 20} };
 	_color color[2] = { {0}, {0xFF000000} };
