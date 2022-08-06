@@ -153,6 +153,11 @@ void _picture::set_drawing_area(const _iarea& q)
 	drawing_area = q & size;
 }
 
+void _picture::reset_drawing_area()
+{
+	drawing_area = size;
+}
+
 _picture::~_picture()
 {
 	delete[] data;

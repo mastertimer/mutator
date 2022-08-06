@@ -168,6 +168,7 @@
     <ClCompile Include="library\graphics.cpp" />
     <ClCompile Include="library\json.cpp" />
     <ClCompile Include="library\multi_string.cpp" />
+    <ClCompile Include="library\tests.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mutator.cpp" />
     <ClCompile Include="tetrons\tetron.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="library\json.h" />
     <ClInclude Include="library\multi_string.h" />
     <ClInclude Include="library\speed.h" />
+    <ClInclude Include="library\tests.h" />
     <ClInclude Include="mutator.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="tetrons\tetron.h" />

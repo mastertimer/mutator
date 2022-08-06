@@ -90,9 +90,10 @@ struct _iinterval // [...)
 
 	void operator=(i64 b) { min = b; max = b + 1; }
 
-	bool operator==(_iinterval b) const;
-	bool operator!=(_iinterval b) const { return !(*this == b); }
+	bool operator==(const _iinterval b) const;
+	bool operator!=(const _iinterval b) const { return !(*this == b); }
 
+	void operator|=(const _iinterval b);
 	void operator&=(const _iinterval b) { if (b.min > min) min = b.min; if (b.max < max) max = b.max; }
 	_iinterval operator&(const _iinterval b) const { return { std::max(min, b.min), std::min(max, b.max) }; }
 
@@ -116,16 +117,19 @@ struct _iarea
 	_iarea() = default;
 	_iarea(_isize b) : x{ 0LL, b.x }, y{ 0LL, b.y } {}
 	_iarea(_iinterval x_, _iinterval y_) : x(x_), y(y_) {}
+	_iarea(_ixy b) : x(b.x), y(b.y) {}
+
+	void operator|=(const _iarea& b);
+	void operator&=(const _iarea& b);
 
 	bool operator!=(_isize b) const;
-
-	void operator&=(const _iarea& b) { x &= b.x; y &= b.y; }
 
 	_iarea operator&( _iarea b) const { b &= *this; return b; }
 
 	bool empty() const { return x.empty() || y.empty(); }
 	void clear() { x.clear(); }
 	_isize size() const { if (empty()) return { 0,0 }; return { x.max - x.min, y.max - y.min }; }
+	bool test(_ixy b) const;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -205,7 +209,7 @@ struct _area
 
 	double min_length();
 
-	bool test(_xy b) const; // принадлежит ли точка области
+	bool test(_xy b) const;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

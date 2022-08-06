@@ -284,7 +284,7 @@ _iinterval::_iinterval(double min_, double max_) : min(min_), max(max_)
 	if ((max_ > 0) || (max == max_)) max++;
 }
 
-bool _iinterval::operator==(_iinterval b) const
+bool _iinterval::operator==(const _iinterval b) const
 {
 	if (empty() && b.empty()) return true;
 	return ((min == b.min) && (max == b.max));
@@ -314,12 +314,47 @@ _interval _iinterval::operator/(const _iinterval b)
 	return { (double(min - b.min)) / len, (double(max - b.min)) / len };
 }
 
+void _iinterval::operator|=(const _iinterval b)
+{
+	if (b.empty()) return;
+	if (empty())
+	{
+		*this = b;
+		return;
+	}
+	if (b.min < min) min = b.min;
+	if (b.max > max) max = b.max;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool _iarea::operator!=(_isize b) const
 {
 	if (b.empty() && empty()) return false;
 	return (x.min != 0) || (y.min != 0) || (x.max != b.x) || (y.max != b.y);
+}
+
+void _iarea::operator|=(const _iarea& b)
+{
+	if (b.empty()) return;
+	if (empty())
+	{
+		*this = b;
+		return;
+	}
+	x |= b.x;
+	y |= b.y;
+}
+
+void _iarea::operator&=(const _iarea& b)
+{
+	x &= b.x;
+	y &= b.y;
+}
+
+bool _iarea::test(_ixy b) const
+{
+	return x.test(b.x) && y.test(b.y);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
