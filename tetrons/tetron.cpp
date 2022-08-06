@@ -1296,7 +1296,7 @@ void _g_rect::ris2(_trans tr, bool final)
 {
 	_area oo = tr(local_area);
 	uint c2 = get_c2();
-	master_bm.fill_rectangle({ {(i64)oo.x.min, (i64)oo.x.max + 1}, {(i64)oo.y.min, (i64)oo.y.max + 1} }, c2);
+	master_bm.fill_rectangle(_iarea{ {(i64)oo.x.min, (i64)oo.x.max + 1}, {(i64)oo.y.min, (i64)oo.y.max + 1} }, { c2 });
 	uint c0 = get_c();
 	if (((c0 >> 24) != 0x00) && (c0 != c2)) master_bm.rectangle(oo, c0);
 }
@@ -2083,10 +2083,10 @@ void _g_edit64bit::ris2(_trans tr, bool final)
 	for (int j = 0; j < 8; j++)
 		for (int i = 0; i < 8; i++)
 			if (*c & (1ULL << (j * 8 + i)))
-				master_bm.fill_rectangle({ {(i64)(oo.x.min + 1 + (d - 1) * 0.125 * i),
+				master_bm.fill_rectangle(_iarea{ {(i64)(oo.x.min + 1 + (d - 1) * 0.125 * i),
 					(i64)(oo.x.min + (d - 1) * 0.125 * (i + 1.0)) + 1},
 					{(i64)(oo.y.min + 1 + (d2 - 1) * 0.125 * j),
-					(i64)(oo.y.min + (d2 - 1) * 0.125 * (j + 1.0)) + 1} }, cc2);
+					(i64)(oo.y.min + (d2 - 1) * 0.125 * (j + 1.0)) + 1} }, { cc2 });
 	if ((d < 25) || (d2 < 25)) { master_bm.rectangle((_area)oo, cc1); }
 	else
 	{
@@ -2175,7 +2175,7 @@ void _g_button::ris2(_trans tr, bool final)
 	if (checked) c = cc1 - 0x40000000;
 	if (n_go_move == this) c = cc1 - 0x80000000;
 	if (n_tani == this) c = cc2 - 0x80000000;
-	master_bm.fill_rectangle({ {(i64)oo.x.min, (i64)oo.x.max + 1}, {(i64)oo.y.min, (i64)oo.y.max + 1} }, c);
+	master_bm.fill_rectangle(_iarea{ {(i64)oo.x.min, (i64)oo.x.max + 1}, {(i64)oo.y.min, (i64)oo.y.max + 1} }, { c });
 }
 
 void _g_button::push(_stack* mem)

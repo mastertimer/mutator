@@ -262,7 +262,7 @@ bool _picture::resize(_isize wh)
 void _picture::clear(_color c)
 { // *
 	if (drawing_area != size)
-		fill_rectangle(size, c.c, true);
+		fill_rectangle(size, c, true);
 	else
 	{
 		transparent = c.a != 0xff;
@@ -987,29 +987,6 @@ void _picture::stretch_draw(_picture* bm, i64 x, i64 y, double m)
 	}
 }
 
-void _picture::line_vert_rep_speed(_ixy p, i64 y2, uint c)
-{
-	uint* c2 = &data[p.y * size.x + p.x];
-	for (i64 y = p.y - y2; y <= 0; y++) { *c2 = c; c2 += size.x; }
-}
-
-void _picture::fill_rect_rep_speed(_iarea r, uint c)
-{
-	if (r.x.length() == 1)
-	{
-		line_vert_rep_speed({ r.x.min, r.y.min }, r.y.max - 1, c);
-		return;
-	}
-	u64 cc = (((u64)c) << 32) + c;
-	for (i64 i = r.y.min; i < r.y.max; i++)
-	{
-		u64* ee = (u64*)(&(data[i * size.x + r.x.min]));
-		u64* eemax = (u64*)(&(data[i * size.x + r.x.max - 1]));
-		while (ee < eemax) *ee++ = cc;
-		if (ee == eemax) *((uint*)ee) = c;
-	}
-}
-
 t_t void _picture_functions::fill_rectangle3(_iarea r, _color c)
 {
 	if (r.x.length() == 1) { vertical_line<_t>(r.x.min, r.y, c); return; }
@@ -1021,7 +998,7 @@ t_t void _picture_functions::fill_rectangle3(_iarea r, _color c)
 	}
 }
 
-void _picture::fill_rectangle2(_iarea r, _color c, bool rep)
+void _picture::fill_rectangle(_iarea r, _color c, bool rep)
 {
 	if (c.a == 0 && !rep) return;
 	r &= drawing_area;
@@ -1035,78 +1012,6 @@ void _picture::fill_rectangle2(_iarea r, _color c, bool rep)
 		((_picture_functions*)this)->fill_rectangle3<_color_mixing>(r, c);
 	else
 		((_picture_functions*)this)->fill_rectangle3<_color_overlay>(r, c);
-}
-
-void _picture::fill_rectangle(_iarea r, uint c, bool rep)
-{
-	r &= drawing_area;
-	if (r.empty()) return;
-	uint kk = (c >> 24);
-	if (rep || (kk == 0xFF)) { fill_rect_rep_speed(r, c); return; }
-	if (kk == 0) return;  // полностью прозрачная
-	if (transparent)
-		fill_rect_transparent_speed(r, c);
-	else
-		fill_rect_speed(r, c);
-}
-
-void _picture::fill_rect_transparent_speed(_iarea r, uint c)
-{
-	i64 dx = r.x.length();
-	if (dx == 1) // вертикальная линия
-	{
-		line({ r.x.min, r.y.min }, { r.x.min, r.y.max - 1 }, c); // !!!!!!!!!!!!!!!! вызвать нужную
-		return;
-	}
-	uint kk = 255 - (c >> 24);
-	uint k2 = 256 - kk;
-	uint d1 = (c & 255) * k2;
-	uint d2 = ((c >> 8) & 255) * k2;
-	uint d3 = ((c >> 16) & 255) * k2;
-	uint d11 = d1 * 255;
-	uint d22 = d2 * 255;
-	uint d33 = d3 * 255;
-	for (i64 i = r.y.min; i < r.y.max; i++)
-	{
-		uchar* c2 = (uchar*)&(data[i * size.x + r.x.min]);
-		for (i64 d = -dx; d < 0; d++)
-		{
-			uint kk_ = 255 - c2[3];
-			uint k2_ = (256 - kk_) * kk;
-			uint znam = 65536 - kk * kk_;
-			c2[0] = (c2[0] * k2_ + d11) / znam;
-			c2[1] = (c2[1] * k2_ + d22) / znam;
-			c2[2] = (c2[2] * k2_ + d33) / znam;
-			c2[3] = 255 - ((kk_ * kk) >> 8);
-			c2 += 4;
-		}
-	}
-}
-
-void _picture::fill_rect_speed(_iarea r, uint c)
-{
-	i64 dx = r.x.length();
-	if (dx == 1) // вертикальная линия
-	{
-		line({ r.x.min, r.y.min }, { r.x.min, r.y.max - 1 }, c); // !!!!!!!!!!!!!!!! вызвать нужную
-		return;
-	}
-	uint kk = 255 - (c >> 24);
-	uint k2 = 256 - kk;
-	uint d1 = (c & 255) * k2;
-	uint d2 = ((c >> 8) & 255) * k2;
-	uint d3 = ((c >> 16) & 255) * k2;
-	for (i64 i = r.y.min; i < r.y.max; i++)
-	{
-		uchar* c2 = (uchar*)&(data[i * size.x + r.x.min]);
-		for (i64 d = -dx; d < 0; d++)
-		{
-			c2[0] = (c2[0] * kk + d1) >> 8;
-			c2[1] = (c2[1] * kk + d2) >> 8;
-			c2[2] = (c2[2] * kk + d3) >> 8;
-			c2 += 4;
-		}
-	}
 }
 
 constexpr int lx2 = 11;
@@ -1204,7 +1109,7 @@ void _picture::text16n(i64 x, i64 y, astr s, i64 n, uint c, uint bg)
 	if (n == 1) return text16({ x, y }, s, c, bg);
 	auto text_area = size_text16(s, n).move({ x,y }) & drawing_area;
 	if (text_area.empty()) return;
-	fill_rectangle(text_area, bg);
+	fill_rectangle(text_area, { bg });
 	constexpr int ly = 13;
 	if ((y >= drawing_area.y.max) || (y + ly * n <= drawing_area.y.min)) return;
 	uint kk = 255 - (c >> 24);
@@ -1320,7 +1225,7 @@ void _picture::text16(_ixy p, std::string_view st, uint c, uint bg)
 {
 	auto text_area = size_text16(st).move(p) & drawing_area;
 	if (text_area.empty()) return;
-	fill_rectangle(text_area, bg);
+	fill_rectangle(text_area, { bg });
 	constexpr int ly = 13;
 	uint kk = 255 - (c >> 24);
 	if (kk == 0xFF) return; // полностью прозрачная
@@ -1444,7 +1349,7 @@ void _picture::froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2)
 	if (x2 >= drawing_area.x.max) x2 = drawing_area.x.max - 1;
 	if (y2 >= drawing_area.y.max) y2 = drawing_area.y.max - 1;
 	if ((x2 < x1) || (y2 < y1)) return;
-	fill_rectangle({ {x1 - 1, x2 + 2}, {y1 - 1, y2 + 2} }, c2);
+	fill_rectangle(_iarea{ {x1 - 1, x2 + 2}, {y1 - 1, y2 + 2} }, { c2 });
 
 	double aa = 1.0625;    // минимальная толщина линии
 	double bb = 1.0625;    // минимальное пустое место

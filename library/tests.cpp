@@ -77,17 +77,17 @@ namespace
 
 	void draw_figure_0(_picture& picture, const _coordinates& coo)
 	{
-		picture.fill_rectangle2(coo.iarea, {0}); // минимальная функция
+		picture.fill_rectangle(coo.iarea, {0}); // минимальная функция
 	}
 
 	void draw_figure_old(_picture& picture, const _coordinates& coo)
 	{
-		picture.fill_rectangle(coo.iarea, coo.c.c, coo.rep);
+		picture.fill_rectangle(coo.iarea, coo.c, coo.rep);
 	}
 
 	void draw_figure_new(_picture& picture, const _coordinates& coo)
 	{
-		picture.fill_rectangle2(coo.iarea, coo.c, coo.rep);
+		picture.fill_rectangle(coo.iarea, coo.c, coo.rep);
 	}
 
 }
