@@ -9,6 +9,7 @@ namespace
 	struct _coordinates
 	{
 		_iarea iarea;
+		_area area;
 		bool rep;
 		_color c;
 	};
@@ -17,10 +18,28 @@ namespace
 	{
 		_coordinates result;
 		auto ss = std::max(picture.size.x, picture.size.y);
-		result.iarea = _ixy(rnd(ss * 2) - ss / 2, rnd(ss * 2) - ss / 2);
-		result.iarea |= _ixy(rnd(ss * 2) - ss / 2, rnd(ss * 2) - ss / 2);
-		if (rnd(7) == 1) result.iarea.x.max = result.iarea.x.min + 1 + rnd(3);
-		if (rnd(7) == 1) result.iarea.y.max = result.iarea.y.min + 1 + rnd(3);
+		i64 k1 = rnd(ss * 2) - ss / 2;
+		i64 k2 = rnd(ss * 2) - ss / 2;
+		i64 k3 = rnd(ss * 2) - ss / 2;
+		i64 k4 = rnd(ss * 2) - ss / 2;
+		double z1 = rnd(1024) / 1024.0;
+		double z2 = rnd(1024) / 1024.0;
+		double z3 = rnd(1024) / 1024.0;
+		double z4 = rnd(1024) / 1024.0;
+		result.iarea = _ixy(k1, k2);
+		result.iarea |= _ixy(k3, k4);
+		result.area = _xy(k1 + z1, k2 + z2);
+		result.area |= _xy(k3 + z3, k4 + z4);
+		if (rnd(7) == 1)
+		{
+			result.iarea.x.max = result.iarea.x.min + 1 + rnd(3);
+			result.area.x.max = result.area.x.min + (1 + rnd(30)) / 10.0;
+		}
+		if (rnd(7) == 1)
+		{
+			result.iarea.y.max = result.iarea.y.min + 1 + rnd(3);
+			result.area.y.max = result.area.y.min + (1 + rnd(30)) / 10.0;
+		}
 		result.rep = (rnd(3) == 1) && with_rep;
 		result.c.c = rnd();
 		if (result.rep && !picture.transparent) result.c.a = 255;
@@ -31,10 +50,30 @@ namespace
 	{
 		_coordinates result;
 		auto ss = std::max(picture.size.x, picture.size.y);
-		result.iarea = _ixy(rnd(ss * 2) - ss / 2, rnd(ss * 2) - ss / 2);
-		result.iarea |= _ixy(rnd(ss * 2) - ss / 2, rnd(ss * 2) - ss / 2);
-		if (vertical) result.iarea.x.max = result.iarea.x.min + 1;
-		if (gorisontal) result.iarea.y.max = result.iarea.y.min + 1;
+		i64 k1 = rnd(ss * 2) - ss / 2;
+		i64 k2 = rnd(ss * 2) - ss / 2;
+		i64 k3 = rnd(ss * 2) - ss / 2;
+		i64 k4 = rnd(ss * 2) - ss / 2;
+		double z1 = rnd(1024) / 1024.0;
+		double z2 = rnd(1024) / 1024.0;
+		double z3 = rnd(1024) / 1024.0;
+		double z4 = rnd(1024) / 1024.0;
+		result.iarea = _ixy(k1, k2);
+		result.iarea |= _ixy(k3, k4);
+		result.area = _xy(k1 + z1, k2 + z2);
+		result.area |= _xy(k3 + z3, k4 + z4);
+		if (vertical)
+		{
+			result.iarea.x.max = result.iarea.x.min + 1;
+			result.area.x.min = i64(result.area.x.min);
+			result.area.x.max = result.area.x.min + 0.7;
+		}
+		if (gorisontal)
+		{
+			result.iarea.y.max = result.iarea.y.min + 1;
+			result.area.y.min = i64(result.area.y.min);
+			result.area.y.max = result.area.y.min + 0.7;
+		}
 		result.rep = rep;
 		result.c.c = rnd();
 		if (result.rep && !picture.transparent) result.c.a = 255;
@@ -82,12 +121,12 @@ namespace
 
 	void draw_figure_old(_picture& picture, const _coordinates& coo)
 	{
-		picture.fill_rectangle(coo.iarea, coo.c, coo.rep);
+		picture.fill_rectangle(coo.area, coo.c);
 	}
 
 	void draw_figure_new(_picture& picture, const _coordinates& coo)
 	{
-		picture.fill_rectangle(coo.iarea, coo.c, coo.rep);
+		picture.fill_rectangle(coo.area, coo.c);
 	}
 
 }
@@ -144,7 +183,10 @@ bool test_graph_matching(bool with_transparent, bool with_rep)
 			draw_figure_new(picture_new, coo);
 			auto delta = max_delta(picture_old, picture_new);
 			if (delta == 0) continue;
-			if (delta > 1) return false;
+			if (delta > 2)
+			{
+				return false;
+			}
 			picture_new = picture_old;
 		}
 	}

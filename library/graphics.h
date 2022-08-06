@@ -92,7 +92,6 @@ struct _picture
 
 	void fill_rectangle(_iarea r, _color c, bool rep = false);
 	void fill_rectangle(_area r, _color c);
-	void fill_rect_d(double x1, double y1, double x2, double y2, uint c); // полупрозрачный пр-к на !!непр-й!! подложке
 
 	void rectangle(_iarea oo, uint c);
 
