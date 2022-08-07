@@ -199,7 +199,7 @@ _area _area::expansion(double b) const
 	return { {x.min - b, x.max + b}, {y.min - b, y.max + b} };
 }
 
-double _area::min_length()
+double _area::min_length() const
 { 
 	return std::min(x.length(), y.length());
 }

@@ -42,7 +42,7 @@ namespace
 		}
 		result.rep = (rnd(3) == 1) && with_rep;
 		result.c.c = rnd();
-		if (result.rep && !picture.transparent) result.c.a = 255;
+		if (result.rep) result.c.a = 255;
 		return result;
 	}
 
@@ -121,12 +121,12 @@ namespace
 
 	void draw_figure_old(_picture& picture, const _coordinates& coo)
 	{
-		picture.fill_rectangle(coo.area, coo.c);
+		picture.fill_circle(coo.area.center(), coo.area.min_length() * 0.5, coo.c);
 	}
 
 	void draw_figure_new(_picture& picture, const _coordinates& coo)
 	{
-		picture.fill_rectangle(coo.area, coo.c);
+		picture.fill_circle(coo.area.center(), coo.area.min_length() * 0.5, coo.c);
 	}
 
 }

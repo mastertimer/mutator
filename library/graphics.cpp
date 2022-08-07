@@ -52,7 +52,6 @@ struct _color_overlay
 		c.g = (c.g * kk + cc.g * k2) >> 8;
 		c.r = (c.r * kk + cc.r * k2) >> 8;
 	}
-
 };
 
 struct _color_mixing
@@ -2499,7 +2498,7 @@ void _picture::fill_ring(_xy p, double r, double d, uint c, uint c2)
 	if (r < 0.5) return; // слишком маленький
 	if (c == c2)
 	{
-		fill_circle(p, r, c);
+		fill_circle(p, r, { c });
 		return;
 	}
 	uint kk_ = 255 - (c2 >> 24);
@@ -2837,7 +2836,7 @@ t_t_b void _picture_functions::fill_circle3(_iarea area, _xy p, double r, _color
 	}
 }
 
-void _picture::fill_circle2(_xy p, double r, _color c)
+void _picture::fill_circle(_xy p, double r, _color c)
 {
 	if (r < 0.5 || c.a == 0) return;
 	_iarea area(_iinterval(p.x - r, p.x + r), _iinterval(p.y - r, p.y + r));
@@ -2854,96 +2853,6 @@ void _picture::fill_circle2(_xy p, double r, _color c)
 		((_picture_functions*)this)->fill_circle3<_color_mixing, _color_mixing>(area, p, r, c);
 	else
 		((_picture_functions*)this)->fill_circle3<_color_overlay, _color_overlay>(area, p, r, c);
-}
-
-void _picture::fill_circle(_xy p, double r, uint c)
-{
-	if (r < 0.5) return; // слишком маленький
-	i64 y1 = (i64)(p.y - r);
-	y1 = std::max(drawing_area.y.min, y1);
-	i64 y2 = (i64)(p.y + r);
-	y2 = std::min(drawing_area.y.max - 1, y2);
-	i64 x1 = (i64)(p.x - r);
-	x1 = std::max(drawing_area.x.min, x1);
-	i64 x2 = (i64)(p.x + r);
-	x2 = std::min(drawing_area.x.max - 1, x2);
-	if ((x2 < x1) || (y2 < y1)) return;
-
-	double rrmin = (r - 0.5) * (r - 0.5);
-	double rrmax = (r + 0.5) * (r + 0.5);
-	double drr = rrmax - rrmin;
-	p.x -= 0.5;
-	p.y -= 0.5;
-	double dxdx0 = (x1 - p.x) * (x1 - p.x);
-	double ab0 = 2 * (x1 - p.x) + 1;
-	uint kk = 255 - (c >> 24);
-	uint k2 = 256 - kk;
-	uint c_0 = (c & 255);
-	uint c_1 = ((c >> 8) & 255);
-	uint c_2 = ((c >> 16) & 255);
-	uint d1 = c_0 * k2;
-	uint d2 = c_1 * k2;
-	uint d3 = c_2 * k2;
-	if (kk == 0)
-	{
-		for (i64 i = y1; i <= y2; i++)
-		{
-			double dd = (i - p.y) * (i - p.y) + dxdx0;
-			double ab = ab0;
-			uchar* cc = px(x1, i);
-			i64 d = x1 - x2;
-			while (d++ <= 0)
-			{
-				if (dd < rrmax)
-				{
-					if (dd > rrmin)
-					{
-						uint k22 = (uint)(k2 * (rrmax - dd) / drr);
-						uint kk2 = 256 - k22;
-						cc[0] = (cc[0] * kk2 + c_0 * k22) >> 8;
-						cc[1] = (cc[1] * kk2 + c_1 * k22) >> 8;
-						cc[2] = (cc[2] * kk2 + c_2 * k22) >> 8;
-					}
-					else
-						*((uint*)cc) = c;
-				}
-				cc += 4;
-				dd += ab;
-				ab += 2;
-			}
-		}
-		return;
-	}
-	for (i64 i = y1; i <= y2; i++)
-	{
-		double dd = (i - p.y) * (i - p.y) + dxdx0;
-		double ab = ab0;
-		uchar* cc = px(x1, i);
-		i64 d = x1 - x2;
-		while (d++ <= 0)
-		{
-			if (dd < rrmax)
-			{
-				if (dd > rrmin)
-				{
-					uint k22 = (uint)(k2 * (rrmax - dd) / drr);
-					uint kk2 = 256 - k22;
-					cc[0] = (cc[0] * kk2 + c_0 * k22) >> 8;
-					cc[1] = (cc[1] * kk2 + c_1 * k22) >> 8;
-					cc[2] = (cc[2] * kk2 + c_2 * k22) >> 8;
-				}
-				else
-				{
-					cc[0] = (cc[0] * kk + d1) >> 8;
-					cc[1] = (cc[1] * kk + d2) >> 8;
-					cc[2] = (cc[2] * kk + d3) >> 8;
-				}
-			}
-			cc += 4;
-			dd += ab;
-			ab += 2;
-		}
-	}
 }
 
 uint brighten(uint c)

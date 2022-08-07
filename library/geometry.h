@@ -204,7 +204,7 @@ struct _area
 	_xy bottom_left()  const { return { x.min, y.max }; } // нижний левый угол
 	_xy bottom_right() const { return { x.max, y.max }; } // нижний правый угол
 
-	double min_length();
+	double min_length() const;
 
 	bool test(_xy b) const;
 };
