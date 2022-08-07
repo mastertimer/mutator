@@ -2505,7 +2505,7 @@ void _picture::fill_ring(_xy p, double r, double d, uint c, uint c2)
 	uint kk_ = 255 - (c2 >> 24);
 	if (kk_ == 0xFF) // полностью прозрачная внутренность
 	{
-		ring(p, r, d, c);
+		ring(p, r, d, { c });
 		return;
 	}
 	double r2 = r - d;
@@ -2698,7 +2698,7 @@ t_t_b void _picture_functions::ring3(_iarea area, _xy p, double r, double r2, _c
 						_b::mix2(c, *cc);
 					}
 					else
-					{ // тонкое кольцо
+					{ // тонкое кольцо! !!! исправить отриц. коэффмфиент p = {58.1263671875, 33.2783203125} r = 0.6 d = 0.4 c = 0xff4ed850
 						c.a = ca * ((rrmax - dd) / drr - (ddmax - dd) / ddd);
 						_b::mix2(c, *cc);
 					}
@@ -2717,7 +2717,7 @@ t_t_b void _picture_functions::ring3(_iarea area, _xy p, double r, double r2, _c
 	}
 }
 
-void _picture::ring2(_xy p, double r, double d, _color c)
+void _picture::ring(_xy p, double r, double d, _color c)
 {
 	if (r < 0.5 || c.a == 0) return;
 	_iarea area(_iinterval(p.x - r, p.x + r), _iinterval(p.y - r, p.y + r));
@@ -2736,146 +2736,6 @@ void _picture::ring2(_xy p, double r, double d, _color c)
 		((_picture_functions*)this)->ring3<_color_mixing, _color_mixing>(area, p, r, r2, c);
 	else
 		((_picture_functions*)this)->ring3<_color_overlay, _color_overlay>(area, p, r, r2, c);
-}
-
-void _picture::ring(_xy p, double r, double d, uint c)
-{
-	if (r < 0.5) return; // слишком маленький
-	double r2 = r - d;
-	if (r2 < 0) r2 = 0;
-	i64 y1 = (int)(p.y - r);
-	y1 = std::max(drawing_area.y.min, y1);
-	i64 y2 = (int)(p.y + r);
-	y2 = std::min(drawing_area.y.max - 1, y2);
-	i64 x1 = (int)(p.x - r);
-	x1 = std::max(drawing_area.x.min, x1);
-	i64 x2 = (int)(p.x + r);
-	x2 = std::min(drawing_area.x.max - 1, x2);
-	if ((x2 < x1) || (y2 < y1)) return;
-
-	double rrmin = (r - 0.5) * (r - 0.5);
-	double rrmax = (r + 0.5) * (r + 0.5);
-	double drr = rrmax - rrmin;
-	double ddmin = (r2 - 0.5) * (r2 - 0.5);
-	double ddmax = (r2 + 0.5) * (r2 + 0.5);
-	double ddd = ddmax - ddmin;
-
-	double xxx2 = (size.x / 2 - p.x) * (size.x / 2 - p.x) + (size.y / 2 - p.y) * (size.y / 2 - p.y);
-	double yyy2 = 0.25 * size.x * size.x + 0.25 * size.y * size.y;
-	if (xxx2 + yyy2 + 2 * sqrt(xxx2 * yyy2) < ddmin) return; // экран внутри кольца
-
-	p.x -= 0.5;
-	p.y -= 0.5;
-	double dxdx0 = (x1 - p.x) * (x1 - p.x);
-	double ab0 = 2 * (x1 - p.x) + 1;
-	uint kk = 255 - (c >> 24);
-	uint k2 = 256 - kk;
-	uint c_0 = (c & 255);
-	uint c_1 = ((c >> 8) & 255);
-	uint c_2 = ((c >> 16) & 255);
-	uint d1 = c_0 * k2;
-	uint d2 = c_1 * k2;
-	uint d3 = c_2 * k2;
-	if (kk == 0)
-	{
-		for (i64 i = y1; i <= y2; i++)
-		{
-			double dd = (i - p.y) * (i - p.y) + dxdx0;
-			double ab = ab0;
-			uchar* cc = px(x1, i);
-			i64 d_ = x1 - x2;
-			while (d_++ <= 0)
-			{
-				if ((dd < rrmax) && (dd > ddmin))
-				{
-					if (dd > rrmin)
-					{
-						if (dd >= ddmax)
-						{
-							uint k22 = (uint)(k2 * (rrmax - dd) / drr);
-							uint kk2 = 256 - k22;
-							cc[0] = (cc[0] * kk2 + c_0 * k22) >> 8;
-							cc[1] = (cc[1] * kk2 + c_1 * k22) >> 8;
-							cc[2] = (cc[2] * kk2 + c_2 * k22) >> 8;
-						}
-						else
-						{ // тонкое кольцо
-							uint k22 = (uint)(k2 * ((rrmax - dd) / drr - (ddmax - dd) / ddd));
-							uint kk2 = 256 - k22;
-							cc[0] = (cc[0] * kk2 + c_0 * k22) >> 8;
-							cc[1] = (cc[1] * kk2 + c_1 * k22) >> 8;
-							cc[2] = (cc[2] * kk2 + c_2 * k22) >> 8;
-						}
-					}
-					else if (dd >= ddmax)
-					{
-						*((uint*)cc) = c;
-					}
-					else
-					{
-						uint k22 = (uint)(k2 * (dd - ddmin) / ddd);
-						uint kk2 = 256 - k22;
-						cc[0] = (cc[0] * kk2 + c_0 * k22) >> 8;
-						cc[1] = (cc[1] * kk2 + c_1 * k22) >> 8;
-						cc[2] = (cc[2] * kk2 + c_2 * k22) >> 8;
-					}
-				}
-				cc += 4;
-				dd += ab;
-				ab += 2;
-			}
-		}
-		return;
-	}
-	for (i64 i = y1; i <= y2; i++)
-	{
-		double dd = (i - p.y) * (i - p.y) + dxdx0;
-		double ab = ab0;
-		uchar* cc = px(x1, i);
-		i64 d_ = x1 - x2;
-		while (d_++ <= 0)
-		{
-			if ((dd < rrmax) && (dd > ddmin))
-			{
-				if (dd > rrmin)
-				{
-					if (dd >= ddmax)
-					{
-						uint k22 = (uint)(k2 * (rrmax - dd) / drr);
-						uint kk2 = 256 - k22;
-						cc[0] = (cc[0] * kk2 + c_0 * k22) >> 8;
-						cc[1] = (cc[1] * kk2 + c_1 * k22) >> 8;
-						cc[2] = (cc[2] * kk2 + c_2 * k22) >> 8;
-					}
-					else
-					{ // тонкое кольцо
-						uint k22 = (uint)(k2 * ((rrmax - dd) / drr - (ddmax - dd) / ddd));
-						uint kk2 = 256 - k22;
-						cc[0] = (cc[0] * kk2 + c_0 * k22) >> 8;
-						cc[1] = (cc[1] * kk2 + c_1 * k22) >> 8;
-						cc[2] = (cc[2] * kk2 + c_2 * k22) >> 8;
-					}
-				}
-				else if (dd >= ddmax)
-				{
-					cc[0] = (cc[0] * kk + d1) >> 8;
-					cc[1] = (cc[1] * kk + d2) >> 8;
-					cc[2] = (cc[2] * kk + d3) >> 8;
-				}
-				else
-				{
-					uint k22 = (uint)(k2 * (dd - ddmin) / ddd);
-					uint kk2 = 256 - k22;
-					cc[0] = (cc[0] * kk2 + c_0 * k22) >> 8;
-					cc[1] = (cc[1] * kk2 + c_1 * k22) >> 8;
-					cc[2] = (cc[2] * kk2 + c_2 * k22) >> 8;
-				}
-			}
-			cc += 4;
-			dd += ab;
-			ab += 2;
-		}
-	}
 }
 
 t_t_b void _picture_functions::fill_circle3(_iarea area, _xy p, double r, _color c)

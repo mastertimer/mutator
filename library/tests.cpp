@@ -12,6 +12,7 @@ namespace
 		_area area;
 		bool rep;
 		_color c;
+		double d;
 	};
 
 	_coordinates generate_coordinates(const _picture& picture, bool with_rep)
@@ -40,6 +41,7 @@ namespace
 			result.iarea.y.max = result.iarea.y.min + 1 + rnd(3);
 			result.area.y.max = result.area.y.min + (1 + rnd(30)) / 10.0;
 		}
+		result.d = rnd(70) / 10.0;
 		result.rep = (rnd(3) == 1) && with_rep;
 		result.c.c = rnd();
 		if (result.rep) result.c.a = 255;
@@ -74,6 +76,7 @@ namespace
 			result.area.y.min = i64(result.area.y.min);
 			result.area.y.max = result.area.y.min + 0.7;
 		}
+		result.d = rnd(70) / 10.0;
 		result.rep = rep;
 		result.c.c = rnd();
 		if (result.rep) result.c.a = 255;
@@ -121,12 +124,12 @@ namespace
 
 	void draw_figure_old(_picture& picture, const _coordinates& coo)
 	{
-		picture.fill_circle(coo.area.center(), coo.area.min_length() * 0.5, coo.c);
+		picture.ring(coo.area.center(), coo.area.min_length() * 0.5, coo.d, coo.c);
 	}
 
 	void draw_figure_new(_picture& picture, const _coordinates& coo)
 	{
-		picture.fill_circle(coo.area.center(), coo.area.min_length() * 0.5, coo.c);
+		picture.ring(coo.area.center(), coo.area.min_length() * 0.5, coo.d, coo.c);
 	}
 
 }
@@ -181,6 +184,11 @@ bool test_graph_matching(bool with_transparent, bool with_rep)
 			auto coo = generate_coordinates(picture_old, with_rep);
 			draw_figure_old(picture_old, coo);
 			draw_figure_new(picture_new, coo);
+			if (i == 1 && m == 477)
+			{
+				picture_old.save_to_file(L"e:\\picture_old.bmp");
+				picture_new.save_to_file(L"e:\\picture_new.bmp");
+			}
 			auto delta = max_delta(picture_old, picture_new);
 			if (delta == 0) continue;
 			if (delta > 2)
