@@ -2665,10 +2665,10 @@ t_t_b void _picture_functions::ring3(_iarea area, _xy p, double r, double r2, _c
 {
 	double rrmin = (r - 0.5) * (r - 0.5);
 	double rrmax = (r + 0.5) * (r + 0.5);
-	double drr = rrmax - rrmin;
+	double drr = 1.0 / (rrmax - rrmin);
 	double ddmin = (r2 - 0.5) * (r2 - 0.5);
 	double ddmax = (r2 + 0.5) * (r2 + 0.5);
-	double ddd = ddmax - ddmin;
+	double ddd = 1.0 / (ddmax - ddmin);
 
 	double xxx2 = (size.x / 2 - p.x) * (size.x / 2 - p.x) + (size.y / 2 - p.y) * (size.y / 2 - p.y);
 	double yyy2 = 0.25 * size.x * size.x + 0.25 * size.y * size.y;
@@ -2694,19 +2694,19 @@ t_t_b void _picture_functions::ring3(_iarea area, _xy p, double r, double r2, _c
 				{
 					if (dd >= ddmax)
 					{
-						c.a = ca * (rrmax - dd) / drr;
+						c.a = ca * (rrmax - dd) * drr;
 						_b::mix2(c, *cc);
 					}
 					else
 					{ // тонкое кольцо! !!! исправить отриц. коэффмфиент p = {58.1263671875, 33.2783203125} r = 0.6 d = 0.4 c = 0xff4ed850
-						c.a = ca * ((rrmax - dd) / drr - (ddmax - dd) / ddd);
+						c.a = ca * ((rrmax - dd) * drr - (ddmax - dd) * ddd);
 						_b::mix2(c, *cc);
 					}
 				}
 				else if (dd >= ddmax) cmix.mix(*cc);
 				else
 				{
-					c.a = ca * (dd - ddmin) / ddd;
+					c.a = ca * (dd - ddmin) * ddd;
 					_b::mix2(c, *cc);
 				}
 			}
