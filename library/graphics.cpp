@@ -8,9 +8,10 @@
 
 struct _picture_functions : public _picture
 {
-	t_t void vertical_line(i64 x, _iinterval y, _color c); // без проверки диапазона
-	t_t void fill_rectangle3(_iarea r, _color c); // без проверки диапазона
-	t_t_b void fill_circle3(_iarea area, _xy p, double r, _color c); // без проверки диапазона
+	t_t void vertical_line(i64 x, _iinterval y, _color c);
+	t_t void fill_rectangle3(_iarea r, _color c);
+	t_t_b void fill_circle3(_iarea area, _xy p, double r, _color c);
+	t_t_b void ring3(_iarea area, _xy p, double r, double r2, _color c);
 };
 
 struct _color_substitution
@@ -2658,6 +2659,83 @@ void _picture::fill_ring(_xy p, double r, double d, uint c, uint c2)
 			ab += 2;
 		}
 	}
+}
+
+t_t_b void _picture_functions::ring3(_iarea area, _xy p, double r, double r2, _color c)
+{
+	double rrmin = (r - 0.5) * (r - 0.5);
+	double rrmax = (r + 0.5) * (r + 0.5);
+	double drr = rrmax - rrmin;
+	double ddmin = (r2 - 0.5) * (r2 - 0.5);
+	double ddmax = (r2 + 0.5) * (r2 + 0.5);
+	double ddd = ddmax - ddmin;
+
+	double xxx2 = (size.x / 2 - p.x) * (size.x / 2 - p.x) + (size.y / 2 - p.y) * (size.y / 2 - p.y);
+	double yyy2 = 0.25 * size.x * size.x + 0.25 * size.y * size.y;
+	if (xxx2 + yyy2 + 2 * sqrt(xxx2 * yyy2) < ddmin) return; // !!!! исправить на внутри области
+	p.x -= 0.5;
+	p.y -= 0.5;
+	double dxdx0 = (area.x.min - p.x) * (area.x.min - p.x);
+	double ab0 = 2 * (area.x.min - p.x) + 1;
+	_t cmix(c);
+	auto ca = c.a;
+	i64 d_start = area.x.min - area.x.max + 1;
+	for (i64 i = area.y.min; i < area.y.max; i++)
+	{
+		double dd = (i - p.y) * (i - p.y) + dxdx0;
+		double ab = ab0;
+		_color* cc = &pixel(area.x.min, i);
+		i64 d_ = d_start;
+		while (d_++ <= 0)
+		{
+			if ((dd < rrmax) && (dd > ddmin))
+			{
+				if (dd > rrmin)
+				{
+					if (dd >= ddmax)
+					{
+						c.a = ca * (rrmax - dd) / drr;
+						_b::mix2(c, *cc);
+					}
+					else
+					{ // тонкое кольцо
+						c.a = ca * ((rrmax - dd) / drr - (ddmax - dd) / ddd);
+						_b::mix2(c, *cc);
+					}
+				}
+				else if (dd >= ddmax) cmix.mix(*cc);
+				else
+				{
+					c.a = ca * (dd - ddmin) / ddd;
+					_b::mix2(c, *cc);
+				}
+			}
+			cc++;
+			dd += ab;
+			ab += 2;
+		}
+	}
+}
+
+void _picture::ring2(_xy p, double r, double d, _color c)
+{
+	if (r < 0.5 || c.a == 0) return;
+	_iarea area(_iinterval(p.x - r, p.x + r), _iinterval(p.y - r, p.y + r));
+	area &= drawing_area;
+	if (area.empty()) return;
+	double r2 = r - d;
+	if (r2 < 0) r2 = 0;
+	if (c.a == 0xff)
+	{
+		if (transparent)
+			((_picture_functions*)this)->ring3<_color_substitution, _color_mixing>(area, p, r, r2, c);
+		else
+			((_picture_functions*)this)->ring3<_color_substitution, _color_overlay>(area, p, r, r2, c);
+	}
+	else if (transparent)
+		((_picture_functions*)this)->ring3<_color_mixing, _color_mixing>(area, p, r, r2, c);
+	else
+		((_picture_functions*)this)->ring3<_color_overlay, _color_overlay>(area, p, r, r2, c);
 }
 
 void _picture::ring(_xy p, double r, double d, uint c)

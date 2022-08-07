@@ -89,6 +89,7 @@ struct _picture
 	void fill_circle(_xy p, double r, _color c);
 	void fill_ring(_xy p, double r, double d, uint c, uint c2);
 	void ring(_xy p, double r, double d, uint c);
+	void ring2(_xy p, double r, double d, _color c);
 
 	void fill_rectangle(_iarea r, _color c, bool rep = false);
 	void fill_rectangle(_area r, _color c);
