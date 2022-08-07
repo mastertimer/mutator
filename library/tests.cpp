@@ -76,7 +76,7 @@ namespace
 		}
 		result.rep = rep;
 		result.c.c = rnd();
-		if (result.rep && !picture.transparent) result.c.a = 255;
+		if (result.rep) result.c.a = 255;
 		return result;
 	}
 

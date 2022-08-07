@@ -15,6 +15,7 @@ using wstr   = const wchar_t*;
 
 #define t_t template <typename _t>
 #define t_b template <typename _b>
+#define t_t_b template <typename _t, typename _b>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

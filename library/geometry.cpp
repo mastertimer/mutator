@@ -357,6 +357,11 @@ bool _iarea::test(_ixy b) const
 	return x.test(b.x) && y.test(b.y);
 }
 
+bool _iarea::empty() const
+{
+	return x.empty() || y.empty();
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 uint test_line(_xy p1, _xy p2, _xy b)

@@ -104,8 +104,6 @@ struct _iinterval // [...)
 	i64  length() const { return (min < max) ? (max - min) : 0; }
 	_iinterval& operator << (i64 x);
 	bool test(i64 x) const { return (x >= min) && (x < max); }
-
-	void clear() { min = max = 0; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,8 +124,7 @@ struct _iarea
 
 	_iarea operator&( _iarea b) const { b &= *this; return b; }
 
-	bool empty() const { return x.empty() || y.empty(); }
-	void clear() { x.clear(); }
+	bool empty() const;
 	_isize size() const { if (empty()) return { 0,0 }; return { x.max - x.min, y.max - y.min }; }
 	bool test(_ixy b) const;
 };
