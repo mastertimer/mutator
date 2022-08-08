@@ -161,7 +161,7 @@ bool _picture::load_from_file(std::wstring_view file_name)
 	}
 	if (biBitCount == 32)
 	{
-		mem.pop_data(data, size.square() * 4);
+		mem.pop_data(data2, size.square() * 4);
 		return true;
 	}
 	return false;
@@ -189,7 +189,7 @@ bool _picture::save_to_file(std::wstring_view file_name)
 	mem << uint(0);      // biYPelsPerMeter
 	mem << uint(0);      // biClrUsed
 	mem << uint(0);      // biClrImportant
-	mem.push_data(data, size.square() * 4);
+	mem.push_data(data2, size.square() * 4);
 
 	return mem.save_to_file(file_name);
 }
@@ -206,33 +206,33 @@ void _picture::reset_drawing_area()
 
 _picture::~_picture()
 {
-	delete[] data;
+	delete[] data2;
 }
 
 _picture::_picture(const _picture& copy) : size(copy.size), transparent(copy.transparent), drawing_area(copy.size)
 {
 	if (size.empty()) return;
-	data = new uint[size.square()];
-	memcpy(data, copy.data, size.square() * sizeof(data[0]));
+	data2 = new _color[size.square()];
+	memcpy(data2, copy.data2, size.square() * 4);
 }
 
 _picture::_picture(_isize r)
 {
 	drawing_area = size = r;
-	if (!size.empty())	data = new uint[size.square()];
+	if (!size.empty())	data2 = new _color[size.square()];
 }
 
 _picture::_picture(_isize r, _color c)
 {
 	drawing_area = size = r;
-	if (!size.empty())	data = new uint[size.square()];
+	if (!size.empty())	data2 = new _color[size.square()];
 	clear(c);
 }
 
-_picture::_picture(_picture&& move) noexcept : data(move.data), size(move.size), transparent(move.transparent),
+_picture::_picture(_picture&& move) noexcept : data2(move.data2), size(move.size), transparent(move.transparent),
 drawing_area(move.drawing_area)
 {
-	move.data = nullptr;
+	move.data2 = nullptr;
 	move.drawing_area = move.size = { 0,0 };
 }
 
@@ -240,7 +240,7 @@ bool _picture::operator==(const _picture& pic) const
 {
 	if (size != pic.size) return false;
 	auto r = size.square();
-	for (auto i = 0; i < r; i++) if (data[i] != pic.data[i]) return false;
+	for (auto i = 0; i < r; i++) if (data2[i].c != pic.data2[i].c) return false;
 	return true;
 }
 
@@ -249,19 +249,19 @@ _picture& _picture::operator=(const _picture& copy)
 	if (&copy == this) return *this;
 	resize(copy.size);
 	transparent = copy.transparent;
-	memcpy(data, copy.data, size.square() * sizeof(data[0]));
+	memcpy(data2, copy.data2, size.square() * 4);
 	return *this;
 }
 
 _picture& _picture::operator=(_picture&& move) noexcept
 {
 	if (&move == this) return *this;
-	delete[] data;
-	data = move.data;
+	delete[] data2;
+	data2 = move.data2;
 	size = move.size;
 	transparent = move.transparent;
 	drawing_area = move.drawing_area;
-	move.data = nullptr;
+	move.data2 = nullptr;
 	move.drawing_area = move.size = { 0,0 };
 	return *this;
 }
@@ -298,8 +298,8 @@ bool _picture::resize(_isize wh)
 {
 	if (size == wh) return false;
 	size = wh;
-	delete[] data;
-	data = (size.empty()) ? nullptr : (new uint[size.square()]);
+	delete[] data2;
+	data2 = (size.empty()) ? nullptr : (new _color[size.square()]);
 	drawing_area = size;
 	transparent = false;
 	return true;
@@ -312,7 +312,7 @@ void _picture::clear(_color c)
 	else
 	{
 		transparent = c.a != 0xff;
-		memset32(data, c.c, size.square());
+		memset32((uint*)data2, c.c, size.square());
 	}
 }
 
