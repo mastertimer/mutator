@@ -12,6 +12,7 @@ namespace
 		_area area;
 		bool rep;
 		_color c;
+		_color c2;
 		double d;
 	};
 
@@ -44,7 +45,12 @@ namespace
 		result.d = rnd(70) / 10.0;
 		result.rep = (rnd(3) == 1) && with_rep;
 		result.c.c = rnd();
-		if (result.rep) result.c.a = 255;
+		result.c2.c = rnd();
+		if (result.rep)
+		{
+			result.c.a = 255;
+			result.c2.a = 255;
+		}
 		return result;
 	}
 
@@ -79,7 +85,12 @@ namespace
 		result.d = rnd(70) / 10.0;
 		result.rep = rep;
 		result.c.c = rnd();
-		if (result.rep) result.c.a = 255;
+		result.c2.c = rnd();
+		if (result.rep)
+		{
+			result.c.a = 255;
+			result.c2.a = 255;
+		}
 		return result;
 	}
 
@@ -124,12 +135,12 @@ namespace
 
 	void draw_figure_old(_picture& picture, const _coordinates& coo)
 	{
-		picture.ring(coo.area.center(), coo.area.min_length() * 0.5, coo.d, coo.c);
+		picture.fill_ring(coo.area.center(), coo.area.min_length() * 0.5, coo.d, coo.c, coo.c2);
 	}
 
 	void draw_figure_new(_picture& picture, const _coordinates& coo)
 	{
-		picture.ring(coo.area.center(), coo.area.min_length() * 0.5, coo.d, coo.c);
+		picture.fill_ring(coo.area.center(), coo.area.min_length() * 0.5, coo.d, coo.c, coo.c2);
 	}
 
 }
