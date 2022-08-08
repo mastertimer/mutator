@@ -4,7 +4,13 @@
 
 struct _picture_functions : public _picture
 {
+	t_t void line5(_ixy p1, _ixy p2, _color c);
+	t_t void line5_x(_ixy p1, _ixy p2, _color c);
+	t_t void line5_y(_ixy p1, _ixy p2, _color c);
+	t_t void line5_x_compact(_ixy p1, _ixy p2, _color c);
+	t_t void line5_y_compact(_ixy p1, _ixy p2, _color c);
 	t_t void vertical_line(i64 x, _iinterval y, _color c);
+	t_t void horizontal_line(_iinterval x, i64 y, _color c);
 	t_t void fill_rectangle3(_iarea r, _color c);
 	t_t_b void fill_circle3(_iarea area, _xy p, double r, _color c);
 	t_t_b void ring3(_iarea area, _xy p, double r, double r2, _color c);
@@ -338,6 +344,13 @@ void _picture::horizontal_line(_ixy p1, i64 p2x, _color c, bool rep)
 	for (i64 i = interval.min; i < interval.max; i++) cc.mix(*c2++);
 }
 
+t_t void _picture_functions::horizontal_line(_iinterval x, i64 y, _color c)
+{
+	_t cmix(c);
+	_color* cс_max = &pixel(x.max, y);
+	for (auto cc = &pixel(x.min, y); cc < cс_max; cc++) cmix.mix(*cc);
+}
+
 t_t void _picture_functions::vertical_line(i64 x, _iinterval y, _color c)
 {
 	_t cmix(c);
@@ -565,6 +578,165 @@ void _picture::line3(_ixy p1, _ixy p2, _color c, bool rep)
 	if (p1.y == p2.y) { horizontal_line(p1, p2.x, c, rep); return; }
 	if (p1.x == p2.x) { vertical_line(p1, p2.y, c, rep); return; }
 	(abs(p1.x - p2.x) >= abs(p1.y - p2.y)) ? line3_x(p1, p2, c, rep) : line3_y(p1, p2, c, rep);
+}
+
+t_t void _picture_functions::line5_x_compact(_ixy p1, _ixy p2, _color c)
+{
+	double y = p1.y + 0.5;
+	double dy_dx = double(p2.y - p1.y) / (p2.x - p1.x);
+	if (p1.x < drawing_area.x.min)
+	{
+		y += (drawing_area.x.min - p1.x) * dy_dx;
+		p1.x = drawing_area.x.min;
+	}
+	if (p2.x >= drawing_area.x.max) p2.x = drawing_area.x.max - 1;
+	if (p2.x < p1.x) return;
+	_t cc(c);
+	for (i64 x = p1.x; x <= p2.x; x++, y += dy_dx) cc.mix(pixel(x, y));
+}
+
+t_t void _picture_functions::line5_y_compact(_ixy p1, _ixy p2, _color c)
+{
+	double x = p1.x + 0.5;
+	double dx_dy = double(p2.x - p1.x) / (p2.y - p1.y);
+	if (p1.y < drawing_area.y.min)
+	{
+		x += (drawing_area.y.min - p1.y) * dx_dy;
+		p1.y = drawing_area.y.min;
+	}
+	if (p2.y >= drawing_area.y.max) p2.y = drawing_area.y.max - 1;
+	if (p2.y < p1.y) return;
+	_t cc(c);
+	for (i64 y = p1.y; y <= p2.y; y++, x += dx_dy) cc.mix(pixel(x, y));
+}
+
+t_t void _picture_functions::line5_x(_ixy p1, _ixy p2, _color c)
+{
+	if (p1.x > p2.x) std::swap(p1, p2);
+	if (drawing_area.y.test(p1.y) && drawing_area.y.test(p2.y))
+	{
+		line5_x_compact<_t>(p1, p2, c);
+		return;
+	}
+	double dy_dx = double(p2.y - p1.y) / (p2.x - p1.x);
+	double dx_dy = 1.0 / dy_dx;
+	double y = p1.y + 0.5;
+	double y2 = p2.y + 0.5;
+	if (p1.x < drawing_area.x.min)
+	{
+		y += (drawing_area.x.min - p1.x) * dy_dx;
+		p1.x = drawing_area.x.min;
+	}
+	if (p2.x >= drawing_area.x.max)
+	{
+		y2 -= (p2.x - drawing_area.x.max + 1) * dy_dx;
+		p2.x = drawing_area.x.max - 1;
+	}
+	if (p2.x < p1.x) return;
+	if (y < drawing_area.y.min)
+	{
+		if (y2 < drawing_area.y.min) return;
+		i64 dx = (drawing_area.y.min - y) * dx_dy;
+		p1.x += dx;
+		y += dx * dy_dx;
+		while (y < drawing_area.y.min) { p1.x++; y += dy_dx; }
+	}
+	else if (y >= drawing_area.y.max)
+	{
+		if (y2 >= drawing_area.y.max) return;
+		i64 dx = (drawing_area.y.max - y) * dx_dy;
+		p1.x += dx;
+		y += dx * dy_dx;
+		while (y >= drawing_area.y.max) { p1.x++; y += dy_dx; }
+	}
+	if (p2.x < p1.x) return;
+	_t cc(c);
+	if (dy_dx > 0)
+		for (i64 x = p1.x; (x <= p2.x) && (y < drawing_area.y.max); x++, y += dy_dx) cc.mix(pixel(x, y));
+	else
+		for (i64 x = p1.x; (x <= p2.x) && (y >= drawing_area.y.min); x++, y += dy_dx) cc.mix(pixel(x, y));
+}
+
+t_t void _picture_functions::line5_y(_ixy p1, _ixy p2, _color c)
+{
+	if (p1.y > p2.y) std::swap(p1, p2);
+	if (drawing_area.x.test(p1.x) && drawing_area.x.test(p2.x))
+	{
+		line5_y_compact<_t>(p1, p2, c);
+		return;
+	}
+	double dx_dy = double(p2.x - p1.x) / (p2.y - p1.y);
+	double dy_dx = 1.0 / dx_dy;
+	double x = p1.x + 0.5;
+	double x2 = p2.x + 0.5;
+	if (p1.y < drawing_area.y.min)
+	{
+		x += (drawing_area.y.min - p1.y) * dx_dy;
+		p1.y = drawing_area.y.min;
+	}
+	if (p2.y >= drawing_area.y.max)
+	{
+		x2 -= (p2.y - drawing_area.y.max + 1) * dx_dy;
+		p2.y = drawing_area.y.max - 1;
+	}
+	if (p2.y < p1.y) return;
+	if (x < drawing_area.x.min)
+	{
+		if (x2 < drawing_area.x.min) return;
+		i64 dy = (drawing_area.x.min - x) * dy_dx;
+		p1.y += dy;
+		x += dy * dx_dy;
+		while (x < drawing_area.x.min) { p1.y++; x += dx_dy; }
+	}
+	else if (x >= drawing_area.x.max)
+	{
+		if (x2 >= drawing_area.x.max) return;
+		i64 dy = (drawing_area.x.max - x) * dy_dx;
+		p1.y += dy;
+		x += dy * dx_dy;
+		while (x >= drawing_area.y.max) { p1.y++; x += dx_dy; }
+	}
+	if (p2.y < p1.y) return;
+	_t cc(c);
+	if (dy_dx > 0)
+		for (i64 y = p1.y; (y <= p2.y) && (x < drawing_area.x.max); y++, x += dx_dy) cc.mix(pixel(x, y));
+	else
+		for (i64 y = p1.y; (y <= p2.y) && (x >= drawing_area.x.min); y++, x += dx_dy) cc.mix(pixel(x, y));
+}
+
+t_t void _picture_functions::line5(_ixy p1, _ixy p2, _color c)
+{
+	if (p1.y == p2.y)
+	{ 
+		if (!drawing_area.y.test(p1.y)) return;
+		auto interval = (_iinterval(p1.x) << p2.x) & drawing_area.x;
+		if (interval.empty()) return;
+		horizontal_line<_t>(interval, p2.y, c);
+		return;
+	}
+	if (p1.x == p2.x)
+	{ 
+		if (!drawing_area.x.test(p1.x)) return;
+		auto interval = (_iinterval(p1.y) << p2.y) & drawing_area.y;
+		if (interval.empty()) return;
+		vertical_line<_t>(p1.x, interval, c);
+		return;
+	}
+	(abs(p1.x - p2.x) >= abs(p1.y - p2.y)) ? line5_x<_t>(p1, p2, c) : line5_y<_t>(p1, p2, c);
+}
+
+void _picture::line4(_ixy p1, _ixy p2, _color c, bool rep)
+{
+	if (c.a == 0 && !rep) return;
+	if (rep || c.a == 0xff)
+	{
+		set_transparent(c);
+		((_picture_functions*)this)->line5<_color_substitution>(p1, p2, c);
+	}
+	else if (transparent)
+		((_picture_functions*)this)->line5<_color_mixing>(p1, p2, c);
+	else
+		((_picture_functions*)this)->line5<_color_overlay>(p1, p2, c);
 }
 
 void _picture::line(_ixy p1, _ixy p2, uint c, bool rep)

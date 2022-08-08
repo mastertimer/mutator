@@ -78,6 +78,7 @@ struct _picture
 
 	// ниже не проверенные, или не универсальные функции
 
+	void line4(_ixy p1, _ixy p2, _color c, bool rep = false);
 	void line3(_ixy p1, _ixy p2, _color c, bool rep = false);
 	void line(_ixy p1, _ixy p2, uint c, bool rep = false);
 	void lines(_xy p1, _xy p2, double l, uint c); // точная линия заданной толщины
