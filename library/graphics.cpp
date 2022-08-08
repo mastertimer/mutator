@@ -322,28 +322,6 @@ void _picture::clear(_color c)
 	}
 }
 
-void _picture::horizontal_line(_ixy p1, i64 p2x, _color c, bool rep)
-{ // *
-	if (!drawing_area.y.test(p1.y)) return;
-	auto interval = (_iinterval(p1.x) << p2x) & drawing_area.x;
-	if (interval.empty()) return;
-	if (rep || c.a == 0xff)
-	{
-		set_transparent(c);
-		memset32((uint*)&pixel(interval.min, p1.y), c.c, interval.length());
-		return;
-	}
-	_color* c2 = &pixel(interval.min, p1.y);
-	if (transparent)
-	{
-		_color_mixing cc(c);
-		for (i64 i = interval.min; i < interval.max; i++) cc.mix(*c2++);
-		return;
-	}
-	_color_overlay cc(c);
-	for (i64 i = interval.min; i < interval.max; i++) cc.mix(*c2++);
-}
-
 t_t void _picture_functions::horizontal_line(_iinterval x, i64 y, _color c)
 {
 	_t cmix(c);
@@ -356,40 +334,6 @@ t_t void _picture_functions::vertical_line(i64 x, _iinterval y, _color c)
 	_t cmix(c);
 	_color* cс_max = &pixel(x, y.max);
 	for (auto cc = &pixel(x, y.min); cc < cс_max; cc += size.x) cmix.mix(*cc);
-}
-
-void _picture::vertical_line(_ixy p1, i64 p2y, _color c, bool rep)
-{ // *
-	if (!drawing_area.x.test(p1.x)) return;
-	auto interval = (_iinterval(p1.y) << p2y) & drawing_area.y;
-	if (interval.empty()) return;
-	_color* c2 = &pixel(p1.x, interval.min);
-	if (rep || c.a == 0xff)
-	{
-		set_transparent(c);
-		for (i64 i = interval.min; i < interval.max; i++)
-		{
-			*c2 = c;
-			c2 += size.x;
-		}
-		return;
-	}
-	if (transparent)
-	{
-		_color_mixing cc(c);
-		for (i64 i = interval.min; i < interval.max; i++)
-		{
-			cc.mix(*c2);
-			c2 += size.x;
-		}
-		return;
-	}
-	_color_overlay cc(c);
-	for (i64 i = interval.min; i < interval.max; i++)
-	{
-		cc.mix(*c2);
-		c2 += size.x;
-	}
 }
 
 t_t void _picture_functions::line5_x_compact(_ixy p1, _ixy p2, _color c)

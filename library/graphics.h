@@ -100,10 +100,6 @@ struct _picture
 	friend struct _picture_functions;
 
 private:
-
-	void horizontal_line(_ixy p1, i64 p2x, _color c, bool rep = false); // *
-	void vertical_line(_ixy p1, i64 p2y, _color c, bool rep = false); // *
-
 	void set_transparent(const _color c) { transparent |= c.a != 0xff; } // *
 
 	_color& pixel(const i64 x, const i64 y) { return data2[y * size.x + x]; }
