@@ -12,6 +12,7 @@ struct _picture_functions : public _picture
 	t_t void fill_rectangle3(_iarea r, _color c);
 	t_t_b void fill_circle3(_iarea area, _xy p, double r, _color c);
 	t_t_b void ring3(_iarea area, _xy p, double r, double r2, _color c);
+	t_t_b void fill_ring3(_iarea area, _xy p, double r, double r2, _color c, _color c2);
 };
 
 struct _color_substitution
@@ -53,6 +54,16 @@ struct _color_overlay
 		c.g = (c.g * kk + cc.g * k2) >> 8;
 		c.r = (c.r * kk + cc.r * k2) >> 8;
 	}
+
+	static void mixmix2(const _color cc1, const _color cc2, _color& c)
+	{
+		uint k1 = cc1.a;
+		uint k2 = cc2.a;
+		uint kk = 256 - cc1.a - cc2.a;
+		c.b = (c.b * kk + cc1.b * k1 + cc2.b * k2) >> 8;
+		c.g = (c.g * kk + cc1.g * k1 + cc2.g * k2) >> 8;
+		c.r = (c.r * kk + cc1.r * k1 + cc2.r * k2) >> 8;
+	}
 };
 
 struct _color_mixing
@@ -92,6 +103,20 @@ struct _color_mixing
 		c.b = (c.b * k2_ + cc.b * k2) / znam;
 		c.g = (c.g * k2_ + cc.g * k2) / znam;
 		c.r = (c.r * k2_ + cc.r * k2) / znam;
+		c.a = 255 - ((kk_ * kk) >> 8);
+	}
+
+	static void mixmix2(const _color cc1, const _color cc2, _color& c)
+	{
+		uint kk = 256 - cc1.a - cc2.a;
+		uint k1 = uint(cc1.a) * 255;
+		uint k2 = uint(cc2.a) * 255;
+		uint kk_ = 255 - c.a;
+		uint k0 = (uint(c.a) + 1) * kk;
+		uint znam = 65535 - kk * kk_;
+		c.b = (c.b * k0 + cc1.b * k1 + cc2.b * k2) / znam;
+		c.g = (c.g * k0 + cc1.g * k1 + cc2.g * k2) / znam;
+		c.r = (c.r * k0 + cc1.r * k1 + cc2.r * k2) / znam;
 		c.a = 255 - ((kk_ * kk) >> 8);
 	}
 };
@@ -2492,6 +2517,89 @@ void _picture::fill_rectangle(_area r, _color c)
 		c.a = ca * k2 * (r.x.max - a.x.max + 1);
 		if (transparent) c2->mix2(c); else c2->mix(c);
 	}
+}
+
+t_t_b void _picture_functions::fill_ring3(_iarea area, _xy p, double r, double r2, _color c, _color c2)
+{
+	double rrmin = (r - 0.5) * (r - 0.5);
+	double rrmax = (r + 0.5) * (r + 0.5);
+	double drr = rrmax - rrmin;
+	double ddmin = (r2 - 0.5) * (r2 - 0.5);
+	double ddmax = (r2 + 0.5) * (r2 + 0.5);
+	double ddd = ddmax - ddmin;
+	p.x -= 0.5;
+	p.y -= 0.5;
+	double dxdx0 = (area.x.min - p.x) * (area.x.min - p.x);
+	double ab0 = 2 * (area.x.min - p.x) + 1;
+	_t cmix(c);
+	_t cmix2(c2);
+	auto ca = c.a;
+	auto c2a = c2.a;
+	i64 d_start = area.x.min - area.x.max + 1;
+	for (i64 i = area.y.min; i < area.y.max; i++)
+	{
+		double dd = (i - p.y) * (i - p.y) + dxdx0;
+		double ab = ab0;
+		_color* cc = &pixel(area.x.min, i);
+		i64 d_ = d_start;
+		while (d_++ <= 0)
+		{
+			if (dd < rrmax)
+			{
+				if (dd <= ddmin) cmix2.mix(*cc);
+				else if (dd > rrmin)
+				{
+					if (dd >= ddmax)
+					{
+						c.a = ca * (rrmax - dd) / drr;
+						_b::mix2(c, *cc);
+					}
+					else
+					{ // тонкое кольцо
+						double m1 = (ddmax - dd) / ddd;
+						c.a = ca * ((rrmax - dd) / drr - m1);
+						c2.a = c2a * m1;
+						_b::mixmix2(c, c2, *cc);
+					}
+				}
+				else if (dd >= ddmax) cmix.mix(*cc);
+				else
+				{
+					double m1 = (ddmax - dd) / ddd;
+					c.a = ca * (1.0 - m1);
+					c2.a = c2a * m1;
+					_b::mixmix2(c, c2, *cc);
+				}
+			}
+			cc++;
+			dd += ab;
+			ab += 2;
+		}
+	}
+
+}
+
+void _picture::fill_ring2(_xy p, double r, double d, _color c, _color c2)
+{
+	if (r < 0.5) return;
+	if (c.c == c2.c) { fill_circle(p, r, c); return; }
+	if (c2.a == 0) { ring(p, r, d, c); return; }
+	_iarea area(_iinterval(p.x - r, p.x + r), _iinterval(p.y - r, p.y + r));
+	area &= drawing_area;
+	if (area.empty()) return;
+	double r2 = r - d;
+	if (r2 < 0) r2 = 0;
+	if (c.a == 0xff && c2.a == 0xff)
+	{
+		if (transparent)
+			((_picture_functions*)this)->fill_ring3<_color_substitution, _color_mixing>(area, p, r, r2, c, c2);
+		else
+			((_picture_functions*)this)->fill_ring3<_color_substitution, _color_overlay>(area, p, r, r2, c, c2);
+	}
+	else if (transparent)
+		((_picture_functions*)this)->fill_ring3<_color_mixing, _color_mixing>(area, p, r, r2, c, c2);
+	else
+		((_picture_functions*)this)->fill_ring3<_color_overlay, _color_overlay>(area, p, r, r2, c, c2);
 }
 
 void _picture::fill_ring(_xy p, double r, double d, uint c, uint c2)
