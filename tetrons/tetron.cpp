@@ -1,4 +1,5 @@
 ﻿#include "tetron.h"
+#include "froglif.h"
 #include <chrono>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1172,7 +1173,7 @@ bool _g_circle::test_local_area(_xy b)
 void _g_froglif::ris2(_trans tr, bool final)
 {
 	_area a = tr(local_area);
-	master_bm.froglif(a.top_left(), a.min_length(), f, r_f, get_c(), get_c2());
+	froglif(master_bm, a.top_left(), a.min_length(), f, r_f, get_c(), get_c2());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2577,7 +2578,7 @@ void _g_tetron::ris2(_trans tr, bool final)
 			if (cmp_drawn())
 				delete_hvost(star, true, false);
 		int fr = t2->get_froglif();
-		master_bm.froglif(p - _xy{ y / 2, y / 2 }, y, (uchar*)&fr, 2, cc2);
+		froglif(master_bm, p - _xy{ y / 2, y / 2 }, y, (uchar*)&fr, 2, cc2);
 		return;
 	}
 

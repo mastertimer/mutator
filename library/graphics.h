@@ -82,7 +82,6 @@ struct _picture
 	void text16(_ixy p, std::string_view st, uint c, uint bg = 0); // простой текст высотой 16
 	void text16n(i64 x, i64 y, astr s, i64 n, uint c, uint bg = 0); // простой текст высотой 16*n
 	static _isize size_text16(std::string_view s, i64 n = 1); // размер текста *n
-	void froglif(_xy p, double r, uchar* f, int rf, uint c, uint c2 = 0);
 
 	void fill_ring(_xy p, double r, double d, _color c, _color c2);
 	void fill_circle(_xy p, double r, _color c);

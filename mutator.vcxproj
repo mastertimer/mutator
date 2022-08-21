@@ -171,6 +171,7 @@
     <ClCompile Include="library\tests.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mutator.cpp" />
+    <ClCompile Include="tetrons\froglif.cpp" />
     <ClCompile Include="tetrons\tetron.cpp" />
     <ClCompile Include="tetrons\t_function.cpp" />
   </ItemGroup>
@@ -185,6 +186,7 @@
     <ClInclude Include="library\tests.h" />
     <ClInclude Include="mutator.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="tetrons\froglif.h" />
     <ClInclude Include="tetrons\tetron.h" />
     <ClInclude Include="tetrons\t_function.h" />
   </ItemGroup>
