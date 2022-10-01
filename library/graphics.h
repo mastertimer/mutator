@@ -15,6 +15,10 @@ union _color
 		uchar b, g, r, a;
 	};
 
+	bool operator==(const _color color) const { return c == color.c; }
+	bool operator!=(const _color color) const { return c != color.c; }
+	operator uint() const { return c; }
+
 	void mix(const _color c2)
 	{
 		uint kk = 255 - c2.a;
