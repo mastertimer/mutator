@@ -5,8 +5,8 @@
 namespace mutator
 {
 	double get_main_scale();
-	void save_to_txt_file(wstr fn);
-	bool start(wstr fn);
+	void save_to_txt_file(const std::filesystem::path& fn);
+	bool start(const std::filesystem::path& fn);
 	void resize(_isize r);
 	void draw(_isize r);
 

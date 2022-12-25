@@ -115,7 +115,7 @@ _tetron* create_tetron(uchar type)
 
 namespace mutator
 {
-	void save_to_txt_file(wstr fn)
+	void save_to_txt_file(const std::filesystem::path& fn)
 	{
 		_wjson tet(fn);
 		std::map<u64, _tetron*> tt; // чтобы упорядочить тетроны
@@ -152,7 +152,7 @@ namespace mutator
 		}
 	}
 
-	bool load_from_txt_file(wstr fn)
+	bool load_from_txt_file(const std::filesystem::path& fn)
 	{
 		_rjson tet(fn);
 		tet.arr("tetrons");
@@ -217,7 +217,7 @@ namespace mutator
 		master_obl_izm = _area();
 	}
 
-	bool start(wstr fn)
+	bool start(const std::filesystem::path& fn)
 	{
 		master_chosen.push_back(&n_ko);                // !!корневой графический объект (трансформация)
 		master_chosen.push_back(&n_s_shift);           // !!зажата клавиша Shift

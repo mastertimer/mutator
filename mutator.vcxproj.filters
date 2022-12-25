@@ -53,6 +53,9 @@
     <ClCompile Include="..\library\multi_string.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
+    <ClCompile Include="..\library\win_basic.cpp">
+      <Filter>Исходные файлы\library</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mutator.h">
@@ -92,6 +95,9 @@
       <Filter>Исходные файлы\library</Filter>
     </ClInclude>
     <ClInclude Include="..\library\speed.h">
+      <Filter>Исходные файлы\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\library\win_basic.h">
       <Filter>Исходные файлы\library</Filter>
     </ClInclude>
   </ItemGroup>
