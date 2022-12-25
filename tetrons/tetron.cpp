@@ -2120,46 +2120,6 @@ void _g_edit64bit::run(_tetron* tt0, _tetron* tt, u64 flags) { cha_area(); }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void _g_button::RisIco(astr kod, const char* s)
-{
-	picture.resize({ 24, 24 });
-	picture.clear({ 0xFF000000 });
-	for (; *kod; kod++)
-	{
-		if (*kod == 'a')
-		{
-
-		}
-	}
-	if (*s == 0) return;
-	int n = 1;
-	for (astr i = s; *i; i++)
-		if (*i == '\n') n++;
-	int y0 = -5;
-	int dy = 6;
-	if (n == 1)	y0 = 4;
-	if (n == 2)
-	{
-		y0 = -1;
-		dy = 10;
-	}
-	if (n == 3)
-	{
-		y0 = -3;
-		dy = 7;
-	}
-	astr ss = s;
-	i64 y = y0;
-	for (astr i = s; *i; i++)
-		if (*i == '\n')
-		{
-			picture.text16({ 0LL, y }, ss, cc1);
-			y += dy;
-			ss = i + 1;
-		}
-	picture.text16({ 0LL, y }, ss, cc1);
-}
-
 void _g_button::ris2(_trans tr, bool final)
 {
 	_area oo = tr(local_area);

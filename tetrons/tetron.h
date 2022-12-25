@@ -979,8 +979,6 @@ struct _g_button : public _t_go
 	void pop(_stack* mem)            override;
 	void push(_wjson& b)             override;
 	void pop(_rjson& b)              override;
-
-	void RisIco(astr kod, const char* s);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
