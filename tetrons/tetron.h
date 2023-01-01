@@ -5,6 +5,7 @@
 #include "speed.h" 
 #include "hash.h" 
 #include "multi_string.h" 
+#include "win_basic.h" 
 
 #include <map>
 #include <optional>
@@ -19,12 +20,6 @@ constexpr uint cc3 = 0xFFA0FFC0; // цвет 3
 constexpr uint cc4 = 0xFF104020; // цвет 4
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-enum class _cursor { normal, size_all, hand_point, size_we, size_ns, drag, vcursor }; // виды курсора
-
-inline _cursor g_cursor = _cursor::normal; // установленный курсор
-
-void set_cursor(_cursor x);
 
 void os_pordis(double min, double max, i64 maxN, double& mi, double& step, double min_step = 0.0);
 
