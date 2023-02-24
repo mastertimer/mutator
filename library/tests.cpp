@@ -12,8 +12,8 @@ namespace
 		_area area;
 		bool rep = false;
 		bool inv = false;
-		_color c = { 0 };
-		_color c2 = { 0 };
+		_color c = 0;
+		_color c2 = 0;
 		double d = 1;
 	};
 
@@ -135,7 +135,7 @@ namespace
 
 	void draw_figure_0(_picture& picture, const _coordinates& coo)
 	{
-		picture.fill_rectangle(coo.iarea, {0}); // минимальная функция
+		picture.fill_rectangle(coo.iarea, 0); // минимальная функция
 	}
 
 	void draw_figure_old(_picture& picture, const _coordinates& coo)
@@ -165,7 +165,7 @@ bool test_graph_climbing_out_of_bounds()
 	constexpr i64 max_size = 200;
 	_isize picture_size[2] = { {max_size, i64(max_size * 0.7)}, {i64(max_size * 0.7), max_size} };
 	_ixy delta[2] = { {15, 20}, {15, 20} };
-	_color color[2] = { {0}, {0xFF000000} };
+	_color color[2] = { 0, 0xFF000000 };
 	for (auto i = 0; i < 2; i++)
 	{
 		_picture picture(picture_size[i]);
@@ -202,7 +202,7 @@ bool test_graph_matching(bool with_transparent, bool with_rep)
 	constexpr int number_of_graphic_elements = 1000;
 	_picture picture_old({ max_size , max_size });
 	_picture picture_new({ max_size , max_size });
-	_color color[2] = { {0}, {0xFF000000} };
+	_color color[2] = { 0, 0xFF000000 };
 	for (auto i = (with_transparent) ? 0 : 1; i < 2; i++)
 	{
 		picture_old.clear(color[i]);
@@ -232,7 +232,7 @@ bool test_graph_matching(bool with_transparent, bool with_rep)
 std::pair<i64, i64> test_graph_speed(i64 n, bool transparent, bool rep, bool vertical, bool gorisontal)
 {
 	_picture picture({ 1920 , 1080 });
-	picture.clear(transparent ? _color{0} : _color{0xFF000000});
+	picture.clear(transparent ? 0 : 0xFF000000);
 	rnd.init(0);
 	auto t_start = std::chrono::high_resolution_clock::now();
 	for (i64 i = 0; i < n; i++)
@@ -241,7 +241,7 @@ std::pair<i64, i64> test_graph_speed(i64 n, bool transparent, bool rep, bool ver
 		draw_figure_0(picture, coo);
 	}
 	auto t0 = std::chrono::high_resolution_clock::now() - t_start;
-	picture.clear(transparent ? _color{ 0 } : _color{ 0xFF000000 });
+	picture.clear(transparent ? 0 : 0xFF000000);
 	rnd.init(0);
 	t_start = std::chrono::high_resolution_clock::now();
 	for (i64 i = 0; i < n; i++)
@@ -250,7 +250,7 @@ std::pair<i64, i64> test_graph_speed(i64 n, bool transparent, bool rep, bool ver
 		draw_figure_old(picture, coo);
 	}
 	auto t1 = std::chrono::high_resolution_clock::now() - t_start;
-	picture.clear(transparent ? _color{ 0 } : _color{ 0xFF000000 });
+	picture.clear(transparent ? 0 : 0xFF000000);
 	rnd.init(0);
 	t_start = std::chrono::high_resolution_clock::now();
 	for (i64 i = 0; i < n; i++)

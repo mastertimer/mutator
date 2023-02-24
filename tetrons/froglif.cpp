@@ -48,7 +48,7 @@ void _froglif_function::froglif(_xy p, double r, uchar* f, int rf, uint c, uint 
 	if (x2 >= drawing_area.x.max) x2 = drawing_area.x.max - 1;
 	if (y2 >= drawing_area.y.max) y2 = drawing_area.y.max - 1;
 	if ((x2 < x1) || (y2 < y1)) return;
-	fill_rectangle(_iarea{ {x1 - 1, x2 + 2}, {y1 - 1, y2 + 2} }, { c2 });
+	fill_rectangle(_iarea{ {x1 - 1, x2 + 2}, {y1 - 1, y2 + 2} }, c2);
 
 	double aa = 1.0625;    // минимальная толщина линии
 	double bb = 1.0625;    // минимальное пустое место
