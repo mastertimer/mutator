@@ -10,11 +10,11 @@ namespace
 	{
 		_iarea iarea;
 		_area area;
-		bool rep;
-		bool inv;
-		_color c;
-		_color c2;
-		double d;
+		bool rep = false;
+		bool inv = false;
+		_color c = { 0 };
+		_color c2 = { 0 };
+		double d = 1;
 	};
 
 	_coordinates generate_coordinates(const _picture& picture, bool with_rep)
@@ -149,9 +149,9 @@ namespace
 	void draw_figure_new(_picture& picture, const _coordinates& coo)
 	{
 		if (coo.inv)
-			picture.line4(coo.iarea.top_right(), coo.iarea.bottom_left(), coo.c, coo.rep);
+			picture.line(coo.iarea.top_right(), coo.iarea.bottom_left(), coo.c, coo.rep);
 		else
-			picture.line4(coo.iarea.top_left(), coo.iarea.bottom_right(), coo.c, coo.rep);
+			picture.line(coo.iarea.top_left(), coo.iarea.bottom_right(), coo.c, coo.rep);
 	}
 
 }

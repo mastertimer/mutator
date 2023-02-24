@@ -668,7 +668,7 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 	else
 		show_message("ОШИБКА - картинки не совпадают!!");*/
 //                                        trans  rep    vert   gor
-	auto time = test_graph_speed(1000000, false, true, false, false);
+	auto time = test_graph_speed(1000000, false, false, false, false);
 	show_message("время старое", time.first);
 	show_message("время новое", time.second);
 }
@@ -771,7 +771,7 @@ void fun48(_tetron* tt0, _tetron* tt, u64 flags)
 	if (g == nullptr) return;
 	_xy r1 = master_trans_go.inverse(mouse_xy_pr);
 	_xy r2 = master_trans_go.inverse(mouse_xy);
-	g->pic.line(r1, r2, (*n_s_shift->operator i64 * ()) ? 0 : cc1, true);
+	g->pic.line(r1, r2, { (*n_s_shift->operator i64 * ()) ? 0 : cc1 }, true);
 	g->cha_area();
 }
 
