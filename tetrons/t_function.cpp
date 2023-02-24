@@ -662,15 +662,15 @@ void show_message(std::string_view s)
 
 void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 {
-//	if (!test_graph_climbing_out_of_bounds()) show_message("ОШИБКА - выход за границу!!");
+	if (!test_graph_climbing_out_of_bounds()) show_message("ОШИБКА - выход за границу!!");
 /*	if (test_graph_matching(false, true))
 		show_message("результат одинаковый))");
 	else
 		show_message("ОШИБКА - картинки не совпадают!!");*/
 //                                        trans  rep    vert   gor
-	auto time = test_graph_speed(1000, false, false, false, false);
-	show_message("время1", time.first);
-	show_message("время2", time.second);
+	//auto time = test_graph_speed(1000, false, false, false, false);
+	//show_message("время1", time.first);
+	//show_message("время2", time.second);
 }
 
 void fun34(_tetron* tt0, _tetron* tt, u64 flags)

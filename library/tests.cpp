@@ -11,6 +11,7 @@ namespace
 		_iarea iarea;
 		_area area;
 		bool rep;
+		bool inv;
 		_color c;
 		_color c2;
 		double d;
@@ -44,6 +45,7 @@ namespace
 		}
 		result.d = rnd(70) / 10.0;
 		result.rep = (rnd(3) == 1) && with_rep;
+		result.inv = rnd(2);
 		result.c.c = rnd();
 		result.c2.c = rnd();
 		if (result.rep)
@@ -135,12 +137,18 @@ namespace
 
 	void draw_figure_old(_picture& picture, const _coordinates& coo)
 	{
-		picture.fill_ring(coo.area.center(), coo.area.min_length() * 0.5, coo.d, coo.c, coo.c2);
+		if (coo.inv)
+			picture.line(coo.iarea.top_right(), coo.iarea.bottom_left(), coo.c, coo.rep);
+		else
+			picture.line(coo.iarea.top_left(), coo.iarea.bottom_right(), coo.c, coo.rep);
 	}
 
 	void draw_figure_new(_picture& picture, const _coordinates& coo)
 	{
-		picture.fill_ring(coo.area.center(), coo.area.min_length() * 0.5, coo.d, coo.c, coo.c2);
+		if (coo.inv)
+			picture.line4(coo.iarea.top_right(), coo.iarea.bottom_left(), coo.c, coo.rep);
+		else
+			picture.line4(coo.iarea.top_left(), coo.iarea.bottom_right(), coo.c, coo.rep);
 	}
 
 }
@@ -165,14 +173,18 @@ bool test_graph_climbing_out_of_bounds()
 				picture.set_drawing_area(_iarea({ delta[k].x, picture.size.x - delta[k].x }, { delta[k].y, picture.size.y - delta[k].y }));
 				for (auto m = 0; m < number_of_graphic_elements; m++)
 				{
-					draw_figure_new(picture, generate_coordinates(picture, true));
+					draw_figure_new(picture, generate_coordinates(picture, j == 0));
 				}
 				if (save1file)
 				{
 					save1file = false;
 					picture.save_to_file(L"e:\\cob_tests.bmp");
 				}
-				if (!test_climbing_out_of_bounds(picture, color[j])) return false;
+				if (!test_climbing_out_of_bounds(picture, color[j]))
+				{
+					picture.save_to_file(L"e:\\out_of_bounds.bmp");
+					return false;
+				}
 			}
 		}
 	}
@@ -195,11 +207,11 @@ bool test_graph_matching(bool with_transparent, bool with_rep)
 			auto coo = generate_coordinates(picture_old, with_rep);
 			draw_figure_old(picture_old, coo);
 			draw_figure_new(picture_new, coo);
-			if (i == 1 && m == 477)
+/*			if (i == 1 && m == 477)
 			{
 				picture_old.save_to_file(L"e:\\picture_old.bmp");
 				picture_new.save_to_file(L"e:\\picture_new.bmp");
-			}
+			}*/
 			auto delta = max_delta(picture_old, picture_new);
 			if (delta == 0) continue;
 			if (delta > 2)
