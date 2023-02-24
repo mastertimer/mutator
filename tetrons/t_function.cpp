@@ -667,8 +667,8 @@ void fun33(_tetron* tt0, _tetron* tt, u64 flags)
 		show_message("результат одинаковый))");
 	else
 		show_message("ОШИБКА - картинки не совпадают!!");*/
-//                                        trans  rep    vert   gor
-	auto time = test_graph_speed(1000000, false, false, false, false);
+//                                     trans  rep    vert   gor
+	auto time = test_graph_speed(1000000, false, true, false, true);
 	show_message("время старое", time.first);
 	show_message("время новое", time.second);
 }

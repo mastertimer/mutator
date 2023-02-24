@@ -140,6 +140,7 @@ namespace
 
 	void draw_figure_old(_picture& picture, const _coordinates& coo)
 	{
+//		picture.fill_rectangle(coo.iarea, coo.c, coo.rep);
 		if (coo.inv)
 			picture.line(coo.iarea.top_right(), coo.iarea.bottom_left(), coo.c, coo.rep);
 		else
@@ -148,6 +149,7 @@ namespace
 
 	void draw_figure_new(_picture& picture, const _coordinates& coo)
 	{
+//		picture.fill_rectangle(coo.iarea, coo.c, coo.rep);
 		if (coo.inv)
 			picture.line(coo.iarea.top_right(), coo.iarea.bottom_left(), coo.c, coo.rep);
 		else
