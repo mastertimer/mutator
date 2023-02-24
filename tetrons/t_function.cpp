@@ -760,7 +760,7 @@ void fun47(_tetron* tt0, _tetron* tt, u64 flags)
 	_g_picture* g = tt->find1<_g_picture>(flag_information);
 	i64* c = tt->find1<i64>(flag_information);
 	if ((c == nullptr) || (g == nullptr)) return;
-	g->pic.clear({ (uint)(*c) });
+	g->pic.clear((uint)(*c));
 	g->cha_area();
 }
 

@@ -48,8 +48,8 @@ namespace
 		result.d = rnd(70) / 10.0;
 		result.rep = (rnd(3) == 1) && with_rep;
 		result.inv = rnd(2);
-		result.c.c = rnd();
-		result.c2.c = rnd();
+		result.c = rnd();
+		result.c2 = rnd();
 		if (result.rep)
 		{
 			result.c.a = 255;
@@ -89,8 +89,8 @@ namespace
 		result.d = rnd(70) / 10.0;
 		result.rep = rep;
 		result.inv = rnd(2);
-		result.c.c = rnd();
-		result.c2.c = rnd();
+		result.c = rnd();
+		result.c2 = rnd();
 		if (result.rep)
 		{
 			result.c.a = 255;
