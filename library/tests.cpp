@@ -117,23 +117,17 @@ namespace
 	{
 		if (picture1.size != picture2.size) return 255;
 		uchar res = 0;
-//		for (i64 y = 0; y < picture1.size.y; y++)
-		for (i64 y = 1; y < picture1.size.y-1; y++)
+		for (i64 y = 0; y < picture1.size.y; y++)
 		{
 			auto sl1 = picture1.scan_line(y);
 			auto sl2 = picture2.scan_line(y);
-//			for (i64 x = 0; x < picture1.size.x; x++)
-			for (i64 x = 1; x < picture1.size.x-1; x++)
+			for (i64 x = 0; x < picture1.size.x; x++)
 			{
 				uchar da = (sl1[x].a >= sl2[x].a) ? sl1[x].a - sl2[x].a : sl2[x].a - sl1[x].a;
 				uchar dr = (sl1[x].r >= sl2[x].r) ? sl1[x].r - sl2[x].r : sl2[x].r - sl1[x].r;
 				uchar dg = (sl1[x].g >= sl2[x].g) ? sl1[x].g - sl2[x].g : sl2[x].g - sl1[x].g;
 				uchar db = (sl1[x].b >= sl2[x].b) ? sl1[x].b - sl2[x].b : sl2[x].b - sl1[x].b;
 				res = std::max({ da, dr, dg, db, res });
-				if (res > 2)
-				{
-					return res;
-				}
 			}
 		}
 		return res;
@@ -216,11 +210,11 @@ bool test_graph_matching(bool with_transparent, bool with_rep)
 			auto coo = generate_coordinates(picture_old, with_rep);
 			draw_figure_old(picture_old, coo);
 			draw_figure_new(picture_new, coo);
-			if (i == 1 && m == 11)
+/*			if (i == 1 && m == 11)
 			{
 				picture_old.save_to_file(L"e:\\picture_old.bmp");
 				picture_new.save_to_file(L"e:\\picture_new.bmp");
-			}
+			}*/
 			auto delta = max_delta(picture_old, picture_new);
 			if (delta == 0) continue;
 			if (delta > 2)
