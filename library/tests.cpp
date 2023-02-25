@@ -171,7 +171,7 @@ bool test_graph_climbing_out_of_bounds()
 		_picture picture(picture_size[i]);
 		for (auto j = 0; j < 2; j++)
 		{
-			picture.reset_drawing_area();
+			picture.set_drawing_area(picture.size);
 			picture.clear(color[j]);
 			for (auto k = 0; k < 2; k++)
 			{
