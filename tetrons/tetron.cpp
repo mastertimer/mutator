@@ -354,8 +354,7 @@ _frozen::_frozen(_tetron* t, u64 flags_) : tetron(t), i(0), tetron2(nullptr), fl
 
 void add_obl_izm(_area a)
 {
-	if (a.empty()) return;
-	if ((a.x.max < 0) || (a.x.min > master_bm.size.x) || (a.y.max < 0) || (a.y.min > master_bm.size.y)) return;
+	if ((a & master_bm.get_size()).empty()) return;
 	master_obl_izm |= a;
 }
 
@@ -1197,7 +1196,7 @@ void _g_line::pop(_rjson& b)
 
 void _g_picture::ris2(_trans tr, bool final)
 {
-	if (pic.size.x * pic.size.y == 0)
+	if (pic.get_size().empty())
 	{
 		int rr = 100;
 		master_bm.line({ tr.offset.x, tr.offset.y }, { tr.offset.x + rr * tr.scale, tr.offset.y }, cc1);
@@ -1220,7 +1219,7 @@ void _g_picture::new_size(_isize ns)
 {
 	if (!pic.resize(ns)) return;
 	del_area();
-	local_area = pic.size;
+	local_area = pic.get_size();
 	area.reset();
 	add_area();
 }
@@ -1229,7 +1228,7 @@ void _g_picture::set_pic(const _picture& pic2)
 {
 	(_picture)pic = pic2;
 	del_area();
-	local_area = pic.size;
+	local_area = pic.get_size();
 	area.reset();
 	add_area();
 }
@@ -1238,7 +1237,7 @@ bool _g_picture::load_from_file(const std::filesystem::path& fn)
 {
 	if (!pic.load_from_file(fn)) return false;
 	del_area();
-	local_area = pic.size;
+	local_area = pic.get_size();
 	area.reset();
 	add_area();
 	return true;
@@ -2085,10 +2084,10 @@ void _g_button::ris2(_trans tr, bool final)
 {
 	_area oo = tr(local_area);
 	uint c = 0;
-	if (picture.size.x * picture.size.y > 0)
+	if (!picture.get_size().empty())
 	{
-		i64 rx2 = (i64)(picture.size.x * tr.scale + 0.5);
-		i64 ry2 = (i64)(picture.size.y * tr.scale + 0.5);
+		i64 rx2 = (i64)(picture.get_size().x * tr.scale + 0.5);
+		i64 ry2 = (i64)(picture.get_size().y * tr.scale + 0.5);
 		_ixy ce = oo.center();
 		master_bm.stretch_draw(&picture, ce.x - rx2 / 2, ce.y - ry2 / 2, tr.scale);
 	}

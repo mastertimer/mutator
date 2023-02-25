@@ -20,7 +20,7 @@ namespace
 	_coordinates generate_coordinates(const _picture& picture, bool with_rep)
 	{
 		_coordinates result;
-		auto ss = std::max(picture.size.x, picture.size.y);
+		auto ss = std::max(picture.get_size().x, picture.get_size().y);
 		i64 k1 = rnd(ss * 2) - ss / 2;
 		i64 k2 = rnd(ss * 2) - ss / 2;
 		i64 k3 = rnd(ss * 2) - ss / 2;
@@ -61,7 +61,7 @@ namespace
 	_coordinates generate_coordinates(const _picture& picture, bool rep, bool vertical, bool gorisontal)
 	{
 		_coordinates result;
-		auto ss = std::max(picture.size.x, picture.size.y);
+		auto ss = std::max(picture.get_size().x, picture.get_size().y);
 		i64 k1 = rnd(ss * 2) - ss / 2;
 		i64 k2 = rnd(ss * 2) - ss / 2;
 		i64 k3 = rnd(ss * 2) - ss / 2;
@@ -101,10 +101,11 @@ namespace
 
 	bool test_climbing_out_of_bounds(const _picture& picture, _color c, _iarea& da)
 	{
-		for (i64 y = 0; y < picture.size.y; y++)
+		auto size = picture.get_size();
+		for (i64 y = 0; y < size.y; y++)
 		{
 			auto sl = picture.scan_line(y);
-			for (i64 x = 0; x < picture.size.x; x++)
+			for (i64 x = 0; x < size.x; x++)
 			{
 				if (da.test({ x,y })) continue;
 				if (sl[x].c != c.c) return false;
@@ -115,13 +116,14 @@ namespace
 
 	uchar max_delta(const _picture& picture1, const _picture& picture2)
 	{
-		if (picture1.size != picture2.size) return 255;
+		auto size = picture1.get_size();
+		if (size != picture2.get_size()) return 255;
 		uchar res = 0;
-		for (i64 y = 0; y < picture1.size.y; y++)
+		for (i64 y = 0; y < size.y; y++)
 		{
 			auto sl1 = picture1.scan_line(y);
 			auto sl2 = picture2.scan_line(y);
-			for (i64 x = 0; x < picture1.size.x; x++)
+			for (i64 x = 0; x < size.x; x++)
 			{
 				uchar da = (sl1[x].a >= sl2[x].a) ? sl1[x].a - sl2[x].a : sl2[x].a - sl1[x].a;
 				uchar dr = (sl1[x].r >= sl2[x].r) ? sl1[x].r - sl2[x].r : sl2[x].r - sl1[x].r;
@@ -171,11 +173,11 @@ bool test_graph_climbing_out_of_bounds()
 		_picture picture(picture_size[i]);
 		for (auto j = 0; j < 2; j++)
 		{
-			picture.set_drawing_area(picture.size);
+			picture.set_drawing_area(picture.get_size());
 			picture.clear(color[j]);
 			for (auto k = 0; k < 2; k++)
 			{
-				auto da = _iarea({ delta[k].x, picture.size.x - delta[k].x }, { delta[k].y, picture.size.y - delta[k].y });
+				auto da = _iarea({ delta[k].x, picture.get_size().x - delta[k].x }, { delta[k].y, picture.get_size().y - delta[k].y });
 				picture.set_drawing_area(da);
 				for (auto m = 0; m < number_of_graphic_elements; m++)
 				{
