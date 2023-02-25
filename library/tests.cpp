@@ -99,14 +99,14 @@ namespace
 		return result;
 	}
 
-	bool test_climbing_out_of_bounds(const _picture& picture, _color c)
+	bool test_climbing_out_of_bounds(const _picture& picture, _color c, _iarea& da)
 	{
 		for (i64 y = 0; y < picture.size.y; y++)
 		{
 			auto sl = picture.scan_line(y);
 			for (i64 x = 0; x < picture.size.x; x++)
 			{
-				if (picture.drawing_area.test({ x,y })) continue;
+				if (da.test({ x,y })) continue;
 				if (sl[x].c != c.c) return false;
 			}
 		}
@@ -175,7 +175,8 @@ bool test_graph_climbing_out_of_bounds()
 			picture.clear(color[j]);
 			for (auto k = 0; k < 2; k++)
 			{
-				picture.set_drawing_area(_iarea({ delta[k].x, picture.size.x - delta[k].x }, { delta[k].y, picture.size.y - delta[k].y }));
+				auto da = _iarea({ delta[k].x, picture.size.x - delta[k].x }, { delta[k].y, picture.size.y - delta[k].y });
+				picture.set_drawing_area(da);
 				for (auto m = 0; m < number_of_graphic_elements; m++)
 				{
 					draw_figure_new(picture, generate_coordinates(picture, j == 0));
@@ -185,7 +186,7 @@ bool test_graph_climbing_out_of_bounds()
 					save1file = false;
 					picture.save_to_file(L"e:\\cob_tests.bmp");
 				}
-				if (!test_climbing_out_of_bounds(picture, color[j]))
+				if (!test_climbing_out_of_bounds(picture, color[j], da))
 				{
 					picture.save_to_file(L"e:\\out_of_bounds.bmp");
 					return false;
