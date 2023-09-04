@@ -143,19 +143,19 @@ namespace
 	void draw_figure_old(_picture& picture, const _coordinates& coo)
 	{
 //		picture.fill_rectangle(coo.iarea, coo.c, coo.rep);
-		if (coo.inv)
-			picture.line(coo.iarea.top_right(), coo.iarea.bottom_left(), coo.c, coo.rep);
-		else
-			picture.line(coo.iarea.top_left(), coo.iarea.bottom_right(), coo.c, coo.rep);
+		//if (coo.inv)
+		//	picture.line(coo.iarea.top_right(), coo.iarea.bottom_left(), coo.c, coo.rep);
+		//else
+		//	picture.line(coo.iarea.top_left(), coo.iarea.bottom_right(), coo.c, coo.rep);
 	}
 
 	void draw_figure_new(_picture& picture, const _coordinates& coo)
 	{
 //		picture.fill_rectangle(coo.iarea, coo.c, coo.rep);
-		if (coo.inv)
-			picture.line(coo.iarea.top_right(), coo.iarea.bottom_left(), coo.c, coo.rep);
-		else
-			picture.line(coo.iarea.top_left(), coo.iarea.bottom_right(), coo.c, coo.rep);
+		//if (coo.inv)
+		//	picture.line(coo.iarea.top_right(), coo.iarea.bottom_left(), coo.c, coo.rep);
+		//else
+		//	picture.line(coo.iarea.top_left(), coo.iarea.bottom_right(), coo.c, coo.rep);
 	}
 
 }
