@@ -1160,7 +1160,7 @@ void _g_line::calc_local_area()
 
 void _g_line::ris2(_trans tr, bool final)
 {
-	master_bm.lines(tr(p1), tr(p2), tr(width), get_c());
+	master_bm.line(tr(p1), tr(p2), get_c(), tr(width));
 }
 
 bool _g_line::test_local_area(_xy b)
@@ -2667,14 +2667,14 @@ void _g_link::ris2(_trans tr, bool final)
 		{
 			auto beg = pp11 + (pp12 - pp11) * ((i + 0.5) / (v_link * 2)) + v * dl;
 			auto end = pp21 + (pp22 - pp21) * ((i + 0.5) / (v_link * 2)) - v * dl2;
-			master_bm.lines(beg, end, t, c);
+			master_bm.line(beg, end, c, t);
 
 			auto dist = beg - end;
 			if (dist.len() >= 8)
 			{
 				dist = dist * (1 / dist.len()) * 7;
-				master_bm.lines(end, end + dist.rotation(0.26), t, c);
-				master_bm.lines(end, end + dist.rotation(-0.26), t, c);
+				master_bm.line(end, end + dist.rotation(0.26), c, t);
+				master_bm.line(end, end + dist.rotation(-0.26), c, t);
 			}
 		}
 		c = (f & (1ULL << (i + 32))) ? color_set[i] : cclow(color_set[i]);
@@ -2688,14 +2688,14 @@ void _g_link::ris2(_trans tr, bool final)
 		{
 			auto beg = pp11 + (pp12 - pp11) * ((v_link * 2 - 0.5 - i) / (v_link * 2)) + v * dl;
 			auto end = pp21 + (pp22 - pp21) * ((v_link * 2 - 0.5 - i) / (v_link * 2)) - v * dl2;
-			master_bm.lines(beg, end, t, c);
+			master_bm.line(beg, end, c, t);
 
 			auto dist = end - beg;
 			if (dist.len() >= 8)
 			{
 				dist = dist * (1 / dist.len()) * 7;
-				master_bm.lines(beg, beg + dist.rotation(0.26), t, c);
-				master_bm.lines(beg, beg + dist.rotation(-0.26), t, c);
+				master_bm.line(beg, beg + dist.rotation(0.26), c, t);
+				master_bm.line(beg, beg + dist.rotation(-0.26), c, t);
 			}
 		}
 	}
