@@ -8,6 +8,7 @@
 #include "win_basic.h" 
 
 #include <map>
+#include <unordered_map>
 #include <optional>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -62,7 +63,7 @@ struct _g_list_link;
 struct _g_button;
 struct _g_circle;
 
-inline _hash_map<u64, _tetron*> all_tetron;
+inline std::unordered_map<u64, _tetron*> all_tetron;
 
 template <typename _t>
 struct _pair_t
@@ -169,9 +170,9 @@ struct _id
 	void operator = (_id b)                      { id = b.id; };
 	void operator = (_tetron* b)                 { id = (b) ? b->id : 0; };
 
-	operator _tetron* ()          const noexcept { return *all_tetron.find(id); }
-	_tetron* operator->()         const noexcept { return *all_tetron.find(id); }
-	operator bool()               const noexcept { return  all_tetron.find(id); }
+	operator _tetron* ()          const noexcept { auto it = all_tetron.find(id); return (it == all_tetron.end()) ? nullptr : it->second; }
+	_tetron* operator->()         const noexcept { auto it = all_tetron.find(id); return (it == all_tetron.end()) ? nullptr : it->second;; }
+	operator bool()               const noexcept { return all_tetron.find(id) != all_tetron.end(); }
 
 	bool operator != (_tetron* b) const noexcept { return (b) ? (id != b->id) : (id != 0); }
 	bool operator != (_id b)      const noexcept { return id != b.id; }

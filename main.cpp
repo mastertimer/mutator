@@ -12,7 +12,7 @@ void change_window_text(HWND hwnd)
 {
 	static std::wstring s_old;
 	wchar_t s[100];
-	swprintf(s, 100, L"%d  %4.1e", all_tetron.size, mutator::get_main_scale());
+	swprintf(s, 100, L"%d  %4.1e", uint(all_tetron.size()), mutator::get_main_scale());
 	if (s_old == s) return;
 	s_old = s;
 	SetWindowText(hwnd, s);

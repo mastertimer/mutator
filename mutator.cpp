@@ -119,7 +119,7 @@ namespace mutator
 	{
 		_wjson tet(fn);
 		std::map<u64, _tetron*> tt; // чтобы упорядочить тетроны
-		for (auto i : all_tetron) tt[i->id] = i;
+		for (auto& i : all_tetron) tt[i.first] = i.second;
 		tet.arr("tetrons");
 		for (auto i : tt)
 		{

@@ -29,7 +29,8 @@ uint hash_func(const _pair_tetron& a)
 
 _tetron::_tetron()
 {
-	all_tetron.insert(id = id_tetron++, this);
+	id = id_tetron++;
+	all_tetron[id] = this;
 }
 
 void _tetron::find_all_intermediate(_tetron* t, u64 flags_before, u64 flags_after, _vector_id& res)
