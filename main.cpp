@@ -12,7 +12,7 @@ void change_window_text(HWND hwnd)
 {
 	static std::wstring s_old;
 	wchar_t s[100];
-	swprintf(s, 100, L"%d  %4.1e", uint(all_tetron.size()), mutator::get_main_scale());
+	swprintf(s, 100, L"%d  %4.1e", uint(all_tetron.size()), _mutator::get_main_scale());
 	if (s_old == s) return;
 	s_old = s;
 	SetWindowText(hwnd, s);
@@ -24,7 +24,7 @@ void paint(HWND hwnd)
 	HDC hdc = GetDC(hwnd);
 	RECT rect;
 	GetClientRect(hwnd, &rect);
-	mutator::draw({ rect.right, rect.bottom });
+	_mutator::draw({ rect.right, rect.bottom });
 	BitBlt(hdc, 0, 0, rect.right, rect.bottom, master_bm.hdc, 0, 0, SRCCOPY);
 	ReleaseDC(hwnd, hdc);
 }
@@ -94,16 +94,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_LBUTTONDOWN: case WM_RBUTTONDOWN: case WM_MBUTTONDOWN:
 		init_shift(wParam);
-		if (message == WM_LBUTTONDOWN) mutator::mouse_button_left(true);
-		if (message == WM_RBUTTONDOWN) mutator::mouse_button_right(true);
-		if (message == WM_MBUTTONDOWN) mutator::mouse_button_middle(true);
+		if (message == WM_LBUTTONDOWN) _mutator::mouse_button_left(true);
+		if (message == WM_RBUTTONDOWN) _mutator::mouse_button_right(true);
+		if (message == WM_MBUTTONDOWN) _mutator::mouse_button_middle(true);
 		if (!master_obl_izm.empty()) paint(hWnd);
 		return 0;
 	case WM_LBUTTONUP: case WM_RBUTTONUP: case WM_MBUTTONUP:
 		init_shift(wParam);
-		if (message == WM_LBUTTONUP) mutator::mouse_button_left(false);
-		if (message == WM_RBUTTONUP) mutator::mouse_button_right(false);
-		if (message == WM_MBUTTONUP) mutator::mouse_button_middle(false);
+		if (message == WM_LBUTTONUP) _mutator::mouse_button_left(false);
+		if (message == WM_RBUTTONUP) _mutator::mouse_button_right(false);
+		if (message == WM_MBUTTONUP) _mutator::mouse_button_middle(false);
 		if (!master_obl_izm.empty()) paint(hWnd);
 		return 0;
 	case WM_LBUTTONDBLCLK: case WM_RBUTTONDBLCLK: case WM_MBUTTONDBLCLK:
@@ -137,7 +137,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 				run_timer = false;
 				int r = MessageBox(hWnd, L"сохранить?", L"предупреждение", MB_YESNO);
-				if (r == IDYES) mutator::save_to_txt_file(exe_path / tetfile);
+				if (r == IDYES) _mutator::save_to_txt_file(exe_path / tetfile);
 				run_timer = true;
 			}
 			break;
@@ -170,7 +170,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 	}
 	case WM_SIZE:
-		mutator::resize({ LOWORD(lParam), HIWORD(lParam) });
+		_mutator::resize({ LOWORD(lParam), HIWORD(lParam) });
 		return 0;
 	case WM_TIMER:
 		if (!run_timer) return 0;
@@ -202,7 +202,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 	exe_path = get_exe_path(hInstance);
-	if (!mutator::start(exe_path / tetfile)) return 1;
+	if (!_mutator::start(exe_path / tetfile)) return 1;
 
 	static TCHAR szWindowClass[] = L"win64app";
 	WNDCLASSEX wcex;

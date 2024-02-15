@@ -22,7 +22,6 @@ constexpr uint cc4 = 0xFF104020; // цвет 4
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-inline u64 id_tetron = 1; // глобальный счетчик id тетронов
 inline bool run_before_del_link = true; // вызывать ли спец функции перед удалением связи
 inline _area master_obl_izm; // область изменений
 
@@ -156,6 +155,9 @@ struct _tetron
 	virtual operator _t_basic_go   * () { return nullptr; }
 
 private:
+	friend struct _mutator;
+	static inline u64 id_tetron = 1; // глобальный счетчик id тетронов
+
 	typedef void (*func_fl)(u64&, u64);
 	void set2_flags(_tetron* t, u64 flags, func_fl trans, bool after); // изменяет флаги, может или создать или удалить связь
 };

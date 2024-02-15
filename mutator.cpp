@@ -36,7 +36,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_tetron* create_tetron(const std::string& name)
+_tetron* _mutator::create_tetron(const std::string& name)
 {
 #define make(name) {""#name, []() -> _tetron* { return new name; }}
 	static std::map<std::string, std::function<_tetron* ()>> ss_tetron =
@@ -113,190 +113,186 @@ _tetron* create_tetron(uchar type)
 	return nullptr;
 }
 
-namespace mutator
+void _mutator::save_to_txt_file(const std::filesystem::path& fn)
 {
-	void save_to_txt_file(const std::filesystem::path& fn)
+	_wjson tet(fn);
+	std::map<u64, _tetron*> tt; // чтобы упорядочить тетроны
+	for (auto& i : all_tetron) tt[i.first] = i.second;
+	tet.arr("tetrons");
+	for (auto i : tt)
 	{
-		_wjson tet(fn);
-		std::map<u64, _tetron*> tt; // чтобы упорядочить тетроны
-		for (auto& i : all_tetron) tt[i.first] = i.second;
-		tet.arr("tetrons");
-		for (auto i : tt)
-		{
-			_tetron* t = i.second;
-			tet.str().add("name", t->name()).add("id", i.first);
-			t->push(tet);
-			tet.arr("links");
-			std::map<u64, _link*> li;
-			for (auto j : t->link) li[(*j)(t)->id] = j;
-			for (auto j : li) tet.str("", true).add("id", (*j.second)(t)->id).add_hex("flags", j.second->get_flags(t)).end();
-			tet.end().end();
-		}
-		tet.end().arr("chosen");
-		for (auto i : master_chosen) tet.add(i->id);
-		tet.end().add("id_tetron", id_tetron);
+		_tetron* t = i.second;
+		tet.str().add("name", t->name()).add("id", i.first);
+		t->push(tet);
+		tet.arr("links");
+		std::map<u64, _link*> li;
+		for (auto j : t->link) li[(*j)(t)->id] = j;
+		for (auto j : li) tet.str("", true).add("id", (*j.second)(t)->id).add_hex("flags", j.second->get_flags(t)).end();
+		tet.end().end();
 	}
+	tet.end().arr("chosen");
+	for (auto i : master_chosen) tet.add(i->id);
+	tet.end().add("id_tetron", _tetron::id_tetron);
+}
 
-	void init_layers()
+void _mutator::init_layers()
+{
+	master_layers.clear();
+	if (!n_go_layer) return;
+	for (auto i : n_go_layer->link)
 	{
-		master_layers.clear();
-		if (!n_go_layer) return;
-		for (auto i : n_go_layer->link)
-		{
-			_tetron* a = (*i)(n_go_layer);
-			if (!i->test_flags(a, flag_parent)) continue;
-			_t_double* b = *a;
-			if (b == nullptr) continue;
-			double n = b->a;
-			master_layers[n] = b;
-		}
+		_tetron* a = (*i)(n_go_layer);
+		if (!i->test_flags(a, flag_parent)) continue;
+		_t_double* b = *a;
+		if (b == nullptr) continue;
+		double n = b->a;
+		master_layers[n] = b;
 	}
+}
 
-	bool load_from_txt_file(const std::filesystem::path& fn)
+bool _mutator::load_from_txt_file(const std::filesystem::path& fn)
+{
+	_rjson tet(fn);
+	tet.arr("tetrons");
+	while (!tet.error)
 	{
-		_rjson tet(fn);
-		tet.arr("tetrons");
+		tet.obj();
+		if (tet.null) break;
+		std::string name = tet.read_string("name");
+		u64 my_id;
+		tet.read("id", my_id);
+		_tetron::id_tetron = my_id;
+		_tetron* tt = create_tetron(name);
+		if (tt->type() == 18) terminal = tt; // временно
+		tt->pop(tet);
+		tet.arr("links");
 		while (!tet.error)
 		{
 			tet.obj();
 			if (tet.null) break;
-			std::string name = tet.read_string("name");
-			u64 my_id;
-			tet.read("id", my_id);
-			id_tetron = my_id;
-			_tetron* tt = create_tetron(name);
-			if (tt->type() == 18) terminal = tt; // временно
-			tt->pop(tet);
-			tet.arr("links");
-			while (!tet.error)
-			{
-				tet.obj();
-				if (tet.null) break;
-				u64 id;
-				tet.read("id", id);
-				u64 flags;
-				tet.read("flags", flags);
-				if (id <= my_id) _id(my_id)->add_flags(_id(id), flags, false);
-				tet.end();
-			}
-			tet.end();
+			u64 id;
+			tet.read("id", id);
+			u64 flags;
+			tet.read("flags", flags);
+			if (id <= my_id) _id(my_id)->add_flags(_id(id), flags, false);
 			tet.end();
 		}
 		tet.end();
-		tet.arr("chosen");
-		for (uint i = 0; i < master_chosen.size(); i++)	tet.read("", master_chosen[i]->id);
 		tet.end();
-		tet.read("id_tetron", id_tetron);
-		init_layers();
-		return (tet.error == 0);
 	}
+	tet.end();
+	tet.arr("chosen");
+	for (uint i = 0; i < master_chosen.size(); i++)	tet.read("", master_chosen[i]->id);
+	tet.end();
+	tet.read("id_tetron", _tetron::id_tetron);
+	init_layers();
+	return (tet.error == 0);
+}
 
-	void resize(_isize r)
+void _mutator::resize(_isize r)
+{
+	static auto prev_size = _isize{ 1200, 800 };
+	if (prev_size != _isize{ 1200, 800 })
 	{
-		static auto prev_size = _isize{ 1200, 800 };
-		if (prev_size != _isize{ 1200, 800 })
-		{
-			_t_trans* kor = *n_ko;
-			kor->trans.offset.x += (double)(r.x - prev_size.x) / 2;
-			kor->trans.offset.y += (double)(r.y - prev_size.y) / 2;
-			n_move_all->run(0, n_move_all, flag_run);
-			master_obl_izm = r;  // обновить экран
-		}
-		prev_size = r;
+		_t_trans* kor = *n_ko;
+		kor->trans.offset.x += (double)(r.x - prev_size.x) / 2;
+		kor->trans.offset.y += (double)(r.y - prev_size.y) / 2;
+		n_move_all->run(0, n_move_all, flag_run);
+		master_obl_izm = r;  // обновить экран
 	}
+	prev_size = r;
+}
 
-	void draw(_isize r)
-	{
-		if (master_bm.resize(r)) master_obl_izm = r;
-		if (master_obl_izm.empty()) return;
-		master_bm.set_drawing_area(master_obl_izm);
-		master_obl_izm &= master_bm.get_size();
-		master_bm.clear(cc0);
-		master_chain_go.clear();
-		n_ko->operator _t_trans* ()->ris(_trans(), false);
-		master_obl_izm = _area();
-	}
+void _mutator::draw(_isize r)
+{
+	if (master_bm.resize(r)) master_obl_izm = r;
+	if (master_obl_izm.empty()) return;
+	master_bm.set_drawing_area(master_obl_izm);
+	master_obl_izm &= master_bm.get_size();
+	master_bm.clear(cc0);
+	master_chain_go.clear();
+	n_ko->operator _t_trans* ()->ris(_trans(), false);
+	master_obl_izm = _area();
+}
 
-	bool start(const std::filesystem::path& fn)
-	{
-		master_chosen.push_back(&n_ko);                // !!корневой графический объект (трансформация)
-		master_chosen.push_back(&n_s_shift);           // !!зажата клавиша Shift
-		master_chosen.push_back(&n_s_alt);             // !!зажата клавиша Alt
-		master_chosen.push_back(&n_s_ctrl);            // !!зажата клавиша Ctrl
-		master_chosen.push_back(&n_s_left);            // зажата левая кнопка мышки
-		master_chosen.push_back(&n_s_right);           // зажата правая кнопка мышки
-		master_chosen.push_back(&n_s_middle);          // зажато колесо мышки
-		master_chosen.push_back(&n_s_double);          // двойной щелчок мышки
-		master_chosen.push_back(&n_down_left);         // нажата левая кнопка мышки
-		master_chosen.push_back(&n_down_right);        // нажата правая кнопка мышки
-		master_chosen.push_back(&n_down_middle);       // нажата средняя кнопка мышки (колесо)
-		master_chosen.push_back(&n_up_left);           // отжата левая кнопка мышки
-		master_chosen.push_back(&n_up_right);          // отжата правая кнопка мышки
-		master_chosen.push_back(&n_up_middle);         // отжата средняя кнопка мышки (колесо)
-		master_chosen.push_back(&n_move);              // перемещен курсор мышки
-		master_chosen.push_back(&n_wheel);             // повернуто колесо мышки
-		master_chosen.push_back(&n_hint);              // подсказка для элемента под курсором мышки
-		master_chosen.push_back(&n_hex);               // АБСТРАКТНЫЙ ПАРАЗИТ 16-ричная система счисления
-		master_chosen.push_back(&n_go_move);           // !!цепочка!! GO, над которым перемещается мышка
-		master_chosen.push_back(&n_perenos);           // режим переноса
-		master_chosen.push_back(&n_move_all);          // вызывается после глобального смещения или масштабирования
-		master_chosen.push_back(&n_ramk);              // рамка выделения потенциально активного
-		master_chosen.push_back(&n_ramk2);             // рамка выделения активного
-		master_chosen.push_back(&n_pot_act);           // потенциально активный тетрон
-		master_chosen.push_back(&n_act);               // активный тетрон
-		master_chosen.push_back(&n_zagolovok);         // АБСТРАКТНЫЙ ПРЕДОК - заголовки
-		master_chosen.push_back(&n_checkbox);          // АБСТРАКТНЫЙ ПРЕДОК - переключатель
-		master_chosen.push_back(&n_go_layer);          // АБСТРАКТНЫЙ ПРЕДОК - графический слой
-		master_chosen.push_back(&n_color_line);        // АБСТРАКТНЫЙ ПРЕДОК - цвет линий и текста
-		master_chosen.push_back(&n_color_bg);          // АБСТРАКТНЫЙ ПРЕДОК - цвет фона
-		master_chosen.push_back(&n_act_key);           // активный тетрон для управления клавиатурой
-		master_chosen.push_back(&n_down_key);          // нажата кнопка клавиатуры
-		master_chosen.push_back(&n_press_key);         // введен символ
-		master_chosen.push_back(&n_timer1000);         // таймер с периодом 1000
-		master_chosen.push_back(&n_tani);              // объект, который тянется, перемещается
-		master_chosen.push_back(&n_fun_tani0);         // АБСТРАКТНЫЙ ПРЕДОК функция начала тяни-толкай
-		master_chosen.push_back(&n_fun_tani);          // АБСТРАКТНЫЙ ПРЕДОК функция тяни-толкай
-		master_chosen.push_back(&n_fun_tani1);         // АБСТРАКТНЫЙ ПРЕДОК функция конца тяни-толкай
-		master_chosen.push_back(&n_temp_go);           // АБСТРАКТНЫЙ ПРЕДОК временный графический объект
-		master_chosen.push_back(&n_center);            // АБСТРАКТНЫЙ ПРЕДОК центр
-		master_chosen.push_back(&n_radius);            // АБСТРАКТНЫЙ ПРЕДОК радиус
-		master_chosen.push_back(&n_width);             // АБСТРАКТНЫЙ ПРЕДОК толщина
-		master_chosen.push_back(&n_begin);             // АБСТРАКТНЫЙ ПРЕДОК начало
-		master_chosen.push_back(&n_end);               // АБСТРАКТНЫЙ ПРЕДОК конец
-		master_chosen.push_back(&n_mouse_inactive);    // АБСТРАКТНАЯ ИНФОРМАЦИЯ неактивный для перемещения мышки
-		master_chosen.push_back(&n_start_mouse_move);  // АБСТРАКТНЫЙ ПРЕДОК функция начала перемещения мышки над объектом
-		master_chosen.push_back(&n_mouse_move);        // АБСТРАКТНЫЙ ПРЕДОК функция перемещения мышки над объектом
-		master_chosen.push_back(&n_finish_mouse_move); // АБСТРАКТНЫЙ ПРЕДОК функция конца перемещения мышки над объектом
-		master_chosen.push_back(&n_fun_up_middle);     // АБСТРАКТНЫЙ ПРЕДОК функция отжато колесо мышки
-		master_chosen.push_back(&n_timer250);          // АБСТРАКТНЫЙ ПРЕДОК функция отжато колесо мышки
-		master_chosen.push_back(&n_cc0);               // цвет фона
-		master_chosen.push_back(&n_cc2);               // цвет сс2
+bool _mutator::start(const std::filesystem::path& fn)
+{
+	master_chosen.push_back(&n_ko);                // !!корневой графический объект (трансформация)
+	master_chosen.push_back(&n_s_shift);           // !!зажата клавиша Shift
+	master_chosen.push_back(&n_s_alt);             // !!зажата клавиша Alt
+	master_chosen.push_back(&n_s_ctrl);            // !!зажата клавиша Ctrl
+	master_chosen.push_back(&n_s_left);            // зажата левая кнопка мышки
+	master_chosen.push_back(&n_s_right);           // зажата правая кнопка мышки
+	master_chosen.push_back(&n_s_middle);          // зажато колесо мышки
+	master_chosen.push_back(&n_s_double);          // двойной щелчок мышки
+	master_chosen.push_back(&n_down_left);         // нажата левая кнопка мышки
+	master_chosen.push_back(&n_down_right);        // нажата правая кнопка мышки
+	master_chosen.push_back(&n_down_middle);       // нажата средняя кнопка мышки (колесо)
+	master_chosen.push_back(&n_up_left);           // отжата левая кнопка мышки
+	master_chosen.push_back(&n_up_right);          // отжата правая кнопка мышки
+	master_chosen.push_back(&n_up_middle);         // отжата средняя кнопка мышки (колесо)
+	master_chosen.push_back(&n_move);              // перемещен курсор мышки
+	master_chosen.push_back(&n_wheel);             // повернуто колесо мышки
+	master_chosen.push_back(&n_hint);              // подсказка для элемента под курсором мышки
+	master_chosen.push_back(&n_hex);               // АБСТРАКТНЫЙ ПАРАЗИТ 16-ричная система счисления
+	master_chosen.push_back(&n_go_move);           // !!цепочка!! GO, над которым перемещается мышка
+	master_chosen.push_back(&n_perenos);           // режим переноса
+	master_chosen.push_back(&n_move_all);          // вызывается после глобального смещения или масштабирования
+	master_chosen.push_back(&n_ramk);              // рамка выделения потенциально активного
+	master_chosen.push_back(&n_ramk2);             // рамка выделения активного
+	master_chosen.push_back(&n_pot_act);           // потенциально активный тетрон
+	master_chosen.push_back(&n_act);               // активный тетрон
+	master_chosen.push_back(&n_zagolovok);         // АБСТРАКТНЫЙ ПРЕДОК - заголовки
+	master_chosen.push_back(&n_checkbox);          // АБСТРАКТНЫЙ ПРЕДОК - переключатель
+	master_chosen.push_back(&n_go_layer);          // АБСТРАКТНЫЙ ПРЕДОК - графический слой
+	master_chosen.push_back(&n_color_line);        // АБСТРАКТНЫЙ ПРЕДОК - цвет линий и текста
+	master_chosen.push_back(&n_color_bg);          // АБСТРАКТНЫЙ ПРЕДОК - цвет фона
+	master_chosen.push_back(&n_act_key);           // активный тетрон для управления клавиатурой
+	master_chosen.push_back(&n_down_key);          // нажата кнопка клавиатуры
+	master_chosen.push_back(&n_press_key);         // введен символ
+	master_chosen.push_back(&n_timer1000);         // таймер с периодом 1000
+	master_chosen.push_back(&n_tani);              // объект, который тянется, перемещается
+	master_chosen.push_back(&n_fun_tani0);         // АБСТРАКТНЫЙ ПРЕДОК функция начала тяни-толкай
+	master_chosen.push_back(&n_fun_tani);          // АБСТРАКТНЫЙ ПРЕДОК функция тяни-толкай
+	master_chosen.push_back(&n_fun_tani1);         // АБСТРАКТНЫЙ ПРЕДОК функция конца тяни-толкай
+	master_chosen.push_back(&n_temp_go);           // АБСТРАКТНЫЙ ПРЕДОК временный графический объект
+	master_chosen.push_back(&n_center);            // АБСТРАКТНЫЙ ПРЕДОК центр
+	master_chosen.push_back(&n_radius);            // АБСТРАКТНЫЙ ПРЕДОК радиус
+	master_chosen.push_back(&n_width);             // АБСТРАКТНЫЙ ПРЕДОК толщина
+	master_chosen.push_back(&n_begin);             // АБСТРАКТНЫЙ ПРЕДОК начало
+	master_chosen.push_back(&n_end);               // АБСТРАКТНЫЙ ПРЕДОК конец
+	master_chosen.push_back(&n_mouse_inactive);    // АБСТРАКТНАЯ ИНФОРМАЦИЯ неактивный для перемещения мышки
+	master_chosen.push_back(&n_start_mouse_move);  // АБСТРАКТНЫЙ ПРЕДОК функция начала перемещения мышки над объектом
+	master_chosen.push_back(&n_mouse_move);        // АБСТРАКТНЫЙ ПРЕДОК функция перемещения мышки над объектом
+	master_chosen.push_back(&n_finish_mouse_move); // АБСТРАКТНЫЙ ПРЕДОК функция конца перемещения мышки над объектом
+	master_chosen.push_back(&n_fun_up_middle);     // АБСТРАКТНЫЙ ПРЕДОК функция отжато колесо мышки
+	master_chosen.push_back(&n_timer250);          // АБСТРАКТНЫЙ ПРЕДОК функция отжато колесо мышки
+	master_chosen.push_back(&n_cc0);               // цвет фона
+	master_chosen.push_back(&n_cc2);               // цвет сс2
 
-		return load_from_txt_file(fn);
-	}
+	return load_from_txt_file(fn);
+}
 
-	double get_main_scale()
-	{
-		_t_trans* tr = *n_ko;
-		return tr->trans.scale;
-	}
+double _mutator::get_main_scale()
+{
+	_t_trans* tr = *n_ko;
+	return tr->trans.scale;
+}
 
-	void mouse_button_left(bool pressed)
-	{
-		*n_s_left->operator i64* () = pressed;
-		if (pressed) n_down_left->run(0, n_down_left, flag_run); else n_up_left->run(0, n_up_left, flag_run);
-	}
+void _mutator::mouse_button_left(bool pressed)
+{
+	*n_s_left->operator i64* () = pressed;
+	if (pressed) n_down_left->run(0, n_down_left, flag_run); else n_up_left->run(0, n_up_left, flag_run);
+}
 
-	void mouse_button_right(bool pressed)
-	{
-		*n_s_right->operator i64* () = pressed;
-		if (pressed) n_down_right->run(0, n_down_right, flag_run); else n_up_right->run(0, n_up_right, flag_run);
-	}
+void _mutator::mouse_button_right(bool pressed)
+{
+	*n_s_right->operator i64* () = pressed;
+	if (pressed) n_down_right->run(0, n_down_right, flag_run); else n_up_right->run(0, n_up_right, flag_run);
+}
 
-	void mouse_button_middle(bool pressed)
-	{
-		*n_s_middle->operator i64* () = pressed;
-		if (pressed) n_down_middle->run(0, n_down_middle, flag_run); else n_up_middle->run(0, n_up_middle, flag_run);
-	}
-
+void _mutator::mouse_button_middle(bool pressed)
+{
+	*n_s_middle->operator i64* () = pressed;
+	if (pressed) n_down_middle->run(0, n_down_middle, flag_run); else n_up_middle->run(0, n_up_middle, flag_run);
 }
