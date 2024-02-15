@@ -62,8 +62,6 @@ struct _g_list_link;
 struct _g_button;
 struct _g_circle;
 
-inline std::unordered_map<u64, _tetron*> all_tetron;
-
 template <typename _t>
 struct _pair_t
 {
@@ -154,6 +152,8 @@ struct _tetron
 	virtual operator _t_trans      * () { return nullptr; }
 	virtual operator _t_basic_go   * () { return nullptr; }
 
+	static inline std::unordered_map<u64, _tetron*> all_tetron;
+
 private:
 	friend struct _mutator;
 	static inline u64 id_tetron = 1; // глобальный счетчик id тетронов
@@ -172,9 +172,9 @@ struct _id
 	void operator = (_id b)                      { id = b.id; };
 	void operator = (_tetron* b)                 { id = (b) ? b->id : 0; };
 
-	operator _tetron* ()          const noexcept { auto it = all_tetron.find(id); return (it == all_tetron.end()) ? nullptr : it->second; }
-	_tetron* operator->()         const noexcept { auto it = all_tetron.find(id); return (it == all_tetron.end()) ? nullptr : it->second;; }
-	operator bool()               const noexcept { return all_tetron.find(id) != all_tetron.end(); }
+	operator _tetron* ()          const noexcept { auto it = _tetron::all_tetron.find(id); return (it == _tetron::all_tetron.end()) ? nullptr : it->second; }
+	_tetron* operator->()         const noexcept { auto it = _tetron::all_tetron.find(id); return (it == _tetron::all_tetron.end()) ? nullptr : it->second;; }
+	operator bool()               const noexcept { return _tetron::all_tetron.find(id) != _tetron::all_tetron.end(); }
 
 	bool operator != (_tetron* b) const noexcept { return (b) ? (id != b->id) : (id != 0); }
 	bool operator != (_id b)      const noexcept { return id != b.id; }

@@ -117,7 +117,7 @@ void _mutator::save_to_txt_file(const std::filesystem::path& fn)
 {
 	_wjson tet(fn);
 	std::map<u64, _tetron*> tt; // чтобы упорядочить тетроны
-	for (auto& i : all_tetron) tt[i.first] = i.second;
+	for (auto& i : _tetron::all_tetron) tt[i.first] = i.second;
 	tet.arr("tetrons");
 	for (auto i : tt)
 	{
