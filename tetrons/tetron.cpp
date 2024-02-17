@@ -229,6 +229,18 @@ void _tetron::traversal(_hash_table_tetron* ht, u64 flags, _vector_tetron* lt)
 	}
 }
 
+void _tetron::traversal(_hash_table_tetron2* ht, u64 flags, _vector_tetron* lt)
+{
+	if (ht->insert(this).second == false) return;
+	if (lt) lt->push_back(this);
+	for (auto i : link)
+	{
+		_tetron* a = (*i)(this);
+		if (!i->test_flags(this, flags)) continue;
+		a->traversal(ht, flags, lt);
+	}
+}
+
 _tetron::~_tetron()
 {
 	for (int i = (int)link.size() - 1; i >= 0; i--) link[i]->~_link();

@@ -8,6 +8,7 @@
 
 #include <map>
 #include <unordered_map>
+#include <unordered_set>
 #include <optional>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -75,6 +76,7 @@ struct _pair_t
 };
 
 typedef __hash_table<_pair_t<i64> > _hash_table_tetron;
+typedef std::unordered_set<_tetron*> _hash_table_tetron2;
 typedef std::vector<_tetron*> _vector_tetron;
 
 struct _id;
@@ -117,6 +119,7 @@ struct _tetron
 	virtual void before_delete_link(_link* li) {} // выз. перед удалением связи
 	virtual void value_changed() {} // было изменено внутренняя переменная
 	void traversal(_hash_table_tetron* ht, u64 flags, _vector_tetron* lt = 0);
+	void traversal(_hash_table_tetron2* ht, u64 flags, _vector_tetron* lt = 0);
 
 	void copy(_tetron* a); // присвоение содержимого
 	_tetron* copy_plus(); // копировать с хвостами
