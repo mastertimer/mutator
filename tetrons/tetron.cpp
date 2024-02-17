@@ -53,18 +53,18 @@ std::string _tetron::name()
 
 namespace super_del_tetron2
 {
-	_speed<_vector_tetron>          ud(false); // список на удаление
-	_speed<_hash_table_tetron>      Sp(false); // полный список
-	__hash_table<_pair_t<_tetron*>> Sp2;       // полный список 2 проход
-	_speed<_hash_table_tetron>      Ba(false); // плохой список
-	_tetron*                        start;     // стартовый особый тетрон
+	_vector_tetron ud; // список на удаление
+	_hash_table_tetron Sp; // полный список
+	__hash_table<_pair_t<_tetron*>> Sp2; // полный список 2 проход
+	_hash_table_tetron Ba; // плохой список
+	_tetron* start; // стартовый особый тетрон
 
 	void metka_del_B12(_tetron* b)
 	{
 		if (Sp2.find(b)) return;
-		if (Ba->find(b)) return;
+		if (Ba.find(b)) return;
 		Sp2.insert(b);
-		ud->push_back(b);
+		ud.push_back(b);
 		for (auto i : b->link)
 		{
 			_tetron* a = (*i)(b);
@@ -85,7 +85,7 @@ namespace super_del_tetron2
 			            // —делать 2 прохода јнтиметок, если q2 точно != q
 			            // если да, проверить NEW
 			            // 2й проход 1й проход
-			if ((Ba->find(a)) || (!Sp->find(a))) return false;
+			if ((Ba.find(a)) || (!Sp.find(a))) return false;
 		}
 		return true;
 	}
@@ -93,7 +93,7 @@ namespace super_del_tetron2
 	void anti_metka_B12(_tetron* b)
 	{
 		if (Sp2.find(b)) return;
-		if (Ba->find(b)) return;
+		if (Ba.find(b)) return;
 		Sp2.insert(b);
 		if (is_my(b))
 		{
@@ -105,19 +105,19 @@ namespace super_del_tetron2
 			}
 		}
 		else
-			b->traversal(Ba, flag_part);
+			b->traversal(&Ba, flag_part);
 	}
 
 	void prepare_sp_unik_sv(_tetron* b) // подготовить список уникальный свойств тетрона
 	{
-		Sp.start();
+		Sp.clear();
 		Sp2.clear();
-		Ba.start();
-		ud.start();
+		Ba.clear();
+		ud.clear();
 		start = b; // NEW
-		b->traversal(Sp, flag_part);
+		b->traversal(&Sp, flag_part);
 		Sp2.insert(b);
-		Ba->insert(b); // NEW
+		Ba.insert(b); // NEW
 		for (auto i : b->link)
 		{
 			_tetron* a = (*i)(b);
@@ -134,27 +134,20 @@ namespace super_del_tetron2
 			metka_del_B12(a);
 		}
 	}
-
-	void free_bank()
-	{
-		Ba.stop();
-		Sp.stop();
-		ud.stop();
-	}
 } // namespace SuperDelTetron2
 
 _tetron* _tetron::copy_plus()
 {
 	super_del_tetron2::prepare_sp_unik_sv(this);
-	super_del_tetron2::ud->push_back(this); // т.к. в списке главного тетрона нет
+	super_del_tetron2::ud.push_back(this); // т.к. в списке главного тетрона нет
 	                                      // Sp2 = ud ???
-	for (auto b : *super_del_tetron2::ud)
+	for (auto b : super_del_tetron2::ud)
 	{
 		_tetron* a = create_tetron(b->type());
 		a->copy(b);
 		super_del_tetron2::Sp2.find(b)->a = a;
 	}
-	for (auto a : *super_del_tetron2::ud)
+	for (auto a : super_del_tetron2::ud)
 	{
 		_tetron* aa = super_del_tetron2::Sp2.find(a)->a;
 		for (auto j : a->link)
@@ -170,7 +163,6 @@ _tetron* _tetron::copy_plus()
 		}
 	}
 	_tetron* rr = super_del_tetron2::Sp2.find(this)->a;
-	super_del_tetron2::free_bank();
 	return rr;
 }
 
@@ -284,8 +276,7 @@ void delete_hvost(_tetron* t, bool del_t, bool run_func)
 	bool pprr           = run_before_del_link;
 	run_before_del_link = run_func;
 	super_del_tetron2::prepare_sp_unik_sv(t);
-	for (auto i : *super_del_tetron2::ud) delete i;
-	super_del_tetron2::free_bank();
+	for (auto i : super_del_tetron2::ud) delete i;
 	if (del_t) delete t;
 	run_before_del_link = pprr;
 }
@@ -332,9 +323,9 @@ _link::~_link()
 
 void _frozen::operator++(int)
 {
-	for (i++; i < lt->size(); i++)
+	for (i++; i < lt.size(); i++)
 	{
-		_tetron* t2 = (*lt)[i];
+		_tetron* t2 = lt[i];
 		if (!t2) continue;
 		if (!tetron->test_flags(t2, flags)) continue;
 		tetron2 = t2;
@@ -349,7 +340,7 @@ _frozen::_frozen(_tetron* t, u64 flags_) : tetron(t), i(0), tetron2(nullptr), fl
 	{
 		if (!j->test_flags(t, flags)) continue;
 		if (!tetron2) tetron2 = (*j)(t);
-		lt->push_back((*j)(t)); // проверить на move
+		lt.push_back((*j)(t)); // проверить на move
 	}
 }
 
@@ -399,34 +390,33 @@ _area _t_basic_go::calc_area()
 
 void _t_basic_go::add_area(_area a, bool first)
 {
-	static _speed<_hash_table_tetron> hash(false);
-	bool start = (hash.a == nullptr);
-	if (start) hash.start();
+	static _hash_table_tetron hash;
 	_t_go* tgo = *this;
 	_t_trans* ttr = *this;
 	if (first)
+	{
+		hash.clear();
 		a = calc_area();
+	}
 	else
 	{
 		if (!(a <= area)) area.reset();
 		if (n_ko == this)
 		{
 			add_obl_izm((tgo) ? a : ttr->trans(a));
-			if (start) hash.stop(); // лишнее (предохранитель на будущее)
 			return;
 		}
 	}
-	hash->insert(this);
+	hash.insert(this);
 	for (auto i : link)
 	{
 		_tetron* t = (*i)(this);
 		_t_basic_go* b = *t; if (b == nullptr) continue;
-		if (hash->find(t)) continue; // рекурсия не допускается
+		if (hash.find(t)) continue; // рекурсия не допускается
 		if (i->test_flags(t, flag_sub_go)) b->add_area((tgo) ? a : ttr->trans(a), false); // можно ли
 		if (i->test_flags(t, flag_parent)) b->add_area(a, false); // И то И то?
 	}
-	hash->erase(this);
-	if (start) hash.stop();
+	hash.erase(this);
 }
 
 void _t_basic_go::cha_area(_trans tr)
@@ -438,80 +428,78 @@ void _t_basic_go::cha_area(_trans tr)
 
 void _t_basic_go::cha_area(_area a, bool first)
 {
-	static _speed<_hash_table_tetron> hash(false);
-	bool start = (hash.a == nullptr);
-	if (start) hash.start();
+	static _hash_table_tetron hash;
 	_t_go* tgo = *this;
 	_t_trans* ttr = *this;
 	if (n_ko == this)
 	{
 		add_obl_izm((tgo) ? a : ttr->trans(a));
-		if (start) hash.stop(); // лишнее (предохранитель на будущее)
 		return;
 	}
 	if (first)
+	{
+		hash.clear();
 		if (tgo) a = tgo->local_area;
-	hash->insert(this);
+	}
+	hash.insert(this);
 	for (auto i : link)
 	{
 		_tetron* t = (*i)(this);
 		_t_basic_go* b = *t; if (b == nullptr) continue;
-		if (hash->find(t)) continue; // рекурсия не допускается
+		if (hash.find(t)) continue; // рекурсия не допускается
 		if (i->test_flags(t, flag_sub_go)) b->cha_area((tgo) ? a : ttr->trans(a), false); // можно ли
 		if (i->test_flags(t, flag_parent)) b->cha_area(a, false); // И то И то?
 	}
-	hash->erase(this);
-	if (start) hash.stop();
+	hash.erase(this);
 }
 
 void _t_basic_go::del_area(_area a, bool first)
 {
-	static _speed<_hash_table_tetron> hash(false);
-	bool start = (hash.a == nullptr);
-	if (start) hash.start();
+	static _hash_table_tetron hash;
 	_t_go* tgo = *this;
 	_t_trans* ttr = *this;
 	if (first)
+	{
+		hash.clear();
 		a = calc_area();
+	}
 	else
 	{
 		if (!(a < area)) area.reset();
 		if (n_ko == this)
 		{
 			add_obl_izm((tgo) ? a : ttr->trans(a));
-			if (start) hash.stop(); // лишнее (предохранитель на будущее)
 			return;
 		}
 	}
-	hash->insert(this);
+	hash.insert(this);
 	for (auto i : link)
 	{
 		_tetron* t = (*i)(this);
 		_t_basic_go* b = *t; if (b == nullptr) continue;
-		if (hash->find(t)) continue; // рекурсия не допускается
+		if (hash.find(t)) continue; // рекурсия не допускается
 		if (i->test_flags(t, flag_sub_go)) b->del_area((tgo) ? a : ttr->trans(a), false); // можно ли
 		if (i->test_flags(t, flag_parent)) b->del_area(a, false); // И то И то?
 	}
-	hash->erase(this);
-	if (start) hash.stop();
+	hash.erase(this);
 }
 
 _trans _t_basic_go::oko_trans(bool* ko)
 {
 	_trans a;
 	_tetron* b = this;
-	_speed<_hash_table_tetron> hash;
+	_hash_table_tetron hash;
 	bool nai = true;
 	while (nai)
 	{
 		if (_t_trans* bb = *b) a = bb->trans * a;
-		hash->insert(b);
+		hash.insert(b);
 		nai = false;
 		for (auto i : b->link)
 		{
 			_tetron* aa = (*i)(b);
 			if (!i->test_flags(aa, flag_sub_go)) continue;
-			if (hash->find(aa)) continue;
+			if (hash.find(aa)) continue;
 			if (!aa->operator _t_basic_go * ()) continue;
 			b = aa;
 			nai = true;

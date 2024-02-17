@@ -185,7 +185,6 @@
     <ClInclude Include="..\library\hash.h" />
     <ClInclude Include="..\library\json.h" />
     <ClInclude Include="..\library\multi_string.h" />
-    <ClInclude Include="..\library\speed.h" />
     <ClInclude Include="..\library\win_basic.h" />
     <ClInclude Include="library\tests.h" />
     <ClInclude Include="mutator.h" />

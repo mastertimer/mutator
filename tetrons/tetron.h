@@ -2,7 +2,6 @@
 
 #include "graphics.h" 
 #include "json.h" 
-#include "speed.h" 
 #include "hash.h" 
 #include "multi_string.h" 
 #include "win_basic.h" 
@@ -320,7 +319,7 @@ struct _frozen // для цикла по слепку связей
 
 private:
 	_tetron* tetron;
-	_speed<_vector_id> lt;
+	_vector_id lt;
 	uint i;
 	_tetron* tetron2;
 	u64 flags;
@@ -338,10 +337,9 @@ _tetron* create_tetron(uchar type); // определено в другом ме
 
 namespace super_del_tetron2
 {
-	extern _speed<_vector_tetron> ud; // список на удаление
+	extern _vector_tetron ud; // список на удаление
 
 	void prepare_sp_unik_sv(_tetron* b);
-	void free_bank();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -825,13 +825,13 @@ void fun54(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	i64* n = tt->find1<i64>(flag_part);
 	if (!n) return;
-	_speed<_hash_table_tetron> ht;
+	_hash_table_tetron ht;
 	for (uint i = 0; i < master_chosen.size(); i++)
 		if (*master_chosen[i])
-			(*master_chosen[i])->traversal(ht, 0);
+			(*master_chosen[i])->traversal(&ht, 0);
 	int v = 0;
 	_tetron* b = nullptr; // пример функции
-	for (auto& i : *ht)
+	for (auto& i : ht)
 	{
 		_tetron* a = i.tetron;
 		if (a->type() != 32) continue;
