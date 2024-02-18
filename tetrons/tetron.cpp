@@ -55,15 +55,15 @@ namespace super_del_tetron2
 {
 	_vector_tetron ud; // список на удаление
 	_set_tetron Sp; // полный список
-	__hash_table<_pair_t<_tetron*>> Sp2; // полный список 2 проход
+	std::unordered_map<_tetron*, _tetron*> Sp2; // полный список 2 проход
 	_set_tetron Ba; // плохой список
 	_tetron* start; // стартовый особый тетрон
 
 	void metka_del_B12(_tetron* b)
 	{
-		if (Sp2.find(b)) return;
+		if (Sp2.find(b) != Sp2.end()) return;
 		if (Ba.find(b) != Ba.end()) return;
-		Sp2.insert(b);
+		Sp2.insert({ b, nullptr });
 		ud.push_back(b);
 		for (auto i : b->link)
 		{
@@ -92,9 +92,9 @@ namespace super_del_tetron2
 
 	void anti_metka_B12(_tetron* b)
 	{
-		if (Sp2.find(b)) return;
+		if (Sp2.find(b) != Sp2.end()) return;
 		if (Ba.find(b) != Ba.end()) return;
-		Sp2.insert(b);
+		Sp2.insert({ b, nullptr });
 		if (is_my(b))
 		{
 			for (auto i : b->link)
@@ -116,7 +116,7 @@ namespace super_del_tetron2
 		ud.clear();
 		start = b; // NEW
 		b->traversal(&Sp, flag_part);
-		Sp2.insert(b);
+		Sp2.insert({ b, nullptr });
 		Ba.insert(b); // NEW
 		for (auto i : b->link)
 		{
@@ -126,7 +126,7 @@ namespace super_del_tetron2
 		}
 		// подготовить список
 		Sp2.clear();
-		Sp2.insert(b);
+		Sp2.insert({ b, nullptr });
 		for (auto i : b->link)
 		{
 			_tetron* a = (*i)(b);
@@ -145,24 +145,24 @@ _tetron* _tetron::copy_plus()
 	{
 		_tetron* a = create_tetron(b->type());
 		a->copy(b);
-		super_del_tetron2::Sp2.find(b)->a = a;
+		super_del_tetron2::Sp2.find(b)->second = a;
 	}
 	for (auto a : super_del_tetron2::ud)
 	{
-		_tetron* aa = super_del_tetron2::Sp2.find(a)->a;
+		_tetron* aa = super_del_tetron2::Sp2.find(a)->second;
 		for (auto j : a->link)
 		{
 			_tetron* b = (*j)(a);
 			auto     n = super_del_tetron2::Sp2.find(b);
-			if (!n)
+			if (n == super_del_tetron2::Sp2.end())
 			{
 				aa->add_flags(b, j->get_flags(a) & 0xFFFFFFFF, false);
 				continue;
 			}
-			if (aa <= n->a) aa->add_flags(n->a, j->get_flags(a), false);
+			if (aa <= n->second) aa->add_flags(n->second, j->get_flags(a), false);
 		}
 	}
-	_tetron* rr = super_del_tetron2::Sp2.find(this)->a;
+	_tetron* rr = super_del_tetron2::Sp2.find(this)->second;
 	return rr;
 }
 
