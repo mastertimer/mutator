@@ -62,19 +62,6 @@ struct _g_list_link;
 struct _g_button;
 struct _g_circle;
 
-template <typename _t>
-struct _pair_t
-{
-	_tetron* tetron = nullptr;
-	_t a = {};
-
-	_pair_t() = default;
-	_pair_t(_tetron* b) : tetron(b) {}
-	_pair_t(_tetron* b, const _t& c) : tetron(b), a(c) {}
-	bool operator == (_tetron* b) const noexcept { return (tetron == b); }
-	bool operator == (const _pair_t& b) const noexcept { return (tetron == b.tetron); }
-};
-
 typedef std::unordered_set<_tetron*> _set_tetron;
 typedef std::vector<_tetron*> _vector_tetron;
 typedef std::vector<struct _id> _vector_id;
@@ -345,12 +332,6 @@ namespace super_del_tetron2
 uint hash_func(const _pair_tetron& a);
 uint hash_func(const _he_intermediate& a);
 
-template <typename _t>
-uint hash_func(const _pair_t<_t>& a)
-{
-	return (uint)((((u64)a.tetron) >> 4) * 27644437);
-}
-
 template <typename _t> _t* _link::get(_tetron* t, u64 f)
 {
 	if (!test_flags(t, f)) return nullptr;
@@ -616,7 +597,7 @@ struct _chain_go // цепочка графических объектов с м
 		_trans tr;
 	};
 
-	__hash_table<_pair_t<para> > hash;
+	std::unordered_map<_tetron*, para> hash;
 	std::vector<_t_basic_go*> chain;
 
 	void clear() { chain.clear(); hash.clear(); }

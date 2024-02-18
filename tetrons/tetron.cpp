@@ -660,8 +660,8 @@ bool _t_basic_go::final_fractal(const _trans& tr)
 {
 	if (tr(calc_area()).min_length() * 0.5 < final_radius()) return true;
 	auto h = master_chain_go.hash.find(this);
-	if (!h) return false;
-	return (tr.scale >= h->a.tr.scale);
+	if (h == master_chain_go.hash.end()) return false;
+	return (tr.scale >= h->second.tr.scale);
 }
 
 void _t_basic_go::priem_gv()
@@ -1020,13 +1020,10 @@ void _chain_go::push(_t_basic_go* a, _trans& tr)
 {
 	chain.push_back(a);
 	auto n = hash.find(a);
-	if (!n)
-	{
-		*n = { a, { 1, tr } };
-		n.life();
-	}
+	if (n == hash.end())
+		hash.insert({ a, { 1, tr } });
 	else
-		n->a.k++;
+		n->second.k++;
 }
 
 void _chain_go::pop()
@@ -1034,8 +1031,8 @@ void _chain_go::pop()
 	_t_basic_go* a = chain.back();
 	chain.pop_back();
 	auto n = hash.find(a);
-	n->a.k--;
-	if (n->a.k == 0) hash.erase(n);
+	n->second.k--;
+	if (n->second.k == 0) hash.erase(n);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
