@@ -825,7 +825,7 @@ void fun54(_tetron* tt0, _tetron* tt, u64 flags)
 {
 	i64* n = tt->find1<i64>(flag_part);
 	if (!n) return;
-	_hash_table_tetron2 ht;
+	_set_tetrons ht;
 	for (uint i = 0; i < master_chosen.size(); i++)
 		if (*master_chosen[i])
 			(*master_chosen[i])->traversal(&ht, 0);
