@@ -54,9 +54,9 @@ std::string _tetron::name()
 namespace super_del_tetron2
 {
 	_vector_tetron ud; // список на удаление
-	_set_tetrons Sp; // полный список
+	_set_tetron Sp; // полный список
 	__hash_table<_pair_t<_tetron*>> Sp2; // полный список 2 проход
-	_set_tetrons Ba; // плохой список
+	_set_tetron Ba; // плохой список
 	_tetron* start; // стартовый особый тетрон
 
 	void metka_del_B12(_tetron* b)
@@ -217,7 +217,7 @@ void _tetron::run(_tetron* tt0, _tetron* tt, u64 flags)
 	for (_frozen i(this, flags); i; i++) i->run(tt, i, flags);
 }
 
-void _tetron::traversal(_set_tetrons* ht, u64 flags, _vector_tetron* lt)
+void _tetron::traversal(_set_tetron* ht, u64 flags, _vector_tetron* lt)
 {
 	if (ht->insert(this).second == false) return;
 	if (lt) lt->push_back(this);
@@ -390,7 +390,7 @@ _area _t_basic_go::calc_area()
 
 void _t_basic_go::add_area(_area a, bool first)
 {
-	static _set_tetrons hash;
+	static _set_tetron hash;
 	_t_go* tgo = *this;
 	_t_trans* ttr = *this;
 	if (first)
@@ -428,7 +428,7 @@ void _t_basic_go::cha_area(_trans tr)
 
 void _t_basic_go::cha_area(_area a, bool first)
 {
-	static _set_tetrons hash;
+	static _set_tetron hash;
 	_t_go* tgo = *this;
 	_t_trans* ttr = *this;
 	if (n_ko == this)
@@ -455,7 +455,7 @@ void _t_basic_go::cha_area(_area a, bool first)
 
 void _t_basic_go::del_area(_area a, bool first)
 {
-	static _set_tetrons hash;
+	static _set_tetron hash;
 	_t_go* tgo = *this;
 	_t_trans* ttr = *this;
 	if (first)
@@ -488,7 +488,7 @@ _trans _t_basic_go::oko_trans(bool* ko)
 {
 	_trans a;
 	_tetron* b = this;
-	_set_tetrons hash;
+	_set_tetron hash;
 	bool nai = true;
 	while (nai)
 	{
