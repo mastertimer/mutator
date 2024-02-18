@@ -402,7 +402,7 @@ _area _t_basic_go::calc_area()
 
 void _t_basic_go::add_area(_area a, bool first)
 {
-	static _hash_table_tetron hash;
+	static _hash_table_tetron2 hash;
 	_t_go* tgo = *this;
 	_t_trans* ttr = *this;
 	if (first)
@@ -424,7 +424,7 @@ void _t_basic_go::add_area(_area a, bool first)
 	{
 		_tetron* t = (*i)(this);
 		_t_basic_go* b = *t; if (b == nullptr) continue;
-		if (hash.find(t)) continue; // рекурсия не допускается
+		if (hash.find(t) != hash.end()) continue; // рекурсия не допускается
 		if (i->test_flags(t, flag_sub_go)) b->add_area((tgo) ? a : ttr->trans(a), false); // можно ли
 		if (i->test_flags(t, flag_parent)) b->add_area(a, false); // И то И то?
 	}
@@ -440,7 +440,7 @@ void _t_basic_go::cha_area(_trans tr)
 
 void _t_basic_go::cha_area(_area a, bool first)
 {
-	static _hash_table_tetron hash;
+	static _hash_table_tetron2 hash;
 	_t_go* tgo = *this;
 	_t_trans* ttr = *this;
 	if (n_ko == this)
@@ -458,7 +458,7 @@ void _t_basic_go::cha_area(_area a, bool first)
 	{
 		_tetron* t = (*i)(this);
 		_t_basic_go* b = *t; if (b == nullptr) continue;
-		if (hash.find(t)) continue; // рекурсия не допускается
+		if (hash.find(t) != hash.end()) continue; // рекурсия не допускается
 		if (i->test_flags(t, flag_sub_go)) b->cha_area((tgo) ? a : ttr->trans(a), false); // можно ли
 		if (i->test_flags(t, flag_parent)) b->cha_area(a, false); // И то И то?
 	}
@@ -467,7 +467,7 @@ void _t_basic_go::cha_area(_area a, bool first)
 
 void _t_basic_go::del_area(_area a, bool first)
 {
-	static _hash_table_tetron hash;
+	static _hash_table_tetron2 hash;
 	_t_go* tgo = *this;
 	_t_trans* ttr = *this;
 	if (first)
@@ -489,7 +489,7 @@ void _t_basic_go::del_area(_area a, bool first)
 	{
 		_tetron* t = (*i)(this);
 		_t_basic_go* b = *t; if (b == nullptr) continue;
-		if (hash.find(t)) continue; // рекурсия не допускается
+		if (hash.find(t) != hash.end()) continue; // рекурсия не допускается
 		if (i->test_flags(t, flag_sub_go)) b->del_area((tgo) ? a : ttr->trans(a), false); // можно ли
 		if (i->test_flags(t, flag_parent)) b->del_area(a, false); // И то И то?
 	}
@@ -500,7 +500,7 @@ _trans _t_basic_go::oko_trans(bool* ko)
 {
 	_trans a;
 	_tetron* b = this;
-	_hash_table_tetron hash;
+	_hash_table_tetron2 hash;
 	bool nai = true;
 	while (nai)
 	{
@@ -511,7 +511,7 @@ _trans _t_basic_go::oko_trans(bool* ko)
 		{
 			_tetron* aa = (*i)(b);
 			if (!i->test_flags(aa, flag_sub_go)) continue;
-			if (hash.find(aa)) continue;
+			if (hash.find(aa) != hash.end()) continue;
 			if (!aa->operator _t_basic_go * ()) continue;
 			b = aa;
 			nai = true;
