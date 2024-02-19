@@ -19,12 +19,21 @@ __hash_table<_link> glink;
 uint hash_func(const _he_intermediate& a)
 {
 	return (uint)((((u64)a.tetron_before) >> 4) * 27644437 + (((u64)a.tetron_after) >> 4) * 33391 +
-	              a.flags_before * 16769023 + a.flags_after * 17971);
+	              a.flags_before * 16769023 + a.flags_after * 17971 + 68718952447);
 }
 
 uint hash_func(const _pair_tetron& a)
 {
-	return (uint)((((u64)a.low_tetron) >> 4) * 27644437 + (((u64)a.high_tetron) >> 4) * 33391);
+	return (uint)((((u64)a.low_tetron) >> 4) * 27644437 + (((u64)a.high_tetron) >> 4) * 33391 + 68718952447);
+}
+
+namespace std
+{
+	std::size_t hash<_he_intermediate>::operator()(const _he_intermediate& a) const noexcept
+	{
+		return (uint)((((u64)a.tetron_before) >> 4) * 27644437 + (((u64)a.tetron_after) >> 4) * 33391 +
+			a.flags_before * 16769023 + a.flags_after * 17971 + 68718952447);
+	}
 }
 
 _tetron::_tetron()

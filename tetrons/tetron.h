@@ -332,6 +332,14 @@ namespace super_del_tetron2
 uint hash_func(const _pair_tetron& a);
 uint hash_func(const _he_intermediate& a);
 
+namespace std
+{
+	template<> struct hash<_he_intermediate>
+	{
+		std::size_t operator()(const _he_intermediate& custom) const noexcept;
+	};
+}
+
 template <typename _t> _t* _link::get(_tetron* t, u64 f)
 {
 	if (!test_flags(t, f)) return nullptr;
