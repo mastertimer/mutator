@@ -109,7 +109,7 @@
       <BrowseInformation>false</BrowseInformation>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir);library;tetrons;../library</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);library;tetrons</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4100;4201;4244</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -151,7 +151,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);library;tetrons;../library</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);library;tetrons</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4100;4201;4244</DisableSpecificWarnings>
       <AdditionalUsingDirectories>
       </AdditionalUsingDirectories>
@@ -165,12 +165,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\library\basic.cpp" />
-    <ClCompile Include="..\library\geometry.cpp" />
-    <ClCompile Include="..\library\graphics.cpp" />
-    <ClCompile Include="..\library\json.cpp" />
-    <ClCompile Include="..\library\multi_string.cpp" />
-    <ClCompile Include="..\library\win_basic.cpp" />
+    <ClCompile Include="library\basic.cpp" />
+    <ClCompile Include="library\geometry.cpp" />
+    <ClCompile Include="library\graphics.cpp" />
+    <ClCompile Include="library\json.cpp" />
+    <ClCompile Include="library\multi_string.cpp" />
+    <ClCompile Include="library\win_basic.cpp" />
     <ClCompile Include="library\tests.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mutator.cpp" />
@@ -179,13 +179,13 @@
     <ClCompile Include="tetrons\t_function.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\library\basic.h" />
-    <ClInclude Include="..\library\geometry.h" />
-    <ClInclude Include="..\library\graphics.h" />
-    <ClInclude Include="..\library\hash.h" />
-    <ClInclude Include="..\library\json.h" />
-    <ClInclude Include="..\library\multi_string.h" />
-    <ClInclude Include="..\library\win_basic.h" />
+    <ClInclude Include="library\basic.h" />
+    <ClInclude Include="library\geometry.h" />
+    <ClInclude Include="library\graphics.h" />
+    <ClInclude Include="library\hash.h" />
+    <ClInclude Include="library\json.h" />
+    <ClInclude Include="library\multi_string.h" />
+    <ClInclude Include="library\win_basic.h" />
     <ClInclude Include="library\tests.h" />
     <ClInclude Include="mutator.h" />
     <ClInclude Include="resource.h" />

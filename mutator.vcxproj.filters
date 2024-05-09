@@ -38,22 +38,22 @@
     <ClCompile Include="tetrons\froglif.cpp">
       <Filter>Исходные файлы\tetrons</Filter>
     </ClCompile>
-    <ClCompile Include="..\library\basic.cpp">
+    <ClCompile Include="library\basic.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\library\geometry.cpp">
+    <ClCompile Include="library\geometry.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\library\graphics.cpp">
+    <ClCompile Include="library\graphics.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\library\json.cpp">
+    <ClCompile Include="library\json.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\library\multi_string.cpp">
+    <ClCompile Include="library\multi_string.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\library\win_basic.cpp">
+    <ClCompile Include="library\win_basic.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
   </ItemGroup>
@@ -76,25 +76,25 @@
     <ClInclude Include="tetrons\froglif.h">
       <Filter>Исходные файлы\tetrons</Filter>
     </ClInclude>
-    <ClInclude Include="..\library\basic.h">
+    <ClInclude Include="library\basic.h">
       <Filter>Исходные файлы\library</Filter>
     </ClInclude>
-    <ClInclude Include="..\library\geometry.h">
+    <ClInclude Include="library\geometry.h">
       <Filter>Исходные файлы\library</Filter>
     </ClInclude>
-    <ClInclude Include="..\library\graphics.h">
+    <ClInclude Include="library\graphics.h">
       <Filter>Исходные файлы\library</Filter>
     </ClInclude>
-    <ClInclude Include="..\library\hash.h">
+    <ClInclude Include="library\hash.h">
       <Filter>Исходные файлы\library</Filter>
     </ClInclude>
-    <ClInclude Include="..\library\json.h">
+    <ClInclude Include="library\json.h">
       <Filter>Исходные файлы\library</Filter>
     </ClInclude>
-    <ClInclude Include="..\library\multi_string.h">
+    <ClInclude Include="library\multi_string.h">
       <Filter>Исходные файлы\library</Filter>
     </ClInclude>
-    <ClInclude Include="..\library\win_basic.h">
+    <ClInclude Include="library\win_basic.h">
       <Filter>Исходные файлы\library</Filter>
     </ClInclude>
   </ItemGroup>

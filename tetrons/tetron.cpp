@@ -31,8 +31,8 @@ namespace std
 {
 	std::size_t hash<_he_intermediate>::operator()(const _he_intermediate& a) const noexcept
 	{
-		return (uint)((((u64)a.tetron_before) >> 4) * 27644437 + (((u64)a.tetron_after) >> 4) * 33391 +
-			a.flags_before * 16769023 + a.flags_after * 17971 + 68718952447);
+		return (((u64)a.tetron_before) >> 4) * 27644437 + (((u64)a.tetron_after) >> 4) * 33391 +
+			a.flags_before * 16769023 + a.flags_after * 17971 + 68718952447;
 	}
 }
 
