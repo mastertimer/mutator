@@ -1,12 +1,13 @@
 ﻿#include "tetron.h"
 #include "mutator.h"
 #include "win_basic.h"
+#include "resource.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-std::wstring tetfile = L"..\\..\\tetrons.txt";
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+namespace
+{
+    WCHAR szWindowClass[] = L"MUTATOR";
+    std::wstring tetfile = L"..\\..\\tetrons.txt";
+}
 
 void change_window_text(HWND hwnd)
 {
@@ -118,29 +119,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		switch (wParam)
 		{
 		case VK_F1:
+		{
+			static bool norm = true;
+			if (norm)
 			{
-				static bool norm = true;
-				if (norm)
-				{
-					SetWindowLongPtr(hWnd, GWL_STYLE, WS_VISIBLE);
-					ShowWindow(hWnd, SW_MAXIMIZE);
-				}
-				else
-				{
-					ShowWindow(hWnd, SW_SHOWNORMAL);
-					SetWindowLongPtr(hWnd, GWL_STYLE, WS_VISIBLE | WS_OVERLAPPEDWINDOW);
-				}
-				norm = !norm;
+				SetWindowLongPtr(hWnd, GWL_STYLE, WS_VISIBLE);
+				ShowWindow(hWnd, SW_MAXIMIZE);
 			}
-			break;
+			else
+			{
+				ShowWindow(hWnd, SW_SHOWNORMAL);
+				SetWindowLongPtr(hWnd, GWL_STYLE, WS_VISIBLE | WS_OVERLAPPEDWINDOW);
+			}
+			norm = !norm;
+		}
+		break;
 		case VK_F2:
-			{
-				run_timer = false;
-				int r = MessageBox(hWnd, L"сохранить?", L"предупреждение", MB_YESNO);
-				if (r == IDYES) _mutator::save_to_txt_file(exe_path / tetfile);
-				run_timer = true;
-			}
-			break;
+		{
+			run_timer = false;
+			int r = MessageBox(hWnd, L"сохранить?", L"предупреждение", MB_YESNO);
+			if (r == IDYES) _mutator::save_to_txt_file(exe_path / tetfile);
+			run_timer = true;
+		}
+		break;
 		case VK_CONTROL:
 			*n_s_ctrl  ->operator i64* () = 1;
 			break;
@@ -199,37 +200,62 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
-int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
+ATOM MyRegisterClass(HINSTANCE hInstance)
 {
-	exe_path = get_exe_path(hInstance);
-	if (!_mutator::start(exe_path / tetfile)) return 1;
+    WNDCLASSEXW wcex;
 
-	static TCHAR szWindowClass[] = L"win64app";
-	WNDCLASSEX wcex;
-	wcex.cbSize = sizeof(WNDCLASSEX);
-	wcex.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
-	wcex.lpfnWndProc = WndProc;
-	wcex.cbClsExtra = 0;
-	wcex.cbWndExtra = 0;
-	wcex.hInstance = hInstance;
-	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(101)); // 101 из resourse.h
-	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wcex.hbrBackground = 0;
-	wcex.lpszMenuName = NULL;
-	wcex.lpszClassName = szWindowClass;
-	wcex.hIconSm = 0;
-	if (!RegisterClassEx(&wcex)) return 2;
-	HWND hWnd = CreateWindow(szWindowClass, L"mutator", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1600, 800,
-		NULL, NULL, hInstance, NULL);
-	if (!hWnd) return 3;
-	ShowWindow(hWnd, nCmdShow);
-	UpdateWindow(hWnd);
-	set_cursor((*n_perenos->operator i64 * ()) ? _cursor::size_all : _cursor::normal);
-	MSG msg;
-	while (GetMessage(&msg, NULL, 0, 0))
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
-	return (int)msg.wParam;
+    wcex.cbSize = sizeof(WNDCLASSEX);
+
+    wcex.style          = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+    wcex.lpfnWndProc    = WndProc;
+    wcex.cbClsExtra     = 0;
+    wcex.cbWndExtra     = 0;
+    wcex.hInstance      = hInstance;
+    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_MUTATOR));
+    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
+    wcex.hbrBackground = CreateSolidBrush(RGB(0, 0, 0));
+    wcex.lpszMenuName   = 0;
+    wcex.lpszClassName  = szWindowClass;
+    wcex.hIconSm        = 0;
+
+    return RegisterClassExW(&wcex);
+}
+
+BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
+{
+   HWND hWnd = CreateWindowW(szWindowClass, L"mutator", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, 
+       nullptr, nullptr, hInstance, nullptr);
+
+   if (!hWnd)
+   {
+      return FALSE;
+   }
+
+   ShowWindow(hWnd, nCmdShow);
+   UpdateWindow(hWnd);
+
+   return TRUE;
+}
+
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
+{
+    exe_path = get_exe_path(hInstance);
+    if (!_mutator::start(exe_path / tetfile)) return 1;
+
+    MyRegisterClass(hInstance);
+
+    if (!InitInstance(hInstance, nCmdShow))
+    {
+        return FALSE;
+    }
+    set_cursor((*n_perenos->operator i64 * ()) ? _cursor::size_all : _cursor::normal);
+
+    MSG msg;
+    while (GetMessage(&msg, nullptr, 0, 0))
+    {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    return (int)msg.wParam;
 }

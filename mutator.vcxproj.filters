@@ -1,43 +1,73 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="Исходные файлы">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Файлы заголовков">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
     <Filter Include="Файлы ресурсов">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Исходные файлы">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>
-      </Extensions>
-    </Filter>
     <Filter Include="Исходные файлы\library">
-      <UniqueIdentifier>{3992fe31-edea-467d-9170-02cc008116be}</UniqueIdentifier>
-      <Extensions>
-      </Extensions>
+      <UniqueIdentifier>{f0eb3ced-d6a5-4f03-8072-399132093ea3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\library">
+      <UniqueIdentifier>{eb75b494-59b7-4830-b17d-1a93dbc93516}</UniqueIdentifier>
     </Filter>
     <Filter Include="Исходные файлы\tetrons">
-      <UniqueIdentifier>{5094bb71-0e68-406b-8a8c-30558c4e4b1e}</UniqueIdentifier>
+      <UniqueIdentifier>{5a670fce-f636-4511-987e-6e124c40dc7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\tetrons">
+      <UniqueIdentifier>{d02529d4-6b49-4dce-a9f7-17669481057d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="mutator.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="tetrons\tetron.cpp">
-      <Filter>Исходные файлы\tetrons</Filter>
-    </ClCompile>
-    <ClCompile Include="tetrons\t_function.cpp">
-      <Filter>Исходные файлы\tetrons</Filter>
-    </ClCompile>
-    <ClCompile Include="library\tests.cpp">
-      <Filter>Исходные файлы\library</Filter>
-    </ClCompile>
-    <ClCompile Include="tetrons\froglif.cpp">
-      <Filter>Исходные файлы\tetrons</Filter>
-    </ClCompile>
+    <ClInclude Include="library\basic.h">
+      <Filter>Файлы заголовков\library</Filter>
+    </ClInclude>
+    <ClInclude Include="library\geometry.h">
+      <Filter>Файлы заголовков\library</Filter>
+    </ClInclude>
+    <ClInclude Include="library\graphics.h">
+      <Filter>Файлы заголовков\library</Filter>
+    </ClInclude>
+    <ClInclude Include="library\hash.h">
+      <Filter>Файлы заголовков\library</Filter>
+    </ClInclude>
+    <ClInclude Include="library\json.h">
+      <Filter>Файлы заголовков\library</Filter>
+    </ClInclude>
+    <ClInclude Include="library\multi_string.h">
+      <Filter>Файлы заголовков\library</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Файлы заголовков\library</Filter>
+    </ClInclude>
+    <ClInclude Include="library\tests.h">
+      <Filter>Файлы заголовков\library</Filter>
+    </ClInclude>
+    <ClInclude Include="library\win_basic.h">
+      <Filter>Файлы заголовков\library</Filter>
+    </ClInclude>
+    <ClInclude Include="tetrons\froglif.h">
+      <Filter>Файлы заголовков\tetrons</Filter>
+    </ClInclude>
+    <ClInclude Include="tetrons\t_function.h">
+      <Filter>Файлы заголовков\tetrons</Filter>
+    </ClInclude>
+    <ClInclude Include="tetrons\tetron.h">
+      <Filter>Файлы заголовков\tetrons</Filter>
+    </ClInclude>
+    <ClInclude Include="mutator.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="library\basic.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
@@ -53,50 +83,27 @@
     <ClCompile Include="library\multi_string.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
+    <ClCompile Include="library\tests.cpp">
+      <Filter>Исходные файлы\library</Filter>
+    </ClCompile>
     <ClCompile Include="library\win_basic.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="mutator.h">
+    <ClCompile Include="tetrons\froglif.cpp">
+      <Filter>Исходные файлы\tetrons</Filter>
+    </ClCompile>
+    <ClCompile Include="tetrons\t_function.cpp">
+      <Filter>Исходные файлы\tetrons</Filter>
+    </ClCompile>
+    <ClCompile Include="tetrons\tetron.cpp">
+      <Filter>Исходные файлы\tetrons</Filter>
+    </ClCompile>
+    <ClCompile Include="mutator.cpp">
       <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
+    </ClCompile>
+    <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="tetrons\tetron.h">
-      <Filter>Исходные файлы\tetrons</Filter>
-    </ClInclude>
-    <ClInclude Include="tetrons\t_function.h">
-      <Filter>Исходные файлы\tetrons</Filter>
-    </ClInclude>
-    <ClInclude Include="library\tests.h">
-      <Filter>Исходные файлы\library</Filter>
-    </ClInclude>
-    <ClInclude Include="tetrons\froglif.h">
-      <Filter>Исходные файлы\tetrons</Filter>
-    </ClInclude>
-    <ClInclude Include="library\basic.h">
-      <Filter>Исходные файлы\library</Filter>
-    </ClInclude>
-    <ClInclude Include="library\geometry.h">
-      <Filter>Исходные файлы\library</Filter>
-    </ClInclude>
-    <ClInclude Include="library\graphics.h">
-      <Filter>Исходные файлы\library</Filter>
-    </ClInclude>
-    <ClInclude Include="library\hash.h">
-      <Filter>Исходные файлы\library</Filter>
-    </ClInclude>
-    <ClInclude Include="library\json.h">
-      <Filter>Исходные файлы\library</Filter>
-    </ClInclude>
-    <ClInclude Include="library\multi_string.h">
-      <Filter>Исходные файлы\library</Filter>
-    </ClInclude>
-    <ClInclude Include="library\win_basic.h">
-      <Filter>Исходные файлы\library</Filter>
-    </ClInclude>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mutator.rc">
@@ -104,7 +111,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="MUTATOR.ico">
+    <Image Include="mutator.ico">
       <Filter>Файлы ресурсов</Filter>
     </Image>
   </ItemGroup>
