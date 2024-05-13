@@ -19,11 +19,11 @@
     <Filter Include="Файлы заголовков\library">
       <UniqueIdentifier>{eb75b494-59b7-4830-b17d-1a93dbc93516}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Исходные файлы\tetrons">
-      <UniqueIdentifier>{5a670fce-f636-4511-987e-6e124c40dc7c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Файлы заголовков\tetrons">
+    <Filter Include="Файлы заголовков\mutator">
       <UniqueIdentifier>{d02529d4-6b49-4dce-a9f7-17669481057d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\mutator">
+      <UniqueIdentifier>{5a670fce-f636-4511-987e-6e124c40dc7c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -54,17 +54,17 @@
     <ClInclude Include="library\win_basic.h">
       <Filter>Файлы заголовков\library</Filter>
     </ClInclude>
-    <ClInclude Include="tetrons\froglif.h">
-      <Filter>Файлы заголовков\tetrons</Filter>
+    <ClInclude Include="mutator\froglif.h">
+      <Filter>Файлы заголовков\mutator</Filter>
     </ClInclude>
-    <ClInclude Include="tetrons\t_function.h">
-      <Filter>Файлы заголовков\tetrons</Filter>
+    <ClInclude Include="mutator\t_function.h">
+      <Filter>Файлы заголовков\mutator</Filter>
     </ClInclude>
-    <ClInclude Include="tetrons\tetron.h">
-      <Filter>Файлы заголовков\tetrons</Filter>
+    <ClInclude Include="mutator\tetron.h">
+      <Filter>Файлы заголовков\mutator</Filter>
     </ClInclude>
-    <ClInclude Include="mutator.h">
-      <Filter>Файлы заголовков</Filter>
+    <ClInclude Include="mutator\mutator.h">
+      <Filter>Файлы заголовков\mutator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -89,20 +89,20 @@
     <ClCompile Include="library\win_basic.cpp">
       <Filter>Исходные файлы\library</Filter>
     </ClCompile>
-    <ClCompile Include="tetrons\froglif.cpp">
-      <Filter>Исходные файлы\tetrons</Filter>
+    <ClCompile Include="mutator\froglif.cpp">
+      <Filter>Исходные файлы\mutator</Filter>
     </ClCompile>
-    <ClCompile Include="tetrons\t_function.cpp">
-      <Filter>Исходные файлы\tetrons</Filter>
+    <ClCompile Include="mutator\t_function.cpp">
+      <Filter>Исходные файлы\mutator</Filter>
     </ClCompile>
-    <ClCompile Include="tetrons\tetron.cpp">
-      <Filter>Исходные файлы\tetrons</Filter>
-    </ClCompile>
-    <ClCompile Include="mutator.cpp">
-      <Filter>Исходные файлы</Filter>
+    <ClCompile Include="mutator\tetron.cpp">
+      <Filter>Исходные файлы\mutator</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="mutator\mutator.cpp">
+      <Filter>Исходные файлы\mutator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

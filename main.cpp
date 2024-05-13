@@ -6,7 +6,7 @@
 namespace
 {
     WCHAR szWindowClass[] = L"MUTATOR";
-    std::wstring tetfile = L"..\\..\\tetrons.txt";
+    std::wstring tetfile = L"..\\..\\mutator\\tetrons.txt";
 }
 
 void change_window_text(HWND hwnd)
