@@ -33,11 +33,10 @@ void paint(HWND hwnd)
 void init_shift(WPARAM wparam) // !!! сделать по аналогии c ctrl
 {
 	*n_s_shift ->operator i64* () = wparam & MK_SHIFT;
-	*n_s_alt   ->operator i64* () = false;
+	*n_s_ctrl  ->operator i64* () = wparam & MK_CONTROL;
 	*n_s_left  ->operator i64* () = wparam & MK_LBUTTON;
 	*n_s_right ->operator i64* () = wparam & MK_RBUTTON;
 	*n_s_middle->operator i64* () = wparam & MK_MBUTTON;
-	*n_s_double->operator i64* () = false;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -95,6 +94,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_LBUTTONDOWN: case WM_RBUTTONDOWN: case WM_MBUTTONDOWN:
 		init_shift(wParam);
+		*n_s_double->operator i64* () = false;
 		if (message == WM_LBUTTONDOWN) _mutator::mouse_button_left(true);
 		if (message == WM_RBUTTONDOWN) _mutator::mouse_button_right(true);
 		if (message == WM_MBUTTONDOWN) _mutator::mouse_button_middle(true);
@@ -102,6 +102,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_LBUTTONUP: case WM_RBUTTONUP: case WM_MBUTTONUP:
 		init_shift(wParam);
+		*n_s_double->operator i64* () = false;
 		if (message == WM_LBUTTONUP) _mutator::mouse_button_left(false);
 		if (message == WM_RBUTTONUP) _mutator::mouse_button_right(false);
 		if (message == WM_MBUTTONUP) _mutator::mouse_button_middle(false);
