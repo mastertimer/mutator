@@ -7,6 +7,15 @@
 
 #include "basic.h"
 
+struct _keyboard
+{
+	bool alt_key = false;
+	bool ctrl_key = false;
+	bool shift_key = false;
+};
+
+inline _keyboard keyboard;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void set_clipboard_text(std::string_view text);

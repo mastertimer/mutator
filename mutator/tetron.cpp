@@ -2374,7 +2374,7 @@ bool _g1list::mouse_wheel2(_xy r)
 		init_sel();
 		return true;
 	}
-	int dx = *n_wheel->operator i64 * ();
+	i64 dx = *n_wheel->operator i64 * ();
 	if (dx == 0) return true;
 	del_area();
 	bool start = false;

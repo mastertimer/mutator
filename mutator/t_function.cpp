@@ -344,7 +344,7 @@ void fun04(_tetron* tt0, _tetron* tt, u64 flags)
 	{
 		_xy tr = mouse_xy;
 		_t_trans* kor = *n_ko;
-		double kk = *n_wheel->operator i64 * ();
+		i64 kk = *n_wheel->operator i64 * ();
 		if ((kk > 0) && (kor->trans.scale > 1E12)) return;
 		kor->cha_area(kor->calc_area());
 		kor->trans.scale_up(tr, pow(1.1, kk));
