@@ -44,7 +44,7 @@ bool _mode::save()
 	return false;
 }
 
-void _mode::key_down()
+void _mode::key_down(u64 key)
 {
 }
 
@@ -53,26 +53,31 @@ _mode::~_mode()
 	stop();
 }
 
+std::wstring _mode::get_window_text()
+{
+	return {};
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void change_window_text(HWND hwnd)
 {
 	static std::wstring s_old;
-	wchar_t s[100];
-	swprintf(s, 100, L"%d  %4.1e", uint(_tetron::all_tetron.size()), _mutator::get_main_scale());
+	auto s = main_modes[mode_name]->get_window_text();
 	if (s_old == s) return;
 	s_old = s;
-	SetWindowText(hwnd, s);
+	SetWindowText(hwnd, s.c_str());
 }
 
-void paint(HWND hwnd)
+void paint(HWND hwnd, bool all = false)
 {
-	change_window_text(hwnd);
 	HDC hdc = GetDC(hwnd);
 	RECT rect;
 	GetClientRect(hwnd, &rect);
-	_mutator::draw({ rect.right, rect.bottom });
-	BitBlt(hdc, 0, 0, rect.right, rect.bottom, master_bm.hdc, 0, 0, SRCCOPY);
+	auto area = _mutator::draw({ rect.right, rect.bottom });
+	if (all) area = _isize(rect.right, rect.bottom);
+	if (!area.empty()) BitBlt(hdc, int(area.x.min), int(area.y.min), int(area.x.length()), int(area.y.length()),
+		master_bm.hdc, int(area.x.min), int(area.y.min), SRCCOPY);
 	ReleaseDC(hwnd, hdc);
 }
 
@@ -113,7 +118,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		init_shift(wParam);
 		mouse_xy = { ((double)(short)LOWORD(lParam)), ((double)(short)HIWORD(lParam)) };
 		n_move->run(0, n_move, flag_run);
-		if (!master_obl_izm.empty()) paint(hWnd);
+		paint(hWnd);
 		return 0;
 	case WM_MOUSELEAVE:
 		tracking_mouse = false;
@@ -137,7 +142,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		init_shift(GET_KEYSTATE_WPARAM(wParam));
 		*n_wheel->operator i64* () = GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 		n_wheel->run(0, n_wheel, flag_run);
-		if (!master_obl_izm.empty()) paint(hWnd);
+		paint(hWnd);
 		return 0;
 	case WM_LBUTTONDOWN: case WM_RBUTTONDOWN: case WM_MBUTTONDOWN:
 		init_shift(wParam);
@@ -145,7 +150,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (message == WM_LBUTTONDOWN) _mutator::mouse_button_left(true);
 		if (message == WM_RBUTTONDOWN) _mutator::mouse_button_right(true);
 		if (message == WM_MBUTTONDOWN) _mutator::mouse_button_middle(true);
-		if (!master_obl_izm.empty()) paint(hWnd);
+		paint(hWnd);
 		return 0;
 	case WM_LBUTTONUP: case WM_RBUTTONUP: case WM_MBUTTONUP:
 		init_shift(wParam);
@@ -153,7 +158,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (message == WM_LBUTTONUP) _mutator::mouse_button_left(false);
 		if (message == WM_RBUTTONUP) _mutator::mouse_button_right(false);
 		if (message == WM_MBUTTONUP) _mutator::mouse_button_middle(false);
-		if (!master_obl_izm.empty()) paint(hWnd);
+		paint(hWnd);
 		return 0;
 	case WM_LBUTTONDBLCLK: case WM_RBUTTONDBLCLK: case WM_MBUTTONDBLCLK:
 		init_shift(wParam);
@@ -161,7 +166,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (message == WM_LBUTTONDBLCLK) n_down_left->run(0, n_down_left, flag_run);
 		if (message == WM_RBUTTONDBLCLK) n_down_right->run(0, n_down_right, flag_run);
 		if (message == WM_MBUTTONDBLCLK) n_down_middle->run(0, n_down_middle, flag_run);
-		if (!master_obl_izm.empty()) paint(hWnd);
+		paint(hWnd);
 		return 0;
 	case WM_KEYDOWN:
 		switch (wParam)
@@ -192,31 +197,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		case VK_CONTROL:
 			keyboard.ctrl_key = true;
-			*n_s_ctrl  ->operator i64* () = 1;
-			break;
 		default:
-			*n_down_key->operator i64* () = wParam;
-			n_down_key->run(0, n_down_key, flag_run);
-			if (!master_obl_izm.empty()) paint(hWnd);
+			main_modes[mode_name]->key_down(wParam);
+			paint(hWnd);
 		}
 		return 0;
 	case WM_KEYUP:
 		if (wParam == VK_CONTROL)
 		{
 			keyboard.ctrl_key = false;
-			*n_s_ctrl  ->operator i64* () = 0;
+			*n_s_ctrl->operator i64* () = 0;
 		}
 		return 0;
 	case WM_CHAR:
 		*n_press_key->operator i64* () = wParam;
 		n_press_key->run(0, n_press_key, flag_run);
-		if (!master_obl_izm.empty()) paint(hWnd);
+		paint(hWnd);
 		return 0;
 	case WM_PAINT:
 	{
 		PAINTSTRUCT ps;
 		BeginPaint(hWnd, &ps);
-		paint(hWnd);
+		paint(hWnd, true);
 		EndPaint(hWnd, &ps);
 		return 0;
 	}
@@ -229,7 +231,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 		case 1:
 			n_timer1000->run(0, n_timer1000, flag_run);
-			if (!master_obl_izm.empty()) paint(hWnd);
+			paint(hWnd);
+			change_window_text(hWnd);
 			break;
 		case 2:
 			n_timer250->run(0, n_timer250, flag_run);

@@ -4,13 +4,17 @@
 #include <memory>
 #include <map>
 
+#include "basic.h"
+
 struct _mode
 {
+    virtual ~_mode();
+
     bool start();
     bool stop();
     virtual bool save();
-    virtual void key_down();
-    virtual ~_mode();
+    virtual void key_down(u64 key);
+    virtual std::wstring get_window_text();
 private:
     bool started = false;
 

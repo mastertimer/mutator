@@ -224,16 +224,18 @@ void _mutator::resize(_isize r)
 	prev_size = r;
 }
 
-void _mutator::draw(_isize r)
+_iarea _mutator::draw(_isize r)
 {
 	if (master_bm.resize(r)) master_obl_izm = r;
-	if (master_obl_izm.empty()) return;
+	if (master_obl_izm.empty()) return {};
 	master_bm.set_drawing_area(master_obl_izm);
 	master_obl_izm &= master_bm.get_size();
 	master_bm.clear(cc0);
 	master_chain_go.clear();
 	n_ko->operator _t_trans* ()->ris(_trans(), false);
+	_iarea result = master_obl_izm;
 	master_obl_izm = _area();
+	return result;
 }
 
 bool _mutator_mode::start2()
@@ -323,6 +325,25 @@ void _mutator::mouse_button_middle(bool pressed)
 	if (pressed) n_down_middle->run(0, n_down_middle, flag_run); else n_up_middle->run(0, n_up_middle, flag_run);
 }
 
-void _mutator_mode::key_down()
+void _mutator_mode::key_down(u64 key)
 {
+	init_from_keyboard();
+	*n_down_key->operator i64* () = key;
+	n_down_key->run(0, n_down_key, flag_run);
+}
+
+void _mutator_mode::init_from_keyboard()
+{
+	*n_s_ctrl->operator i64* () = keyboard.ctrl_key;
+	*n_s_alt->operator i64* () = keyboard.alt_key;
+	*n_s_shift->operator i64* () = keyboard.shift_key;
+}
+
+std::wstring _mutator_mode::get_window_text()
+{
+	constexpr int max_len = 100;
+
+	wchar_t s[max_len];
+	swprintf(s, max_len, L"%d  %4.1e", uint(_tetron::all_tetron.size()), _mutator::get_main_scale());
+	return s;
 }
