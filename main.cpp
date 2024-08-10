@@ -5,12 +5,55 @@
 #include "win_basic.h"
 #include "resource.h"
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace
 {
     WCHAR szWindowClass[] = L"MUTATOR";
 
 	std::string mode_name = "mutator";
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool _mode::start()
+{
+	if (!started) started = start2();
+	return started;
+}
+
+bool _mode::start2()
+{
+	return false;
+}
+
+bool _mode::stop()
+{
+	if (!started) return true;
+	started = !stop2();
+	return !started;
+}
+
+bool _mode::stop2()
+{
+	return false;
+}
+
+bool _mode::save()
+{
+	return false;
+}
+
+void _mode::key_down()
+{
+}
+
+_mode::~_mode()
+{
+	stop();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void change_window_text(HWND hwnd)
 {
@@ -143,7 +186,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			run_timer = false;
 			int r = MessageBox(hWnd, L"сохранить?", L"предупреждение", MB_YESNO);
-			if (r == IDYES) main_save();
+			if (r == IDYES) main_modes[mode_name]->save();
 			run_timer = true;
 			break;
 		}
@@ -244,20 +287,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    return TRUE;
 }
 
-bool start_mode()
-{
-	auto mode = main_modes.find(mode_name);
-	if (mode == main_modes.end())
-	{
-		return false;
-	}
-	return mode->second();
-}
-
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
     exe_path = get_exe_path(hInstance);
-    if (!start_mode()) return 1;
+    if (!main_modes[mode_name]->start()) return 1;
 
     MyRegisterClass(hInstance);
 

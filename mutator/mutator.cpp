@@ -45,7 +45,7 @@ std::wstring tetfile = L"..\\..\\mutator\\tetrons.txt";
 
 bool start_unit()
 {
-	main_modes["mutator"] = _mutator::start;
+	main_modes["mutator"] = std::make_unique<_mutator_mode>();
 	return true;
 }
 auto ignore = start_unit();
@@ -54,7 +54,7 @@ auto ignore = start_unit();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_tetron* _mutator::create_tetron(const std::string& name)
+_tetron* create_tetron(const std::string& name)
 {
 #define make(name) {""#name, []() -> _tetron* { return new name; }}
 	static std::map<std::string, std::function<_tetron* ()>> ss_tetron =
@@ -131,7 +131,7 @@ _tetron* create_tetron(uchar type)
 	return nullptr;
 }
 
-bool _mutator::save_to_txt_file()
+bool _mutator_mode::save()
 {
 	const std::filesystem::path fn = exe_path / tetfile;
 
@@ -156,7 +156,7 @@ bool _mutator::save_to_txt_file()
 	return true;
 }
 
-void _mutator::init_layers()
+void init_layers()
 {
 	master_layers.clear();
 	if (!n_go_layer) return;
@@ -171,7 +171,7 @@ void _mutator::init_layers()
 	}
 }
 
-bool _mutator::load_from_txt_file(const std::filesystem::path& fn)
+bool _mutator_mode::load_from_txt_file(const std::filesystem::path& fn)
 {
 	_rjson tet(fn);
 	tet.arr("tetrons");
@@ -236,12 +236,10 @@ void _mutator::draw(_isize r)
 	master_obl_izm = _area();
 }
 
-bool _mutator::start()
+bool _mutator_mode::start2()
 {
-	main_save = save_to_txt_file;
-
 	static bool first_run = true;
-	if (first_run) first_run = false; else return false;
+	if (first_run) first_run = false; else return true;
 
 	const std::filesystem::path fn = exe_path / tetfile;
 
@@ -323,4 +321,8 @@ void _mutator::mouse_button_middle(bool pressed)
 {
 	*n_s_middle->operator i64* () = pressed;
 	if (pressed) n_down_middle->run(0, n_down_middle, flag_run); else n_up_middle->run(0, n_up_middle, flag_run);
+}
+
+void _mutator_mode::key_down()
+{
 }

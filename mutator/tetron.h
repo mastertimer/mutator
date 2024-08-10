@@ -139,7 +139,7 @@ struct _tetron
 	static inline std::unordered_map<u64, _tetron*> all_tetron;
 
 private:
-	friend struct _mutator;
+	friend struct _mutator_mode;
 	static inline u64 id_tetron = 1; // глобальный счетчик id тетронов
 
 	typedef void (*func_fl)(u64&, u64);
