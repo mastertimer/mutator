@@ -30,9 +30,27 @@
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <functional>
+#include <tuple>
 
 #include "t_function.h"
 #include "mutator.h"
+#include "../main.h"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+namespace
+{
+
+std::wstring tetfile = L"..\\..\\mutator\\tetrons.txt";
+
+bool start_unit()
+{
+	main_modes["mutator"] = _mutator::start;
+	return true;
+}
+auto ignore = start_unit();
+
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -113,8 +131,10 @@ _tetron* create_tetron(uchar type)
 	return nullptr;
 }
 
-void _mutator::save_to_txt_file(const std::filesystem::path& fn)
+bool _mutator::save_to_txt_file()
 {
+	const std::filesystem::path fn = exe_path / tetfile;
+
 	_wjson tet(fn);
 	std::map<u64, _tetron*> tt; // чтобы упорядочить тетроны
 	for (auto& i : _tetron::all_tetron) tt[i.first] = i.second;
@@ -133,6 +153,7 @@ void _mutator::save_to_txt_file(const std::filesystem::path& fn)
 	tet.end().arr("chosen");
 	for (auto i : master_chosen) tet.add(i->id);
 	tet.end().add("id_tetron", _tetron::id_tetron);
+	return true;
 }
 
 void _mutator::init_layers()
@@ -215,8 +236,15 @@ void _mutator::draw(_isize r)
 	master_obl_izm = _area();
 }
 
-bool _mutator::start(const std::filesystem::path& fn)
+bool _mutator::start()
 {
+	main_save = save_to_txt_file;
+
+	static bool first_run = true;
+	if (first_run) first_run = false; else return false;
+
+	const std::filesystem::path fn = exe_path / tetfile;
+
 	master_chosen.push_back(&n_ko);                // !!корневой графический объект (трансформация)
 	master_chosen.push_back(&n_s_shift);           // !!зажата клавиша Shift
 	master_chosen.push_back(&n_s_alt);             // !!зажата клавиша Alt

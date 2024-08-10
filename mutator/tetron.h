@@ -157,7 +157,7 @@ struct _id
 	void operator = (_tetron* b)                 { id = (b) ? b->id : 0; };
 
 	operator _tetron* ()          const noexcept { auto it = _tetron::all_tetron.find(id); return (it == _tetron::all_tetron.end()) ? nullptr : it->second; }
-	_tetron* operator->()         const noexcept { auto it = _tetron::all_tetron.find(id); return (it == _tetron::all_tetron.end()) ? nullptr : it->second;; }
+	_tetron* operator->()         const noexcept { auto it = _tetron::all_tetron.find(id); return (it == _tetron::all_tetron.end()) ? nullptr : it->second; }
 	operator bool()               const noexcept { return _tetron::all_tetron.find(id) != _tetron::all_tetron.end(); }
 
 	bool operator != (_tetron* b) const noexcept { return (b) ? (id != b->id) : (id != 0); }

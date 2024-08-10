@@ -1,4 +1,6 @@
-﻿#include "tetron.h"
+﻿#include "main.h"
+
+#include "tetron.h"
 #include "mutator.h"
 #include "win_basic.h"
 #include "resource.h"
@@ -6,7 +8,8 @@
 namespace
 {
     WCHAR szWindowClass[] = L"MUTATOR";
-    std::wstring tetfile = L"..\\..\\mutator\\tetrons.txt";
+
+	std::string mode_name = "mutator";
 }
 
 void change_window_text(HWND hwnd)
@@ -33,6 +36,7 @@ void paint(HWND hwnd)
 void init_shift(WPARAM wparam) // !!! сделать по аналогии c ctrl
 {
 	*n_s_shift ->operator i64* () = wparam & MK_SHIFT;
+	keyboard.ctrl_key = wparam & MK_CONTROL;
 	*n_s_ctrl  ->operator i64* () = wparam & MK_CONTROL;
 	*n_s_left  ->operator i64* () = wparam & MK_LBUTTON;
 	*n_s_right ->operator i64* () = wparam & MK_RBUTTON;
@@ -133,17 +137,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				SetWindowLongPtr(hWnd, GWL_STYLE, WS_VISIBLE | WS_OVERLAPPEDWINDOW);
 			}
 			norm = !norm;
+			break;
 		}
-		break;
 		case VK_F2:
 		{
 			run_timer = false;
 			int r = MessageBox(hWnd, L"сохранить?", L"предупреждение", MB_YESNO);
-			if (r == IDYES) _mutator::save_to_txt_file(exe_path / tetfile);
+			if (r == IDYES) main_save();
 			run_timer = true;
+			break;
 		}
-		break;
 		case VK_CONTROL:
+			keyboard.ctrl_key = true;
 			*n_s_ctrl  ->operator i64* () = 1;
 			break;
 		default:
@@ -155,6 +160,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_KEYUP:
 		if (wParam == VK_CONTROL)
 		{
+			keyboard.ctrl_key = false;
 			*n_s_ctrl  ->operator i64* () = 0;
 		}
 		return 0;
@@ -238,10 +244,20 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    return TRUE;
 }
 
+bool start_mode()
+{
+	auto mode = main_modes.find(mode_name);
+	if (mode == main_modes.end())
+	{
+		return false;
+	}
+	return mode->second();
+}
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
     exe_path = get_exe_path(hInstance);
-    if (!_mutator::start(exe_path / tetfile)) return 1;
+    if (!start_mode()) return 1;
 
     MyRegisterClass(hInstance);
 

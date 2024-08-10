@@ -66,6 +66,9 @@
     <ClInclude Include="mutator\mutator.h">
       <Filter>Файлы заголовков\mutator</Filter>
     </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="library\basic.cpp">

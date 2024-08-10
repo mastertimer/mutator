@@ -5,8 +5,8 @@
 struct _mutator
 {
 	static double get_main_scale();
-	static void save_to_txt_file(const std::filesystem::path& fn);
-	static bool start(const std::filesystem::path& fn);
+	static bool save_to_txt_file();
+	static bool start();
 	static void resize(_isize r);
 	static void draw(_isize r);
 
