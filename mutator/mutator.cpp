@@ -50,6 +50,13 @@ bool start_unit()
 }
 auto ignore = start_unit();
 
+void init_from_keyboard()
+{
+	*n_s_ctrl->operator i64* () = keyboard.ctrl_key;
+	*n_s_alt->operator i64* () = keyboard.alt_key;
+	*n_s_shift->operator i64* () = keyboard.shift_key;
+}
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -210,7 +217,7 @@ bool _mutator_mode::load_from_txt_file(const std::filesystem::path& fn)
 	return (tet.error == 0);
 }
 
-void _mutator::resize(_isize r)
+void _mutator_mode::resize(_isize r)
 {
 	static auto prev_size = _isize{ 1200, 800 };
 	if (prev_size != _isize{ 1200, 800 })
@@ -224,7 +231,7 @@ void _mutator::resize(_isize r)
 	prev_size = r;
 }
 
-_iarea _mutator::draw(_isize r)
+_iarea _mutator_mode::draw(_isize r)
 {
 	if (master_bm.resize(r)) master_obl_izm = r;
 	if (master_obl_izm.empty()) return {};
@@ -330,13 +337,6 @@ void _mutator_mode::key_down(u64 key)
 	init_from_keyboard();
 	*n_down_key->operator i64* () = key;
 	n_down_key->run(0, n_down_key, flag_run);
-}
-
-void _mutator_mode::init_from_keyboard()
-{
-	*n_s_ctrl->operator i64* () = keyboard.ctrl_key;
-	*n_s_alt->operator i64* () = keyboard.alt_key;
-	*n_s_shift->operator i64* () = keyboard.shift_key;
 }
 
 std::wstring _mutator_mode::get_window_text()

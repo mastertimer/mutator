@@ -4,7 +4,7 @@
 #include <memory>
 #include <map>
 
-#include "basic.h"
+#include "geometry.h"
 
 struct _mode
 {
@@ -15,6 +15,9 @@ struct _mode
     virtual bool save();
     virtual void key_down(u64 key);
     virtual std::wstring get_window_text();
+    virtual _iarea draw(_isize r);
+    virtual void resize(_isize r);
+
 private:
     bool started = false;
 

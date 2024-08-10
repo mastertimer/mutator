@@ -58,6 +58,15 @@ std::wstring _mode::get_window_text()
 	return {};
 }
 
+_iarea _mode::draw(_isize r)
+{
+	return {};
+}
+
+void _mode::resize(_isize r)
+{
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void change_window_text(HWND hwnd)
@@ -74,7 +83,7 @@ void paint(HWND hwnd, bool all = false)
 	HDC hdc = GetDC(hwnd);
 	RECT rect;
 	GetClientRect(hwnd, &rect);
-	auto area = _mutator::draw({ rect.right, rect.bottom });
+	auto area = main_modes[mode_name]->draw({ rect.right, rect.bottom });
 	if (all) area = _isize(rect.right, rect.bottom);
 	if (!area.empty()) BitBlt(hdc, int(area.x.min), int(area.y.min), int(area.x.length()), int(area.y.length()),
 		master_bm.hdc, int(area.x.min), int(area.y.min), SRCCOPY);
@@ -223,7 +232,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 	}
 	case WM_SIZE:
-		_mutator::resize({ LOWORD(lParam), HIWORD(lParam) });
+		main_modes[mode_name]->resize({ LOWORD(lParam), HIWORD(lParam) });
 		return 0;
 	case WM_TIMER:
 		if (!run_timer) return 0;
