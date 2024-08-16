@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include "basic.h"
 #include "../main.h"
 
 struct _mutator

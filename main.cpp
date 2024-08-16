@@ -206,6 +206,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		case VK_CONTROL:
 			keyboard.ctrl_key = true;
+			[[fallthrough]];
 		default:
 			main_modes[mode_name]->key_down(wParam);
 			paint(hWnd);

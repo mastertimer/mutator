@@ -118,7 +118,8 @@ struct _iinterval // [...)
 	bool empty()  const { return (max <= min); }
 	i64  center() const { i64 s = min + max; if (s < 0) s--; return s >> 1; }
 	i64  length() const { return (min < max) ? (max - min) : 0; }
-	_iinterval& operator << (i64 x);
+	_iinterval& operator+=(i64 x);
+	_iinterval operator+(i64 x) const { return _iinterval(*this) += x; }
 	bool test(i64 x) const { return (x >= min) && (x < max); }
 };
 

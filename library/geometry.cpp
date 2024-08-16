@@ -290,7 +290,7 @@ bool _iinterval::operator==(const _iinterval b) const
 	return ((min == b.min) && (max == b.max));
 }
 
-_iinterval& _iinterval::operator << (i64 x)
+_iinterval& _iinterval::operator += (i64 x)
 {
 	if (empty())
 	{
