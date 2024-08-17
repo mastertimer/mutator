@@ -64,12 +64,6 @@ void init_shift(WPARAM wparam) // !!! сделать по аналогии c ctr
 	mouse.left_button = wparam & MK_LBUTTON;
 	mouse.right_button = wparam & MK_RBUTTON;
 	mouse.middle_button = wparam & MK_MBUTTON;
-
-	*n_s_shift ->operator i64* () = wparam & MK_SHIFT;
-	*n_s_ctrl  ->operator i64* () = wparam & MK_CONTROL;
-	*n_s_left  ->operator i64* () = wparam & MK_LBUTTON;
-	*n_s_right ->operator i64* () = wparam & MK_RBUTTON;
-	*n_s_middle->operator i64* () = wparam & MK_MBUTTON;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -98,7 +92,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		init_shift(wParam);
 		mouse.position = { ((i64)(short)LOWORD(lParam)), ((i64)(short)HIWORD(lParam)) };
-		n_move->run(0, n_move, flag_run);
+		main_modes[mode_name]->mouse_move();
 		mouse.prev_position = mouse.position;
 		paint(hWnd);
 		return 0;
@@ -122,13 +116,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_MOUSEWHEEL:
 		init_shift(GET_KEYSTATE_WPARAM(wParam));
-		*n_wheel->operator i64* () = GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
-		n_wheel->run(0, n_wheel, flag_run);
+		main_modes[mode_name]->mouse_wheel(GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA);
 		paint(hWnd);
 		return 0;
 	case WM_LBUTTONDOWN: case WM_RBUTTONDOWN: case WM_MBUTTONDOWN:
 		init_shift(wParam);
-		*n_s_double->operator i64* () = false;
 		if (message == WM_LBUTTONDOWN) main_modes[mode_name]->mouse_button_left(true);
 		if (message == WM_RBUTTONDOWN) main_modes[mode_name]->mouse_button_right(true);
 		if (message == WM_MBUTTONDOWN) main_modes[mode_name]->mouse_button_middle(true);
@@ -136,7 +128,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_LBUTTONUP: case WM_RBUTTONUP: case WM_MBUTTONUP:
 		init_shift(wParam);
-		*n_s_double->operator i64* () = false;
 		if (message == WM_LBUTTONUP) main_modes[mode_name]->mouse_button_left(false);
 		if (message == WM_RBUTTONUP) main_modes[mode_name]->mouse_button_right(false);
 		if (message == WM_MBUTTONUP) main_modes[mode_name]->mouse_button_middle(false);
@@ -144,10 +135,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_LBUTTONDBLCLK: case WM_RBUTTONDBLCLK: case WM_MBUTTONDBLCLK:
 		init_shift(wParam);
-		*n_s_double->operator i64* () = true;
-		if (message == WM_LBUTTONDBLCLK) n_down_left->run(0, n_down_left, flag_run);
-		if (message == WM_RBUTTONDBLCLK) n_down_right->run(0, n_down_right, flag_run);
-		if (message == WM_MBUTTONDBLCLK) n_down_middle->run(0, n_down_middle, flag_run);
+		if (message == WM_LBUTTONDBLCLK) main_modes[mode_name]->mouse_button_left(true, true);
+		if (message == WM_RBUTTONDBLCLK) main_modes[mode_name]->mouse_button_right(true, true);
+		if (message == WM_MBUTTONDBLCLK) main_modes[mode_name]->mouse_button_middle(true, true);
 		paint(hWnd);
 		return 0;
 	case WM_KEYDOWN:

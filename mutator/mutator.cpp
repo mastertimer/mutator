@@ -44,10 +44,12 @@ struct _mutator_mode : public _mode
 	virtual std::wstring get_window_text() override;
 	virtual _iarea draw(_isize r) override;
 	virtual void resize(_isize r) override;
-	virtual void mouse_button_left(bool pressed) override;
-	virtual void mouse_button_right(bool pressed) override;
-	virtual void mouse_button_middle(bool pressed) override;
+	virtual void mouse_button_left(bool pressed, bool dbl) override;
+	virtual void mouse_button_right(bool pressed, bool dbl) override;
+	virtual void mouse_button_middle(bool pressed, bool dbl) override;
 	virtual _bitmap& get_bitmap() override { return master_bm; }
+	virtual void mouse_move() override;
+	virtual void mouse_wheel(i64 delta) override;
 
 private:
 	virtual bool start2() override;
@@ -66,11 +68,24 @@ bool start_unit()
 }
 auto ignore = start_unit();
 
-void init_from_keyboard()
+void init_keyboard()
 {
 	*n_s_ctrl->operator i64* () = keyboard.ctrl_key;
 	*n_s_alt->operator i64* () = keyboard.alt_key;
 	*n_s_shift->operator i64* () = keyboard.shift_key;
+}
+
+void init_mouse()
+{
+	*n_s_left  ->operator i64* () = mouse.left_button;
+	*n_s_right ->operator i64* () = mouse.right_button;
+	*n_s_middle->operator i64* () = mouse.middle_button;
+}
+
+void init_keyboard_mouse()
+{
+	init_keyboard();
+	init_mouse();
 }
 
 double get_main_scale()
@@ -330,27 +345,33 @@ bool _mutator_mode::start2()
 	return load_from_txt_file(fn);
 }
 
-void _mutator_mode::mouse_button_left(bool pressed)
+void _mutator_mode::mouse_button_left(bool pressed, bool dbl)
 {
+	init_keyboard_mouse();
+	*n_s_double->operator i64* () = dbl;
 	*n_s_left->operator i64* () = pressed;
 	if (pressed) n_down_left->run(0, n_down_left, flag_run); else n_up_left->run(0, n_up_left, flag_run);
 }
 
-void _mutator_mode::mouse_button_right(bool pressed)
+void _mutator_mode::mouse_button_right(bool pressed, bool dbl)
 {
+	init_keyboard_mouse();
+	*n_s_double->operator i64* () = dbl;
 	*n_s_right->operator i64* () = pressed;
 	if (pressed) n_down_right->run(0, n_down_right, flag_run); else n_up_right->run(0, n_up_right, flag_run);
 }
 
-void _mutator_mode::mouse_button_middle(bool pressed)
+void _mutator_mode::mouse_button_middle(bool pressed, bool dbl)
 {
+	init_keyboard_mouse();
+	*n_s_double->operator i64* () = dbl;
 	*n_s_middle->operator i64* () = pressed;
 	if (pressed) n_down_middle->run(0, n_down_middle, flag_run); else n_up_middle->run(0, n_up_middle, flag_run);
 }
 
 void _mutator_mode::key_down(u64 key)
 {
-	init_from_keyboard();
+	init_keyboard();
 	*n_down_key->operator i64* () = key;
 	n_down_key->run(0, n_down_key, flag_run);
 }
@@ -362,4 +383,17 @@ std::wstring _mutator_mode::get_window_text()
 	wchar_t s[max_len];
 	swprintf(s, max_len, L"%d  %4.1e", uint(_tetron::all_tetron.size()), get_main_scale());
 	return s;
+}
+
+void _mutator_mode::mouse_move()
+{
+	init_keyboard_mouse();
+	n_move->run(0, n_move, flag_run);
+}
+
+void _mutator_mode::mouse_wheel(i64 delta)
+{
+	init_keyboard_mouse();
+	*n_wheel->operator i64* () = delta;
+	n_wheel->run(0, n_wheel, flag_run);
 }

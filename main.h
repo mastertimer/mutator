@@ -15,9 +15,11 @@ struct _mode
     virtual std::wstring get_window_text() { return {}; }
     virtual _iarea draw(_isize r) { return {}; }
     virtual void resize(_isize r) {}
-    virtual void mouse_button_left(bool pressed) {}
-    virtual void mouse_button_right(bool pressed) {}
-    virtual void mouse_button_middle(bool pressed) {}
+    virtual void mouse_button_left(bool pressed, bool dbl = false) {}
+    virtual void mouse_button_right(bool pressed, bool dbl = false) {}
+    virtual void mouse_button_middle(bool pressed, bool dbl = false) {}
+    virtual void mouse_move() {}
+    virtual void mouse_wheel(i64 delta) {}
     virtual _bitmap& get_bitmap() = 0;
 
 private:
