@@ -20,7 +20,7 @@ struct _se_mode : public _mode
 	virtual void key_down(u64 key) override;
 	virtual void mouse_move() override;
 	virtual void mouse_leave() override;
-	virtual void mouse_wheel(i64 delta) override;
+	virtual void mouse_wheel(short delta) override;
 	virtual void mouse_button_left(bool pressed, bool dbl) override;
 	virtual void mouse_button_right(bool pressed, bool dbl) override;
 	virtual void mouse_button_middle(bool pressed, bool dbl) override;
@@ -176,7 +176,7 @@ void _se_mode::mouse_leave()
 	if (mouse.middle_button) ui.mouse_button_middle_up();
 }
 
-void _se_mode::mouse_wheel(i64 delta)
+void _se_mode::mouse_wheel(short delta)
 {
 	ui.mouse_wheel_turn(delta);
 }

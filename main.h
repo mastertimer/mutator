@@ -22,7 +22,7 @@ struct _mode
     virtual void mouse_button_middle(bool pressed, bool dbl = false) {}
     virtual void mouse_move() {}
     virtual void mouse_leave() {}
-    virtual void mouse_wheel(i64 delta) {}
+    virtual void mouse_wheel(short delta) {}
     virtual void timer1000() {}
     virtual void timer250() {}
     virtual void destroy() {}

@@ -22,11 +22,11 @@ void _ui_element::update()
 	for (auto element : copy_subelements) element->update();
 }
 
-void _ui_element::key_down(ushort key)
+void _ui_element::key_down(u64 key)
 {
 }
 
-void _ui_element::key_press(ushort key)
+void _ui_element::key_press(u64 key)
 {
 }
 
@@ -254,13 +254,13 @@ void _ui::run_timer250()
 	for (auto element : n_timer250) element->update();
 }
 
-void _ui::key_down(ushort key)
+void _ui::key_down(u64 key)
 {
 	if (!n_act_key) return;
 	n_act_key->key_down(key);
 }
 
-void _ui::key_press(ushort key)
+void _ui::key_press(u64 key)
 {
 	if (!n_act_key) return;
 	n_act_key->key_press(key);

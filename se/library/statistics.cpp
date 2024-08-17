@@ -157,8 +157,8 @@ _matrix _statistics::to_matrix()
 	_matrix res(data.size(), 2);
 	for (i64 i = 0; i < (i64)data.size(); i++)
 	{
-		res[i][0] = data[i].value;
-		res[i][1] = data[i].number;
+		res[i][0] = double(data[i].value);
+		res[i][1] = double(data[i].number);
 	}
 	return res;
 }
@@ -173,8 +173,8 @@ _matrix _statistics::to_matrix(i64 mi, i64 ma)
 	_matrix res(k - n + 1, 2);
 	for (i64 i = n; i <= k; i++)
 	{
-		res[i - n][0] = data[i].value;
-		res[i - n][1] = data[i].number;
+		res[i - n][0] = double(data[i].value);
+		res[i - n][1] = double(data[i].number);
 	}
 	return res;
 }

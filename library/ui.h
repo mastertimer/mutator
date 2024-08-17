@@ -31,8 +31,8 @@ struct _ui_element : public std::enable_shared_from_this<_ui_element>
 	_area calc_area(); // вычислить область
 
 	virtual void update();
-	virtual void key_down(ushort key);
-	virtual void key_press(ushort key);
+	virtual void key_down(u64 key);
+	virtual void key_press(u64 key);
 	virtual bool mouse_wheel2(_xy r, short value);
 	virtual bool mouse_down_left2(_xy r);
 	virtual void mouse_move_left2(_xy r);
@@ -138,8 +138,8 @@ struct _ui
 	_iarea draw(_isize r);
 	void run_timer1000();
 	void run_timer250();
-	void key_down(ushort key);
-	void key_press(ushort key);
+	void key_down(u64 key);
+	void key_press(u64 key);
 	void mouse_move();
 	void mouse_button_left_down(bool dblclk = false);
 	void mouse_button_left_up();

@@ -9,7 +9,7 @@
 namespace
 {
 
-	inline i64 bit_for_value(u64 k) { return (k == 0) ? 0 : position1_64(k - 1); } // k - кол-во чисел. 1=0, 2=1, 4=2
+	inline uchar bit_for_value(u64 k) { return (k == 0) ? 0 : position1_64(k - 1); } // k - кол-во чисел. 1=0, 2=1, 4=2
 
 	struct _cdf // структура частот для сжатия чисел с переменным количеством бит
 	{
@@ -596,17 +596,17 @@ i64  _compressed_exchange_data::decoding_delta_number(i64 a)
 
 bool _compressed_exchange_data::read0(_supply_and_demand& c)
 {
-	c.demand.back().price = data.pop(16);
+	c.demand.back().price = int(data.pop(16));
 	for (i64 i = size_offer - 1; i >= 0; i--)
 	{
-		if (i != size_offer - 1) c.demand[i].price = c.demand[i + 1].price + f_delta.decoding(data);
-		c.demand[i].number = f_number.decoding(data);
+		if (i != size_offer - 1) c.demand[i].price = c.demand[i + 1].price + int(f_delta.decoding(data));
+		c.demand[i].number = int(f_number.decoding(data));
 	}
-	c.supply[0].price = c.demand[0].price + nnd.decoding(data);
+	c.supply[0].price = c.demand[0].price + int(nnd.decoding(data));
 	for (i64 i = 0; i < size_offer; i++)
 	{
-		if (i != 0) c.supply[i].price = c.supply[i - 1].price + f_delta.decoding(data);
-		c.supply[i].number = f_number.decoding(data);
+		if (i != 0) c.supply[i].price = c.supply[i - 1].price + int(f_delta.decoding(data));
+		c.supply[i].number = int(f_number.decoding(data));
 	}
 	base_buy.resize(size_offer);
 	base_sale.resize(size_offer);
@@ -642,7 +642,7 @@ bool _compressed_exchange_data::read12(_offer* v1, std::vector<_offer>& v0)
 			i += ser;
 			if (i >= n) break;
 			v1[i].price = v0[i].price;
-			v1[i].number = decoding_delta_number(v0[i].number);
+			v1[i].number = int(decoding_delta_number(v0[i].number));
 			v0[i].number = v1[i].number;
 			i++;
 		}
@@ -654,8 +654,8 @@ bool _compressed_exchange_data::read12(_offer* v1, std::vector<_offer>& v0)
 		i64 n2 = nnsegg[std::min((i64)v0.size(), size_offer)].decoding(data);
 		if (n2 == 0)
 		{
-			v1[0].price = lv - kk * f_delta.decoding(data);
-			v1[0].number = f_number.decoding(data);
+			v1[0].price = int(lv - kk * f_delta.decoding(data));
+			v1[0].number = int(f_number.decoding(data));
 			v0.insert(v0.begin(), v1[0]);
 			n = 1;
 		}
@@ -669,7 +669,7 @@ bool _compressed_exchange_data::read12(_offer* v1, std::vector<_offer>& v0)
 				i += ser;
 				if (i >= n) break;
 				v1[i].price = v0[i].price;
-				v1[i].number = decoding_delta_number(v0[i].number);
+				v1[i].number = int(decoding_delta_number(v0[i].number));
 				v0[i].number = v1[i].number;
 				i++;
 			}
@@ -681,8 +681,8 @@ bool _compressed_exchange_data::read12(_offer* v1, std::vector<_offer>& v0)
 		v0.insert(v0.begin(), izm, {});
 		for (i64 i = izm - 1; i >= 0; i--) // кодируется как c add0
 		{
-			v1[i].price = v0[i + 1].price + kk * f_delta.decoding(data);
-			v1[i].number = f_number.decoding(data);
+			v1[i].price = int(v0[i + 1].price + kk * f_delta.decoding(data));
+			v1[i].number = int(f_number.decoding(data));
 			v0[i] = v1[i];
 		}
 		n = izm;
@@ -699,7 +699,7 @@ bool _compressed_exchange_data::read12(_offer* v1, std::vector<_offer>& v0)
 				i += ser;
 				if (i >= n2) break;
 				v1[i].price = v0[i].price;
-				v1[i].number = decoding_delta_number(v0[i].number);
+				v1[i].number = int(decoding_delta_number(v0[i].number));
 				v0[i].number = v1[i].number;
 				i++;
 			}
@@ -714,8 +714,8 @@ bool _compressed_exchange_data::read12(_offer* v1, std::vector<_offer>& v0)
 			v0.resize(size_offer);
 			for (; n < size_offer; n++)
 			{
-				v1[n].price = v1[n - 1].price - kk * f_delta.decoding(data);
-				v1[n].number = f_number.decoding(data);
+				v1[n].price = int(v1[n - 1].price - kk * f_delta.decoding(data));
+				v1[n].number = int(f_number.decoding(data));
 				v0[n] = v1[n];
 			}
 			break;
@@ -726,8 +726,8 @@ bool _compressed_exchange_data::read12(_offer* v1, std::vector<_offer>& v0)
 				v0.erase(v0.begin() + n);
 			else
 			{
-				v1[n].price = v1[n - 1].price - kk * f_delta.decoding(data);
-				v1[n].number = f_number.decoding(data);
+				v1[n].price = int(v1[n - 1].price - kk * f_delta.decoding(data));
+				v1[n].number = int(f_number.decoding(data));
 				v0.insert(v0.begin() + n, v1[n]);
 				n++;
 			}
@@ -745,7 +745,7 @@ bool _compressed_exchange_data::read12(_offer* v1, std::vector<_offer>& v0)
 				i += ser;
 				if (i >= n2) break;
 				v1[i].price = v0[i].price;
-				v1[i].number = decoding_delta_number(v0[i].number);
+				v1[i].number = int(decoding_delta_number(v0[i].number));
 				v0[i].number = v1[i].number;
 				i++;
 			}

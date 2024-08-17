@@ -4,7 +4,7 @@
 #include "e_exchange_graph.h"
 
 i64 can_trade = -6; // разрешенное количество сделок (купить-продать = 2 сделки), отрицательное - неактивно
-int vrema_prodat = 0; // время когда нужно продать
+time_t vrema_prodat = 0; // время когда нужно продать
 
 void scan_supply_and_demand(_ui& ui)
 {

@@ -132,13 +132,13 @@ void _e_exchange_graph::ris2(_trans tr)
 
 	i64 ll2 = curve.size();
 
-	i64 k_el = local_area.x.length() / size_el;
+	i64 k_el = i64(local_area.x.length() / size_el);
 	if (k_el < 1) return;
 	double r_el = a.x.length() / k_el;
 
 	i64 n = index_data.size();
 	if (n == 0) return;
-	v_vib = n - 1;
+	v_vib = int(n - 1);
 	if (v_vib < 0) v_vib = 0;
 	int vib = (int)(polzi_ * v_vib + 0.5); // !! ползунок
 
@@ -186,7 +186,7 @@ void _e_exchange_graph::ris2(_trans tr)
 	}
 	// рисование горизонтальных линий сетки с подписями
 	i64 dex = 33; // длина подписи
-	i64 maxN = a.y.length() / 15;
+	i64 maxN = i64(a.y.length() / 15);
 	if (maxN > 1)
 	{
 		double mi, step;
@@ -228,8 +228,8 @@ void _e_exchange_graph::ris2(_trans tr)
 	if (stept % 3600) ido = 1;
 	if (stept % 60) ido = 0;
 	std::string s = "00:00";
-	int mintime = 0;
-	int pr_time = 0;
+	time_t mintime = 0;
+	time_t pr_time = 0;
 	for (uint i = 0; i < time_.size(); i++)
 	{
 		if (time_[i] == 0) continue;
@@ -267,10 +267,10 @@ void _e_exchange_graph::ris2(_trans tr)
 		}
 	}
 	// рисование даты
-	ui->canvas.text16n(std::max(a.x.min, 0.0) + dex + 10, std::max(a.y.min, 0.0) + 11,
+	ui->canvas.text16n(std::max(i64(a.x.min), 0i64) + dex + 10, std::max(i64(a.y.min), 0i64) + 11,
 		date_to_ansi_string(mintime).data(), 4, ui->cc2 - 0x80000000, 0xA0000000);
 	// рисование количества элементов
-	ui->canvas.text16n(std::max(a.x.min, 0.0) + dex + 10, std::max(a.y.min, 0.0) + 61,
+	ui->canvas.text16n(std::max(i64(a.x.min), 0i64) + dex + 10, std::max(i64(a.y.min), 0i64) + 61,
 		std::to_string(ed.size()).data(), 2, 0x80ff0000, 0xA0000000);
 }
 

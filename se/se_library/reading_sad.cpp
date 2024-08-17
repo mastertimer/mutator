@@ -194,7 +194,7 @@ std::optional<_supply_and_demand> read_sad_from_screen()
 				if (c < L'0' || c > L'9') return std::nullopt;
 				return c - L'0';
 			};
-		std::optional<i64> c;
+		std::optional<int> c;
 		if (c = read_c(x0); !c) goto err;
 		_offer off{ 0,0 };
 		off.price = *c;

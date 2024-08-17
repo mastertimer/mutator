@@ -52,7 +52,7 @@ struct _mutator_mode : public _mode
 	virtual _bitmap& get_bitmap() override { return master_bm; }
 	virtual void mouse_move() override;
 	virtual void mouse_leave() override;
-	virtual void mouse_wheel(i64 delta) override;
+	virtual void mouse_wheel(short delta) override;
 	virtual void timer1000() override;
 	virtual void timer250() override;
 	virtual void destroy() override;
@@ -408,7 +408,7 @@ void _mutator_mode::mouse_move()
 	n_move->run(0, n_move, flag_run);
 }
 
-void _mutator_mode::mouse_wheel(i64 delta)
+void _mutator_mode::mouse_wheel(short delta)
 {
 	init_keyboard_mouse();
 	*n_wheel->operator i64* () = delta;

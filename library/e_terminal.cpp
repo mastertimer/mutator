@@ -232,7 +232,7 @@ void _e_terminal::update()
 	visible_cursor = !visible_cursor;
 }
 
-void _e_terminal::key_down(ushort key)
+void _e_terminal::key_down(u64 key)
 {
 	visible_cursor = true;
 	switch (key)
@@ -367,13 +367,13 @@ void _e_terminal::set_clipboard()
 	selection_begin.x = -1;
 }
 
-void _e_terminal::key_press(ushort key)
+void _e_terminal::key_press(u64 key)
 {
 	if (key < 32) return;
 	if (insert_mode || (cursor >= (i64)cmd.size()))
-		cmd.insert(cursor, 1, key);
+		cmd.insert(cursor, 1, ushort(key));
 	else
-		cmd[cursor] = key;
+		cmd[cursor] = ushort(key);
 	cursor++;
 	old_cmd_vis_len = -1;
 	selection_begin.x = -1;
