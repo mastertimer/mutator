@@ -1,6 +1,5 @@
 ﻿#include "main.h"
 
-#include "tetron.h"
 #include "win_basic.h"
 #include "resource.h"
 
@@ -170,8 +169,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		main_modes[mode_name]->key_up(wParam);
 		return 0;
 	case WM_CHAR:
-		*n_press_key->operator i64* () = wParam;
-		n_press_key->run(0, n_press_key, flag_run);
+		main_modes[mode_name]->key_press(wParam);
 		paint(hWnd);
 		return 0;
 	case WM_PAINT:
@@ -190,12 +188,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		switch (wParam)
 		{
 		case 1:
-			n_timer1000->run(0, n_timer1000, flag_run);
+			main_modes[mode_name]->timer1000();
 			paint(hWnd);
 			change_window_text(hWnd);
 			break;
 		case 2:
-			n_timer250->run(0, n_timer250, flag_run);
+			main_modes[mode_name]->timer250();
 			break;
 		}
 		return 0;
@@ -204,7 +202,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		SetTimer(hWnd, 2, 250, 0); // более быстрый, без отрисовки
 		return 0;
 	case WM_DESTROY:
-		run_before_del_link = false; // разобраться почему без этого - ошибка
+		main_modes[mode_name]->destroy();
 		KillTimer(hWnd, 1);
 		KillTimer(hWnd, 2);
 		PostQuitMessage(0);
@@ -261,7 +259,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     {
         return FALSE;
     }
-    set_cursor((*n_perenos->operator i64 * ()) ? _cursor::size_all : _cursor::normal);
+//    set_cursor((*n_perenos->operator i64 * ()) ? _cursor::size_all : _cursor::normal);
 
     MSG msg;
     while (GetMessage(&msg, nullptr, 0, 0))

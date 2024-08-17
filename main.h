@@ -13,6 +13,7 @@ struct _mode
     virtual bool save() { return false; }
     virtual void key_down(u64 key) {}
     virtual void key_up(u64 key) {}
+    virtual void key_press(u64 key) {}
     virtual std::wstring get_window_text() { return {}; }
     virtual _iarea draw(_isize r) { return {}; }
     virtual void resize(_isize r) {}
@@ -22,6 +23,10 @@ struct _mode
     virtual void mouse_move() {}
     virtual void mouse_leave() {}
     virtual void mouse_wheel(i64 delta) {}
+    virtual void timer1000() {}
+    virtual void timer250() {}
+    virtual void destroy() {}
+
     virtual _bitmap& get_bitmap() = 0;
 
 private:

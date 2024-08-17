@@ -42,6 +42,7 @@ struct _mutator_mode : public _mode
 	virtual bool save() override;
 	virtual void key_down(u64 key) override;
 	virtual void key_up(u64 key) override;
+	virtual void key_press(u64 key) override;
 	virtual std::wstring get_window_text() override;
 	virtual _iarea draw(_isize r) override;
 	virtual void resize(_isize r) override;
@@ -52,6 +53,9 @@ struct _mutator_mode : public _mode
 	virtual void mouse_move() override;
 	virtual void mouse_leave() override;
 	virtual void mouse_wheel(i64 delta) override;
+	virtual void timer1000() override;
+	virtual void timer250() override;
+	virtual void destroy() override;
 
 private:
 	virtual bool start2() override;
@@ -383,6 +387,12 @@ void _mutator_mode::key_up(u64 key)
 	init_keyboard();
 }
 
+void _mutator_mode::key_press(u64 key)
+{
+	*n_press_key->operator i64* () = key;
+	n_press_key->run(0, n_press_key, flag_run);
+}
+
 std::wstring _mutator_mode::get_window_text()
 {
 	constexpr int max_len = 100;
@@ -422,4 +432,19 @@ void _mutator_mode::mouse_leave()
 		*n_s_middle->operator i64* () = 0;
 		n_up_middle->run(0, n_up_middle, flag_run);
 	}
+}
+
+void _mutator_mode::timer1000()
+{
+	n_timer1000->run(0, n_timer1000, flag_run);
+}
+
+void _mutator_mode::timer250()
+{
+	n_timer250->run(0, n_timer250, flag_run);
+}
+
+void _mutator_mode::destroy()
+{
+	run_before_del_link = false; // разобраться почему без этого - ошибка
 }
