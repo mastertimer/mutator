@@ -8,7 +8,7 @@
 namespace
 {
 
-	constexpr wchar_t mmm_file[] = L"..\\..\\data\\mmm.txt";
+	constexpr wchar_t mmm_file[] = L"..\\..\\se\\data\\mmm.txt";
 	bool mmm_loaded = false;
 	std::wstring mmm1s = L"1";
 	std::wstring mmm2s = L"2";

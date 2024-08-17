@@ -43,6 +43,7 @@ void _exchange_data::load_from_file()
 
 	_stack mem;
 	mem.load_from_file(fn);
+	if (mem.size == 0) return;
 	i64 v = 0;
 	for (i64 i = 0; i < number_thread; i++)
 	{

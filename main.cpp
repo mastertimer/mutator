@@ -65,7 +65,7 @@ void paint(HWND hwnd, bool all = false)
 	ReleaseDC(hwnd, hdc);
 }
 
-void init_shift(WPARAM wparam) // !!! сделать по аналогии c ctrl
+void init_shift(WPARAM wparam)
 {
 	keyboard.ctrl_key = wparam & MK_CONTROL;
 	keyboard.shift_key = wparam & MK_SHIFT;
