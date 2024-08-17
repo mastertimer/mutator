@@ -48,8 +48,8 @@ namespace
 		result.d = rnd(70) / 10.0;
 		result.rep = (rnd(3) == 1) && with_rep;
 		result.inv = rnd(2);
-		result.c = rnd();
-		result.c2 = rnd();
+		result.c = uint(rnd());
+		result.c2 = uint(rnd());
 		if (result.rep)
 		{
 			result.c.a = 255;
@@ -77,20 +77,20 @@ namespace
 		if (vertical)
 		{
 			result.iarea.x.max = result.iarea.x.min + 1;
-			result.area.x.min = i64(result.area.x.min);
+			result.area.x.min = double(i64(result.area.x.min));
 			result.area.x.max = result.area.x.min + 0.7;
 		}
 		if (gorisontal)
 		{
 			result.iarea.y.max = result.iarea.y.min + 1;
-			result.area.y.min = i64(result.area.y.min);
+			result.area.y.min = double(i64(result.area.y.min));
 			result.area.y.max = result.area.y.min + 0.7;
 		}
 		result.d = rnd(70) / 10.0;
 		result.rep = rep;
 		result.inv = rnd(2);
-		result.c = rnd();
-		result.c2 = rnd();
+		result.c = uint(rnd());
+		result.c2 = uint(rnd());
 		if (result.rep)
 		{
 			result.c.a = 255;

@@ -411,8 +411,8 @@ bool _e_terminal::mouse_down_left2(_xy r)
 		i64 x_text = oo.x.min + otst_x;
 		i64 y_cmd = oo.y.max - otst_y;
 
-		i64 xx = (r.x - x_text) / font_width;
-		i64 yy = (y_cmd - r.y) / font_size + scrollbar;
+		i64 xx = i64((r.x - x_text) / font_width);
+		i64 yy = i64((y_cmd - r.y) / font_size + scrollbar);
 
 		selection_begin = { xx, yy };
 		selection_end = { xx, yy };
@@ -429,7 +429,7 @@ void _e_terminal::mouse_move_left2(_xy r)
 	{
 		i64 ypix = oo.y.length() - otst_y * 2 - y_slider.length();
 		i64 yline = full_lines - max_lines;
-		scrollbar = scrollbar0_move_slider - (r.y - y0_move_slider) * yline / ypix;
+		scrollbar = scrollbar0_move_slider - i64((r.y - y0_move_slider) * yline / ypix);
 		cha_area();
 		return;
 	}
@@ -437,8 +437,8 @@ void _e_terminal::mouse_move_left2(_xy r)
 	i64 x_text = oo.x.min + otst_x;
 	i64 y_cmd = oo.y.max - otst_y;
 
-	i64 xx = (r.x - x_text) / font_width;
-	i64 yy = (y_cmd - r.y) / font_size + scrollbar;
+	i64 xx = i64((r.x - x_text) / font_width);
+	i64 yy = i64((y_cmd - r.y) / font_size + scrollbar);
 	selection_end = { xx, yy };
 	if (yy - scrollbar < 0) scrollbar--;
 	if (yy - scrollbar >= max_lines) scrollbar++;
