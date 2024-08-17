@@ -69,7 +69,7 @@ std::wstring tetfile = L"..\\..\\mutator\\tetrons.txt";
 
 bool start_unit()
 {
-	main_modes["mutator"] = std::make_unique<_mutator_mode>();
+	main_modes[L"mutator"] = std::make_unique<_mutator_mode>();
 	return true;
 }
 auto ignore = start_unit();

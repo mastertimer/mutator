@@ -37,4 +37,4 @@ private:
 
 };
 
-inline std::map<std::string, std::unique_ptr<_mode>> main_modes;
+inline std::map<std::wstring, std::unique_ptr<_mode>> main_modes;

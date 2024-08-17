@@ -1,18 +1,26 @@
 ﻿#include "main.h"
 
 #include "win_basic.h"
+#include "json.h"
 #include "resource.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 namespace
 {
-    WCHAR szWindowClass[] = L"MUTATOR";
-
-	std::string mode_name = "mutator";
+	constexpr wchar_t sz_window_class[] = L"MUTATOR";
+	constexpr wchar_t settings_filemane[] = L"..\\..\\settings.json";
+	std::wstring mode_name = L"mutator";
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void load_settings()
+{
+	_rjson fs(exe_path / settings_filemane);
+	if (fs.error) return;
+	fs.read("mode", mode_name);
+}
 
 bool _mode::start()
 {
@@ -226,7 +234,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground = CreateSolidBrush(RGB(0, 0, 0));
     wcex.lpszMenuName   = 0;
-    wcex.lpszClassName  = szWindowClass;
+    wcex.lpszClassName  = sz_window_class;
     wcex.hIconSm        = 0;
 
     return RegisterClassExW(&wcex);
@@ -234,7 +242,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   HWND hWnd = CreateWindowW(szWindowClass, L"mutator", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, 
+   HWND hWnd = CreateWindowW(sz_window_class, L"mutator", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, 
        nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
@@ -251,7 +259,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
     exe_path = get_exe_path(hInstance);
-    if (!main_modes[mode_name]->start()) return 1;
+	load_settings();
+	if (!main_modes[mode_name]) return 1;
+    if (!main_modes[mode_name]->start()) return 2;
 
     MyRegisterClass(hInstance);
 

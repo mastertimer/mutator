@@ -471,7 +471,7 @@ void _e_terminal::run_cmd()
 	if (command_name.empty()) command_name = cmd.substr(i0, cmd.size() - i0);
 	// вычленение параметров
 	int rez = 0; // 0 - пробелы 1 - набор символов 2 - строка "safasf asf"
-	int start_p = 0;
+	i64 start_p = 0;
 	for (i64 i = i0 + command_name.size(); i < (i64)cmd.size(); i++)
 	{
 		wchar_t c = cmd[i];

@@ -27,7 +27,7 @@ struct _e_terminal : public _ui_element
 	_iarea area_cursor;
 	i64 scrollbar = 0; // отступ ползунка снизу
 	inline static int font_size = 14; // минимум 12 для читабельности
-	int font_width = 0; // ширина символов
+	i64 font_width = 0; // ширина символов
 	inline static std::wstring prefix = L"> ";
 	inline static i64 width_scrollbar = 15; // ширина полосы прокрутки
 	inline static i64 otst_x = 3; // отступ при рисовании
