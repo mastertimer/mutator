@@ -33,10 +33,25 @@
 #include <tuple>
 
 #include "t_function.h"
-#include "mutator.h"
 #include "../main.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct _mutator_mode : public _mode
+{
+	virtual bool save() override;
+	virtual void key_down(u64 key) override;
+	virtual std::wstring get_window_text() override;
+	virtual _iarea draw(_isize r) override;
+	virtual void resize(_isize r) override;
+	virtual void mouse_button_left(bool pressed) override;
+	virtual void mouse_button_right(bool pressed) override;
+	virtual void mouse_button_middle(bool pressed) override;
+
+private:
+	virtual bool start2() override;
+	bool load_from_txt_file(const std::filesystem::path& fn);
+};
 
 namespace
 {
@@ -55,6 +70,12 @@ void init_from_keyboard()
 	*n_s_ctrl->operator i64* () = keyboard.ctrl_key;
 	*n_s_alt->operator i64* () = keyboard.alt_key;
 	*n_s_shift->operator i64* () = keyboard.shift_key;
+}
+
+double get_main_scale()
+{
+	_t_trans* tr = *n_ko;
+	return tr->trans.scale;
 }
 
 }
@@ -308,25 +329,19 @@ bool _mutator_mode::start2()
 	return load_from_txt_file(fn);
 }
 
-double _mutator::get_main_scale()
-{
-	_t_trans* tr = *n_ko;
-	return tr->trans.scale;
-}
-
-void _mutator::mouse_button_left(bool pressed)
+void _mutator_mode::mouse_button_left(bool pressed)
 {
 	*n_s_left->operator i64* () = pressed;
 	if (pressed) n_down_left->run(0, n_down_left, flag_run); else n_up_left->run(0, n_up_left, flag_run);
 }
 
-void _mutator::mouse_button_right(bool pressed)
+void _mutator_mode::mouse_button_right(bool pressed)
 {
 	*n_s_right->operator i64* () = pressed;
 	if (pressed) n_down_right->run(0, n_down_right, flag_run); else n_up_right->run(0, n_up_right, flag_run);
 }
 
-void _mutator::mouse_button_middle(bool pressed)
+void _mutator_mode::mouse_button_middle(bool pressed)
 {
 	*n_s_middle->operator i64* () = pressed;
 	if (pressed) n_down_middle->run(0, n_down_middle, flag_run); else n_up_middle->run(0, n_up_middle, flag_run);
@@ -344,6 +359,6 @@ std::wstring _mutator_mode::get_window_text()
 	constexpr int max_len = 100;
 
 	wchar_t s[max_len];
-	swprintf(s, max_len, L"%d  %4.1e", uint(_tetron::all_tetron.size()), _mutator::get_main_scale());
+	swprintf(s, max_len, L"%d  %4.1e", uint(_tetron::all_tetron.size()), get_main_scale());
 	return s;
 }

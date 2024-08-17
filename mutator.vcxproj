@@ -146,7 +146,6 @@
     <ClInclude Include="library\tests.h" />
     <ClInclude Include="library\win_basic.h" />
     <ClInclude Include="main.h" />
-    <ClInclude Include="mutator\mutator.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="mutator\froglif.h" />
     <ClInclude Include="mutator\tetron.h" />

@@ -63,9 +63,6 @@
     <ClInclude Include="mutator\tetron.h">
       <Filter>Файлы заголовков\mutator</Filter>
     </ClInclude>
-    <ClInclude Include="mutator\mutator.h">
-      <Filter>Файлы заголовков\mutator</Filter>
-    </ClInclude>
     <ClInclude Include="main.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>

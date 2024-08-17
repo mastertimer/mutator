@@ -1,7 +1,6 @@
 ﻿#include "main.h"
 
 #include "tetron.h"
-#include "mutator.h"
 #include "win_basic.h"
 #include "resource.h"
 
@@ -22,11 +21,6 @@ bool _mode::start()
 	return started;
 }
 
-bool _mode::start2()
-{
-	return false;
-}
-
 bool _mode::stop()
 {
 	if (!started) return true;
@@ -34,37 +28,9 @@ bool _mode::stop()
 	return !started;
 }
 
-bool _mode::stop2()
-{
-	return false;
-}
-
-bool _mode::save()
-{
-	return false;
-}
-
-void _mode::key_down(u64 key)
-{
-}
-
 _mode::~_mode()
 {
 	stop();
-}
-
-std::wstring _mode::get_window_text()
-{
-	return {};
-}
-
-_iarea _mode::draw(_isize r)
-{
-	return {};
-}
-
-void _mode::resize(_isize r)
-{
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -156,17 +122,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONDOWN: case WM_RBUTTONDOWN: case WM_MBUTTONDOWN:
 		init_shift(wParam);
 		*n_s_double->operator i64* () = false;
-		if (message == WM_LBUTTONDOWN) _mutator::mouse_button_left(true);
-		if (message == WM_RBUTTONDOWN) _mutator::mouse_button_right(true);
-		if (message == WM_MBUTTONDOWN) _mutator::mouse_button_middle(true);
+		if (message == WM_LBUTTONDOWN) main_modes[mode_name]->mouse_button_left(true);
+		if (message == WM_RBUTTONDOWN) main_modes[mode_name]->mouse_button_right(true);
+		if (message == WM_MBUTTONDOWN) main_modes[mode_name]->mouse_button_middle(true);
 		paint(hWnd);
 		return 0;
 	case WM_LBUTTONUP: case WM_RBUTTONUP: case WM_MBUTTONUP:
 		init_shift(wParam);
 		*n_s_double->operator i64* () = false;
-		if (message == WM_LBUTTONUP) _mutator::mouse_button_left(false);
-		if (message == WM_RBUTTONUP) _mutator::mouse_button_right(false);
-		if (message == WM_MBUTTONUP) _mutator::mouse_button_middle(false);
+		if (message == WM_LBUTTONUP) main_modes[mode_name]->mouse_button_left(false);
+		if (message == WM_RBUTTONUP) main_modes[mode_name]->mouse_button_right(false);
+		if (message == WM_MBUTTONUP) main_modes[mode_name]->mouse_button_middle(false);
 		paint(hWnd);
 		return 0;
 	case WM_LBUTTONDBLCLK: case WM_RBUTTONDBLCLK: case WM_MBUTTONDBLCLK:
