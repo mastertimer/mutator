@@ -111,7 +111,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>library;mutator</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>library;mutator;se;se/library;se/se_library</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -127,7 +127,7 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>library;mutator</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>library;mutator;se;se/library;se/se_library</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -138,32 +138,59 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="library\basic.h" />
+    <ClInclude Include="library\e_terminal.h" />
     <ClInclude Include="library\geometry.h" />
     <ClInclude Include="library\graphics.h" />
     <ClInclude Include="library\hash.h" />
     <ClInclude Include="library\json.h" />
     <ClInclude Include="library\multi_string.h" />
     <ClInclude Include="library\tests.h" />
+    <ClInclude Include="library\ui.h" />
     <ClInclude Include="library\win_basic.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="mutator\froglif.h" />
     <ClInclude Include="mutator\tetron.h" />
     <ClInclude Include="mutator\t_function.h" />
+    <ClInclude Include="se\compressed_exchange_data.h" />
+    <ClInclude Include="se\exchange_research.h" />
+    <ClInclude Include="se\exchange_trade.h" />
+    <ClInclude Include="se\e_exchange_graph.h" />
+    <ClInclude Include="se\library\mathematics.h" />
+    <ClInclude Include="se\library\statistics.h" />
+    <ClInclude Include="se\mediator.h" />
+    <ClInclude Include="se\se_library\ed_sampling.h" />
+    <ClInclude Include="se\se_library\exchange_basic.h" />
+    <ClInclude Include="se\se_library\exchange_data.h" />
+    <ClInclude Include="se\se_library\reading_sad.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="library\basic.cpp" />
+    <ClCompile Include="library\e_terminal.cpp" />
     <ClCompile Include="library\geometry.cpp" />
     <ClCompile Include="library\graphics.cpp" />
     <ClCompile Include="library\json.cpp" />
     <ClCompile Include="library\multi_string.cpp" />
     <ClCompile Include="library\tests.cpp" />
+    <ClCompile Include="library\ui.cpp" />
     <ClCompile Include="library\win_basic.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mutator\mutator.cpp" />
     <ClCompile Include="mutator\froglif.cpp" />
     <ClCompile Include="mutator\tetron.cpp" />
     <ClCompile Include="mutator\t_function.cpp" />
+    <ClCompile Include="se\compressed_exchange_data.cpp" />
+    <ClCompile Include="se\exchange_research.cpp" />
+    <ClCompile Include="se\exchange_trade.cpp" />
+    <ClCompile Include="se\e_exchange_graph.cpp" />
+    <ClCompile Include="se\library\mathematics.cpp" />
+    <ClCompile Include="se\library\statistics.cpp" />
+    <ClCompile Include="se\mediator.cpp" />
+    <ClCompile Include="se\se.cpp" />
+    <ClCompile Include="se\se_library\ed_sampling.cpp" />
+    <ClCompile Include="se\se_library\exchange_basic.cpp" />
+    <ClCompile Include="se\se_library\exchange_data.cpp" />
+    <ClCompile Include="se\se_library\reading_sad.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mutator.rc" />

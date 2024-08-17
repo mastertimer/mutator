@@ -25,6 +25,24 @@
     <Filter Include="Исходные файлы\mutator">
       <UniqueIdentifier>{5a670fce-f636-4511-987e-6e124c40dc7c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\se">
+      <UniqueIdentifier>{5c182dd5-79a9-4caa-bbcb-0f03ec2606c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\se">
+      <UniqueIdentifier>{c96f6be8-b35c-4a5b-873c-e801bf0aecf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\se\library">
+      <UniqueIdentifier>{e190455e-fd0c-405d-b3f1-203800bbf9bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\se\library">
+      <UniqueIdentifier>{01ed68ac-5d09-4d7c-b2bb-d7b81bccf995}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\se\se_library">
+      <UniqueIdentifier>{d5337103-3786-407b-9729-950a914cdc3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\se\se_library">
+      <UniqueIdentifier>{2891be12-34c7-47e4-8808-02d036096bb9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\basic.h">
@@ -66,6 +84,45 @@
     <ClInclude Include="main.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="se\compressed_exchange_data.h">
+      <Filter>Файлы заголовков\se</Filter>
+    </ClInclude>
+    <ClInclude Include="se\e_exchange_graph.h">
+      <Filter>Файлы заголовков\se</Filter>
+    </ClInclude>
+    <ClInclude Include="se\exchange_research.h">
+      <Filter>Файлы заголовков\se</Filter>
+    </ClInclude>
+    <ClInclude Include="se\exchange_trade.h">
+      <Filter>Файлы заголовков\se</Filter>
+    </ClInclude>
+    <ClInclude Include="se\mediator.h">
+      <Filter>Файлы заголовков\se</Filter>
+    </ClInclude>
+    <ClInclude Include="se\library\mathematics.h">
+      <Filter>Файлы заголовков\se\library</Filter>
+    </ClInclude>
+    <ClInclude Include="se\library\statistics.h">
+      <Filter>Файлы заголовков\se\library</Filter>
+    </ClInclude>
+    <ClInclude Include="se\se_library\ed_sampling.h">
+      <Filter>Файлы заголовков\se\se_library</Filter>
+    </ClInclude>
+    <ClInclude Include="se\se_library\exchange_basic.h">
+      <Filter>Файлы заголовков\se\se_library</Filter>
+    </ClInclude>
+    <ClInclude Include="se\se_library\exchange_data.h">
+      <Filter>Файлы заголовков\se\se_library</Filter>
+    </ClInclude>
+    <ClInclude Include="se\se_library\reading_sad.h">
+      <Filter>Файлы заголовков\se\se_library</Filter>
+    </ClInclude>
+    <ClInclude Include="library\e_terminal.h">
+      <Filter>Файлы заголовков\library</Filter>
+    </ClInclude>
+    <ClInclude Include="library\ui.h">
+      <Filter>Файлы заголовков\library</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="library\basic.cpp">
@@ -103,6 +160,48 @@
     </ClCompile>
     <ClCompile Include="mutator\mutator.cpp">
       <Filter>Исходные файлы\mutator</Filter>
+    </ClCompile>
+    <ClCompile Include="se\se.cpp">
+      <Filter>Исходные файлы\se</Filter>
+    </ClCompile>
+    <ClCompile Include="se\compressed_exchange_data.cpp">
+      <Filter>Исходные файлы\se</Filter>
+    </ClCompile>
+    <ClCompile Include="se\e_exchange_graph.cpp">
+      <Filter>Исходные файлы\se</Filter>
+    </ClCompile>
+    <ClCompile Include="se\exchange_research.cpp">
+      <Filter>Исходные файлы\se</Filter>
+    </ClCompile>
+    <ClCompile Include="se\exchange_trade.cpp">
+      <Filter>Исходные файлы\se</Filter>
+    </ClCompile>
+    <ClCompile Include="se\mediator.cpp">
+      <Filter>Исходные файлы\se</Filter>
+    </ClCompile>
+    <ClCompile Include="se\library\mathematics.cpp">
+      <Filter>Исходные файлы\se\library</Filter>
+    </ClCompile>
+    <ClCompile Include="se\library\statistics.cpp">
+      <Filter>Исходные файлы\se\library</Filter>
+    </ClCompile>
+    <ClCompile Include="se\se_library\ed_sampling.cpp">
+      <Filter>Исходные файлы\se\se_library</Filter>
+    </ClCompile>
+    <ClCompile Include="se\se_library\exchange_basic.cpp">
+      <Filter>Исходные файлы\se\se_library</Filter>
+    </ClCompile>
+    <ClCompile Include="se\se_library\exchange_data.cpp">
+      <Filter>Исходные файлы\se\se_library</Filter>
+    </ClCompile>
+    <ClCompile Include="se\se_library\reading_sad.cpp">
+      <Filter>Исходные файлы\se\se_library</Filter>
+    </ClCompile>
+    <ClCompile Include="library\e_terminal.cpp">
+      <Filter>Исходные файлы\library</Filter>
+    </ClCompile>
+    <ClCompile Include="library\ui.cpp">
+      <Filter>Исходные файлы\library</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

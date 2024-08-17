@@ -11,17 +11,7 @@ _ui ui;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void change_window_text(HWND hwnd)
-{
-/*	static std::wstring s_old;
-	wchar_t s[100];
-	swprintf(s, 100, L"%d  %4.1e", all_tetron.size, mutator::get_main_scale());
-	if (s_old == s) return;
-	s_old = s;
-	SetWindowText(hwnd, s);*/
-}
-
-void init_shift(WPARAM wparam) // !!! сделать по аналогии c ctrl
+void init_shift33(WPARAM wparam) // !!! сделать по аналогии c ctrl
 {
 	ui.n_s_shift = wparam & MK_SHIFT;
 	ui.n_s_left = wparam & MK_LBUTTON;
@@ -29,7 +19,7 @@ void init_shift(WPARAM wparam) // !!! сделать по аналогии c ctr
 	ui.n_s_middle = wparam & MK_MBUTTON;
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK WndProc33(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	static bool run_timer = true;
 	static bool tracking_mouse = false;
@@ -53,7 +43,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			a.hwndTrack = hWnd;
 			TrackMouseEvent(&a);
 		}
-		init_shift(wParam);
+		init_shift33(wParam);
 		ui.mouse_xy = { ((double)(short)LOWORD(lParam)), ((double)(short)HIWORD(lParam)) };
 		ui.mouse_move();
 		if (!ui.changed_area.empty()) ui.paint(hWnd);
@@ -65,26 +55,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (ui.n_s_middle) ui.mouse_button_middle_up();
 		return 0;
 	case WM_MOUSEWHEEL:
-		init_shift(GET_KEYSTATE_WPARAM(wParam));
+		init_shift33(GET_KEYSTATE_WPARAM(wParam));
 		ui.mouse_wheel_turn(GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA);
 		if (!ui.changed_area.empty()) ui.paint(hWnd);
 		return 0;
 	case WM_LBUTTONDOWN: case WM_RBUTTONDOWN: case WM_MBUTTONDOWN:
-		init_shift(wParam);
+		init_shift33(wParam);
 		if (message == WM_LBUTTONDOWN) ui.mouse_button_left_down();
 		if (message == WM_RBUTTONDOWN) ui.mouse_button_right_down();
 		if (message == WM_MBUTTONDOWN) ui.mouse_button_middle_down();
 		if (!ui.changed_area.empty()) ui.paint(hWnd);
 		return 0;
 	case WM_LBUTTONUP: case WM_RBUTTONUP: case WM_MBUTTONUP:
-		init_shift(wParam);
+		init_shift33(wParam);
 		if (message == WM_LBUTTONUP) ui.mouse_button_left_up();
 		if (message == WM_RBUTTONUP) ui.mouse_button_right_up();
 		if (message == WM_MBUTTONUP) ui.mouse_button_middle_up();
 		if (!ui.changed_area.empty()) ui.paint(hWnd);
 		return 0;
 	case WM_LBUTTONDBLCLK: case WM_RBUTTONDBLCLK: case WM_MBUTTONDBLCLK:
-		init_shift(wParam);
+		init_shift33(wParam);
 		if (message == WM_LBUTTONDBLCLK) ui.mouse_button_left_down(true);
 		if (message == WM_RBUTTONDBLCLK) ui.mouse_button_right_down(true);
 		if (message == WM_MBUTTONDBLCLK) ui.mouse_button_middle_down(true);
@@ -254,9 +244,9 @@ void init_ui_elements()
 
 }
 
-int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
+int Win33Main(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 	exe_path = get_exe_path(hInstance);
 	init_ui_elements();
-	return run_windows_app(L"se", hInstance, WndProc, nCmdShow);
+	return run_windows_app(L"se", hInstance, WndProc33, nCmdShow);
 }
