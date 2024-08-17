@@ -231,15 +231,17 @@ void _ui::add_changed_area(_area a)
 	changed_area |= (a & canvas.get_size());
 }
 
-void _ui::draw(_isize r)
+_iarea _ui::draw(_isize r)
 {
 	if (canvas.resize(r)) changed_area = r;
-	if (changed_area.empty()) return;
+	if (changed_area.empty()) return {};
 	canvas.set_drawing_area(changed_area);
 	changed_area &= canvas.get_size();
 	canvas.clear(cc0);
 	n_ko->ris(_trans());
+	_iarea result = changed_area;
 	changed_area = _area();
+	return result;
 }
 
 void _ui::run_timer1000()

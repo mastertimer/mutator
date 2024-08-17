@@ -142,7 +142,7 @@ struct _ui
 	_ui();
 	void paint(HWND hwnd);
 	void add_changed_area(_area a);
-	void draw(_isize r);
+	_iarea draw(_isize r);
 	void run_timer1000();
 	void run_timer250();
 	void key_down(ushort key);

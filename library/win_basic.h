@@ -41,9 +41,7 @@ inline HCURSOR cursors[u64(_cursor::vcursor)] = { LoadCursor(0, IDC_ARROW), Load
 	LoadCursor(0, IDC_HAND), LoadCursor(0, IDC_SIZEWE), LoadCursor(0, IDC_SIZENS), LoadCursor(0, IDC_UPARROW) };
 
 inline _cursor g_cursor = _cursor::normal; // установленный курсор
-inline HWND h_wnd = nullptr;
 
 void set_cursor(_cursor x);
-int run_windows_app(std::wstring_view window_name, HINSTANCE hinstance, WNDPROC wnd_proc, int n_cmd_show);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

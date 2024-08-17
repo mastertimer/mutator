@@ -15,13 +15,6 @@ namespace
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void load_settings()
-{
-	_rjson fs(exe_path / settings_filemane);
-	if (fs.error) return;
-	fs.read("mode", mode_name);
-}
-
 bool _mode::start()
 {
 	if (!started) started = start2();
@@ -41,6 +34,13 @@ _mode::~_mode()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void load_settings()
+{
+	_rjson fs(exe_path / settings_filemane);
+	if (fs.error) return;
+	fs.read("mode", mode_name);
+}
 
 void change_window_text(HWND hwnd)
 {

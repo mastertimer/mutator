@@ -4,10 +4,35 @@
 #include "e_exchange_graph.h"
 #include "exchange_data.h"
 #include "exchange_trade.h"
+#include "../main.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 _ui ui;
+
+struct _se_mode : public _mode
+{
+	virtual _bitmap& get_bitmap() override { return ui.canvas; }
+	virtual _iarea draw(_isize r) override;
+
+private:
+	virtual bool start2() override;
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+namespace
+{
+
+bool start_unit()
+{
+	main_modes[L"se"] = std::make_unique<_se_mode>();
+	return true;
+}
+auto ignore = start_unit();
+
+
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -244,9 +269,16 @@ void init_ui_elements()
 
 }
 
-int Win33Main(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
+bool _se_mode::start2()
 {
-	exe_path = get_exe_path(hInstance);
+	static bool first_run = true;
+	if (first_run) first_run = false; else return true;
+
 	init_ui_elements();
-	return run_windows_app(L"se", hInstance, WndProc33, nCmdShow);
+	return true;
+}
+
+_iarea _se_mode::draw(_isize r)
+{
+	return ui.draw(r);
 }
