@@ -170,10 +170,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		return 0;
 	case WM_KEYUP:
-		if (wParam == VK_CONTROL)
-		{
-			keyboard.ctrl_key = false;
-		}
+		if (wParam == VK_CONTROL) keyboard.ctrl_key = false;
 		main_modes[mode_name]->key_up(wParam);
 		return 0;
 	case WM_CHAR:

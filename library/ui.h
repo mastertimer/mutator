@@ -121,14 +121,7 @@ struct _ui
 	std::shared_ptr<_ui_element> n_hint;
 	std::set<std::shared_ptr<_ui_element>> n_timer1000;
 	std::set<std::shared_ptr<_ui_element>> n_timer250;
-	bool n_s_ctrl = false;
-	bool n_s_shift = false;
-	bool n_s_left = false;
-	bool n_s_right = false;
-	bool n_s_middle = false;
 	bool n_perenos = false;
-	_xy mouse_xy{ 0, 0 };
-	_xy mouse_xy_pr{ 0, 0 };
 
 	_trans master_trans_go; // трансформация тяни-толкай объекта, или объекта под мышкой
 	_trans master_trans_go_move; // трансформация n_go_move

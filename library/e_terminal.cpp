@@ -297,7 +297,7 @@ void _e_terminal::key_down(ushort key)
 		}
 		break;
 	case 67: // c
-		if (ui->n_s_ctrl) set_clipboard();
+		if (keyboard.ctrl_key) set_clipboard();
 		break;
 	}
 	cha_area();

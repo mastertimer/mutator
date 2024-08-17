@@ -36,27 +36,12 @@ auto ignore = start_unit();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void init_shift33(WPARAM wparam) // !!! сделать по аналогии c ctrl
-{
-	ui.n_s_shift = wparam & MK_SHIFT;
-	ui.n_s_left = wparam & MK_LBUTTON;
-	ui.n_s_right = wparam & MK_RBUTTON;
-	ui.n_s_middle = wparam & MK_MBUTTON;
-}
-
 LRESULT CALLBACK WndProc33(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	static bool run_timer = true;
 	static bool tracking_mouse = false;
 	switch (message)
 	{
-	case WM_SETCURSOR:
-		if (LOWORD(lParam) == HTCLIENT)
-		{
-			SetCursor(cursors[u64(g_cursor)]);
-			return true;
-		}
-		break;
 	case WM_MOUSEMOVE:
 		if (!tracking_mouse)
 		{
@@ -68,38 +53,32 @@ LRESULT CALLBACK WndProc33(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 			a.hwndTrack = hWnd;
 			TrackMouseEvent(&a);
 		}
-		init_shift33(wParam);
-		ui.mouse_xy = { ((double)(short)LOWORD(lParam)), ((double)(short)HIWORD(lParam)) };
 		ui.mouse_move();
 		if (!ui.changed_area.empty()) ui.paint(hWnd);
 		return 0;
 	case WM_MOUSELEAVE:
 		tracking_mouse = false;
-		if (ui.n_s_left) ui.mouse_button_left_up();
-		if (ui.n_s_right) ui.mouse_button_right_up();
-		if (ui.n_s_middle) ui.mouse_button_middle_up();
+		if (mouse.left_button) ui.mouse_button_left_up();
+		if (mouse.right_button) ui.mouse_button_right_up();
+		if (mouse.middle_button) ui.mouse_button_middle_up();
 		return 0;
 	case WM_MOUSEWHEEL:
-		init_shift33(GET_KEYSTATE_WPARAM(wParam));
 		ui.mouse_wheel_turn(GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA);
 		if (!ui.changed_area.empty()) ui.paint(hWnd);
 		return 0;
 	case WM_LBUTTONDOWN: case WM_RBUTTONDOWN: case WM_MBUTTONDOWN:
-		init_shift33(wParam);
 		if (message == WM_LBUTTONDOWN) ui.mouse_button_left_down();
 		if (message == WM_RBUTTONDOWN) ui.mouse_button_right_down();
 		if (message == WM_MBUTTONDOWN) ui.mouse_button_middle_down();
 		if (!ui.changed_area.empty()) ui.paint(hWnd);
 		return 0;
 	case WM_LBUTTONUP: case WM_RBUTTONUP: case WM_MBUTTONUP:
-		init_shift33(wParam);
 		if (message == WM_LBUTTONUP) ui.mouse_button_left_up();
 		if (message == WM_RBUTTONUP) ui.mouse_button_right_up();
 		if (message == WM_MBUTTONUP) ui.mouse_button_middle_up();
 		if (!ui.changed_area.empty()) ui.paint(hWnd);
 		return 0;
 	case WM_LBUTTONDBLCLK: case WM_RBUTTONDBLCLK: case WM_MBUTTONDBLCLK:
-		init_shift33(wParam);
 		if (message == WM_LBUTTONDBLCLK) ui.mouse_button_left_down(true);
 		if (message == WM_RBUTTONDBLCLK) ui.mouse_button_right_down(true);
 		if (message == WM_MBUTTONDBLCLK) ui.mouse_button_middle_down(true);
@@ -108,32 +87,8 @@ LRESULT CALLBACK WndProc33(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 	case WM_KEYDOWN:
 		switch (wParam)
 		{
-		case VK_F1:
-			{
-				static bool norm = true;
-				if (norm)
-				{
-					SetWindowLongPtr(hWnd, GWL_STYLE, WS_VISIBLE);
-					ShowWindow(hWnd, SW_MAXIMIZE);
-				}
-				else
-				{
-					ShowWindow(hWnd, SW_SHOWNORMAL);
-					SetWindowLongPtr(hWnd, GWL_STYLE, WS_VISIBLE | WS_OVERLAPPEDWINDOW);
-				}
-				norm = !norm;
-			}
-			break;
-		case VK_F2:
-			{
-				run_timer = false;
-				int r = MessageBox(hWnd, L"сохранить?", L"предупреждение", MB_YESNO);
-//				if (r == IDYES) mutator::save_to_txt_file(exe_path / tetfile);
-				run_timer = true;
-			}
-			break;
 		case VK_CONTROL:
-			ui.n_s_ctrl = true;
+			keyboard.ctrl_key = true;
 			break;
 		default:
 			ui.key_down(wParam);
@@ -141,7 +96,7 @@ LRESULT CALLBACK WndProc33(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 		}
 		return 0;
 	case WM_KEYUP:
-		if (wParam == VK_CONTROL) ui.n_s_ctrl = false;
+		if (wParam == VK_CONTROL) keyboard.ctrl_key = false;
 		return 0;
 	case WM_CHAR:
 		ui.key_press(wParam);
@@ -155,9 +110,6 @@ LRESULT CALLBACK WndProc33(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 		EndPaint(hWnd, &ps);
 		return 0;
 	}
-	case WM_SIZE:
-//		mutator::resize({ LOWORD(lParam), HIWORD(lParam) });
-		return 0;
 	case WM_TIMER:
 		if (!run_timer) return 0;
 		switch (wParam)
@@ -170,15 +122,6 @@ LRESULT CALLBACK WndProc33(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 			ui.run_timer250();
 			break;
 		}
-		return 0;
-	case WM_CREATE:
-		SetTimer(hWnd, 1, 1000, 0); // общий с отрисовкой
-		SetTimer(hWnd, 2, 250, 0); // более быстрый, без отрисовки
-		return 0;
-	case WM_DESTROY:
-		KillTimer(hWnd, 1);
-		KillTimer(hWnd, 2);
-		PostQuitMessage(0);
 		return 0;
 	}
 	return DefWindowProc(hWnd, message, wParam, lParam);

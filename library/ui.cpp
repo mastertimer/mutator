@@ -102,10 +102,10 @@ bool _ui_element::mouse_move(_trans tr)
 	for (auto element : subelements)
 	{
 		_trans tr2 = tr * element->trans;
-		if (!element->calc_area().test(tr2.inverse(ui->mouse_xy))) continue;
+		if (!element->calc_area().test(tr2.inverse(mouse.position))) continue;
 		if (element->mouse_move(tr2)) return true;
 	}
-	_xy r = tr.inverse(ui->mouse_xy);
+	_xy r = tr.inverse(mouse.position);
 	if (test_local_area(r)) // ДЕЙСТВИЕ
 	{
 		ui->master_trans_go = tr;
@@ -136,10 +136,10 @@ bool _ui_element::mouse_wheel_turn(_trans tr, short value)
 	for (auto element : subelements)
 	{
 		_trans tr2 = tr * element->trans;
-		if (!element->area->test(tr2.inverse(ui->mouse_xy))) continue;
+		if (!element->area->test(tr2.inverse(mouse.position))) continue;
 		if (element->mouse_wheel_turn(tr2, value)) return true;
 	}
-	_xy r = tr.inverse(ui->mouse_xy);
+	_xy r = tr.inverse(mouse.position);
 	if (test_local_area(r)) // ДЕЙСТВИЕ
 	{
 		ui->master_trans_go = tr;
@@ -153,10 +153,10 @@ bool _ui_element::mouse_down_left(_trans tr)
 	for (auto element : subelements)
 	{
 		_trans tr2 = tr * element->trans;
-		if (!element->area->test(tr2.inverse(ui->mouse_xy))) continue;
+		if (!element->area->test(tr2.inverse(mouse.position))) continue;
 		if (element->mouse_down_left(tr2)) return true;
 	}
-	_xy r = tr.inverse(ui->mouse_xy);
+	_xy r = tr.inverse(mouse.position);
 	if (test_local_area(r))
 	{
 		if (key_fokus)
@@ -270,24 +270,21 @@ void _ui::mouse_move()
 {
 	if (n_tani)
 	{
-		if (!n_s_left)
+		if (!mouse.left_button)
 		{
 			mouse_button_left_up();
 			return;
 		}
-		n_tani->mouse_move_left2(master_trans_go.inverse(mouse_xy));
-		mouse_xy_pr = mouse_xy;
+		n_tani->mouse_move_left2(master_trans_go.inverse(mouse.position));
 		return;
 	}
 	if (n_perenos)
 	{
-		if (n_s_left)
+		if (mouse.left_button)
 		{
 			n_ko->cha_area(n_ko->calc_area());
-			n_ko->trans.offset.x += mouse_xy.x - mouse_xy_pr.x;
-			n_ko->trans.offset.y += mouse_xy.y - mouse_xy_pr.y;
+			n_ko->trans.offset += mouse.position - mouse.prev_position;
 			n_ko->cha_area(n_ko->calc_area());
-			mouse_xy_pr = mouse_xy;
 		}
 		return; // закомментировать - колесо будет работать, но курсор будет сбрасываться при выделении
 	}
@@ -301,36 +298,35 @@ void _ui::mouse_move()
 
 void _ui::mouse_button_left_down(bool dblclk)
 {
-	n_s_left = true;
-	mouse_xy_pr = mouse_xy;
+	mouse.left_button = true;
 	if (n_perenos) return;
 	n_ko->mouse_down_left(n_ko->trans);
 }
 
 void _ui::mouse_button_left_up()
 {
-	n_s_left = false;
+	mouse.left_button = false;
 	if (!n_tani) return;
-	n_tani->mouse_up_left2(master_trans_go.inverse(mouse_xy));
+	n_tani->mouse_up_left2(master_trans_go.inverse(mouse.position));
 	n_tani = nullptr;
 }
 
 void _ui::mouse_button_right_down(bool dblclk)
 {
-	n_s_right = true;
+	mouse.right_button = true;
 }
 
 void _ui::mouse_button_right_up()
 {
-	n_s_right = false;
+	mouse.right_button = false;
 }
 
 void _ui::mouse_button_middle_down(bool dblclk)
 {
-	n_s_middle = true;
+	mouse.middle_button = true;
 	if (dblclk)
 	{
-		_xy tr = mouse_xy;
+		_xy tr = mouse.position;
 		n_ko->cha_area(n_ko->calc_area());
 		n_ko->trans.scale_up(tr, 1 / n_ko->trans.scale);
 		n_ko->trans.scale = 1;
@@ -340,7 +336,7 @@ void _ui::mouse_button_middle_down(bool dblclk)
 
 void _ui::mouse_button_middle_up()
 {
-	n_s_middle = false;
+	mouse.middle_button = false;
 	n_perenos = !n_perenos;
 	set_cursor((n_perenos) ? _cursor::size_all : _cursor::normal);
 }
@@ -349,14 +345,14 @@ void _ui::mouse_wheel_turn(short value)
 {
 	if (n_perenos)
 	{
-		_xy tr = mouse_xy;
+		_xy tr = mouse.position;
 		if ((value > 0) && (n_ko->trans.scale > 1E12)) return;
 		n_ko->cha_area(n_ko->calc_area());
 		n_ko->trans.scale_up(tr, pow(1.1, value));
 		n_ko->cha_area(n_ko->calc_area());
 		return;
 	}
-	if (n_s_right)
+	if (mouse.right_button)
 	{
 		return;
 	}
