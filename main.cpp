@@ -53,7 +53,8 @@ void paint(HWND hwnd, bool all = false)
 	auto area = mode->draw({ rect.right, rect.bottom });
 	if (all) area = _isize(rect.right, rect.bottom);
 	if (!area.empty()) BitBlt(hdc, int(area.x.min), int(area.y.min), int(area.x.length()), int(area.y.length()),
-		mode->get_bitmap().hdc, int(area.x.min), int(area.y.min), SRCCOPY);
+		mode->get_bitmap().hdc, int(area.x.min), int(area.y.min), SRCCOPY); // съедаются границы при переносе
+//	if (!area.empty()) BitBlt(hdc, 0, 0, rect.right, rect.bottom, mode->get_bitmap().hdc, 0, 0, SRCCOPY); // а так норм
 	ReleaseDC(hwnd, hdc);
 }
 
@@ -98,21 +99,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_MOUSELEAVE:
 		tracking_mouse = false;
-		if (*n_s_left->operator i64 * ())
-		{
-			*n_s_left->operator i64* () = 0;
-			n_up_left->run(0, n_up_left, flag_run);
-		}
-		if (*n_s_right->operator i64 * ())
-		{
-			*n_s_right->operator i64* () = 0;
-			n_up_right->run(0, n_up_right, flag_run);
-		}
-		if (*n_s_middle->operator i64 * ())
-		{
-			*n_s_middle->operator i64* () = 0;
-			n_up_middle->run(0, n_up_middle, flag_run);
-		}
+		main_modes[mode_name]->mouse_leave();
 		return 0;
 	case WM_MOUSEWHEEL:
 		init_shift(GET_KEYSTATE_WPARAM(wParam));
@@ -179,8 +166,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (wParam == VK_CONTROL)
 		{
 			keyboard.ctrl_key = false;
-			*n_s_ctrl->operator i64* () = 0;
 		}
+		main_modes[mode_name]->key_up(wParam);
 		return 0;
 	case WM_CHAR:
 		*n_press_key->operator i64* () = wParam;

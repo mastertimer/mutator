@@ -41,6 +41,7 @@ struct _mutator_mode : public _mode
 {
 	virtual bool save() override;
 	virtual void key_down(u64 key) override;
+	virtual void key_up(u64 key) override;
 	virtual std::wstring get_window_text() override;
 	virtual _iarea draw(_isize r) override;
 	virtual void resize(_isize r) override;
@@ -49,6 +50,7 @@ struct _mutator_mode : public _mode
 	virtual void mouse_button_middle(bool pressed, bool dbl) override;
 	virtual _bitmap& get_bitmap() override { return master_bm; }
 	virtual void mouse_move() override;
+	virtual void mouse_leave() override;
 	virtual void mouse_wheel(i64 delta) override;
 
 private:
@@ -376,6 +378,11 @@ void _mutator_mode::key_down(u64 key)
 	n_down_key->run(0, n_down_key, flag_run);
 }
 
+void _mutator_mode::key_up(u64 key)
+{
+	init_keyboard();
+}
+
 std::wstring _mutator_mode::get_window_text()
 {
 	constexpr int max_len = 100;
@@ -396,4 +403,23 @@ void _mutator_mode::mouse_wheel(i64 delta)
 	init_keyboard_mouse();
 	*n_wheel->operator i64* () = delta;
 	n_wheel->run(0, n_wheel, flag_run);
+}
+
+void _mutator_mode::mouse_leave()
+{
+	if (*n_s_left->operator i64 * ())
+	{
+		*n_s_left->operator i64* () = 0;
+		n_up_left->run(0, n_up_left, flag_run);
+	}
+	if (*n_s_right->operator i64 * ())
+	{
+		*n_s_right->operator i64* () = 0;
+		n_up_right->run(0, n_up_right, flag_run);
+	}
+	if (*n_s_middle->operator i64 * ())
+	{
+		*n_s_middle->operator i64* () = 0;
+		n_up_middle->run(0, n_up_middle, flag_run);
+	}
 }
