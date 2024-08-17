@@ -47,6 +47,7 @@ struct _mutator_mode : public _mode
 	virtual void mouse_button_left(bool pressed) override;
 	virtual void mouse_button_right(bool pressed) override;
 	virtual void mouse_button_middle(bool pressed) override;
+	virtual _bitmap& get_bitmap() override { return master_bm; }
 
 private:
 	virtual bool start2() override;

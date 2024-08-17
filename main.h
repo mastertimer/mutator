@@ -2,7 +2,7 @@
 
 #include <map>
 
-#include "geometry.h"
+#include "graphics.h"
 
 struct _mode
 {
@@ -18,6 +18,7 @@ struct _mode
     virtual void mouse_button_left(bool pressed) {}
     virtual void mouse_button_right(bool pressed) {}
     virtual void mouse_button_middle(bool pressed) {}
+    virtual _bitmap& get_bitmap() = 0;
 
 private:
     bool started = false;

@@ -562,11 +562,11 @@ bool _t_basic_go::mouse_down_left(_trans tr)
 				tr2 = tr;
 			else
 				tr2 = tr * a->operator _t_trans * ()->trans;
-			if (!aa->area->test(tr2.inverse(mouse_xy))) continue;
+			if (!aa->area->test(tr2.inverse(mouse.position))) continue;
 			if (aa->mouse_down_left(tr2)) return true;
 		}
 	}
-	_xy r = tr.inverse(mouse_xy);
+	_xy r = tr.inverse(mouse.position);
 	if (_t_go* tgo = *this)
 		if (tgo->test_local_area(r))
 		{
@@ -641,11 +641,11 @@ bool _t_basic_go::mouse_wheel(_trans tr)
 				tr2 = tr;
 			else
 				tr2 = tr * a->operator _t_trans * ()->trans;
-			if (!aa->area->test(tr2.inverse(mouse_xy))) continue;
+			if (!aa->area->test(tr2.inverse(mouse.position))) continue;
 			if (aa->mouse_wheel(tr2)) return true;
 		}
 	}
-	_xy r = tr.inverse(mouse_xy);
+	_xy r = tr.inverse(mouse.position);
 	if (_t_go* tgo = *this)
 		if (tgo->test_local_area(r)) // ДЕЙСТВИЕ
 		{
@@ -766,11 +766,11 @@ bool _t_trans::mouse_move(_trans tr, bool final)
 				tr2 = tr;
 			else
 				tr2 = tr * a->operator _t_trans * ()->trans;
-			if (!aa->calc_area().test(tr2.inverse(mouse_xy))) continue;
+			if (!aa->calc_area().test(tr2.inverse(mouse.position))) continue;
 			if (aa->mouse_move(tr2, final)) return true;
 		}
 	}
-	_xy r = tr.inverse(mouse_xy);
+	_xy r = tr.inverse(mouse.position);
 	for (int i = (int)link.size() - 1; i >= 0; i--)
 	{
 		_tetron* a = (*link[i])(this);
@@ -960,11 +960,11 @@ bool _t_go::mouse_move(_trans tr, bool final)
 					tr2 = tr;
 				else
 					tr2 = tr * a->operator _t_trans * ()->trans;
-				if (!aa->calc_area().test(tr2.inverse(mouse_xy))) continue;
+				if (!aa->calc_area().test(tr2.inverse(mouse.position))) continue;
 				if (aa->mouse_move(tr2, final)) return true;
 			}
 		}
-	_xy r = tr.inverse(mouse_xy);
+	_xy r = tr.inverse(mouse.position);
 	if (test_local_area(r)) // ДЕЙСТВИЕ
 	{
 		master_trans_go = tr;

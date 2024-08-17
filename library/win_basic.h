@@ -5,7 +5,7 @@
 #define NOMINMAX
 #include <windows.h>
 
-#include "basic.h"
+#include "geometry.h"
 
 struct _keyboard
 {
@@ -14,7 +14,17 @@ struct _keyboard
 	bool shift_key = false;
 };
 
+struct _mouse
+{
+	bool left_button = false;
+	bool right_button = false;
+	bool middle_button = false;
+	_ixy position{ 0, 0 };
+	_ixy prev_position{ 0, 0 };
+};
+
 inline _keyboard keyboard;
+inline _mouse mouse;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

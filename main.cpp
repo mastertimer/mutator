@@ -49,17 +49,23 @@ void paint(HWND hwnd, bool all = false)
 	HDC hdc = GetDC(hwnd);
 	RECT rect;
 	GetClientRect(hwnd, &rect);
-	auto area = main_modes[mode_name]->draw({ rect.right, rect.bottom });
+	auto& mode = main_modes[mode_name];
+	auto area = mode->draw({ rect.right, rect.bottom });
 	if (all) area = _isize(rect.right, rect.bottom);
 	if (!area.empty()) BitBlt(hdc, int(area.x.min), int(area.y.min), int(area.x.length()), int(area.y.length()),
-		master_bm.hdc, int(area.x.min), int(area.y.min), SRCCOPY);
+		mode->get_bitmap().hdc, int(area.x.min), int(area.y.min), SRCCOPY);
 	ReleaseDC(hwnd, hdc);
 }
 
 void init_shift(WPARAM wparam) // !!! сделать по аналогии c ctrl
 {
-	*n_s_shift ->operator i64* () = wparam & MK_SHIFT;
 	keyboard.ctrl_key = wparam & MK_CONTROL;
+	keyboard.shift_key = wparam & MK_SHIFT;
+	mouse.left_button = wparam & MK_LBUTTON;
+	mouse.right_button = wparam & MK_RBUTTON;
+	mouse.middle_button = wparam & MK_MBUTTON;
+
+	*n_s_shift ->operator i64* () = wparam & MK_SHIFT;
 	*n_s_ctrl  ->operator i64* () = wparam & MK_CONTROL;
 	*n_s_left  ->operator i64* () = wparam & MK_LBUTTON;
 	*n_s_right ->operator i64* () = wparam & MK_RBUTTON;
@@ -91,8 +97,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			TrackMouseEvent(&a);
 		}
 		init_shift(wParam);
-		mouse_xy = { ((double)(short)LOWORD(lParam)), ((double)(short)HIWORD(lParam)) };
+		mouse.position = { ((i64)(short)LOWORD(lParam)), ((i64)(short)HIWORD(lParam)) };
 		n_move->run(0, n_move, flag_run);
+		mouse.prev_position = mouse.position;
 		paint(hWnd);
 		return 0;
 	case WM_MOUSELEAVE:

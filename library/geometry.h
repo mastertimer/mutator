@@ -3,6 +3,7 @@
 #include "basic.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+struct _xy;
 
 struct _ixy // индекс, номер
 {
@@ -18,6 +19,9 @@ struct _ixy // индекс, номер
 		if ((x_ < 0) && (x != x_)) x--;
 		if ((y_ < 0) && (y != y_)) y--;
 	}
+
+	_ixy operator-(const _ixy b) const { return { x - b.x, y - b.y }; }
+	inline _xy operator/(const double b) const;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,12 +41,12 @@ struct _xy
 	_xy operator+(const _xy b)    const { return { x + b.x, y + b.y }; }
 	_xy operator-(const _xy b)    const { return { x - b.x, y - b.y }; }
 	_xy operator*(const double b) const { return { x * b, y * b }; }
-	_xy operator/(const double b) const { double k = 1.0 / b; return { x * k, y * k }; }
+	_xy operator/(const double b) const { return { x / b, y / b }; }
 
 	void operator+=(const _xy b)        { x += b.x; y += b.y; }
 	void operator-=(const _xy b)        { x -= b.x; y -= b.y; }
 	void operator*=(const double b)     { x *= b; y *= b; }
-	void operator/=(const double b)     { double k = 1.0 / b; x *= k; y *= k; }
+	void operator/=(const double b)     { x /= b; y /= b; }
 
 	bool operator!=(const _xy b)  const { return (x != b.x) || (y != b.y); }
 
@@ -267,6 +271,11 @@ uint test_line(_xy p1, _xy p2, _xy b);
 _iarea _isize::move(_ixy d) const
 {
 	return { {d.x, d.x + x}, {d.y, d.y + y} };
+}
+
+_xy _ixy::operator/(const double b) const
+{
+	return { x / b, y / b };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
