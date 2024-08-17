@@ -1,0 +1,471 @@
+﻿#include "mathematics.h"
+
+#include <algorithm>
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+constexpr double calculation_accuracy = 1e-13;
+
+// точный минимум в окрестности точки
+double exact_minimum(std::function<double(double)> fun, double x, double dx)
+{
+	double epsilon = abs(x - dx) * calculation_accuracy;
+	double epsilon2 = abs(x + dx) * calculation_accuracy;
+	if (epsilon2 > epsilon) epsilon = epsilon2;
+	double fx = fun(x);
+	while (dx > epsilon)
+	{
+		dx *= 0.5;
+		double fm1 = fun(x - dx);
+		double fp1 = fun(x + dx);
+		if ((fx <= fm1) && (fx <= fp1)) continue;
+		if (fm1 <= fp1)
+		{
+			fx = fm1;
+			x = x - dx;
+		}
+		else
+		{
+			fx = fp1;
+			x = x + dx;
+		}
+	}
+	return x;
+}
+
+std::vector<double> minimum(std::function<double(double)> fun, _interval a, i64 n)
+{
+	std::vector<double> res;
+	double dx = a.length() / n;
+	double f_2 = fun(a.min + dx * 0.5);
+	double f_1 = fun(a.min + dx * 1.5);
+	for (double x = a.min + dx * 2.5; x < a.max; x += dx)
+	{
+		double f = fun(x);
+		if ((f_1 <= f_2) && (f_1 <= f))	res.push_back(exact_minimum(fun, x - dx, dx));
+		f_2 = f_1;
+		f_1 = f;
+	}
+	return res;
+}
+
+double only1min(std::function<double(double, double)> fun, _interval a, _interval b, i64 na, i64 nb)
+{
+	double dx = b.length() / nb;
+	bool f_1 = minimum([&](double p) { return fun(p, b.min + dx * 0.5); }, a, na).size() == 1;
+	double xn = 0, xk = 0;
+	for (double x = a.min + dx * 1.5; x < a.max; x += dx)
+	{
+		bool f = minimum([&](double p) { return fun(p, x); }, a, na).size() == 1;
+		if (f ^ f_1)
+		{
+			xn = x - dx;
+			xk = x;
+			break;
+		}
+		f_1 = f;
+	}
+	if (xn == xk) return 0;
+	double epsilon = abs(xn) * calculation_accuracy;
+	double epsilon2 = abs(xk) * calculation_accuracy;
+	if (epsilon2 > epsilon) epsilon = epsilon2;
+/*	while (xk - xn > epsilon)
+	{
+		double x = (xn + xn) * 0.5;
+	}*/
+	return 0;//!!!!!!!!!!!!!!!!
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void _matrix::operator=(_matrix&& a) noexcept
+{
+	if (data) delete[] data;
+	data = a.data;
+	size = a.size;
+	a.data = nullptr;
+	a.size = {};
+}
+
+void _matrix::operator=(const _matrix& a) noexcept
+{
+	resize(a.size);
+	memcpy(data, a.data, size.square() * sizeof(double));
+}
+
+_matrix::_matrix(_matrix&& a) noexcept : data(a.data), size(a.size)
+{
+	a.data = nullptr;
+	a.size = {};
+}
+
+_matrix::_matrix(const _matrix& a) noexcept : size(a.size)
+{
+	if (size.empty()) return;
+	data = new double[size.square()];
+	memcpy(data, a.data, size.square() * sizeof(double));
+}
+
+_matrix _matrix::operator<<(const _matrix& a) const noexcept
+{
+	if (a.empty()) return *this;
+	if (empty()) return a;
+	if (size.y != a.size.y) return _matrix();
+	_matrix b(size.y, size.x + a.size.x);
+	double* rez = b.data;
+	double* m1 = data;
+	double* m2 = a.data;
+	for (i64 j = 0; j < size.y; j++)
+	{
+		for (i64 i = 0; i < size.x; i++, rez++, m1++) *rez = *m1;
+		for (i64 i = 0; i < a.size.x; i++, rez++, m2++)*rez = *m2;
+	}
+	return b;
+}
+
+/*matrix matrix::transpose() const noexcept
+{
+	matrix b(rx_, ry_);
+	double* rez = b.data_;
+	for (size_t j = 0; j < rx_; j++)
+	{
+		double* ist = data_ + j;
+		for (size_t i = 0; i < ry_; i++, rez++, ist += rx_)	rez = ist;
+	}
+	return b;
+}*/
+
+_matrix _matrix::this_mul_transpose() const noexcept
+{
+	_matrix b(size.y, size.y);
+	for (i64 j = 0; j < size.y; j++)
+		for (i64 i = j; i < size.y; i++)
+		{
+			double s = 0;
+			double* a1 = data + (j * size.x);
+			double* a2 = data + (i * size.x);
+			for (i64 k = 0; k < size.x; k++, a1++, a2++) s += (*a1) * (*a2);
+			b[j][i] = b[i][j] = s;
+		}
+	return b;
+}
+
+_matrix _matrix::operator*(const _matrix& a) const noexcept
+{
+	if (size.x != a.size.y) return _matrix();
+	_matrix b(size.y, a.size.x);
+	for (i64 j = 0; j < b.size.y; j++)
+		for (i64 i = 0; i < b.size.x; i++)
+		{
+			double s = 0;
+			double* a1 = data + (j * size.x);
+			double* a2 = a.data + i;
+			for (i64 k = 0; k < size.x; k++)
+			{
+				s += (*a1) * (*a2);
+				a1++;
+				a2 += a.size.x;
+			}
+			b[j][i] = s;
+		}
+	return b;
+}
+
+_matrix _matrix::operator-(const _matrix& a) const noexcept
+{
+	if (size != a.size) return _matrix();
+	_matrix b(size);
+	i64 n = size.square();
+	for (i64 i = 0; i < n; i++) b.data[i] = data[i] - a.data[i];
+	return b;
+}
+
+void _matrix::operator+=(const _matrix& a) noexcept
+{
+	if (size != a.size) return;
+	i64 n = size.x * size.y;
+	for (i64 i = 0; i < n; i++) data[i] += a.data[i];
+}
+
+_matrix::_matrix(i64 ry, i64 rx, double z) noexcept : size{ rx, ry }
+{
+	i64 n = size.y * size.x;
+	if (n == 0) return;
+	data = new double[n];
+	for (i64 i = 0; i < n; i++) data[i] = z;
+}
+
+_matrix::_matrix(i64 ry, i64 rx, std::function<double(i64, i64)> fun) noexcept : size{ rx, ry }
+{
+	if (size.empty()) return;
+	data = new double[size.x * size.y];
+	for (i64 j = 0; j < size.y; j++)
+		for (i64 i = 0; i < size.x; i++)
+			data[j * size.x + i] = fun(j, i);
+}
+
+_matrix::_matrix(i64 ry, std::function<double(i64)> fun)  noexcept : size{ 1, ry }
+{
+	if (size.y == 0) return;
+	data = new double[size.y];
+	for (i64 i = 0; i < size.y; i++) data[i] = fun(i);
+}
+
+_matrix::_matrix(i64 ry) noexcept : size{ 1, ry }
+{
+	if (size.y) data = new double[size.y];
+}
+
+_matrix::_matrix(i64 ry, i64 rx)  noexcept : size{ rx,ry }
+{
+	if (!size.empty()) data = new double[size.square()];
+}
+
+_matrix::_matrix(_isize r)  noexcept : size(r)
+{
+	if (!size.empty()) data = new double[size.square()];
+}
+
+void _matrix::resize(_isize r)
+{
+	if (r.square() > size.square())
+	{
+		delete[] data;
+		data = new double[r.square()];
+	}
+	size = r;
+}
+
+/*void matrix::MinMax(double* mi, double* ma)
+{
+	size_t vdata = rx_ * ry_;
+	if (vdata == 0)
+	{
+		*mi = 1.0;
+		*ma = 0;
+		return;
+	}
+	double mii = data_[0];
+	double maa = data_[0];
+	for (int i = 1; i < vdata; i++)
+	{
+		if (data_[i] < mii) mii = data_[i];
+		if (data_[i] > maa) maa = data_[i];
+	}
+	*mi = mii;
+	*ma = maa;
+}*/
+
+/*void matrix::Push(_stack* mem)
+{
+	*mem << rx_ << ry_;
+	mem->push_data(data_, sizeof(double) * rx_ * ry_);
+}*/
+
+/*void matrix::Pop(_stack* mem)
+{
+	size_t rx, ry;
+	*mem >> rx >> ry;
+	resize(ry, rx);
+	mem->pop_data(data_, sizeof(double) * rx_ * ry_);
+}*/
+
+void _matrix::set_diagonal_matrix(i64 n, double dz) noexcept
+{
+	resize({ n, n });
+	memset(data, 0, n * n * sizeof(double));
+	for (i64 i = 0; i < n; i++) data[i * n + i] = dz;
+}
+
+void _matrix::FindAllEigenVectors(_matrix& R, _matrix& A) const noexcept
+{
+	// Сборник научных программ на Фортране. Вып. 2. Матричная алгебра и линейная
+	// алгебра. Нью-Йорк, 1960-1971, пер. с англ. (США). М., "Статистика", 1974.
+	// 224 с.
+	// стр - 187, подпрограмма EIGEN
+	double ANORM, ANRMX, THR, X, Y, SINX, SINX2, COSX, COSX2, SINCS;
+	constexpr double RANGE = 1.0E-13;                                     // было -13
+//	constexpr double LIM = 1.0E-11;                                       // -6
+	A = *this;
+	size_t N = A.size.x;
+	R.set_diagonal_matrix(N, 1.0);
+	ANORM = 0;
+	for (int j = 0; j < N; j++)
+		for (int i = j + 1; i < N; i++)
+			ANORM += A[j][i] * A[j][i];
+	if (ANORM > 0)
+	{
+		ANORM = sqrt(2 * ANORM);
+		ANRMX = ANORM * RANGE / N;
+		THR = ANORM;
+		do
+		{
+			THR = THR / N;
+			bool ind;
+			do
+			{
+				ind = false;
+				for (size_t L = 0; L < N - 1; L++)
+					for (size_t M = L + 1; M < N; M++)
+						if (abs(A[L][M]) >= THR)
+						{
+							ind = true;
+							X = 0.5 * (A[L][L] - A[M][M]);
+							Y = -A[L][M] / sqrt(A[L][M] * A[L][M] + X * X);
+							if (X < 0) Y = -Y;
+							SINX = Y / sqrt(2 * (1 + sqrt(1 - Y * Y)));
+							SINX2 = SINX * SINX;
+							COSX = sqrt(1 - SINX2);
+							COSX2 = COSX * COSX;
+							SINCS = SINX * COSX;
+							for (size_t i = 0; i < N; i++)
+							{
+								if ((i != L) && (i != M))
+								{
+									X = A[i][L] * COSX - A[i][M] * SINX;
+									A[M][i] = A[i][M] = A[i][L] * SINX + A[i][M] * COSX;
+									A[L][i] = A[i][L] = X;
+								}
+								X = R[i][L] * COSX - R[i][M] * SINX;
+								R[i][M] = R[i][L] * SINX + R[i][M] * COSX;
+								R[i][L] = X;
+							}
+							X = 2 * A[L][M] * SINCS;
+							Y = A[L][L] * COSX2 + A[M][M] * SINX2 - X;
+							X = A[L][L] * SINX2 + A[M][M] * COSX2 + X;
+							A[M][L] = A[L][M] = (A[L][L] - A[M][M]) * SINCS + A[L][M] * (COSX2 - SINX2);
+							A[L][L] = Y;
+							A[M][M] = X;
+						}
+			} while (ind);
+		} while (THR > ANRMX);
+	}
+		//for (int i = 0; i < N; i++)
+		//	for (int j = i + 1; j < N; j++)
+		//		if (A[i][i] < A[j][j])
+		//		{
+		//			X = A[i][i];
+		//			A[i][i] = A[j][j];
+		//			A[j][j] = X;
+		//			R.PerestCol(i, j);
+		//		}
+
+		//// конец подпрограммы EIGEN
+
+		//for (int j = 0; j < N; j++)
+		//	for (int i = 0; i < N; i++)
+		//		if (i != j) A[j][i] = 0;
+		//double SumD = Abs().shpoor();//   /N
+		//double SumL = abs(A[0][0]);
+		//for (int i = 1; i < N; i++)
+		//{
+		//	SumL += abs(A[i][i]);
+		//	//    if ((::Abs(A[i][i]/SumD)) < 1.0E-8)
+		//	if (abs(1.0 - SumL / SumD) < LIM)
+		//		//    if (A[i][i] <= 0)
+		//	{
+		//		Vl = i - 1;
+		//		A.ry = i - 1;
+		//		A.rx = i - 1;
+		//		R.rx = i - 1;
+		//		return;
+		//	}
+		//}
+		//Vl = rx_;
+}
+
+//вычисление псевдообратной матрицы
+_matrix _matrix::pseudoinverse() const noexcept
+{
+	double LIM = 1.0E-13;                                       // min -10 max -15  было -11 -13
+	_matrix BQ, BL;
+	FindAllEigenVectors(BQ, BL);
+	double SumD = 0;
+	for (i64 i = 0; i < size.y; i++)
+		if (BL[i][i] > SumD) SumD = BL[i][i];
+	LIM *= SumD;
+	_matrix Aplus(size.y, size.y, 0);
+	for (i64 j = 0; j < size.y; j++)
+	{
+		double lam = BL[j][j];
+		if (lam < LIM) continue;
+		lam = 1.0 / lam;
+		double* rez = Aplus.data;
+		double* ist = BQ.data + j;
+		for (i64 y = 0; y < size.y; y++)
+		{
+			double mn = lam * ist[y * size.y];
+			for (i64 x = 0; x < size.y; x++, rez++)
+				*rez += mn * ist[x * size.y];
+		}
+	}
+	return Aplus;
+}
+
+/*double matrix::linear_prediction(const matrix& k) const noexcept
+{
+	size_t rk = k.size();
+	size_t r = size();
+	if (r * rk == 0) return 0.0;
+	if (rk > r) return data_[r - 1];
+	r -= rk;
+	double s = 0.0;
+	for (size_t ii = 0; ii < rk; ii++) s += k.data_[ii] * data_[ii + r];
+	return s;
+}*/
+
+_matrix _matrix::linear_prediction(const _matrix& k, i64 start, i64 n, i64 ots) const noexcept
+{
+	_matrix b(n, 1, 0);
+	if (((k.size.x != 1) && (k.size.y != 1)) || ((size.x != 1) && (size.y != 1))) return b; // должен быть вектор
+	i64 rk = k.size.square();
+	i64 r = size.square();
+	if ((start < rk) || (start > r)) return b;
+	for (i64 i = 0; i < n; i++)
+	{
+		double s = 0;
+		for (i64 ii = 0; ii < rk; ii++)
+		{
+			i64 p = ii - rk + i - ots;
+			s += k.data[ii] * ((p >= 0) ? b.data[p] : data[start + p]);
+		}
+		b.data[i] = s;
+	}
+	return b;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*double MatrixColumn::Delta(size_t y)
+{
+	if ((x_ < 0) || (x_ >= m_->rx_) || (y < 1) || (y >= m_->ry_)) return 0.0;
+	return m_->data_[y * (m_->rx_) + x_] - m_->data_[(y - 1) * (m_->rx_) + x_];
+}*/
+
+bool matrix_column::min_max(double* mi, double* ma)
+{
+	if ((x < 0) || (x >= m->size.x) || (m->size.y < 1)) return false;
+	double* da = m->data;
+	double mii = da[x];
+	double maa = da[x];
+	i64 vdata = m->size.square();
+	for (i64 i = x + m->size.x; i < vdata; i += m->size.x)
+	{
+		if (da[i] < mii) mii = da[i];
+		if (da[i] > maa) maa = da[i];
+	}
+	*mi = mii;
+	*ma = maa;
+	return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+_matrix get_noise(i64 n, double k)
+{
+	_matrix b(n);
+	for (i64 i = 0; i < n; i++) b[0][i] = rnd(-k, k);
+	return b;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
