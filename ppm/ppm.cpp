@@ -6,8 +6,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-std::wstring test_file = L"e:\\programs\\ppm\\data\\t110521.txt";
-std::wstring test_file2 = L"data/t110521.txt";
+std::wstring test_file = L"e:/mutator/ppm/data/t110521.txt";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -56,7 +55,7 @@ std::string command_decomposition(const std::string& cmd, std::vector<std::strin
 	if (command_name.empty()) command_name = cmd.substr(i0, cmd.size() - i0);
 	// вычленение параметров
 	int rez = 0; // 0 - пробелы 1 - набор символов 2 - строка "safasf asf"
-	int start_p = 0;
+	i64 start_p = 0;
 	for (i64 i = i0 + command_name.size(); i < (i64)cmd.size(); i++)
 	{
 		wchar_t c = cmd[i];
@@ -292,7 +291,7 @@ void test_ppm(_e_terminal& trm, const std::vector<std::wstring>& parameters)
 		if (dtt > maxdt) maxdt = dtt;
 		summdt += dtt;
 	}
-	double v = res.size();
+	double v = double(res.size());
 	if (db > 0)
 	{
 		v -= 1;

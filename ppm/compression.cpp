@@ -124,7 +124,7 @@ void arithmetic_coding(const std::vector<uchar>& data, _bit_vector& res)
 {
 	res.clear();
 	if (data.empty()) return;
-	u64 bit_size = position1_64(data.size());
+	uchar bit_size = position1_64(data.size());
 	res.push(bit_size, 6);
 	res.push(data.size(), bit_size);
 	u64 frequency[256];
@@ -165,7 +165,7 @@ void arithmetic_decoding(_bit_vector& data, std::vector<uchar>& res)
 	res.clear();
 	if (data.empty()) return;
 	data.bit_read = 0;
-	i64 size = data.pop(data.pop(6));
+	i64 size = data.pop(uchar(data.pop(6)));
 	res.reserve(size);
 	u64 frequency[256];
 	for (auto& i : frequency) i = 1;
@@ -180,7 +180,7 @@ void arithmetic_decoding(_bit_vector& data, std::vector<uchar>& res)
 		for (u64 y = ((x - begin + 1) * summ_frequency - 1) / eb; y >= (chs += frequency[c]); c++);
 		end = begin + eb * chs / summ_frequency;
 		begin += eb * (chs - frequency[c]++) / summ_frequency++;
-		res.push_back(c);
+		res.push_back(uchar(c));
 		for (;;)
 		{
 			u64 delta = (end <= h2) ? h0 : (begin >= h2) ? h2 : ((begin >= h1) && (end <= h3)) ? h1 : h4;
@@ -244,7 +244,7 @@ std::vector<uchar> generate_vector(_frequency2& f)
 {
 	std::vector<uchar> res;
 	res.reserve(f.size());
-	for (i64 i = 0; i < f.number; i++) res.insert(res.end(), f.frequency[i], i);
+	for (i64 i = 0; i < f.number; i++) res.insert(res.end(), f.frequency[i], uchar(i));
 	for (i64 i = (i64)res.size() - 1; i > 0; i--) std::swap(res[i], res[rnd(i + 1)]);
 	return res;
 }
