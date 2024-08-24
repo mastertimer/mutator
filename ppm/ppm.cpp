@@ -76,28 +76,28 @@ std::string command_decomposition(const std::string& cmd, std::vector<std::strin
 	return command_name;
 }
 
-void test_arithmetic_coding(std::vector<std::string>& parameters)
+void test_arithmetic_coding(_e_terminal& trm, const std::vector<std::wstring>& parameters)
 {
-	std::wcout << L"файл: " << test_file << std::endl;
+	trm.print(L"файл: " + test_file);
 	std::vector<uchar> data, data2;
 	_bit_vector res;
 	if (!load_file(test_file, data))
 	{
-		std::wcout << L"ошибка загрузки!" << std::endl;
+		trm.print(L"ошибка загрузки!");
 		return;
 	}
-	std::wcout << L"размер:            " << std::to_wstring(data.size()) << std::endl;
+	trm.print(L"размер:            " + std::to_wstring(data.size()));
 	double com1 = 0.0, com2 = 0.0;
 	double com = information(data, &com1, &com2);
-	std::wcout << L"информация:        " << double_to_wstring(com, 1) << L" (" + double_to_wstring(com1, 1) << L" + " <<
-		double_to_wstring(com2, 1) + L")" << std::endl;
-	std::wcout << L"идеал:             " << double_to_wstring(size_arithmetic_coding(data), 1) << std::endl;
-	std::wcout << L"идеал0:            " + double_to_wstring(size_arithmetic_coding(data, 0.01), 1) << std::endl;
+	trm.print(L"информация:        " + double_to_wstring(com, 1) + L" (" + double_to_wstring(com1, 1) + L" + " +
+		double_to_wstring(com2, 1) + L")");
+	trm.print(L"идеал:             " + double_to_wstring(size_arithmetic_coding(data), 1));
+	trm.print(L"идеал0:            " + double_to_wstring(size_arithmetic_coding(data, 0.01), 1));
 
 	i64 n = 1;
 	if (!parameters.empty()) n = std::stoi(parameters[0]);
 	if (n < 1) n = 1;
-	if (n > 1) std::wcout << std::to_wstring(n) << L" испытаний" << std::endl;
+	if (n > 1) trm.print(std::to_wstring(n) + L" испытаний");
 
 	i64 mindt = 1000000000;
 	i64 maxdt = 0;
@@ -116,11 +116,11 @@ void test_arithmetic_coding(std::vector<std::string>& parameters)
 
 
 	double v = res.size() / 8.0;
-	std::wcout << L"arithmetic_coding: " << double_to_wstring(v, 1) << std::endl;
-	std::wcout << L"разница:           " << double_to_wstring(v - com, 1) << std::endl;
-	std::wcout << L"среднее время, мксек:      " << std::to_wstring(summdt / n) << std::endl;
-	std::wcout << L"минимальное время, мксек:  " << std::to_wstring(mindt) << std::endl;
-	std::wcout << L"максимальное время, мксек: " << std::to_wstring(maxdt) << std::endl;
+	trm.print(L"arithmetic_coding: " + double_to_wstring(v, 1));
+	trm.print(L"разница:           " + double_to_wstring(v - com, 1));
+	trm.print(L"среднее время, мксек:      " + std::to_wstring(summdt / n));
+	trm.print(L"минимальное время, мксек:  " + std::to_wstring(mindt));
+	trm.print(L"максимальное время, мксек: " + std::to_wstring(maxdt));
 
 	mindt = 1000000000;
 	maxdt = 0;
@@ -137,12 +137,12 @@ void test_arithmetic_coding(std::vector<std::string>& parameters)
 		summdt += dtt;
 	}
 	if (data == data2)
-		std::wcout << L"расжатие норма" << std::endl;
+		trm.print(L"расжатие норма");
 	else
-		std::wcout << L"!!ошибка!! расжатый файл не равен исходному!" << std::endl;
-	std::wcout << L"среднее время, мксек:      " << std::to_wstring(summdt / n) << std::endl;
-	std::wcout << L"минимальное время, мксек:  " << std::to_wstring(mindt) << std::endl;
-	std::wcout << L"максимальное время, мксек: " << std::to_wstring(maxdt) << std::endl;
+		trm.print(L"!!ошибка!! расжатый файл не равен исходному!");
+	trm.print(L"среднее время, мксек:      " + std::to_wstring(summdt / n));
+	trm.print(L"минимальное время, мксек:  " + std::to_wstring(mindt));
+	trm.print(L"максимальное время, мксек: " + std::to_wstring(maxdt));
 }
 
 double f1(double x)
@@ -249,23 +249,23 @@ std::pair<double, double> find_k3()
 	return { x1_m,x2_m };
 }
 
-void test_test(std::vector<std::string>& parameters)
+void test_test(_e_terminal& trm, const std::vector<std::wstring>& parameters)
 {
 	auto k = find_k3();
-	std::wcout << k.first << std::endl;
-	std::wcout << k.second << std::endl;
+	trm.print(std::to_wstring(k.first));
+	trm.print(std::to_wstring(k.second));
 }
 
-void test_ppm(std::vector<std::string>& parameters)
+void test_ppm(_e_terminal& trm, const std::vector<std::wstring>& parameters)
 {
-	std::wcout << L"файл: " << test_file << std::endl;
+	trm.print(L"файл: " + test_file);
 	std::vector<uchar> data, data2, res;
 	if (!load_file(test_file, data))
 	{
-		std::wcout << L"ошибка загрузки!" << std::endl;
+		trm.print(L"ошибка загрузки!");
 		return;
 	}
-	std::wcout << L"размер: " << std::to_wstring(data.size()) << std::endl;
+	trm.print(L"размер: " + std::to_wstring(data.size()));
 
 	i64 n = 0;
 	if (parameters.size() >= 1)
@@ -273,7 +273,7 @@ void test_ppm(std::vector<std::string>& parameters)
 		n = std::stoi(parameters[0]);
 		if (n < 0) n = 0;
 	}
-	std::wcout << L"порядок = " << std::to_wstring(n) << std::endl;
+	trm.print(L"порядок = " + std::to_wstring(n));
 
 	i64 mindt = 1000000000;
 	i64 maxdt = 0;
@@ -298,9 +298,9 @@ void test_ppm(std::vector<std::string>& parameters)
 		v -= 1;
 		v += db * 0.1;
 	}
-	std::wcout << L"время, мксек:  " << std::to_wstring(mindt) << std::endl;
-	std::wcout << L"ppm:           " << double_to_wstring(v, 1) << std::endl;
-	std::wcout << L"ppm_test:      " << double_to_wstring(db2, 1) << std::endl << std::endl;
+	trm.print(L"время, мксек:  " + std::to_wstring(mindt));
+	trm.print(L"ppm:           " + double_to_wstring(v, 1));
+	trm.print(L"ppm_test:      " + double_to_wstring(db2, 1));
 }
 
 void eee(std::vector<std::vector<i64>>& res, std::vector<i64> tek, i64 sum, i64 maxx)
@@ -318,7 +318,7 @@ void eee(std::vector<std::vector<i64>>& res, std::vector<i64> tek, i64 sum, i64 
 	}
 }
 
-void razl(std::vector<std::string>& parameters)
+void razl(_e_terminal& trm, const std::vector<std::wstring>& parameters)
 {
 	i64 n = 1;
 	if (parameters.size() >= 1)
@@ -326,46 +326,16 @@ void razl(std::vector<std::string>& parameters)
 		n = std::stoi(parameters[0]);
 		if (n < 1) n = 1;
 	}
-	std::wcout << L"разложение числа: " << n << std::endl;
+	trm.print(L"разложение числа: " + std::to_wstring(n));
 	std::vector<std::vector<i64>> res;
 	eee(res, {}, n, n);
-/*	for (auto& i : res)
+	for (auto& i : res)
 	{
-		for (auto& j : i) std::wcout << j << L" ";
-		std::wcout << std::endl;
-	}*/
-	std::wcout << L"всего разложений: " << res.size() << std::endl;
-}
-
-int main33(int argc, char* argv[])
-{
-	{
-		std::string s = argv[0];
-		if (s[1] != ':') test_file = test_file2;
+		std::wstring s;
+		for (auto& j : i) s += std::to_wstring(j) + L" ";
+		trm.print(s);
 	}
-	setlocale(LC_ALL, "RU");
-	std::wcout << test_file << std::endl;
-    for (;;)
-    {
-        std::cout << ">";
-        std::string cmd;
-		std::getline(std::cin, cmd);
-		std::vector<std::string> parameters;
-		std::string command_name = command_decomposition(cmd, parameters);
-		if (command_name == "a")
-			test_arithmetic_coding(parameters);
-		else if (command_name == "b")
-			test_test(parameters);
-		else if (command_name == "ppm")
-			test_ppm(parameters);
-		else if (command_name == "r")
-			razl(parameters);
-		else if (command_name == "exit")
-			break;
-		else
-			std::cout << "команда не найдена\n";
-	}
-	return 0;
+	trm.print(L"всего разложений: " + std::to_wstring(res.size()));
 }
 
 bool _ppm_mode::start2()
@@ -384,5 +354,8 @@ void _ppm_mode::init_ui_elements()
 	term->local_area.y = _interval(10, 740);
 	n_ko->add_child(term);
 	n_act_key = term;
-
+	term->command.insert({ L"a", { L"тест арифметического кодирования", test_arithmetic_coding } });
+	term->command.insert({ L"b", { L"test_test", test_test } });
+	term->command.insert({ L"ppm", { L"test ppm", test_ppm } });
+	term->command.insert({ L"r", { L"разложение числа", razl } });
 }

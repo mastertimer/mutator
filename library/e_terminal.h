@@ -1,8 +1,6 @@
 ﻿#pragma once
 
 #include "ui.h"
-
-#include <functional>
 #include <map>
 #include <mutex>
 

@@ -3,6 +3,7 @@
 #include "e_exchange_graph.h"
 #include "exchange_data.h"
 #include "exchange_trade.h"
+#include "exchange_research.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -44,6 +45,10 @@ void _se_mode::init_ui_elements()
 	term->local_area.y = _interval(10, 740);
 	n_ko->add_child(term);
 	n_act_key = term;
+	term->command.insert({ L"1", { L"статистика цен", exchange__fun1 } });
+	term->command.insert({ L"2", { L"тестирование фильтра", test__filter } });
+	term->command.insert({ L"sad", { L"спрос и предложение", exchange__fun2 } });
+	term->command.insert({ L"delta", { L"разность цен", exchange__fun3 } });
 
 	auto button = std::make_shared<_e_button>(this);
 	button->picture.set_from_text("00000000000000000000ff0f000108000108fc3f0804200808400808400810800810800820000920000940000a40000a80000c80000c00010800ff0f000000000000000000000000", 0, cc1);

@@ -1,7 +1,5 @@
 ﻿#include "e_terminal.h"
-
 #include "win_basic.h"
-#include "exchange_research.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -32,10 +30,6 @@ _e_terminal::_e_terminal(_ui* ui_) : _ui_element(ui_)
 	command.insert({ L"clear", { L"очищение экрана", trm_clear } });
 	command.insert({ L"help", { L"вывод справки", trm_help } });
 	command.insert({ L"test", { L"тестирование разное", trm_test } });
-	command.insert({ L"1", { L"статистика цен", exchange__fun1 } });
-	command.insert({ L"2", { L"тестирование фильтра", test__filter } });
-	command.insert({ L"sad", { L"спрос и предложение", exchange__fun2 } });
-	command.insert({ L"delta", { L"разность цен", exchange__fun3 } });
 }
 
 void _e_terminal::ris2(_trans tr)
