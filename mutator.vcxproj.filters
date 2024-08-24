@@ -43,6 +43,12 @@
     <Filter Include="Файлы заголовков\se\se_library">
       <UniqueIdentifier>{2891be12-34c7-47e4-8808-02d036096bb9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\ppm">
+      <UniqueIdentifier>{af4656ed-81b0-4967-a02c-2e579b040205}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\ppm">
+      <UniqueIdentifier>{8c188d00-fdbc-4556-a2b4-c5fb9d28d628}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\basic.h">
@@ -123,6 +129,9 @@
     <ClInclude Include="library\ui.h">
       <Filter>Файлы заголовков\library</Filter>
     </ClInclude>
+    <ClInclude Include="ppm\compression.h">
+      <Filter>Файлы заголовков\ppm</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="library\basic.cpp">
@@ -202,6 +211,12 @@
     </ClCompile>
     <ClCompile Include="library\ui.cpp">
       <Filter>Исходные файлы\library</Filter>
+    </ClCompile>
+    <ClCompile Include="ppm\compression.cpp">
+      <Filter>Исходные файлы\ppm</Filter>
+    </ClCompile>
+    <ClCompile Include="ppm\ppm.cpp">
+      <Filter>Исходные файлы\ppm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -8,8 +8,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_ui ui;
-
 struct _se_mode : public _mode
 {
 	virtual _bitmap& get_bitmap() override { return ui.canvas; }
@@ -26,6 +24,8 @@ struct _se_mode : public _mode
 	virtual void mouse_button_middle(bool pressed, bool dbl) override;
 
 private:
+	_ui ui;
+
 	virtual bool start2() override;
 };
 
@@ -45,14 +45,14 @@ auto ignore = start_unit();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void read_cena(_e_button& eb)
+void read_cena(_e_button& eb, _ui& ui)
 {
-	static auto fun = std::make_shared<_e_function>(eb.ui, []() { scan_supply_and_demand(ui); });
+	static auto fun = std::make_shared<_e_function>(eb.ui, [&ui]() { scan_supply_and_demand(ui); });
 	eb.ui->n_timer1000.erase(fun);
 	if (eb.checked) eb.ui->n_timer1000.insert(fun);
 }
 
-void init_ui_elements()
+void init_ui_elements(_ui& ui)
 {
 	auto term = std::make_shared<_e_terminal>(&ui);
 	term->local_area.x = _interval(10, 480);
@@ -79,7 +79,7 @@ void init_ui_elements()
 	button->checkbox = true;
 	button->trans.offset = { 664, 16 };
 	button->hint = L"чтение цен";
-	button->run = read_cena;
+	button->run = [&ui](_e_button& eb) { read_cena(eb, ui); };
 	ui.n_ko->add_child(button);
 
 	button = std::make_shared<_e_button>(&ui);
@@ -94,14 +94,14 @@ void init_ui_elements()
 	button->picture.set_from_text("00000000000000000000000000800300c00300e00100fc00006600007000003000002c00002400000300800100c00000400000200000000000000000000000000000000000000000", 0, ui.cc1);
 	button->trans.offset = { 728, 16 };
 	button->hint = L"купить";
-	button->run = [](_e_button&) { buy_shares(ui); };
+	button->run = [&ui](_e_button&) { buy_shares(ui); };
 	ui.n_ko->add_child(button);
 
 	button = std::make_shared<_e_button>(&ui);
 	button->picture.set_from_text("00000000000000000000000000001800000c00000400000200800100c000006000002000001100800900803400801a00800700800300800000000000000000000000000000000000", 0, ui.cc1);
 	button->trans.offset = { 760, 16 };
 	button->hint = L"продать";
-	button->run = [](_e_button&) { sell_shares(ui); };
+	button->run = [&ui](_e_button&) { sell_shares(ui); };
 	ui.n_ko->add_child(button);
 
 	button = std::make_shared<_e_button>(&ui);
@@ -135,7 +135,7 @@ bool _se_mode::start2()
 	static bool first_run = true;
 	if (first_run) first_run = false; else return true;
 
-	init_ui_elements();
+	init_ui_elements(ui);
 	return true;
 }
 

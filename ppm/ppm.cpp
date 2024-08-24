@@ -308,7 +308,7 @@ void razl(std::vector<std::string>& parameters)
 	std::wcout << L"всего разложений: " << res.size() << std::endl;
 }
 
-int main(int argc, char* argv[])
+int main33(int argc, char* argv[])
 {
 	{
 		std::string s = argv[0];
@@ -336,4 +336,5 @@ int main(int argc, char* argv[])
 		else
 			std::cout << "команда не найдена\n";
 	}
+	return 0;
 }
