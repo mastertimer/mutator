@@ -112,7 +112,10 @@ struct _e_text : public _ui_element
 
 struct _e_list : public _ui_element
 {
+	int font_size = 16; // минимум 12 для читабельности
 	std::vector<std::wstring> strings;
+	_e_list(_ui* ui_);
+	void ris2(_trans tr) override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

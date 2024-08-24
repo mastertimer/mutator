@@ -532,7 +532,7 @@ void _e_button::ris2(_trans tr)
 	if (checked) c = ui->cc1 - 0x40000000;
 	if (ui->n_go_move.get() == this) c = ui->cc1 - 0x80000000;
 	if (ui->n_tani.get() == this) c = ui->cc2 - 0x80000000;
-	ui->canvas.fill_rectangle(_iarea{ {(i64)oo.x.min, (i64)oo.x.max + 1}, {(i64)oo.y.min, (i64)oo.y.max + 1} }, { c });
+	ui->canvas.fill_rectangle(oo, { c });
 }
 
 bool _e_button::mouse_move2(_xy r)
@@ -582,4 +582,17 @@ void _e_text::update()
 	local_area = { {-1, std::max((double)size.x, 13.0)}, {0, std::max((double)size.y, 13.0)} };
 	area.reset();
 	add_area();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+_e_list::_e_list(_ui* ui_) : _ui_element(ui_)
+{
+	local_area = { {0, 60}, {0, 100} };
+}
+
+void _e_list::ris2(_trans tr)
+{
+	_iarea oo = tr(local_area);
+	ui->canvas.rectangle(oo, { c });
 }

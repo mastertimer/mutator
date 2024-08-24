@@ -71,6 +71,12 @@ void _diary_mode::init_ui_elements()
 	n_ko->add_child(term);
 	n_act_key = term;
 	term->command.insert({ L"вес", { L"ввод текущего веса", std::bind(&_diary_mode::add_weight, this, std::placeholders::_1, std::placeholders::_2) } });
+
+	auto list_weight = std::make_shared<_e_list>(this);
+	list_weight->local_area.x = _interval(500, 600);
+	list_weight->local_area.y = _interval(10, 740);
+	n_ko->add_child(list_weight);
+
 }
 
 void _diary_mode::destroy()
