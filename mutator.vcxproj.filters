@@ -49,6 +49,12 @@
     <Filter Include="Файлы заголовков\ppm">
       <UniqueIdentifier>{8c188d00-fdbc-4556-a2b4-c5fb9d28d628}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\diary">
+      <UniqueIdentifier>{615f4e15-ab5a-442b-a2a4-2f06028532b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\diary">
+      <UniqueIdentifier>{3da89f9c-8c78-445e-b915-915d6ba81102}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\basic.h">
@@ -217,6 +223,9 @@
     </ClCompile>
     <ClCompile Include="ppm\ppm.cpp">
       <Filter>Исходные файлы\ppm</Filter>
+    </ClCompile>
+    <ClCompile Include="diary\diary.cpp">
+      <Filter>Исходные файлы\diary</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

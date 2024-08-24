@@ -111,7 +111,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>library;mutator;se;se/library;se/se_library;ppm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>library;mutator;se;se/library;se/se_library;ppm;diary</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -128,7 +128,7 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>library;mutator;se;se/library;se/se_library;ppm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>library;mutator;se;se/library;se/se_library;ppm;diary</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -168,6 +168,7 @@
     <ClInclude Include="se\se_library\reading_sad.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="diary\diary.cpp" />
     <ClCompile Include="library\basic.cpp" />
     <ClCompile Include="library\e_terminal.cpp" />
     <ClCompile Include="library\geometry.cpp" />
