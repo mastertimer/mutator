@@ -1,10 +1,39 @@
-﻿#include <iostream>
+﻿#include "ui.h"
+#include "compression.h"
+#include "e_terminal.h"
+#include <iostream>
 #include <chrono>
 
-#include "compression.h"
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 std::wstring test_file = L"e:\\programs\\ppm\\data\\t110521.txt";
 std::wstring test_file2 = L"data/t110521.txt";
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct _ppm_mode : public _ui
+{
+private:
+
+	virtual bool start2() override;
+	void init_ui_elements();
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+namespace
+{
+
+bool start_unit()
+{
+	main_modes[L"ppm"] = std::make_unique<_ppm_mode>();
+	return true;
+}
+auto ignore = start_unit();
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 std::string command_decomposition(const std::string& cmd, std::vector<std::string>& parameters)
 {
@@ -337,4 +366,23 @@ int main33(int argc, char* argv[])
 			std::cout << "команда не найдена\n";
 	}
 	return 0;
+}
+
+bool _ppm_mode::start2()
+{
+	static bool first_run = true;
+	if (first_run) first_run = false; else return true;
+
+	init_ui_elements();
+	return true;
+}
+
+void _ppm_mode::init_ui_elements()
+{
+	auto term = std::make_shared<_e_terminal>(this);
+	term->local_area.x = _interval(10, 480);
+	term->local_area.y = _interval(10, 740);
+	n_ko->add_child(term);
+	n_act_key = term;
+
 }
