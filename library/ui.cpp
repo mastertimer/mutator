@@ -244,12 +244,12 @@ _iarea _ui::draw(_isize r)
 	return result;
 }
 
-void _ui::run_timer1000()
+void _ui::timer1000()
 {
 	for (auto element : n_timer1000) element->update();
 }
 
-void _ui::run_timer250()
+void _ui::timer250()
 {
 	for (auto element : n_timer250) element->update();
 }
@@ -341,7 +341,7 @@ void _ui::mouse_button_middle_up()
 	set_cursor((n_perenos) ? _cursor::size_all : _cursor::normal);
 }
 
-void _ui::mouse_wheel_turn(short value)
+void _ui::mouse_wheel(short value)
 {
 	if (n_perenos)
 	{
@@ -399,6 +399,31 @@ void _ui::erase(std::shared_ptr<_ui_element> e)
 	if (n_tani == e) n_tani.reset();
 	if (n_go_move == e) n_go_move.reset();
 	if (n_hint == e) n_hint.reset();
+}
+
+void _ui::mouse_leave()
+{
+	if (mouse.left_button) mouse_button_left_up();
+	if (mouse.right_button) mouse_button_right_up();
+	if (mouse.middle_button) mouse_button_middle_up();
+}
+
+void _ui::mouse_button_left(bool pressed, bool dbl)
+{
+	if (dbl) { mouse_button_left_down(true); return; }
+	if (pressed) mouse_button_left_down(); else mouse_button_left_up();
+}
+
+void _ui::mouse_button_right(bool pressed, bool dbl)
+{
+	if (dbl) { mouse_button_right_down(true); return; }
+	if (pressed) mouse_button_right_down(); else mouse_button_right_up();
+}
+
+void _ui::mouse_button_middle(bool pressed, bool dbl)
+{
+	if (dbl) { mouse_button_middle_down(true); return; }
+	if (pressed) mouse_button_middle_down(); else mouse_button_middle_up();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

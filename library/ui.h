@@ -5,6 +5,7 @@
 #include <optional>
 #include <set>
 #include <functional>
+#include "../main.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -109,7 +110,7 @@ struct _e_text : public _ui_element
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _ui
+struct _ui: public _mode
 {
 	_bitmap canvas;
 	_area changed_area;
@@ -135,22 +136,28 @@ struct _ui
 	_ui();
 	void paint(HWND hwnd);
 	void add_changed_area(_area a);
-	_iarea draw(_isize r);
-	void run_timer1000();
-	void run_timer250();
-	void key_down(u64 key);
-	void key_press(u64 key);
-	void mouse_move();
 	void mouse_button_left_down(bool dblclk = false);
 	void mouse_button_left_up();
 	void mouse_button_right_down(bool dblclk = false);
 	void mouse_button_right_up();
 	void mouse_button_middle_down(bool dblclk = false);
 	void mouse_button_middle_up();
-	void mouse_wheel_turn(short value);
 	void add_hint(std::wstring_view hint, std::shared_ptr<_ui_element> g);
 	void del_hint();
 	void erase(std::shared_ptr<_ui_element> e);
+
+	virtual _bitmap& get_bitmap() override { return canvas; }
+	virtual void timer250() override;
+	virtual void timer1000() override;
+	virtual void mouse_wheel(short value) override;
+	virtual void mouse_leave() override;
+	virtual void mouse_move() override;
+	virtual _iarea draw(_isize r) override;
+	virtual void key_down(u64 key) override;
+	virtual void key_press(u64 key) override;
+	virtual void mouse_button_left(bool pressed, bool dbl) override;
+	virtual void mouse_button_right(bool pressed, bool dbl) override;
+	virtual void mouse_button_middle(bool pressed, bool dbl) override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

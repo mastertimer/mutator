@@ -34,7 +34,6 @@ private:
 
     virtual bool start2() { return false; }
     virtual bool stop2() { return false; }
-
 };
 
 inline std::map<std::wstring, std::unique_ptr<_mode>> main_modes;

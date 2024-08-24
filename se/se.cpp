@@ -8,23 +8,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _se_mode : public _mode
+struct _se_mode : public _ui
 {
-	virtual _bitmap& get_bitmap() override { return ui.canvas; }
-	virtual _iarea draw(_isize r) override;
-	virtual void timer1000() override;
-	virtual void timer250() override;
-	virtual void key_press(u64 key) override;
-	virtual void key_down(u64 key) override;
-	virtual void mouse_move() override;
-	virtual void mouse_leave() override;
-	virtual void mouse_wheel(short delta) override;
-	virtual void mouse_button_left(bool pressed, bool dbl) override;
-	virtual void mouse_button_right(bool pressed, bool dbl) override;
-	virtual void mouse_button_middle(bool pressed, bool dbl) override;
-
 private:
-	_ui ui;
 
 	virtual bool start2() override;
 };
@@ -127,7 +113,6 @@ void init_ui_elements(_ui& ui)
 	polz->vid = 2;
 	eg->add_child(polz);
 	polz->prilip();
-
 }
 
 bool _se_mode::start2()
@@ -135,66 +120,6 @@ bool _se_mode::start2()
 	static bool first_run = true;
 	if (first_run) first_run = false; else return true;
 
-	init_ui_elements(ui);
+	init_ui_elements(*this);
 	return true;
-}
-
-_iarea _se_mode::draw(_isize r)
-{
-	return ui.draw(r);
-}
-
-void _se_mode::timer1000()
-{
-	ui.run_timer1000();
-}
-
-void _se_mode::timer250()
-{
-	ui.run_timer250();
-}
-
-void _se_mode::key_press(u64 key)
-{
-	ui.key_press(key);
-}
-
-void _se_mode::key_down(u64 key)
-{
-	ui.key_down(key);
-}
-
-void _se_mode::mouse_move()
-{
-	ui.mouse_move();
-}
-
-void _se_mode::mouse_leave()
-{
-	if (mouse.left_button) ui.mouse_button_left_up();
-	if (mouse.right_button) ui.mouse_button_right_up();
-	if (mouse.middle_button) ui.mouse_button_middle_up();
-}
-
-void _se_mode::mouse_wheel(short delta)
-{
-	ui.mouse_wheel_turn(delta);
-}
-
-void _se_mode::mouse_button_left(bool pressed, bool dbl)
-{
-	if (dbl) { ui.mouse_button_left_down(true); return; }
-	if (pressed) ui.mouse_button_left_down(); else ui.mouse_button_left_up();
-}
-
-void _se_mode::mouse_button_right(bool pressed, bool dbl)
-{
-	if (dbl) { ui.mouse_button_right_down(true); return; }
-	if (pressed) ui.mouse_button_right_down(); else ui.mouse_button_right_up();
-}
-
-void _se_mode::mouse_button_middle(bool pressed, bool dbl)
-{
-	if (dbl) { ui.mouse_button_middle_down(true); return; }
-	if (pressed) ui.mouse_button_middle_down(); else ui.mouse_button_middle_up();
 }
