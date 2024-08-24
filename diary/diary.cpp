@@ -1,46 +1,43 @@
-﻿#include "ui.h"
-#include "e_terminal.h"
+﻿#include "diary.h"
+#include "basic.h"
+#include <fstream>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _diary_mode : public _ui
+void _diary::load_from_file(const std::filesystem::path& fn)
 {
-private:
-
-	virtual bool start2() override;
-	void init_ui_elements();
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-namespace
-{
-
-bool start_unit()
-{
-	main_modes[L"diary"] = std::make_unique<_diary_mode>();
-	return true;
-}
-auto ignore = start_unit();
-
+    entries.clear();
+    std::ifstream file(fn);
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-bool _diary_mode::start2()
+bool _diary::save_to_file(const std::filesystem::path& fn)
 {
-	static bool first_run = true;
-	if (first_run) first_run = false; else return true;
+    std::ofstream file(fn);
+    char s[20];
+    for (auto& entry : entries)
+    {
+        tm t3;
+        localtime_s(&t3, &entry.time);
 
-	init_ui_elements();
-	return true;
+        strftime(s, sizeof(s), "%d.%m.%g %H.%M", &t3);
+        file << s << " ";
+
+        switch (entry.type)
+        {
+        case _entry_type::weight:
+            file << "вес=" << double_to_string(entry.double_, 1);
+            break;
+        }
+        file << std::endl;
+    }
+    return !file.fail();
 }
 
-void _diary_mode::init_ui_elements()
+void _diary::add_weight(double weight)
 {
-	auto term = std::make_shared<_e_terminal>(this);
-	term->local_area.x = _interval(10, 480);
-	term->local_area.y = _interval(10, 740);
-	n_ko->add_child(term);
-	n_act_key = term;
+    _diary_entry entry;
+    entry.time = time(0);
+    entry.type = _entry_type::weight;
+    entry.double_ = weight;
+    entries.push_back(entry);
 }

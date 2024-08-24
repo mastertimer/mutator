@@ -138,6 +138,9 @@
     <ClInclude Include="ppm\compression.h">
       <Filter>Файлы заголовков\ppm</Filter>
     </ClInclude>
+    <ClInclude Include="diary\diary.h">
+      <Filter>Файлы заголовков\diary</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="library\basic.cpp">
@@ -223,6 +226,9 @@
     </ClCompile>
     <ClCompile Include="ppm\ppm.cpp">
       <Filter>Исходные файлы\ppm</Filter>
+    </ClCompile>
+    <ClCompile Include="diary\diary_mode.cpp">
+      <Filter>Исходные файлы\diary</Filter>
     </ClCompile>
     <ClCompile Include="diary\diary.cpp">
       <Filter>Исходные файлы\diary</Filter>
