@@ -54,7 +54,7 @@ void _se_mode::init_ui_elements()
 	button->picture.set_from_text("00000000000000000000ff0f000108000108fc3f0804200808400808400810800810800820000920000940000a40000a80000c80000c00010800ff0f000000000000000000000000", 0, cc1);
 	button->trans.offset = { 600, 16 };
 	button->hint = L"загрузить статистику";
-	button->run = [](_e_button&) { start_se(); };
+	button->run = [](_e_button&) { load_se(); };
 	n_ko->add_child(button);
 
 	button = std::make_shared<_e_button>(this);
@@ -112,6 +112,8 @@ void _se_mode::init_ui_elements()
 	eg->local_area.x = _interval(490, 1570);
 	eg->local_area.y = _interval(50, 735);
 	n_ko->add_child(eg);
+	eg->curve.push_back(new _candle_curve2);
+	eg->curve.push_back(new _prices_curve4);
 
 	auto polz = std::make_shared<_e_scrollbar>(this);
 	polz->vid = 2;

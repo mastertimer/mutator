@@ -12,51 +12,16 @@
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include <deque>
 #include "e_exchange_graph.h"
 #include "exchange_data.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _candle_curve2 : public _basic_curve2 // классические свечи
+void load_se()
 {
-	void draw(_bitmap& bm, i64 n, _area area) override; // нарисовать 1 элемент
-	_interval get_y(i64 n) override; // дипазон рисования по y
-};
-
-struct _prices_curve3 : public _basic_curve2 // посекундный спрос/предложение
-{
-	static const int max_part = 22000; // максимально количество элементов ss
-	std::deque<_supply_and_demand> part_ss; // часть супер-статистики
-	i64 begin_ss = 0; // начало куска супер-статистики
-
-	void draw(_bitmap& bm, i64 n, _area area) override; // нарисовать 1 элемент
-	_interval get_y(i64 n) override; // дипазон рисования по y
-};
-
-struct _prices_curve4 : public _basic_curve2 // посекундный спрос/предложение (цвет - дельта)
-{
-	static const int max_part = 22000; // максимально количество элементов ss
-	std::deque<_supply_and_demand> part_ss; // часть супер-статистики
-	i64 begin_ss = 0; // начало куска супер-статистики
-
-	void draw(_bitmap& bm, i64 n, _area area) override; // нарисовать 1 элемент
-	_interval get_y(i64 n) override; // дипазон рисования по y
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void start_se()
-{
-	if (!ed.empty()) return;
-	ed.load_from_file();
-
-	if (!graph2) return;
-	graph2->cha_area();
-
+	if (ed.empty()) ed.load_from_file();
 	update_index_data();
-	graph2->curve.push_back(new _candle_curve2);
-	graph2->curve.push_back(new _prices_curve4);
+	if (graph2) graph2->cha_area();
 }
 
 void expand_elements_graph2()
