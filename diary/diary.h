@@ -5,13 +5,21 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+struct _time_interval
+{
+	time_t end; // ключ
+	time_t begin;
+
+	void operator=(time_t time);
+};
+
 enum class _entry_type { weight };
 
 struct _diary_entry
 {
-	time_t time;
+	_time_interval time;
 	_entry_type type;
-	double double_;
+	double value_;
 };
 
 struct _diary
@@ -22,5 +30,5 @@ struct _diary
 	void add_weight( double weight );
 
 private:
-	std::vector<_diary_entry> entries;
+	std::vector<_diary_entry> entries; // отсортировано по ключу
 };
