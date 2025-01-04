@@ -99,7 +99,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			TrackMouseEvent(&a);
 		}
 		init_shift(wParam);
-		mouse.position = { ((i64)(short)LOWORD(lParam)), ((i64)(short)HIWORD(lParam)) };
+		mouse.position = { ((short)LOWORD(lParam)) + 0.5, ((short)HIWORD(lParam)) + 0.5 };
 		main_modes[mode_name]->mouse_move();
 		mouse.prev_position = mouse.position;
 		paint(hWnd);

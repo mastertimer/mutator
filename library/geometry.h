@@ -32,7 +32,7 @@ struct _xy
 	double y;
 
 	_xy(double x_, double y_) : x(x_), y(y_) {}
-	_xy(const _ixy b) : x(b.x + 0.5), y(b.y + 0.5) {}
+	_xy(const _ixy b) : x(double(b.x)), y(double(b.y)) {}
 
 	operator _ixy()               const { return { x, y }; }
 

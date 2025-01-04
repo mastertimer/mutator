@@ -286,7 +286,7 @@ void _ui::mouse_move()
 			n_ko->trans.offset += mouse.position - mouse.prev_position;
 			n_ko->cha_area(n_ko->calc_area());
 		}
-		return; // закомментировать - колесо будет работать, но курсор будет сбрасываться при выделении
+		return;
 	}
 	if (!n_ko->mouse_move(n_ko->trans))
 		if (n_go_move)
