@@ -17,7 +17,7 @@ struct _ui_element : public std::enable_shared_from_this<_ui_element>
 	_trans trans;
 	std::set<std::shared_ptr<_ui_element>> subelements;
 	std::shared_ptr<_ui_element> parent;
-	_color c{ 0xFF208040 };
+	_color color{ 0xFFDADADA };
 	_color c2{ 0 };
 	_ui* ui;
 
@@ -138,10 +138,10 @@ struct _ui: public _mode
 	_trans master_trans_go_move; // трансформация n_go_move
 
 	_color background_color = black_color; // цвет фона
-	_color border_color = 0xFF208040;
+	_color border_color = 0xFF9A9A9A; // цвет рамок
+	_color text_color = 0xFFDADADA; // цвет шрифта по умолчанию
 	_color cc1 = 0xFF208040; // цвет 1
 	_color cc2 = 0xFF40FF80; // цвет 2
-	_color cc3 = 0xFFA0FFC0; // цвет 3
 
 	_ui();
 	void paint(HWND hwnd);

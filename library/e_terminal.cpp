@@ -34,6 +34,8 @@ _e_terminal::_e_terminal(_ui* ui_) : _ui_element(ui_)
 
 void _e_terminal::ris2(_trans tr)
 {
+	_color cc3 = 0xFFFFFFFF; // цвет курсора/выделения
+
 	std::lock_guard<std::mutex> lck(mtx);
 	std::wstring old_font = ui->canvas.get_font_name();
 	ui->canvas.set_font(L"Cascadia Code", false);
@@ -98,25 +100,25 @@ void _e_terminal::ris2(_trans tr)
 	if (_area(area_cursor) == ui->changed_area) // перерисовать только курсор
 	{
 		if (area_cursor.empty()) goto finish; // перестраховка
-		ui->canvas.text({ area_cursor.x.min, area_cursor.y.min }, cmd.substr(cursor, 1), font_size, ui->cc2, ui->background_color);
-		if (visible_cursor) ui->canvas.fill_rectangle(area_cursor, { ui->cc3 - 0xC0000000 });
+		ui->canvas.text({ area_cursor.x.min, area_cursor.y.min }, cmd.substr(cursor, 1), font_size, ui->text_color, ui->background_color);
+		if (visible_cursor) ui->canvas.fill_rectangle(area_cursor, { cc3 - 0xC0000000 });
 		goto finish;
 	}
 
 	ui->canvas.fill_rectangle(oo2, c2);
-	if ((c.a != 0x00) && (c != c2)) ui->canvas.rectangle(oo2, c);
+	if (ui->border_color != c2) ui->canvas.rectangle(oo2, ui->border_color);
 	if ((oo2.y.length() < 30) || (oo2.x.length() < 30)) goto finish;
 
 	if (full_lines > max_lines)
 	{ // ползунок
-		ui->canvas.line({ oo.x.max - 1, oo.y.min }, { oo.x.max - 1, oo.y.max }, c);
-		ui->canvas.line({ oo2.x.max, oo.y.min }, { oo.x.max - 2, oo.y.min }, c);
-		ui->canvas.line({ oo2.x.max, oo.y.max - 1 }, { oo.x.max - 2, oo.y.max - 1 }, c);
+		ui->canvas.line({ oo.x.max - 1, oo.y.min }, { oo.x.max - 1, oo.y.max }, ui->border_color);
+		ui->canvas.line({ oo2.x.max, oo.y.min }, { oo.x.max - 2, oo.y.min }, ui->border_color);
+		ui->canvas.line({ oo2.x.max, oo.y.max - 1 }, { oo.x.max - 2, oo.y.max - 1 }, ui->border_color);
 
 		i64 tt = (oo.y.length() - otst_y * 2 - length_slider) * scrollbar / (full_lines - max_lines);
 
 		y_slider = { oo.y.max - otst_y - tt - length_slider, oo.y.max - otst_y - tt };
-		ui->canvas.fill_rectangle(_iarea{ {oo.x.max - width_scrollbar + 2, oo.x.max - 2}, y_slider }, { c });
+		ui->canvas.fill_rectangle(_iarea{ {oo.x.max - width_scrollbar + 2, oo.x.max - 2}, y_slider }, { ui->border_color });
 	}
 
 	if (ui->n_act_key.get() == this)
@@ -130,10 +132,10 @@ void _e_terminal::ris2(_trans tr)
 		if (n < 0) break;
 		if (n >= max_lines) continue;
 		ui->canvas.text({ x_text, y_cmd - n * font_size }, full_cmd.substr(i * cmd_vis_len, cmd_vis_len),
-			font_size, ui->cc2, ui->background_color);
+			font_size, ui->text_color, ui->background_color);
 	}
 
-	if (visible_cursor) ui->canvas.fill_rectangle(area_cursor, { ui->cc3 - 0xC0000000 });
+	if (visible_cursor) ui->canvas.fill_rectangle(area_cursor, { cc3 - 0xC0000000 });
 
 	for (i64 i = text.size() - 1; i >= 0; i--)
 	{
@@ -149,7 +151,7 @@ void _e_terminal::ris2(_trans tr)
 			if (n < 0) break;
 			if (n >= max_lines) continue;
 			ui->canvas.text({ x_text, y_cmd - n * font_size }, s.substr(j * cmd_vis_len, cmd_vis_len),
-				font_size, ui->cc1, ui->background_color);
+				font_size, ui->text_color, ui->background_color);
 		}
 		if (ks - scrollbar > max_lines) break;
 	}
@@ -165,7 +167,7 @@ void _e_terminal::ris2(_trans tr)
 				i64 x1 = std::max(selection_begin.x, selection_end.x) + 1;
 				_iarea a = { {x_text + x0 * font_width, x_text + x1 * font_width},
 					{y_cmd - yy * font_size, y_cmd - (yy - 1) * font_size} };
-				ui->canvas.fill_rectangle(a, { ui->cc3 - 0xA0000000 });
+				ui->canvas.fill_rectangle(a, { cc3 - 0xA0000000 });
 			}
 		}
 		else
@@ -189,21 +191,21 @@ void _e_terminal::ris2(_trans tr)
 			{
 				_iarea a = { {x_text + x1 * font_width, x_text + cmd_vis_len * font_width},
 				{y_cmd - y1 * font_size, y_cmd - (y1 - 1) * font_size} };
-				ui->canvas.fill_rectangle(a, { ui->cc3 - 0xA0000000 });
+				ui->canvas.fill_rectangle(a, { cc3 - 0xA0000000 });
 			}
 			for (i64 yy = y1 - 1; yy > y0; yy--)
 				if ((yy >= 0) && (yy < max_lines))
 				{
 					_iarea a = { {x_text, x_text + cmd_vis_len * font_width},
 					{y_cmd - yy * font_size, y_cmd - (yy - 1) * font_size} };
-					ui->canvas.fill_rectangle(a, { ui->cc3 - 0xA0000000 });
+					ui->canvas.fill_rectangle(a, { cc3 - 0xA0000000 });
 				}
 
 			if ((y0 >= 0) && (y0 < max_lines))
 			{
 				_iarea a = { {x_text, x_text + (x0 + 1) * font_width},
 				{y_cmd - y0 * font_size, y_cmd - (y0 - 1) * font_size} };
-				ui->canvas.fill_rectangle(a, { ui->cc3 - 0xA0000000 });
+				ui->canvas.fill_rectangle(a, { cc3 - 0xA0000000 });
 			}
 		}
 	}
