@@ -36,7 +36,7 @@ void _e_terminal::ris2(_trans tr)
 {
 	std::lock_guard<std::mutex> lck(mtx);
 	std::wstring old_font = ui->canvas.get_font_name();
-	ui->canvas.set_font(L"Consolas", false);
+	ui->canvas.set_font(L"Cascadia Code", false);
 	if (font_width == 0) font_width = ui->canvas.size_text("0123456789", font_size).x / 10;
 
 	std::wstring full_cmd = prefix + cmd;
