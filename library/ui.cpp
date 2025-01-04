@@ -237,7 +237,7 @@ _iarea _ui::draw(_isize r)
 	if (changed_area.empty()) return {};
 	canvas.set_drawing_area(changed_area);
 	changed_area &= canvas.get_size();
-	canvas.clear(cc0);
+	canvas.clear(background_color);
 	n_ko->ris(_trans());
 	_iarea result = changed_area;
 	changed_area = _area();
@@ -369,7 +369,7 @@ void _ui::add_hint(std::wstring_view hint, std::shared_ptr<_ui_element> g)
 	tr.scale = 1;
 	auto go = std::make_shared<_e_text>(this);
 	go->c =cc3;
-	go->c2 = cc0;
+	go->c2 = background_color;
 	go->trans = n_ko->trans.inverse() * tr;
 	go->s = hint;
 	go->update();

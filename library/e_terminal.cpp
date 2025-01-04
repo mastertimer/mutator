@@ -98,7 +98,7 @@ void _e_terminal::ris2(_trans tr)
 	if (_area(area_cursor) == ui->changed_area) // перерисовать только курсор
 	{
 		if (area_cursor.empty()) goto finish; // перестраховка
-		ui->canvas.text({ area_cursor.x.min, area_cursor.y.min }, cmd.substr(cursor, 1), font_size, ui->cc2, ui->cc0);
+		ui->canvas.text({ area_cursor.x.min, area_cursor.y.min }, cmd.substr(cursor, 1), font_size, ui->cc2, ui->background_color);
 		if (visible_cursor) ui->canvas.fill_rectangle(area_cursor, { ui->cc3 - 0xC0000000 });
 		goto finish;
 	}
@@ -130,7 +130,7 @@ void _e_terminal::ris2(_trans tr)
 		if (n < 0) break;
 		if (n >= max_lines) continue;
 		ui->canvas.text({ x_text, y_cmd - n * font_size }, full_cmd.substr(i * cmd_vis_len, cmd_vis_len),
-			font_size, ui->cc2, ui->cc0);
+			font_size, ui->cc2, ui->background_color);
 	}
 
 	if (visible_cursor) ui->canvas.fill_rectangle(area_cursor, { ui->cc3 - 0xC0000000 });
@@ -149,7 +149,7 @@ void _e_terminal::ris2(_trans tr)
 			if (n < 0) break;
 			if (n >= max_lines) continue;
 			ui->canvas.text({ x_text, y_cmd - n * font_size }, s.substr(j * cmd_vis_len, cmd_vis_len),
-				font_size, ui->cc1, ui->cc0);
+				font_size, ui->cc1, ui->background_color);
 		}
 		if (ks - scrollbar > max_lines) break;
 	}

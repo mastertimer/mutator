@@ -16,6 +16,7 @@ private:
 
 	void init_ui_elements();
 	void add_weight(_e_terminal& trm, const std::vector<std::wstring>& parameters);
+	void init_colors();
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,7 +60,13 @@ bool _diary_mode::start2()
 	if (first_run) first_run = false; else return true;
 
 	init_ui_elements();
+	init_colors();
 	return true;
+}
+
+void _diary_mode::init_colors()
+{
+	background_color = 0xFF1E1E1E;
 }
 
 void _diary_mode::init_ui_elements()

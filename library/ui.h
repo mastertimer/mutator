@@ -137,11 +137,11 @@ struct _ui: public _mode
 	_trans master_trans_go; // трансформация тяни-толкай объекта, или объекта под мышкой
 	_trans master_trans_go_move; // трансформация n_go_move
 
-	_color cc0 = black_color; // цвет фона
+	_color background_color = black_color; // цвет фона
+	_color border_color = 0xFF208040;
 	_color cc1 = 0xFF208040; // цвет 1
 	_color cc2 = 0xFF40FF80; // цвет 2
 	_color cc3 = 0xFFA0FFC0; // цвет 3
-	_color cc4 = 0xFF104020; // цвет 4
 
 	_ui();
 	void paint(HWND hwnd);
