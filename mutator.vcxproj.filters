@@ -141,6 +141,9 @@
     <ClInclude Include="diary\diary.h">
       <Filter>Файлы заголовков\diary</Filter>
     </ClInclude>
+    <ClInclude Include="diary\weight_list.h">
+      <Filter>Файлы заголовков\diary</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="library\basic.cpp">
@@ -231,6 +234,9 @@
       <Filter>Исходные файлы\diary</Filter>
     </ClCompile>
     <ClCompile Include="diary\diary.cpp">
+      <Filter>Исходные файлы\diary</Filter>
+    </ClCompile>
+    <ClCompile Include="diary\weight_list.cpp">
       <Filter>Исходные файлы\diary</Filter>
     </ClCompile>
   </ItemGroup>

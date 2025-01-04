@@ -32,7 +32,7 @@ _e_terminal::_e_terminal(_ui* ui_) : _ui_element(ui_)
 	command.insert({ L"test", { L"тестирование разное", trm_test } });
 }
 
-void _e_terminal::ris2(_trans tr)
+void _e_terminal::draw(_trans tr)
 {
 	_color cc3 = 0xFFFFFFFF; // цвет курсора/выделения
 

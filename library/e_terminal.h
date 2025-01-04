@@ -47,7 +47,7 @@ struct _e_terminal : public _ui_element
 	void mouse_move_left2(_xy r) override;
 
 protected:
-	void ris2(_trans tr) override;
+	void draw(_trans tr) override;
 
 private:
 	std::vector<std::wstring> text;

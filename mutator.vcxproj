@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="diary\diary.h" />
+    <ClInclude Include="diary\weight_list.h" />
     <ClInclude Include="library\basic.h" />
     <ClInclude Include="library\e_terminal.h" />
     <ClInclude Include="library\geometry.h" />
@@ -171,6 +172,7 @@
   <ItemGroup>
     <ClCompile Include="diary\diary.cpp" />
     <ClCompile Include="diary\diary_mode.cpp" />
+    <ClCompile Include="diary\weight_list.cpp" />
     <ClCompile Include="library\basic.cpp" />
     <ClCompile Include="library\e_terminal.cpp" />
     <ClCompile Include="library\geometry.cpp" />

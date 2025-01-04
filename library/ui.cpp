@@ -12,7 +12,7 @@ _ui_element::~_ui_element()
 {
 }
 
-void _ui_element::ris2(_trans tr)
+void _ui_element::draw(_trans tr)
 {
 }
 
@@ -64,7 +64,7 @@ void _ui_element::ris(_trans tr)
 	tr *= trans;
 	if (((tr(calc_area())) & ui->changed_area).empty()) return;
 	ui->canvas.set_drawing_area(tr(local_area) & ui->changed_area);
-	ris2(tr);
+	draw(tr);
 	for (auto element : subelements) element->ris(tr);
 }
 
@@ -473,7 +473,7 @@ void _e_scrollbar::mouse_move_left2(_xy r)
 	}
 }
 
-void _e_scrollbar::ris2(_trans tr)
+void _e_scrollbar::draw(_trans tr)
 {
 	_area a = tr(local_area);
 	uint c = ui->cc1;
@@ -516,7 +516,7 @@ _e_button::_e_button(_ui* ui_) : _ui_element(ui_)
 	local_area = { {0, 26}, {0, 26} };
 }
 
-void _e_button::ris2(_trans tr)
+void _e_button::draw(_trans tr)
 {
 	_area oo = tr(local_area);
 	uint c = 0;
@@ -568,7 +568,7 @@ bool _e_text::mouse_move2(_xy r)
 	return false;
 }
 
-void _e_text::ris2(_trans tr)
+void _e_text::draw(_trans tr)
 {
 	int sf = (int)(13 * tr.scale + 0.5);
 	if (sf < 5) return;
@@ -582,17 +582,4 @@ void _e_text::update()
 	local_area = { {-1, std::max((double)size.x, 13.0)}, {0, std::max((double)size.y, 13.0)} };
 	area.reset();
 	add_area();
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-_e_list::_e_list(_ui* ui_) : _ui_element(ui_)
-{
-	local_area = { {0, 60}, {0, 100} };
-}
-
-void _e_list::ris2(_trans tr)
-{
-	_iarea oo = tr(local_area);
-	ui->canvas.rectangle(oo, ui->border_color);
 }

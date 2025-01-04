@@ -50,7 +50,7 @@ protected:
 	bool key_fokus = false;
 	std::optional<_area> area;
 
-	virtual void ris2(_trans tr);
+	virtual void draw(_trans tr);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,7 +74,7 @@ struct _e_scrollbar : public _ui_element
 	~_e_scrollbar();
 	bool mouse_down_left2(_xy r) override;
 	void mouse_move_left2(_xy r) override;
-	void ris2(_trans tr) override;
+	void draw(_trans tr) override;
 	void prilip(); // прилипание к графическому объекту
 };
 
@@ -90,7 +90,7 @@ struct _e_button : public _ui_element
 
 	_e_button(_ui* ui_);
 	void mouse_up_left2(_xy r);
-	void ris2(_trans tr) override;
+	void draw(_trans tr) override;
 	bool mouse_move2(_xy r) override;
 	void mouse_finish_move() override;
 	bool mouse_down_left2(_xy r) override;
@@ -104,18 +104,8 @@ struct _e_text : public _ui_element
 
 	_e_text(_ui* ui_);
 	bool mouse_move2(_xy r) override;
-	void ris2(_trans tr) override;
+	void draw(_trans tr) override;
 	void update() override;
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-struct _e_list : public _ui_element
-{
-	int font_size = 16; // минимум 12 для читабельности
-	std::vector<std::wstring> strings;
-	_e_list(_ui* ui_);
-	void ris2(_trans tr) override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

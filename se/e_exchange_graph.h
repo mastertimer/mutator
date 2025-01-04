@@ -48,7 +48,7 @@ struct _e_exchange_graph : public _ui_element
 
 	_e_exchange_graph(_ui* ui_);
 	~_e_exchange_graph();
-	void ris2(_trans tr) override;
+	void draw(_trans tr) override;
 	void update() override;
 	bool mouse_down_left2(_xy r) override; // начало перетаскивания
 	void mouse_move_left2(_xy r) override; // процесс перетаскивания

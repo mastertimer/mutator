@@ -77,7 +77,7 @@ void _e_exchange_graph::update()
 	cha_area();
 }
 
-void _e_exchange_graph::ris2(_trans tr)
+void _e_exchange_graph::draw(_trans tr)
 {
 	_area a = tr(local_area);
 

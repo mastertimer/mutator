@@ -1,6 +1,7 @@
 ﻿#include "ui.h"
 #include "e_terminal.h"
 #include "diary.h"
+#include "weight_list.h"
 #include <functional>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,13 +46,14 @@ void _diary_mode::add_weight(_e_terminal& trm, const std::vector<std::wstring>& 
 		return;
 	}
 	auto w = std::stod(parameters[0]);
-	if (w > 200 || w < 50)
+	if (w > 300 || w < 3)
 	{
 		trm.print(L"нереальный вес");
 		return;
 	}
 	diary.add_weight(w);
 	trm.print(L"вес принят: " + double_to_wstring(w, 1));
+	n_ko->update();
 }
 
 bool _diary_mode::start2()
@@ -79,7 +81,7 @@ void _diary_mode::init_ui_elements()
 	n_act_key = term;
 	term->command.insert({ L"вес", { L"ввод текущего веса", std::bind(&_diary_mode::add_weight, this, std::placeholders::_1, std::placeholders::_2) } });
 
-	auto list_weight = std::make_shared<_e_list>(this);
+	auto list_weight = std::make_shared<_e_weight_list>(this);
 	list_weight->local_area.x = _interval(500, 600);
 	list_weight->local_area.y = _interval(10, 740);
 	n_ko->add_child(list_weight);
