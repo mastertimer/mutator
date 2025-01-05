@@ -17,8 +17,6 @@ struct _ui_element : public std::enable_shared_from_this<_ui_element>
 	_trans trans;
 	std::set<std::shared_ptr<_ui_element>> subelements;
 	std::shared_ptr<_ui_element> parent;
-	_color color{ 0xFFDADADA };
-	_color c2{ 0 };
 	_ui* ui;
 
 	_ui_element(_ui* ui_);
@@ -106,6 +104,11 @@ struct _e_text : public _ui_element
 	bool mouse_move2(_xy r) override;
 	void draw(_trans tr) override;
 	void update() override;
+};
+
+struct _e_scrollable_area : public _ui_element
+{
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

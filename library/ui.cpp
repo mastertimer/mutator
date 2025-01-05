@@ -368,8 +368,6 @@ void _ui::add_hint(std::wstring_view hint, std::shared_ptr<_ui_element> g)
 	tr.offset += _xy{ -siz.x * 0.5, -15.0 } + _xy{ 0.5 * g->local_area.x, g->local_area.y.min } *tr.scale;
 	tr.scale = 1;
 	auto go = std::make_shared<_e_text>(this);
-	go->color =text_color;
-	go->c2 = background_color;
 	go->trans = n_ko->trans.inverse() * tr;
 	go->s = hint;
 	go->update();
@@ -572,7 +570,7 @@ void _e_text::draw(_trans tr)
 {
 	int sf = (int)(13 * tr.scale + 0.5);
 	if (sf < 5) return;
-	ui->canvas.text(tr.offset, s.c_str(), sf, color, c2);
+	ui->canvas.text(tr.offset, s.c_str(), sf, ui->text_color, ui->background_color);
 }
 
 void _e_text::update()

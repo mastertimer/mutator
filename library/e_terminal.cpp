@@ -35,6 +35,7 @@ _e_terminal::_e_terminal(_ui* ui_) : _ui_element(ui_)
 void _e_terminal::draw(_trans tr)
 {
 	_color cc3 = 0xFFFFFFFF; // цвет курсора/выделения
+	_color c2 = ui->background_color; // цвет заливки
 
 	std::lock_guard<std::mutex> lck(mtx);
 	std::wstring old_font = ui->canvas.get_font_name();
