@@ -46,7 +46,7 @@ struct _ui_element : public std::enable_shared_from_this<_ui_element>
 
 protected:
 	bool key_fokus = false;
-	std::optional<_area> area;
+	std::optional<_area> area; // local_area + subelements.local_area
 
 	virtual void draw(_trans tr);
 };
@@ -108,7 +108,15 @@ struct _e_text : public _ui_element
 
 struct _e_scrollable_area : public _ui_element
 {
+	i64 width_scrollbar = 11; // ширина полосы прокрутки (хватательного прямоугольника)
+	i64 max_lines = 0; // сколько строк помещается на экране
+	i64 total_lines = 0; // полное количество строк
+	i64 scrollbar = 0; // отступ ползунка снизу
+	_iinterval y_slider; // пиксельные координаты y ползунка
 
+	_e_scrollable_area(_ui* ui_);
+	void draw(_trans tr) override;
+	virtual void calc_lines();
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

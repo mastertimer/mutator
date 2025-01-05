@@ -1,6 +1,7 @@
 ﻿#include "ui.h"
 
 #include "win_basic.h"
+#include <algorithm>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -580,4 +581,39 @@ void _e_text::update()
 	local_area = { {-1, std::max((double)size.x, 13.0)}, {0, std::max((double)size.y, 13.0)} };
 	area.reset();
 	add_area();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+_e_scrollable_area::_e_scrollable_area(_ui* ui_) : _ui_element(ui_)
+{
+	local_area = { {0, 30}, {0, 30} };
+}
+
+void _e_scrollable_area::draw(_trans tr)
+{
+	_iarea oo = tr(local_area);
+	_iarea oo2 = oo;
+	oo2.x.max -= width_scrollbar - 1;
+
+	ui->canvas.fill_rectangle(oo.expanded(-1), ui->background_color);
+	ui->canvas.rectangle(oo, ui->border_color);
+	calc_lines();
+	if (total_lines <= max_lines) return;
+	i64 x3 = oo.x.max - 4 - width_scrollbar;
+	ui->canvas.line({ x3, oo.y.min + 1 }, { x3, oo.y.max - 2 }, ui->border_color);
+
+	i64 y_size = oo.y.length() - 4;
+	i64 length_slider = std::clamp(max_lines * y_size / total_lines, 10LL, y_size);
+
+	i64 tt = (y_size - length_slider) * scrollbar / (total_lines - max_lines);
+
+	y_slider = { oo.y.max - 2 - tt - length_slider, oo.y.max - 2 - tt };
+	ui->canvas.fill_rectangle(_iarea{ {x3 + 2, oo.x.max - 2}, y_slider }, { ui->border_color });
+}
+
+void _e_scrollable_area::calc_lines()
+{
+	total_lines = 100;
+	max_lines = 50;
 }

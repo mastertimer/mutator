@@ -125,6 +125,7 @@ struct _iinterval // [...)
 	_iinterval& operator+=(i64 x);
 	_iinterval operator+(i64 x) const { return _iinterval(*this) += x; }
 	bool test(i64 x) const { return (x >= min) && (x < max); }
+	void expand(i64 b);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -152,6 +153,8 @@ struct _iarea
 	bool empty() const;
 	_isize size() const { if (empty()) return { 0,0 }; return { x.max - x.min, y.max - y.min }; }
 	bool test(_ixy b) const;
+	_iarea expanded(i64 b) const; // расширенная область во все стороны на b
+	void expand(i64 b);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

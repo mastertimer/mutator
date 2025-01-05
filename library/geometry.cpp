@@ -326,6 +326,13 @@ void _iinterval::operator|=(const _iinterval b)
 	if (b.max > max) max = b.max;
 }
 
+void _iinterval::expand(i64 b)
+{
+	if (empty()) return;
+	min -= b;
+	max += b;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool _iarea::operator!=(_isize b) const
@@ -360,6 +367,19 @@ bool _iarea::test(_ixy b) const
 bool _iarea::empty() const
 {
 	return x.empty() || y.empty();
+}
+
+_iarea _iarea::expanded(i64 b) const
+{
+	_iarea result = *this;
+	result.expand(b);
+	return result;
+}
+
+void _iarea::expand(i64 b)
+{
+	x.expand(b);
+	y.expand(b);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

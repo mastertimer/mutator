@@ -4,7 +4,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _e_weight_list : public _ui_element
+struct _e_weight_list : public _e_scrollable_area
 {
 	int font_size = 16; // минимум 12 для читабельности
 	std::vector<std::wstring> strings;

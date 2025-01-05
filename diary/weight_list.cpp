@@ -2,15 +2,15 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-_e_weight_list::_e_weight_list(_ui* ui_) : _ui_element(ui_)
+_e_weight_list::_e_weight_list(_ui* ui_) : _e_scrollable_area(ui_)
 {
 	local_area = { {0, 60}, {0, 100} };
 }
 
 void _e_weight_list::draw(_trans tr)
 {
+	_e_scrollable_area::draw(tr);
 	_iarea oo = tr(local_area);
-	ui->canvas.rectangle(oo, ui->border_color);
 }
 
 void _e_weight_list::update()
