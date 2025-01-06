@@ -73,8 +73,7 @@ void _diary_mode::init_colors()
 
 void _diary_mode::init_ui_elements()
 {
-	auto term = std::make_shared<_e_terminal>(this);
-	term->font_size = 20;
+	auto term = std::make_shared<_e_terminal>(this, 20);
 	term->local_area.x = _interval(10, 480);
 	term->local_area.y = _interval(10, 740);
 	n_ko->add_child(term);

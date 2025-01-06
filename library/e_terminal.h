@@ -6,7 +6,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct _e_terminal : public _ui_element
+struct _e_terminal : public _e_scrollable_area
 {
 	struct _command
 	{
@@ -23,17 +23,15 @@ struct _e_terminal : public _ui_element
 	bool visible_cursor = true;
 	bool insert_mode = true;
 	_iarea area_cursor;
-	i64 scrollbar = 0; // отступ ползунка снизу
-	int font_size = 14; // минимум 12 для читабельности
 	i64 font_width = 0; // ширина символов
+	std::wstring font_name = L"Cascadia Code";
 	inline static std::wstring prefix = L"> ";
-	inline static i64 width_scrollbar = 15; // ширина полосы прокрутки
 	inline static i64 otst_x = 3; // отступ при рисовании
 	inline static i64 otst_y = 2; // отступ при рисовании
 	_ixy selection_begin = { -1LL,0LL }; // номер отображаемой строки и номер символа
 	_ixy selection_end = { 0LL,0LL }; // номер отображаемой строки и номер символа
 
-	_e_terminal(_ui* ui_);
+	_e_terminal(_ui* ui_, int font_size_ = 14);
 	void run_cmd(); // выволнить введенную команду
 	void print(std::wstring_view s); // добавить текст
 	void text_clear() { text.clear(); }
@@ -45,21 +43,18 @@ struct _e_terminal : public _ui_element
 	bool mouse_wheel2(_xy r, short value) override;
 	bool mouse_down_left2(_xy r) override;
 	void mouse_move_left2(_xy r) override;
+	void calc_lines() override;
 
 protected:
 	void draw(_trans tr) override;
 
 private:
+	int font_size = 14; // минимум 12 для читабельности
 	std::vector<std::wstring> text;
 	std::vector<decltype(std::chrono::high_resolution_clock::now())> timer;
-	i64 old_cmd_vis_len = -1; // количество символов в строке
-	i64 old_full_lines = 0; // полное количество строк
-	i64 vis_cur = false; // сделать курсор видимым
-	_iinterval y_slider; // пиксельные координаты y ползунка
-	i64 max_lines = 0; // сколько строк помещается на экране
 	double y0_move_slider = -1; // начальный y - перемещения ползунка
 	i64 scrollbar0_move_slider = 0; // начальное положение scrollbar
-	i64 full_lines = 0; // полное количество строк
+	std::map<i64, i64> total_lines_map; // для разного количества символов в строке
 	i64 cmd_vis_len = 0; // количество символов по x
 	std::mutex mtx;
 	bool need_to_update = false;

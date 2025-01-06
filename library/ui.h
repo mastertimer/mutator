@@ -113,6 +113,7 @@ struct _e_scrollable_area : public _ui_element
 	i64 total_lines = 0; // полное количество строк
 	i64 scrollbar = 0; // отступ ползунка снизу
 	_iinterval y_slider; // пиксельные координаты y ползунка
+	_iarea draw_area; // область для рисования без рамки и ползунков
 
 	_e_scrollable_area(_ui* ui_);
 	void draw(_trans tr) override;
