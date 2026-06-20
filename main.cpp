@@ -9,7 +9,6 @@
 namespace
 {
 	constexpr wchar_t sz_window_class[] = L"MUTATOR";
-	constexpr wchar_t settings_filemane[] = L"..\\..\\settings.json";
 	std::wstring mode_name = L"mutator";
 }
 
@@ -34,13 +33,6 @@ _mode::~_mode()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void load_settings()
-{
-	_rjson fs(exe_path / settings_filemane);
-	if (fs.error) return;
-	fs.read("mode", mode_name);
-}
 
 void change_window_text(HWND hwnd)
 {
@@ -256,7 +248,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
     exe_path = get_exe_path(hInstance);
-	load_settings();
 	if (!main_modes[mode_name]) return 1;
     if (!main_modes[mode_name]->start()) return 2;
 
